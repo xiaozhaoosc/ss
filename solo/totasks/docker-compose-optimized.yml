@@ -1,0 +1,87 @@
+version: '3.8'
+services:
+  mysql:
+    build:
+      context: ../../xiaozhi/xiaozhi-esp32-server-java
+      dockerfile: Dockerfile-mysql
+    ports:
+      - "13306:3306"
+    networks:
+      - app-network
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "xiaozhi", "-p123456"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  node:
+    build:
+      context: ../../xiaozhi/xiaozhi-esp32-server-java
+      dockerfile: Dockerfile-node
+    depends_on:
+      mysql:
+        condition: service_healthy
+    ports:
+      - "8084:8084"
+    networks:
+      - app-network
+    environment:
+      - API_URL=http://server:8091
+
+  server:
+    build:
+      context: ../../xiaozhi/xiaozhi-esp32-server-java
+      dockerfile: Dockerfile-server-optimized
+      args:
+        - VOSK_MODEL_SIZE=${VOSK_MODEL_SIZE:-medium}
+    depends_on:
+      mysql:
+        condition: service_healthy
+    ports:
+      - "8091:8091"
+    networks:
+      - app-network
+    environment:
+      - SPRING_DATA_REDIS_HOST=redis
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/xiaozhi?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=xiaozhi
+      - SPRING_DATASOURCE_PASSWORD=ui123456789~
+      - VOSK_MODEL_SIZE=medium
+      - JAVA_OPTS=-Xms4G -Xmx16G -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:ParallelGCThreads=8 -XX:ConcGCThreads=4
+      - OMP_NUM_THREADS=16
+      - MKL_NUM_THREADS=16
+      - GPU_ENABLED=true
+      - CUDA_VISIBLE_DEVICES=0
+    volumes:
+      - maven_repo:/root/.m2/repository
+      - vosk_models:/vosk_cache
+      - ../../xiaozhi/xiaozhi-esp32-server-java/models:/app/models:ro
+      - ../../xiaozhi/xiaozhi-esp32-server-java/lib:/app/lib:ro
+      - /usr/local/cuda:/usr/local/cuda:ro
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "16"
+          memory: "24G"
+    runtime: nvidia
+    privileged: true
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    restart: always
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+  maven_repo:
+  vosk_models:

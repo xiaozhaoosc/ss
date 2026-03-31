@@ -1,0 +1,95 @@
+FROM eclipse-temurin:21-jdk AS builder
+
+ARG VOSK_MODEL_SIZE=standard
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    maven \
+    wget \
+    unzip \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /build
+
+COPY ./src ./src
+COPY ./db ./db
+COPY pom.xml ./
+RUN mvn -Dmaven.repo.local=/root/.m2/repository package -DskipTests
+
+RUN APP_VERSION=$(grep -A1 "<artifactId>xiaozhi.server</artifactId>" pom.xml | grep "<version>" | sed -e 's/<version>//' -e 's/<\/version>//' -e 's/[[:space:]]//g') && \
+    echo "APP_VERSION=${APP_VERSION}" > /build/app_version.env && \
+    cat /build/app_version.env
+
+RUN mkdir -p /build/models
+
+COPY ./models/silero_vad.onnx /build/models/silero_vad.onnx
+
+RUN mkdir -p /vosk_cache && \
+    if [ "$VOSK_MODEL_SIZE" = "small" ]; then \
+        if [ ! -d "/vosk_cache/vosk-model-small-cn-0.22" ]; then \
+            echo "Downloading small Vosk model..." && \
+            cd /vosk_cache && \
+            wget https://alphacephei.com/vosk/models/vosk-model-small-cn-0.22.zip && \
+            unzip vosk-model-small-cn-0.22.zip && \
+            rm vosk-model-small-cn-0.22.zip; \
+        else \
+            echo "Using cached small Vosk model"; \
+        fi && \
+        cp -r /vosk_cache/vosk-model-small-cn-0.22 /build/models/vosk-model; \
+    elif [ "$VOSK_MODEL_SIZE" = "medium" ]; then \
+        if [ ! -d "/vosk_cache/vosk-model-cn-0.22" ]; then \
+            echo "Downloading medium Vosk model..." && \
+            cd /vosk_cache && \
+            wget https://alphacephei.com/vosk/models/vosk-model-cn-0.22.zip && \
+            unzip vosk-model-cn-0.22.zip && \
+            rm vosk-model-cn-0.22.zip; \
+        else \
+            echo "Using cached medium Vosk model"; \
+        fi && \
+        cp -r /vosk_cache/vosk-model-cn-0.22 /build/models/vosk-model; \
+    else \
+        if [ ! -d "/vosk_cache/vosk-model-cn-0.22" ]; then \
+            echo "Downloading standard Vosk model..." && \
+            cd /vosk_cache && \
+            wget https://alphacephei.com/vosk/models/vosk-model-cn-0.22.zip && \
+            unzip vosk-model-cn-0.22.zip && \
+            rm vosk-model-cn-0.22.zip; \
+        else \
+            echo "Using cached standard Vosk model"; \
+        fi && \
+        cp -r /vosk_cache/vosk-model-cn-0.22 /build/models/vosk-model; \
+    fi
+
+FROM nvidia/cuda:11.8.0-runtime-ubuntu22.04
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ffmpeg \
+    ca-certificates \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN mkdir -p /opt/java && \
+    curl -L "https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.2%2B13/OpenJDK21U-jre_x64_linux_hotspot_21.0.2_13.tar.gz" \
+    | tar -xz -C /opt/java --strip-components=1
+
+ENV JAVA_HOME=/opt/java
+ENV PATH="${JAVA_HOME}/bin:${PATH}"
+ENV LD_LIBRARY_PATH="/usr/local/cuda/lib64:${LD_LIBRARY_PATH}"
+
+WORKDIR /app
+
+COPY --from=builder /build/target/xiaozhi.server-*.jar /app/
+COPY --from=builder /build/app_version.env /app/
+COPY --from=builder /build/models /app/models
+
+RUN echo '#!/bin/bash\n\
+if [ -f /app/app_version.env ]; then\n\
+  . /app/app_version.env\n\
+fi\n\
+echo "Starting application version: ${APP_VERSION}"\n\
+JAVA_OPTS="${JAVA_OPTS:--Xms4G -Xmx16G -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:ParallelGCThreads=8 -XX:ConcGCThreads=4}"\n\
+echo "Using JAVA_OPTS: ${JAVA_OPTS}"\n\
+java ${JAVA_OPTS} -jar /app/xiaozhi.server-${APP_VERSION}.jar\n\
+' > /app/start.sh && chmod +x /app/start.sh
+
+CMD ["/bin/bash", "/app/start.sh"]

@@ -1,0 +1,130 @@
+server:
+  port: 8091
+
+mybatis:
+  mapper-locations: classpath*:com/xiaozhi/mapper/*.xml
+
+spring:
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      minimum-idle: 10
+      maximum-pool-size: 100
+      auto-commit: true
+      idle-timeout: 300000
+      pool-name: DatebookHikariCP
+      max-lifetime: 1800000
+      connection-timeout: 30000
+      connection-test-query: SELECT 1
+      validation-timeout: 5000
+      leak-detection-threshold: 60000
+      keepalive-time: 30000
+      register-mbeans: true
+
+  cache:
+    type: redis
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      database: 0
+      redisson:
+        config: classpath:redisson-config.yml
+
+  groovy:
+    template:
+      check-template-location: false
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 20480MB
+      max-request-size: 20480MB
+
+  jmx:
+    enabled: false
+
+  websocket:
+    allowed-origins: '*'
+
+  session:
+    cookie:
+      http-only: true
+      secure: false
+      same-site: lax
+      path: /
+
+  threads:
+    virtual:
+      enabled: true
+
+  web:
+    resources:
+      add-mappings: true
+
+  profiles:
+    active: dev
+
+logging:
+  level:
+    root: INFO
+    org.springframework: INFO
+    io.github.imfangs.dify.client.impl.StreamEventDispatcher: ERROR
+    io.netty.handler: ERROR
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+    url: /v3/api-docs
+
+sa-token:
+  token-name: Authorization
+  timeout: 2592000
+  active-timeout: -1
+  is-concurrent: true
+  is-share: false
+  token-style: uuid
+  is-log: false
+  is-read-cookie: true
+  is-read-header: true
+  token-prefix: Bearer
+  jwt-secret-key: xiaozhi-esp32-server-java-jwt-secret-key
+
+check:
+  inactive:
+    session: true
+
+onnx:
+  runtime:
+    inter-op-threads: 16
+    intra-op-threads: 16
+    execution-mode: SEQUENTIAL
+    graph-optimization-level: ALL
+    enable-cpu: true
+    enable-gpu: ${GPU_ENABLED:false}
+    cuda-device-id: ${CUDA_VISIBLE_DEVICES:0}
+    memory-pattern: true
+    gpu-mem-limit: 12884901888
+
+vad:
+  model:
+    path: models/silero_vad.onnx
+    batch-size: 1
+    enable-caching: true
+
+stt:
+  model:
+    cache-size: 1
+    enable-batch-processing: false
+    batch-size: 4
+
+thread-pool:
+  async:
+    core-size: 16
+    max-size: 32
+    queue-capacity: 1000
+    keep-alive-seconds: 60
