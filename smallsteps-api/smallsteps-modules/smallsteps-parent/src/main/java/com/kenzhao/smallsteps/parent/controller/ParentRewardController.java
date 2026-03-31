@@ -1,0 +1,154 @@
+package com.kenzhao.smallsteps.parent.controller;
+
+import cn.dev33.satoken.annotation.SaCheckPermission;
+import com.kenzhao.smallsteps.common.core.domain.R;
+import com.kenzhao.smallsteps.common.core.validate.AddGroup;
+import com.kenzhao.smallsteps.common.core.validate.EditGroup;
+import com.kenzhao.smallsteps.common.excel.utils.ExcelUtil;
+import com.kenzhao.smallsteps.common.idempotent.annotation.RepeatSubmit;
+import com.kenzhao.smallsteps.common.log.annotation.Log;
+import com.kenzhao.smallsteps.common.log.enums.BusinessType;
+import com.kenzhao.smallsteps.common.mybatis.core.page.PageQuery;
+import com.kenzhao.smallsteps.common.mybatis.core.page.TableDataInfo;
+import com.kenzhao.smallsteps.common.web.core.BaseController;
+import com.kenzhao.smallsteps.parent.domain.bo.ParentRewardBo;
+import com.kenzhao.smallsteps.parent.domain.vo.ParentRewardVo;
+import com.kenzhao.smallsteps.parent.service.IParentRewardService;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+/**
+ * 家长奖励配置
+ *
+ * @author 赵轩
+ * @date 2026-02-01
+ */
+@Validated
+@RequiredArgsConstructor
+@RestController
+@RequestMapping("/parent/reward")
+public class ParentRewardController extends BaseController {
+
+    private final IParentRewardService parentRewardService;
+    private final com.kenzhao.smallsteps.parent.service.IScoreService scoreService;
+
+    /**
+     * 查询家长奖励配置列表
+     */
+    @SaCheckPermission("parent:reward:list")
+    @GetMapping("/list")
+    public TableDataInfo<ParentRewardVo> list(ParentRewardBo bo, PageQuery pageQuery) {
+        return parentRewardService.queryPageList(bo, pageQuery);
+    }
+
+    /**
+     * 导出家长奖励配置列表
+     */
+    @SaCheckPermission("parent:reward:export")
+    @Log(title = "家长奖励配置", businessType = BusinessType.EXPORT)
+    @PostMapping("/export")
+    public void export(ParentRewardBo bo, HttpServletResponse response) {
+        List<ParentRewardVo> list = parentRewardService.queryList(bo);
+        ExcelUtil.exportExcel(list, "家长奖励配置", ParentRewardVo.class, response);
+    }
+
+    /**
+     * 获取家长奖励配置详细信息
+     *
+     * @param rewardId 主键
+     */
+    @SaCheckPermission("parent:reward:query")
+    @GetMapping("/{rewardId}")
+    public R<ParentRewardVo> getInfo(@NotNull(message = "主键不能为空") @PathVariable Long rewardId) {
+        return R.ok(parentRewardService.queryById(rewardId));
+    }
+
+    /**
+     * 新增家长奖励配置
+     */
+    @SaCheckPermission("parent:reward:add")
+    @Log(title = "家长奖励配置", businessType = BusinessType.INSERT)
+    @RepeatSubmit()
+    @PostMapping()
+    public R<Void> add(@Validated(AddGroup.class) @RequestBody ParentRewardBo bo) {
+        return toAjax(parentRewardService.insertByBo(bo));
+    }
+
+    /**
+     * 获取用户积分
+     */
+    @GetMapping("/score/{userId}")
+    public R<com.kenzhao.smallsteps.parent.domain.ChildScore> getScore(@PathVariable Long userId) {
+        return R.ok(scoreService.getChildScore(userId));
+    }
+
+    /**
+     * 兑换奖励
+     */
+    @cn.dev33.satoken.annotation.SaCheckLogin
+    @Log(title = "兑换奖励", businessType = BusinessType.UPDATE)
+    @PostMapping("/redeem")
+    public R<Void> redeem(@RequestBody ParentRewardBo bo) {
+        // Require rewardId and userId
+        if (bo.getRewardId() == null || bo.getUserId() == null) {
+            return R.fail("参数缺失");
+        }
+        ParentRewardVo reward = parentRewardService.queryById(bo.getRewardId());
+        if (reward == null) {
+            return R.fail("奖励不存在");
+        }
+        if (reward.getPointsRequired() == null || reward.getPointsRequired() <= 0) {
+            return R.fail("无需积分"); // Or handle as free
+        }
+
+        // Stock check
+        if (reward.getStock() != null && reward.getStock() != -1) {
+            if (reward.getStock() <= 0) {
+                return R.fail("库存不足");
+            }
+        }
+
+        boolean success = scoreService.deductPoints(bo.getUserId(), reward.getPointsRequired(), bo.getRewardId(),
+                "兑换: " + reward.getName());
+        if (success) {
+            // Decrement stock if not infinite
+            if (reward.getStock() != null && reward.getStock() != -1) {
+                ParentRewardBo updateBo = new ParentRewardBo();
+                updateBo.setRewardId(reward.getRewardId());
+                updateBo.setStock(reward.getStock() - 1);
+                parentRewardService.updateByBo(updateBo);
+            }
+            return R.ok();
+        }
+        return R.fail("积分不足");
+    }
+
+    /**
+     * 修改家长奖励配置
+     */
+    @SaCheckPermission("parent:reward:edit")
+    @Log(title = "家长奖励配置", businessType = BusinessType.UPDATE)
+    @RepeatSubmit()
+    @PutMapping()
+    public R<Void> edit(@Validated(EditGroup.class) @RequestBody ParentRewardBo bo) {
+        return toAjax(parentRewardService.updateByBo(bo));
+    }
+
+    /**
+     * 删除家长奖励配置
+     *
+     * @param rewardIds 主键串
+     */
+    @SaCheckPermission("parent:reward:remove")
+    @Log(title = "家长奖励配置", businessType = BusinessType.DELETE)
+    @DeleteMapping("/{rewardIds}")
+    public R<Void> remove(@NotEmpty(message = "主键不能为空") @PathVariable Long[] rewardIds) {
+        return toAjax(parentRewardService.deleteWithValidByIds(List.of(rewardIds), true));
+    }
+}

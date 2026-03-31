@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+
+<html class="light" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Child Scan Sync (CN)</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#8bd0a0",
+                        "background-light": "#f6f7f7",
+                        "background-dark": "#151d17",
+                        "accent-blue": "#E0F2F7", // Soft blue requested
+                        "accent-blue-dark": "#1e293b",
+                    },
+                    fontFamily: {
+                        "display": ["Spline Sans", "Nunito", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "2xl": "4rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom Utilities that might be needed for specific effects not in standard tailwind v3 but keeping it clean */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+        }
+        .dark .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-display bg-accent-blue dark:bg-accent-blue-dark transition-colors duration-300">
+<div class="relative flex min-h-screen w-full flex-col overflow-hidden max-w-md mx-auto shadow-2xl bg-accent-blue dark:bg-accent-blue-dark">
+<!-- Background Decor -->
+<div class="absolute top-[-10%] right-[-20%] w-64 h-64 bg-primary/20 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute bottom-[-10%] left-[-20%] w-80 h-80 bg-blue-300/20 dark:bg-blue-900/20 rounded-full blur-3xl pointer-events-none"></div>
+<!-- Navigation -->
+<header class="relative z-20 flex items-center justify-between p-6 pt-12">
+<button class="group flex items-center justify-center size-14 bg-white dark:bg-slate-800 text-slate-800 dark:text-white rounded-full shadow-lg border-2 border-white dark:border-slate-700 active:scale-90 transition-all duration-200 hover:shadow-xl">
+<span class="material-symbols-outlined text-3xl group-hover:-translate-x-0.5 transition-transform" style="font-variation-settings: 'wght' 600;">arrow_back_ios_new</span>
+</button>
+<div class="flex items-center gap-2 bg-white/60 dark:bg-slate-800/60 backdrop-blur-sm px-4 py-2 rounded-full border border-white/50 dark:border-slate-700/50">
+<div class="size-3 bg-green-400 rounded-full animate-pulse"></div>
+<span class="text-sm font-bold text-slate-700 dark:text-slate-200 tracking-wide">Small Steps</span>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col items-center justify-start relative z-10 px-6 pt-4 pb-10">
+<!-- Robot Character Status -->
+<div class="flex flex-col items-center gap-4 mb-8 w-full">
+<div class="relative size-32">
+<!-- Glow effect behind robot -->
+<div class="absolute inset-0 bg-white/40 dark:bg-primary/20 rounded-full blur-xl scale-125"></div>
+<!-- Robot Image -->
+<div class="relative z-10 w-full h-full bg-center bg-contain bg-no-repeat transition-transform hover:scale-105 duration-500" data-alt="Cute 3D style robot character with round eyes and antennas looking curious" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBpJJ3g0sERAgjHt76qtuQ8fP2hfNEUjSlPMQtFuKo6WIer74WFpTVuFzPO6-Ke2YhLj5n1gFnjDJvOrWCDQ4tjL-RtBJtxhx0Ie_oEjBcaELdIcfljac2bW7qDdtKh8oBGcmiqS3nFHbzX0AnQfvKUz7Wkub7dX9EcUR71Wo1PYvPSrHLKhfdK8cR90abk8mr_2E3OsF3t32o4ZYxLxtyzbXbOkQIdih5FcATRBCyMvi8pS0hDgRC1nlP8wOX05V87067He2l8hzY'); border-radius: 50%;">
+<!-- Floating question mark badge -->
+<div class="absolute -top-2 -right-2 bg-primary text-white size-10 flex items-center justify-center rounded-full border-4 border-accent-blue dark:border-accent-blue-dark shadow-sm">
+<span class="material-symbols-outlined text-xl font-bold">search</span>
+</div>
+</div>
+</div>
+<div class="bg-white/80 dark:bg-slate-800/80 px-6 py-3 rounded-xl shadow-sm backdrop-blur-sm border border-white/50 dark:border-slate-700/50">
+<p class="text-slate-800 dark:text-white text-lg font-bold leading-none tracking-wide text-center">正在寻找 StarBuddy...</p>
+</div>
+</div>
+<!-- Gamified Viewfinder -->
+<div class="relative w-full aspect-square max-w-[340px] mb-8 group cursor-pointer">
+<!-- Viewfinder Outer Glow -->
+<div class="absolute -inset-1 bg-gradient-to-tr from-primary/0 via-primary/50 to-primary/0 rounded-[2.5rem] blur-md opacity-70 animate-pulse"></div>
+<!-- Viewfinder Frame -->
+<div class="relative w-full h-full rounded-[2.5rem] border-[8px] border-primary bg-slate-200 dark:bg-slate-900 overflow-hidden shadow-2xl ring-4 ring-white/30 dark:ring-black/20">
+<!-- Camera Feed Placeholder -->
+<div class="absolute inset-0 bg-cover bg-center opacity-80 mix-blend-overlay" data-alt="Blurred living room background representing camera view" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBxGO-ZPE28ZplHfubN6iaUja36XQ72V-ba6AM6AniFpKsDbz0SD8X0as7gzxgZmYzYe1qBvNq0ZYzPgLH9Ijwt3UuzezKTZ241iyQ0s8m65Mx3XBc7yVb3ei-kH7Kx8wJvE_DTQap0z3STita45NBF6Rqa09a6OpcKIFrZpl2l8IaWxN78ao47TaoSYi8WE_eFaDSHdAZENcYIJviUVHRCfGQxNGMs-YJ8oCQ7RokaoREYtHkIzRaXjNeytDB5ih2Llzfo5b-0iJU');">
+</div>
+<div class="absolute inset-0 bg-slate-500/10 dark:bg-black/40"></div>
+<!-- Scanning Line Animation (Simulated with absolute gradient) -->
+<div class="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-primary/5 via-primary/20 to-transparent border-b-2 border-primary/50 translate-y-[50%] animate-pulse"></div>
+<!-- Corner Brackets (Decorative) -->
+<div class="absolute top-4 left-4 size-8 border-t-4 border-l-4 border-white rounded-tl-xl opacity-80"></div>
+<div class="absolute top-4 right-4 size-8 border-t-4 border-r-4 border-white rounded-tr-xl opacity-80"></div>
+<div class="absolute bottom-4 left-4 size-8 border-b-4 border-l-4 border-white rounded-bl-xl opacity-80"></div>
+<div class="absolute bottom-4 right-4 size-8 border-b-4 border-r-4 border-white rounded-br-xl opacity-80"></div>
+<!-- Center Focus Reticle -->
+<div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+<div class="size-20 border-2 border-dashed border-white/70 rounded-full flex items-center justify-center">
+<div class="size-1 bg-primary rounded-full shadow-[0_0_10px_rgba(139,208,160,1)]"></div>
+</div>
+</div>
+</div>
+<!-- Floating Action Button (Flashlight/Toggle) -->
+<button class="absolute bottom-4 right-4 bg-black/40 hover:bg-black/60 backdrop-blur-md text-white size-12 rounded-full flex items-center justify-center transition-colors border border-white/20">
+<span class="material-symbols-outlined text-xl">flashlight_on</span>
+</button>
+</div>
+<!-- Instructions -->
+<div class="flex flex-col items-center gap-3 w-full text-center">
+<h2 class="text-slate-800 dark:text-white text-3xl font-bold tracking-tight px-4 leading-tight drop-shadow-sm">
+                    把手机靠近 <span class="text-primary">StarBuddy</span>
+</h2>
+<div class="flex items-center gap-3 mt-1">
+<span class="h-px w-8 bg-slate-300 dark:bg-slate-600"></span>
+<p class="text-slate-500 dark:text-slate-400 text-base font-semibold">或者扫描二维码</p>
+<span class="h-px w-8 bg-slate-300 dark:bg-slate-600"></span>
+</div>
+</div>
+<!-- Bottom Actions -->
+<div class="mt-auto pt-8 w-full flex justify-center gap-6">
+<button class="flex flex-col items-center gap-2 group">
+<div class="size-14 rounded-2xl bg-white dark:bg-slate-800 shadow-md flex items-center justify-center text-primary group-active:scale-95 transition-transform border border-slate-100 dark:border-slate-700">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">qr_code_scanner</span>
+</div>
+<span class="text-xs font-bold text-slate-500 dark:text-slate-400">扫码</span>
+</button>
+<button class="flex flex-col items-center gap-2 group">
+<div class="size-14 rounded-2xl bg-primary shadow-lg shadow-primary/30 flex items-center justify-center text-white group-active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-3xl">wifi_tethering</span>
+</div>
+<span class="text-xs font-bold text-primary">NFC 配对</span>
+</button>
+<button class="flex flex-col items-center gap-2 group">
+<div class="size-14 rounded-2xl bg-white dark:bg-slate-800 shadow-md flex items-center justify-center text-slate-400 dark:text-slate-500 group-active:scale-95 transition-transform border border-slate-100 dark:border-slate-700">
+<span class="material-symbols-outlined text-2xl">help</span>
+</div>
+<span class="text-xs font-bold text-slate-500 dark:text-slate-400">帮助</span>
+</button>
+</div>
+</main>
+</div>
+</body></html>

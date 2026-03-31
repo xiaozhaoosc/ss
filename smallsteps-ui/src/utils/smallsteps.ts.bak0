@@ -1,0 +1,18 @@
+// 从 ruoyi.ts 中导出所有需要的函数
+export { parseTime, addDateRange, handleTree, selectDictLabel, selectDictLabels, getNormalPath, tansParams, blobValidate, parseStrEmpty } from './ruoyi';
+
+// 导出默认对象
+export default {
+  parseTime,
+  addDateRange,
+  handleTree,
+  selectDictLabel,
+  selectDictLabels,
+  getNormalPath,
+  tansParams,
+  blobValidate,
+  parseStrEmpty
+};
+
+// 导入需要的函数
+import { parseTime, addDateRange, handleTree, selectDictLabel, selectDictLabels, getNormalPath, tansParams, blobValidate, parseStrEmpty } from './ruoyi';

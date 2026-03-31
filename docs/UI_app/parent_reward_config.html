@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+
+<html class="light" lang="zh-CN">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Parent Reward Config</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#6b9bd1",
+                        "primary-dark": "#5a82b0",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#14191e",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1e2329",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "Noto Sans SC", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        /* Custom scrollbar for cleaner look */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 20px;
+        }
+    </style>
+    <style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark text-[#101419] dark:text-gray-100 font-display transition-colors duration-200">
+    <div
+        class="relative flex h-full min-h-screen w-full flex-col overflow-x-hidden max-w-md mx-auto bg-background-light dark:bg-background-dark shadow-xl">
+        <!-- Header -->
+        <header
+            class="sticky top-0 z-10 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm border-b border-gray-200 dark:border-gray-800 p-4 pb-2">
+            <div class="flex items-center justify-between">
+                <button
+                    class="flex size-10 items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-[#101419] dark:text-white">
+                    <span class="material-symbols-outlined">arrow_back_ios_new</span>
+                </button>
+                <h2 class="text-[#101419] dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">奖励设置</h2>
+                <div class="size-10"></div> <!-- Spacer for visual balance -->
+            </div>
+        </header>
+        <!-- Main Content -->
+        <main class="flex-1 p-4 space-y-6">
+            <!-- Pending Requests Section -->
+            <section aria-labelledby="pending-requests">
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="material-symbols-outlined text-primary">notifications_active</span>
+                    <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wider dark:text-gray-400"
+                        id="pending-requests">待处理请求</h3>
+                </div>
+                <div
+                    class="rounded-lg border border-[#d4dbe3] dark:border-gray-700 bg-surface-light dark:bg-surface-dark p-5 shadow-sm">
+                    <div class="flex flex-col gap-4">
+                        <div class="flex items-start gap-4">
+                            <!-- Avatar placeholder -->
+                            <div
+                                class="relative h-12 w-12 shrink-0 rounded-full bg-blue-100 flex items-center justify-center overflow-hidden">
+                                <span class="material-symbols-outlined text-primary text-2xl">face_6</span>
+                            </div>
+                            <div class="flex flex-col gap-1 flex-1">
+                                <p class="text-[#101419] dark:text-white text-base font-bold leading-tight">乐高玩具套装</p>
+                                <p class="text-[#5b718b] dark:text-gray-400 text-sm font-normal leading-normal">
+                                    <span class="font-medium text-gray-900 dark:text-gray-200">小明</span> 想要兑换
+                                </p>
+                                <div class="inline-flex items-center gap-1 mt-1">
+                                    <span class="material-symbols-outlined text-yellow-500 text-[18px]">star</span>
+                                    <span class="text-sm font-bold text-yellow-600 dark:text-yellow-400">100 颗星</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Action Buttons -->
+                        <div class="flex items-center gap-3 mt-2">
+                            <button
+                                class="flex-1 h-10 items-center justify-center rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent text-gray-600 dark:text-gray-300 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                                拒绝
+                            </button>
+                            <button
+                                class="flex-1 h-10 items-center justify-center rounded-lg bg-primary hover:bg-primary-dark text-white text-sm font-medium shadow-sm transition-colors">
+                                批准
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- History Section (Toggleable) -->
+            <div x-data="{ tab: 'config' }"> <!-- Simulated Alpine logic -->
+                <div class="flex p-1 bg-gray-100 dark:bg-gray-800 rounded-lg mb-4">
+                    <button
+                        class="flex-1 py-1.5 text-xs font-bold rounded-md bg-white dark:bg-surface-dark shadow-sm text-primary">配置奖励</button>
+                    <button
+                        class="flex-1 py-1.5 text-xs font-bold rounded-md text-gray-500 hover:text-gray-700">兑换历史</button>
+                </div>
+            </div>
+
+            <!-- Rewards Config Section -->
+            <section aria-labelledby="rewards-list">
+                <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">list_alt</span>
+                        <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wider dark:text-gray-400"
+                            id="rewards-list">现有奖励</h3>
+                    </div>
+                </div>
+                <!-- Add New Button -->
+                <button
+                    class="w-full mb-6 group flex items-center justify-center gap-2 rounded-lg border-2 border-dashed border-primary/30 bg-primary/5 dark:bg-primary/10 h-12 px-4 text-primary font-bold text-sm hover:bg-primary/10 dark:hover:bg-primary/20 hover:border-primary/50 transition-all active:scale-[0.99]">
+                    <span class="material-symbols-outlined text-[20px]">add_circle</span>
+                    <span>添加新奖励</span>
+                </button>
+                <!-- List Items -->
+                <div class="flex flex-col gap-3">
+                    <!-- Item 1: Zoo Trip -->
+                    <div
+                        class="group flex items-center gap-4 bg-surface-light dark:bg-surface-dark p-4 rounded-lg border border-transparent shadow-sm hover:border-gray-200 dark:hover:border-gray-700 transition-all">
+                        <div
+                            class="flex items-center justify-center rounded-lg bg-[#e9edf1] dark:bg-gray-800 text-primary shrink-0 size-12">
+                            <span class="material-symbols-outlined">local_activity</span>
+                        </div>
+                        <div class="flex flex-col flex-1 min-w-0">
+                            <p class="text-[#101419] dark:text-white text-base font-medium leading-tight truncate">动物园之旅
+                            </p>
+                            <div class="flex items-center gap-1 mt-1">
+                                <span class="material-symbols-outlined text-yellow-500 text-[14px]">star</span>
+                                <span class="text-xs text-gray-500 dark:text-gray-400">50 颗星</span>
+                            </div>
+                        </div>
+                        <div class="shrink-0">
+                            <label
+                                class="relative flex h-[28px] w-[48px] cursor-pointer items-center rounded-full border-none bg-gray-200 dark:bg-gray-700 p-0.5 has-[:checked]:justify-end has-[:checked]:bg-primary transition-colors duration-200">
+                                <div
+                                    class="h-[24px] w-[24px] rounded-full bg-white shadow-sm transition-all duration-200">
+                                </div>
+                                <input checked="" class="hidden" type="checkbox" />
+                            </label>
+                        </div>
+                    </div>
+                    <!-- Item 2: Screen Time -->
+                    <div
+                        class="group flex items-center gap-4 bg-surface-light dark:bg-surface-dark p-4 rounded-lg border border-transparent shadow-sm hover:border-gray-200 dark:hover:border-gray-700 transition-all">
+                        <div
+                            class="flex items-center justify-center rounded-lg bg-[#e9edf1] dark:bg-gray-800 text-primary shrink-0 size-12">
+                            <span class="material-symbols-outlined">smart_display</span>
+                        </div>
+                        <div class="flex flex-col flex-1 min-w-0">
+                            <p class="text-[#101419] dark:text-white text-base font-medium leading-tight truncate">
+                                额外屏幕时间</p>
+                            <div class="flex items-center gap-1 mt-1">
+                                <span class="material-symbols-outlined text-yellow-500 text-[14px]">star</span>
+                                <span class="text-xs text-gray-500 dark:text-gray-400">10 颗星</span>
+                            </div>
+                        </div>
+                        <div class="shrink-0">
+                            <label
+                                class="relative flex h-[28px] w-[48px] cursor-pointer items-center rounded-full border-none bg-gray-200 dark:bg-gray-700 p-0.5 has-[:checked]:justify-end has-[:checked]:bg-primary transition-colors duration-200">
+                                <div
+                                    class="h-[24px] w-[24px] rounded-full bg-white shadow-sm transition-all duration-200">
+                                </div>
+                                <input checked="" class="hidden" type="checkbox" />
+                            </label>
+                        </div>
+                    </div>
+                    <!-- Item 3: Ice Cream -->
+                    <div
+                        class="group flex items-center gap-4 bg-surface-light dark:bg-surface-dark p-4 rounded-lg border border-transparent shadow-sm hover:border-gray-200 dark:hover:border-gray-700 transition-all opacity-70 hover:opacity-100">
+                        <div
+                            class="flex items-center justify-center rounded-lg bg-[#e9edf1] dark:bg-gray-800 text-gray-400 shrink-0 size-12">
+                            <span class="material-symbols-outlined">icecream</span>
+                        </div>
+                        <div class="flex flex-col flex-1 min-w-0">
+                            <p class="text-gray-500 dark:text-gray-400 text-base font-medium leading-tight truncate">
+                                冰淇淋奖励</p>
+                            <div class="flex items-center gap-1 mt-1">
+                                <span class="material-symbols-outlined text-gray-400 text-[14px]">star</span>
+                                <span class="text-xs text-gray-400">15 颗星</span>
+                            </div>
+                        </div>
+                        <div class="shrink-0">
+                            <label
+                                class="relative flex h-[28px] w-[48px] cursor-pointer items-center rounded-full border-none bg-gray-200 dark:bg-gray-700 p-0.5 has-[:checked]:justify-end has-[:checked]:bg-primary transition-colors duration-200">
+                                <div
+                                    class="h-[24px] w-[24px] rounded-full bg-white shadow-sm transition-all duration-200">
+                                </div>
+                                <input class="hidden" type="checkbox" />
+                            </label>
+                        </div>
+                    </div>
+                    <!-- Item 4: Book -->
+                    <div
+                        class="group flex items-center gap-4 bg-surface-light dark:bg-surface-dark p-4 rounded-lg border border-transparent shadow-sm hover:border-gray-200 dark:hover:border-gray-700 transition-all opacity-70 hover:opacity-100">
+                        <div
+                            class="flex items-center justify-center rounded-lg bg-[#e9edf1] dark:bg-gray-800 text-gray-400 shrink-0 size-12">
+                            <span class="material-symbols-outlined">menu_book</span>
+                        </div>
+                        <div class="flex flex-col flex-1 min-w-0">
+                            <p class="text-gray-500 dark:text-gray-400 text-base font-medium leading-tight truncate">
+                                购买新绘本</p>
+                            <div class="flex items-center gap-1 mt-1">
+                                <span class="material-symbols-outlined text-gray-400 text-[14px]">star</span>
+                                <span class="text-xs text-gray-400">30 颗星</span>
+                            </div>
+                        </div>
+                        <div class="shrink-0">
+                            <label
+                                class="relative flex h-[28px] w-[48px] cursor-pointer items-center rounded-full border-none bg-gray-200 dark:bg-gray-700 p-0.5 has-[:checked]:justify-end has-[:checked]:bg-primary transition-colors duration-200">
+                                <div
+                                    class="h-[24px] w-[24px] rounded-full bg-white shadow-sm transition-all duration-200">
+                                </div>
+                                <input class="hidden" type="checkbox" />
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <div class="h-20"></div> <!-- Bottom padding for scroll -->
+        </main>
+        <!-- Bottom Navigation (Simplified for context) -->
+        <nav
+            class="sticky bottom-0 w-full bg-surface-light dark:bg-surface-dark border-t border-gray-200 dark:border-gray-800 pb-safe">
+            <div class="flex justify-around items-center h-16 px-2">
+                <a class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-primary gap-1"
+                    href="#">
+                    <span class="material-symbols-outlined">home</span>
+                    <span class="text-[10px]">首页</span>
+                </a>
+                <a class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-primary gap-1"
+                    href="#">
+                    <span class="material-symbols-outlined">task_alt</span>
+                    <span class="text-[10px]">任务</span>
+                </a>
+                <a class="flex flex-col items-center justify-center w-full h-full text-primary gap-1" href="#">
+                    <span class="material-symbols-outlined fill-current">settings</span>
+                    <span class="text-[10px] font-medium">设置</span>
+                </a>
+                <a class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-primary gap-1"
+                    href="#">
+                    <span class="material-symbols-outlined">person</span>
+                    <span class="text-[10px]">我的</span>
+                </a>
+            </div>
+        </nav>
+    </div>
+    <script>
+        // Simple script to handle checkbox visual state if needed, though pure CSS is handling it mostly.
+        // Tailwind forms plugin handles basic styling.
+    </script>
+
+    <!-- Navigation Links added by Antigravity -->
+    <nav
+        style="position: fixed; bottom: 0; width: 100%; background: white; border-top: 1px solid #eee; display: flex; justify-content: space-around; padding: 10px 0; overflow-x: auto;">
+        <a href="./parent_dashboard.html" style="text-decoration: none; color: #666;">首页</a>
+        <a href="./parent_task_creator.html" style="text-decoration: none; color: #666;">任务</a>
+        <a href="./parent_reward_config.html" style="text-decoration: none; color: #6C9BD2; font-weight: bold;">奖励</a>
+        <a href="./parent_guide.html" style="text-decoration: none; color: #666;">学堂</a>
+        <a href="./parent_insights.html" style="text-decoration: none; color: #666;">洞察</a>
+        <a href="./parent_profile.html" style="text-decoration: none; color: #666;">我的</a>
+    </nav>
+</body>
+
+</html>

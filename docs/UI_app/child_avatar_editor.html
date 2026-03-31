@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+
+<html class="light" lang="zh-CN">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Child Avatar Editor</title>
+  <!-- Fonts -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Noto+Sans+SC:wght@400;500;700&amp;display=swap"
+    rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <!-- Theme Configuration -->
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#2b6cee",
+            "primary-dark": "#1a4bb0",
+            "background-light": "#f6f6f8",
+            "background-dark": "#101622",
+            "surface-light": "#ffffff",
+            "surface-dark": "#1e293b",
+          },
+          fontFamily: {
+            "display": ["Plus Jakarta Sans", "Noto Sans SC", "sans-serif"],
+            "body": ["Plus Jakarta Sans", "Noto Sans SC", "sans-serif"]
+          },
+          borderRadius: {
+            "DEFAULT": "1rem",
+            "lg": "2rem",
+            "xl": "3rem",
+            "full": "9999px"
+          },
+          backgroundImage: {
+            'adventure-gradient': 'linear-gradient(180deg, #E0F2FE 0%, #f6f6f8 100%)',
+            'adventure-gradient-dark': 'linear-gradient(180deg, #1e293b 0%, #101622 100%)',
+          }
+        },
+      },
+    }
+  </script>
+  <style>
+    /* Custom scrollbar hiding */
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    /* Floating animation for stars/background elements */
+    @keyframes float {
+      0% {
+        transform: translateY(0px);
+      }
+
+      50% {
+        transform: translateY(-10px);
+      }
+
+      100% {
+        transform: translateY(0px);
+      }
+    }
+
+    .animate-float {
+      animation: float 4s ease-in-out infinite;
+    }
+
+    .animate-float-delayed {
+      animation: float 5s ease-in-out infinite;
+      animation-delay: 1s;
+    }
+  </style>
+  <style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+
+<body
+  class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display overflow-x-hidden selection:bg-primary selection:text-white">
+  <!-- Main Container -->
+  <div class="relative flex h-full min-h-screen w-full flex-col group/design-root transition-colors duration-300">
+    <!-- Background Decor: Floating Stars/Blobs -->
+    <div class="absolute inset-0 bg-adventure-gradient dark:bg-adventure-gradient-dark -z-10"></div>
+    <div class="absolute top-20 left-10 text-primary/20 dark:text-white/10 animate-float pointer-events-none">
+      <span class="material-symbols-outlined text-4xl">star</span>
+    </div>
+    <div class="absolute top-40 right-10 text-primary/10 dark:text-white/5 animate-float-delayed pointer-events-none">
+      <span class="material-symbols-outlined text-6xl">cloud</span>
+    </div>
+    <div class="absolute bottom-1/3 left-1/4 text-yellow-400/30 animate-float pointer-events-none">
+      <span class="material-symbols-outlined text-2xl">star</span>
+    </div>
+    <!-- Top Header -->
+    <header class="flex items-center p-4 pt-6 justify-between z-10">
+      <button
+        class="flex items-center justify-center size-12 bg-white dark:bg-surface-dark rounded-full shadow-sm active:scale-95 transition-transform text-slate-800 dark:text-white">
+        <span class="material-symbols-outlined">arrow_back</span>
+      </button>
+      <h2
+        class="text-slate-900 dark:text-white text-xl font-extrabold tracking-tight flex-1 text-center pr-12 drop-shadow-sm">
+        角色装扮
+      </h2>
+    </header>
+    <!-- Main Content Area -->
+    <main class="flex-1 flex flex-col items-center justify-between w-full max-w-md mx-auto pb-6">
+      <!-- Character Preview Section -->
+      <div class="flex-1 w-full flex items-center justify-center relative min-h-[360px] p-4">
+        <!-- Floating Island Base Shadow -->
+        <div
+          class="absolute bottom-8 w-40 h-8 bg-black/10 dark:bg-black/40 rounded-[100%] blur-xl transform scale-x-150">
+        </div>
+        <!-- Robot Avatar -->
+        <div class="relative w-full h-full flex items-center justify-center animate-float">
+          <!-- Image Placeholder: Robot on Island -->
+          <div class="w-full h-full max-h-[400px] bg-contain bg-center bg-no-repeat z-10 drop-shadow-2xl filter"
+            data-alt="3D cute robot character standing on a small floating grassy island"
+            style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC-gkh44KgB_3ITvIh-AHFFFgbWH2JQFSh9SjavpcwsVlab4H7klttYh0kRXZBtf-9_GkaGVvBhNGQy0CrLpJN-cVlMmWI4saD906MCVBNVYt7tbiRgSK0GWsIowEZ-wr1BQISc8tg3EM-cLKcrHZsr7jN3_LW2oDniMEHCo4nis31sRXgEN6LE6akBtKQKmiTE75VZPZeAijuYbx-g3ajTjDWs51xjmekeSsLggif3J_UfmEePFG2ElXegYNOWeuV3SdCbfqe3nK8');">
+          </div>
+        </div>
+      </div>
+      <!-- Customization Panel -->
+      <div class="w-full flex flex-col gap-6 z-20 px-4">
+        <!-- Category Tabs (Pill Shape) -->
+        <div class="flex justify-center w-full">
+          <div
+            class="flex h-14 items-center justify-center rounded-full bg-white dark:bg-surface-dark p-1.5 shadow-sm w-full max-w-[340px]">
+            <!-- Tab 1: Hats (Active) -->
+            <label
+              class="group flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-full px-4 transition-all duration-300 has-[:checked]:bg-primary has-[:checked]:shadow-md has-[:checked]:text-white text-slate-500 dark:text-slate-400 font-bold text-sm">
+              <span class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[20px] group-has-[:checked]:text-white">checkroom</span>
+                <span class="truncate">帽子</span>
+              </span>
+              <input checked="" class="invisible w-0 fixed" name="category" type="radio" value="hats" />
+            </label>
+            <!-- Tab 2: Colors -->
+            <label
+              class="group flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-full px-4 transition-all duration-300 has-[:checked]:bg-primary has-[:checked]:shadow-md has-[:checked]:text-white text-slate-500 dark:text-slate-400 font-bold text-sm">
+              <span class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[20px] group-has-[:checked]:text-white">palette</span>
+                <span class="truncate">颜色</span>
+              </span>
+              <input class="invisible w-0 fixed" name="category" type="radio" value="colors" />
+            </label>
+            <!-- Tab 3: Accessories -->
+            <label
+              class="group flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-full px-4 transition-all duration-300 has-[:checked]:bg-primary has-[:checked]:shadow-md has-[:checked]:text-white text-slate-500 dark:text-slate-400 font-bold text-sm">
+              <span class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[20px] group-has-[:checked]:text-white">backpack</span>
+                <span class="truncate">配饰</span>
+              </span>
+              <input class="invisible w-0 fixed" name="category" type="radio" value="accessories" />
+            </label>
+          </div>
+        </div>
+        <!-- Items Carousel -->
+        <div class="w-full overflow-hidden">
+          <div class="flex overflow-x-auto hide-scrollbar pb-2 px-2 snap-x">
+            <div class="flex items-start gap-4">
+              <!-- Item 1 (Selected) -->
+              <div class="flex flex-col items-center gap-2 group cursor-pointer snap-center">
+                <div
+                  class="relative w-24 h-24 rounded-[20px] bg-white dark:bg-surface-dark shadow-sm border-4 border-primary p-2 flex items-center justify-center transition-transform transform active:scale-95">
+                  <div class="absolute -top-2 -right-2 bg-primary text-white rounded-full p-0.5 shadow-sm z-10">
+                    <span class="material-symbols-outlined text-sm font-bold">check</span>
+                  </div>
+                  <div class="w-full h-full bg-center bg-contain bg-no-repeat" data-alt="Colorful baseball cap icon"
+                    style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCGb0hPJ1yEggcrGMM7jhMVzxLdWVGFaVtMFSU06VQzpk7Fja155MID9Z1NXqHjBoftUzpC33BKDXDbY3_GaMo0RftONw-fC4XIQ8tBIP4yQKSQwSCZtvdAkr8eVzS_c9tmhUvE1waTvMYxqCpOWxqyKqMpiwqYrybE5m1qDgv9MnI8GhWwbiWAxp8bEZFove6Q7a835ATkDgKiPfWGmM0UWqlxtkK_noYmgZfeaeCvmrKY8gYW60-Ioth-z9hw26U8R5t113SL-IY');">
+                  </div>
+                </div>
+                <p class="text-primary font-bold text-sm leading-tight">棒球帽</p>
+              </div>
+              <!-- Item 2 -->
+              <div class="flex flex-col items-center gap-2 group cursor-pointer snap-center">
+                <div
+                  class="w-24 h-24 rounded-[20px] bg-white dark:bg-surface-dark shadow-sm border-4 border-transparent hover:border-primary/30 p-2 flex items-center justify-center transition-transform transform active:scale-95">
+                  <div class="w-full h-full bg-center bg-contain bg-no-repeat" data-alt="Space helmet icon"
+                    style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAPQ1Q_iXRfKzEer3Eix2PvwUmnIKia0SfURR130wL7hYUhR5HDk6iMltpG_Q-BGZcjYnrvMfqAsyUwmUZuM8YBj1I0u_Q_OZBEv4Xpjbc2Kz_ddeALwEMELOZr7P0RQRKmWUcilIlMb7C2c6t8ABh2KBxYHmMBvBQp0oIlf89ygwkodkYfOM9xNaDg9yj4dIJszIk0Cx2bRvqLaIyBQC1okfIFOa_48-TI_RZwYEOfflMr2lC0QRLc1gQruQ0-XLGQZxm7337Tye8');">
+                  </div>
+                </div>
+                <p class="text-slate-600 dark:text-slate-300 font-medium text-sm leading-tight">头盔</p>
+              </div>
+              <!-- Item 3 -->
+              <div class="flex flex-col items-center gap-2 group cursor-pointer snap-center">
+                <div
+                  class="w-24 h-24 rounded-[20px] bg-white dark:bg-surface-dark shadow-sm border-4 border-transparent hover:border-primary/30 p-2 flex items-center justify-center transition-transform transform active:scale-95">
+                  <div class="w-full h-full bg-center bg-contain bg-no-repeat" data-alt="Pirate hat icon"
+                    style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD_oqOPHEjWV7Y7hXNWraHLdcscsln_NrVC_4wOIOCiK8fhra9DEk9bxjwd3gJFPB6rVVpp5kiwKL_TM0KDQXfpoQvpVA5PUQBS2TKfLlvJWyc0SG29hiP1IcL6SxTjsi6ntUNaCQs9t-uBWH4HDEwWQEud6_2XXjp7s4Q05YP9jjGSv5vV9BIN1t-24oyz8AMO6R1-j0YNwpiRe4dX5reJXWbBblNcwnOxDaATAvy8L5qcv8H0NEU9OFXQEETtoKd4tSWs_D2FG_4');">
+                  </div>
+                </div>
+                <p class="text-slate-600 dark:text-slate-300 font-medium text-sm leading-tight">海盗帽</p>
+              </div>
+              <!-- Item 4 -->
+              <div class="flex flex-col items-center gap-2 group cursor-pointer snap-center">
+                <div
+                  class="w-24 h-24 rounded-[20px] bg-white dark:bg-surface-dark shadow-sm border-4 border-transparent hover:border-primary/30 p-2 flex items-center justify-center transition-transform transform active:scale-95">
+                  <div class="w-full h-full bg-center bg-contain bg-no-repeat" data-alt="Bamboo propeller icon"
+                    style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCuH4FUEONvLDTjTUfzdEJ7MtG0S8UOvohWHPmDE-nK6K2unfujNyWsUcGw_Ce8R_I_J1d-R3Uwbj3V5V3R7xSNwMX-yZqsua-1mSOb3nihsz9UmYmhX63Pa78bfxdeOzSFnZ095bX3ABuC-7ZLW4tWnBGNGY0faKGF0uUnk6DL_ZY5PNEmtHKTyKV_DJKGvkUA4944Aa42j3l8G-M48Hs6rF7E2_Xi7-0VqE17TimDxUv6a2LDsY2dqTy6Z1dd3Tt2gDzdUMaoupU');">
+                  </div>
+                </div>
+                <p class="text-slate-600 dark:text-slate-300 font-medium text-sm leading-tight">竹蜻蜓</p>
+              </div>
+              <!-- Item 5 -->
+              <div class="flex flex-col items-center gap-2 group cursor-pointer snap-center pr-4">
+                <div
+                  class="w-24 h-24 rounded-[20px] bg-white dark:bg-surface-dark shadow-sm border-4 border-transparent hover:border-primary/30 p-2 flex items-center justify-center transition-transform transform active:scale-95">
+                  <div class="w-full h-full bg-center bg-contain bg-no-repeat opacity-50" data-alt="Locked crown icon"
+                    style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDNgFuQEdI3ZVf_oLzVP-lQ52VmnyH4GY9TzH9Jea0xYqUa5r7fw5ss3Fc2-Frk-cUschc9G-5-Lv4dsHVD7AkHBoiYFzwHhQPonITMi8LIIjdqoY-kaXLia88hq-c714W1lTQkGdxuGdlBWHS_RmmJNi2txygDR911K8bDitMqOWBDd6Q1Fw3LWgBj0Qx_2vIbQa5QQLC95AzdR4_KOFsG4FsAK415ePqVmozzxNKx0tHaPWxKHbDvBim6EUXGN5RJCwEe8agGvHQ');">
+                  </div>
+                  <div class="absolute inset-0 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-slate-400">lock</span>
+                  </div>
+                </div>
+                <p class="text-slate-400 dark:text-slate-500 font-medium text-sm leading-tight">皇冠</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Save Button -->
+        <div class="w-full pt-2 pb-4">
+          <button
+            class="w-full h-14 rounded-full bg-primary hover:bg-primary-dark text-white text-lg font-bold tracking-wide shadow-lg shadow-primary/30 transform active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined">save</span>
+            保存
+          </button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Gamified Nav added by Antigravity -->
+  <nav
+    style="position: fixed; bottom: 0; width: 100%; background: #F0F9FF; border-top: 2px solid #8CD0A1; display: flex; justify-content: space-around; padding: 15px 0; border-radius: 20px 20px 0 0; box-shadow: 0 -4px 10px rgba(0,0,0,0.05); z-index: 50;">
+    <a href="./child_home.html"
+      style="text-decoration: none; color: #111827; background: #FFF; border: 2px solid #FFD54F; padding: 6px 14px; border-radius: 20px;">🏠
+      主页</a>
+    <a href="./child_task_execute.html"
+      style="text-decoration: none; color: #111827; background: #FFF; border: 2px solid #FFD54F; padding: 6px 14px; border-radius: 20px;">🎯
+      任务</a>
+    <a href="./child_reward_shop.html"
+      style="text-decoration: none; color: #111827; background: #FFF; border: 2px solid #FFD54F; padding: 6px 14px; border-radius: 20px;">🎁
+      商店</a>
+    <a href="./child_avatar_editor.html"
+      style="text-decoration: none; color: #111827; font-weight: bold; background: #FFD54F; padding: 8px 16px; border-radius: 20px; box-shadow: 0 4px 0 #E0A800;">🤖
+      换装</a>
+  </nav>
+</body>
+
+</html>

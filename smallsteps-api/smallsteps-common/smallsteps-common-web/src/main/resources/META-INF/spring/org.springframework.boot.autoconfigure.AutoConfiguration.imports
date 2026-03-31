@@ -1,0 +1,5 @@
+com.kenzhao.smallsteps.common.web.config.CaptchaConfig
+com.kenzhao.smallsteps.common.web.config.FilterConfig
+com.kenzhao.smallsteps.common.web.config.I18nConfig
+com.kenzhao.smallsteps.common.web.config.ResourcesConfig
+com.kenzhao.smallsteps.common.web.config.UndertowConfig

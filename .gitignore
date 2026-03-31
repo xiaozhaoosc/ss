@@ -1,0 +1,62 @@
+# === 论文/文档目录 ===
+/论文/
+
+# === 内部工具与脚本 (敏感信息风险) ===
+**/tools/
+
+# === IDE & 系统文件 ===
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# === 依赖与构建输出 (Node.js/Vue) ===
+node_modules/
+dist/
+build/
+.npm/
+.pnpm-debug.log*
+stats.json
+
+# === 依赖与构建输出 (Java/Maven) ===
+target/
+*.class
+*.jar
+*.war
+*.ear
+.mvn/wrapper/maven-wrapper.jar
+
+# === 依赖与构建输出 (Python) ===
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+env/
+.pytest_cache/
+
+# === Docker & 日志 ===
+*.log
+logs/
+pg_data/
+redis_data/
+rabbitmq_data/
+emqx_data/
+minio_data/
+n8n_data/
+.docker/
+
+# === 敏感信息 (虽然已脱敏，但建议继续忽略本地专用文件) ===
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# === ESP32 / C++ ===
+build/
+sdkconfig
+sdkconfig.old
+managed_components/

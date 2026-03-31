@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html class="light" lang="zh-CN">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Small Steps - 成就墙</title>
+    <!-- Material Symbols -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet" />
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- Theme Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#8CD0A1", // Mint Green
+                        "accent": "#F5D76E",  // Banana Yellow
+                        "bg-soft": "#F0F9FF",
+                    },
+                    fontFamily: {
+                        "display": ["Nunito", "sans-serif"]
+                    },
+                    boxShadow: {
+                        'bouncy': '0 6px 0px 0px rgba(0,0,0,0.1)',
+                        'card': '0 4px 12px rgba(0,0,0,0.05)',
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-8px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+
+<body class="font-display bg-bg-soft text-gray-800 antialiased pb-24">
+
+    <!-- Header: Level Progress -->
+    <div class="bg-primary pt-8 pb-12 px-6 rounded-b-[2.5rem] shadow-bouncy relative overflow-hidden">
+        <div
+            class="absolute top-0 left-0 w-full h-full opacity-20 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]">
+        </div>
+
+        <div class="relative z-10 flex flex-col items-center">
+            <!-- Level Badge -->
+            <div class="bg-white p-2 rounded-full border-4 border-yellow-300 shadow-lg mb-2">
+                <span class="material-symbols-outlined text-4xl text-yellow-500"
+                    style="font-variation-settings: 'FILL' 1;">military_tech</span>
+            </div>
+            <h1 class="text-2xl font-black text-white mb-1">Lv.3 探索者</h1>
+            <p class="text-white/90 text-sm font-bold mb-4">下一级: 宇航员 (还差 50 ⭐️)</p>
+
+            <!-- Progress Bar -->
+            <div class="w-full max-w-xs bg-black/10 rounded-full h-4 p-1">
+                <div class="bg-yellow-300 h-full rounded-full w-[60%] shadow-sm relative">
+                    <!-- Shine effect -->
+                    <div class="absolute top-0 right-0 w-2 h-full bg-white/50 rounded-full animate-pulse"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content: Badge Grid -->
+    <main class="px-4 -mt-6 relative z-10 grid grid-cols-2 gap-4 max-w-md mx-auto">
+
+        <!-- Badge 1: Early Bird (Unlocked) -->
+        <div class="bg-white p-4 rounded-3xl shadow-bouncy flex flex-col items-center text-center animate-float"
+            style="animation-delay: 0s;">
+            <div class="bg-orange-100 p-3 rounded-2xl mb-2 text-orange-500">
+                <span class="material-symbols-outlined text-4xl"
+                    style="font-variation-settings: 'FILL' 1;">wb_sunny</span>
+            </div>
+            <h3 class="font-black text-gray-800">早起鸟</h3>
+            <p class="text-xs text-gray-500 font-bold mt-1">7:00 前完成打卡</p>
+            <span class="mt-2 bg-green-100 text-green-700 text-[10px] px-2 py-0.5 rounded-full font-bold">已获得 于
+                10/24</span>
+        </div>
+
+        <!-- Badge 2: Bookworm (Unlocked) -->
+        <div class="bg-white p-4 rounded-3xl shadow-bouncy flex flex-col items-center text-center animate-float"
+            style="animation-delay: 0.5s;">
+            <div class="bg-blue-100 p-3 rounded-2xl mb-2 text-blue-500">
+                <span class="material-symbols-outlined text-4xl"
+                    style="font-variation-settings: 'FILL' 1;">menu_book</span>
+            </div>
+            <h3 class="font-black text-gray-800">小书虫</h3>
+            <p class="text-xs text-gray-500 font-bold mt-1">阅读累计 5 小时</p>
+            <span class="mt-2 bg-green-100 text-green-700 text-[10px] px-2 py-0.5 rounded-full font-bold">已获得 于
+                11/02</span>
+        </div>
+
+        <!-- Badge 3: Focus Master (Locked) -->
+        <div
+            class="bg-gray-100 p-4 rounded-3xl border-2 border-dashed border-gray-300 flex flex-col items-center text-center grayscale opacity-70">
+            <div class="bg-gray-200 p-3 rounded-2xl mb-2 text-gray-400 relative">
+                <span class="material-symbols-outlined text-4xl">self_improvement</span>
+                <div class="absolute -top-1 -right-1 bg-gray-500 rounded-full p-1 border-2 border-white">
+                    <span class="material-symbols-outlined text-white text-xs">lock</span>
+                </div>
+            </div>
+            <h3 class="font-bold text-gray-500">专注大师</h3>
+            <p class="text-xs text-gray-400 font-bold mt-1">连续专注 25m</p>
+        </div>
+
+        <!-- Badge 4: Astronaut (Locked) -->
+        <div
+            class="bg-gray-100 p-4 rounded-3xl border-2 border-dashed border-gray-300 flex flex-col items-center text-center grayscale opacity-70">
+            <div class="bg-gray-200 p-3 rounded-2xl mb-2 text-gray-400 relative">
+                <span class="material-symbols-outlined text-4xl">rocket_launch</span>
+                <div class="absolute -top-1 -right-1 bg-gray-500 rounded-full p-1 border-2 border-white">
+                    <span class="material-symbols-outlined text-white text-xs">lock</span>
+                </div>
+            </div>
+            <h3 class="font-bold text-gray-500">宇航员</h3>
+            <p class="text-xs text-gray-400 font-bold mt-1">升至 Lv.4 解锁</p>
+        </div>
+
+    </main>
+
+    <!-- Navigation -->
+    <nav
+        style="position: fixed; bottom: 0; width: 100%; background: #F0F9FF; border-top: 2px solid #8CD0A1; display: flex; justify-content: space-around; padding: 15px 0; border-radius: 20px 20px 0 0; box-shadow: 0 -4px 10px rgba(0,0,0,0.05); z-index: 50;">
+        <a href="./child_home.html"
+            style="text-decoration: none; color: #111827; background: #FFF; border: 2px solid #FFD54F; padding: 6px 14px; border-radius: 20px;">🏠
+            主页</a>
+        <a href="./child_task_execute.html"
+            style="text-decoration: none; color: #111827; background: #FFF; border: 2px solid #FFD54F; padding: 6px 14px; border-radius: 20px;">🎯
+            任务</a>
+        <a href="./child_reward_shop.html"
+            style="text-decoration: none; color: #111827; background: #FFF; border: 2px solid #FFD54F; padding: 6px 14px; border-radius: 20px;">🎁
+            商店</a>
+        <a href="./child_avatar_editor.html"
+            style="text-decoration: none; color: #111827; background: #FFF; border: 2px solid #FFD54F; padding: 6px 14px; border-radius: 20px;">🤖
+            换装</a>
+    </nav>
+
+</body>
+
+</html>

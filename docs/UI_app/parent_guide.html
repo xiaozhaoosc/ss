@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+
+<html class="light" lang="zh-CN">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Parenting Guide</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&amp;family=Noto+Sans+SC:wght@400;500;700&amp;display=swap"
+        rel="stylesheet" />
+    <!-- Material Symbols -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- Theme Configuration -->
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#6C9BD2",
+                        "primary-dark": "#5a82b3",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#121720",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1c222e",
+                        "text-main": "#0f131a",
+                        "text-sub": "#556b91",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "Noto Sans SC", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+    <style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark font-display text-text-main dark:text-gray-100">
+    <div class="relative flex h-full min-h-screen w-full flex-col overflow-x-hidden pb-24">
+        <!-- Top App Bar -->
+        <header
+            class="sticky top-0 z-50 flex items-center bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm p-4 pb-2 justify-between border-b border-gray-200/50 dark:border-gray-800/50">
+            <div class="flex size-12 shrink-0 items-center justify-start cursor-pointer text-text-main dark:text-white">
+                <span class="material-symbols-outlined text-[24px]">arrow_back</span>
+            </div>
+            <h2
+                class="text-text-main dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center">
+                育儿指南</h2>
+            <div class="flex size-12 items-center justify-end">
+                <button
+                    class="flex cursor-pointer items-center justify-center rounded-lg h-12 bg-transparent text-text-main dark:text-white min-w-0 p-0">
+                    <span class="material-symbols-outlined text-[24px]">notifications</span>
+                </button>
+            </div>
+        </header>
+        <!-- Main Content -->
+        <main class="flex flex-col gap-4 p-4">
+            <!-- Daily Knowledge Capsule -->
+            <section>
+                <div
+                    class="flex items-stretch justify-between gap-4 rounded-lg bg-surface-light dark:bg-surface-dark p-4 shadow-sm border border-gray-100 dark:border-gray-800 transition-colors">
+                    <div class="flex flex-col gap-2 flex-[2_2_0px] justify-between">
+                        <div>
+                            <span
+                                class="inline-block px-2 py-0.5 rounded bg-primary/10 text-primary text-xs font-bold mb-1">今日推荐</span>
+                            <p class="text-text-main dark:text-gray-100 text-base font-bold leading-tight mb-1">每日知识胶囊
+                            </p>
+                            <p class="text-text-sub dark:text-gray-400 text-sm font-normal leading-normal line-clamp-2">
+                                1分钟速读：如何应对宝宝的第一次发烧，新手父母必读指南。</p>
+                        </div>
+                        <div class="flex items-center gap-1 text-primary text-xs font-medium">
+                            <span class="material-symbols-outlined text-[16px]">schedule</span>
+                            <span>1 分钟阅读</span>
+                        </div>
+                    </div>
+                    <div class="w-24 sm:w-32 bg-center bg-no-repeat bg-cover rounded-lg shrink-0 aspect-square"
+                        data-alt="Soft illustration of a baby sleeping peacefully"
+                        style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB3sfA_OKl-vRZHVJhzot-_A_BV4UYPMSBAAKlOrI5UOPE0rJviCUxT4RDvT7F_gA5SJf4F9TQdIAn9xyViryfkpApQuUpNmz9SXvUC-0NZVjOtTx00-5TkbFn0VFTzJ6BbOIm4n2y7Rybr93vyQcQ50GF9Csten969ZeJ4JGn9vheXUbJCOCWsZwpfX9cKCHBfkCpQVlSkT6sT8J1Q9WJTgFyxm-IAOjHlgJnHyQKDLvcfCTvX8EQAxCFtdumKzjo6LPpcFE9Z_jw");'>
+                    </div>
+                </div>
+            </section>
+            <!-- SOS Button -->
+            <section class="flex justify-center py-2">
+                <button
+                    class="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-4 bg-red-50 hover:bg-red-100 dark:bg-red-900/20 dark:hover:bg-red-900/30 text-red-600 dark:text-red-400 text-sm font-bold leading-normal tracking-[0.015em] transition-colors border border-red-100 dark:border-red-900/30 shadow-sm gap-2">
+                    <span class="material-symbols-outlined">sos</span>
+                    <span class="truncate text-base">紧急援助 (SOS)</span>
+                </button>
+            </section>
+            <!-- Section Header: Community Stories -->
+            <section>
+                <div class="flex items-center justify-between pb-2 pt-2">
+                    <h3 class="text-text-main dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">社区故事
+                    </h3>
+                    <button class="text-primary text-sm font-medium flex items-center gap-0.5">
+                        全部
+                        <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+                    </button>
+                </div>
+            </section>
+            <!-- Featured Story Card -->
+            <section>
+                <div class="group relative overflow-hidden rounded-lg shadow-sm">
+                    <div class="bg-cover bg-center flex flex-col items-stretch justify-end pt-[160px] transition-transform duration-500 group-hover:scale-105"
+                        data-alt="Mother holding baby looking out window at sunset"
+                        style='background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 50%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuA1jUl73hfsIHEaT6qIx3sQwFBeBfMre2WEfzWdkcnxT6vdv7ftJveG6ggqmsEdxo7ReT8Wez3N3L3PlgOIuOqVpGx2kUAFneTMJ-rNuNqNn3BIzX7RIfAdUAv0VciwVxciA0toJcDsk-6EZvO5xa5Hyxf76crgNqOg56p6lDbUfCIfavkCxi21esWarrexLEgyqbsMniRNm222NtuEz5GnC3Zim22bPPgzc0LoJs_M-BqZ-NeP6_0eh9APesoEXjUnQ6ChIa0feis");'>
+                        <div class="flex w-full items-end justify-between gap-4 p-4 relative z-10">
+                            <div class="flex max-w-[440px] flex-1 flex-col gap-1">
+                                <p
+                                    class="text-white tracking-light text-xl font-bold leading-tight shadow-black drop-shadow-sm">
+                                    新手妈妈的深夜日记</p>
+                                <p class="text-gray-200 text-sm font-medium leading-normal line-clamp-1">
+                                    面对产后焦虑，我是怎么走出来的...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- Secondary Stories List -->
+            <section class="flex flex-col gap-3">
+                <!-- Story Item 1 -->
+                <div
+                    class="flex items-center gap-3 rounded-lg bg-surface-light dark:bg-surface-dark p-3 shadow-sm border border-gray-100 dark:border-gray-800">
+                    <div class="w-20 h-20 bg-center bg-no-repeat bg-cover rounded-lg shrink-0"
+                        data-alt="Healthy baby food arrangement on table"
+                        style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBJm8RhW6WhTXKgWIWvBMosZmFk6T8ZUso5598ErGo08UIzKuTIwFwCnWk98FjHdKxUJG3kTXgMyu1e4aImksStFjUSbHXcQrAP-Z2a6xolobSiZ1JFEuobnsVaAsez5GnnNZLwTt33pp6GDGeu_98ZXHzZ15wQB8M5HjpZKapXGbVytp11NVHRw0Sb3g1XqxVZFLU7sgXNZz0Zm56f-4tqSkua_JlG-dTkN1yH8b2W3OnDP7WXqnCPiN_g2OsZ-gayKDtj9DIr5KQ");'>
+                    </div>
+                    <div class="flex flex-col gap-1 flex-1 overflow-hidden">
+                        <div class="flex items-center gap-2">
+                            <span
+                                class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300">营养</span>
+                            <span class="text-xs text-gray-400 dark:text-gray-500">2小时前</span>
+                        </div>
+                        <p class="text-text-main dark:text-gray-100 text-sm font-bold leading-tight truncate">
+                            宝宝辅食添加全攻略：从第一口米粉开始</p>
+                        <p class="text-text-sub dark:text-gray-400 text-xs font-normal truncate">科学喂养，让宝宝爱上吃饭不挑食。</p>
+                    </div>
+                </div>
+                <!-- Story Item 2 -->
+                <div
+                    class="flex items-center gap-3 rounded-lg bg-surface-light dark:bg-surface-dark p-3 shadow-sm border border-gray-100 dark:border-gray-800">
+                    <div class="w-20 h-20 bg-center bg-no-repeat bg-cover rounded-lg shrink-0"
+                        data-alt="Father playing with toddler with wooden blocks"
+                        style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCgyKpYz7mWh6U4oMjBw6dj8kh5sMuKFC0gkqNFaA5SEZw-g-UKXCBGsiYEPXDtqI9mVeKNFbRob0h3bMw0LOxdvgTFhqVUmHxl5tMffi0XYHwlaIKGXHXCXfSTnxS4rOLbYNw4Yh3VHUv8Om5bTMF4sGw-tFkB3QLFOSTBIXdmqk2IqNyY7zEfd0QnkgFtOlPgr3fEEJndpA0irDz2TlHFxwPqXMyebLTmWHi_p_sBIoQM1GUuPBIr5k113DabpUgLR7J8GjjEbVI");'>
+                    </div>
+                    <div class="flex flex-col gap-1 flex-1 overflow-hidden">
+                        <div class="flex items-center gap-2">
+                            <span
+                                class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-300">早教</span>
+                            <span class="text-xs text-gray-400 dark:text-gray-500">5小时前</span>
+                        </div>
+                        <p class="text-text-main dark:text-gray-100 text-sm font-bold leading-tight truncate">
+                            高质量陪伴：爸爸带娃的10个小游戏</p>
+                        <p class="text-text-sub dark:text-gray-400 text-xs font-normal truncate">放下手机，和孩子一起探索世界。</p>
+                    </div>
+                </div>
+                <!-- Story Item 3 -->
+                <div
+                    class="flex items-center gap-3 rounded-lg bg-surface-light dark:bg-surface-dark p-3 shadow-sm border border-gray-100 dark:border-gray-800">
+                    <div class="w-20 h-20 bg-center bg-no-repeat bg-cover rounded-lg shrink-0"
+                        data-alt="Toddler walking in park holding parent hand"
+                        style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA0-HJfxBXVRFH1idJBIKzP1Wp0NVrKMcHr6BjfHEoB_x8LuJ3CxTXJuRDW6GDoxs3v2Qe3vQBOcaVMlhnyE8O_6Oz0_WdFXI3dSiDARKZT6lSdLcqHM_P8ZTEmKSxBVIAgKQnybQrEeF2284mnVN5CO5Dc9_hHXDgkonMOUOhzUmxeLOynr1biuYsJfspdGx49EhsysQtSmBiKMKQ-ehC6pS7ui-yNEPpNwKmYir4GfUGDNlef6WwEwTkuYRHPgZ0-8Vd9TvewMZ0");'>
+                    </div>
+                    <div class="flex flex-col gap-1 flex-1 overflow-hidden">
+                        <div class="flex items-center gap-2">
+                            <span
+                                class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-purple-50 dark:bg-purple-900/30 text-purple-600 dark:text-purple-300">成长</span>
+                            <span class="text-xs text-gray-400 dark:text-gray-500">1天前</span>
+                        </div>
+                        <p class="text-text-main dark:text-gray-100 text-sm font-bold leading-tight truncate">
+                            学步期的安全隐患排查清单</p>
+                        <p class="text-text-sub dark:text-gray-400 text-xs font-normal truncate">家里这些角落可能正在伤害你的宝宝。</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <!-- Bottom Navigation -->
+        <nav
+            class="fixed bottom-0 left-0 w-full bg-surface-light dark:bg-surface-dark border-t border-gray-200 dark:border-gray-800 pb-safe pt-2 px-6 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+            <div class="flex justify-between items-end h-[60px] pb-3">
+                <button class="flex flex-col items-center justify-center gap-1 w-16 group">
+                    <span
+                        class="material-symbols-outlined text-gray-400 group-hover:text-primary transition-colors text-[28px]">home</span>
+                    <span
+                        class="text-[10px] font-medium text-gray-400 group-hover:text-primary transition-colors">首页</span>
+                </button>
+                <button class="flex flex-col items-center justify-center gap-1 w-16 text-primary">
+                    <span class="material-symbols-outlined fill-1 text-[28px]">menu_book</span>
+                    <span class="text-[10px] font-bold">指南</span>
+                </button>
+                <button class="flex flex-col items-center justify-center gap-1 w-16 group">
+                    <span
+                        class="material-symbols-outlined text-gray-400 group-hover:text-primary transition-colors text-[28px]">forum</span>
+                    <span
+                        class="text-[10px] font-medium text-gray-400 group-hover:text-primary transition-colors">社区</span>
+                </button>
+                <button class="flex flex-col items-center justify-center gap-1 w-16 group">
+                    <span
+                        class="material-symbols-outlined text-gray-400 group-hover:text-primary transition-colors text-[28px]">person</span>
+                    <span
+                        class="text-[10px] font-medium text-gray-400 group-hover:text-primary transition-colors">我的</span>
+                </button>
+            </div>
+        </nav>
+        <!-- Safe area padding for iPhone home indicator -->
+        <div class="h-6 w-full bg-surface-light dark:bg-surface-dark fixed bottom-0 z-[-1]"></div>
+    </div>
+    <script>
+        // Simple script to handle safe area padding on mobile without specific CSS env variables in this context
+        // This is a visual fallback
+    </script>
+
+    <!-- Navigation Links added by Antigravity -->
+    <nav
+        style="position: fixed; bottom: 0; width: 100%; background: white; border-top: 1px solid #eee; display: flex; justify-content: space-around; padding: 10px 0; overflow-x: auto;">
+        <a href="./parent_dashboard.html" style="text-decoration: none; color: #666;">首页</a>
+        <a href="./parent_task_creator.html" style="text-decoration: none; color: #666;">任务</a>
+        <a href="./parent_reward_config.html" style="text-decoration: none; color: #666;">奖励</a>
+        <a href="./parent_guide.html" style="text-decoration: none; color: #6C9BD2; font-weight: bold;">学堂</a>
+        <a href="./parent_insights.html" style="text-decoration: none; color: #666;">洞察</a>
+        <a href="./parent_profile.html" style="text-decoration: none; color: #666;">我的</a>
+    </nav>
+</body>
+
+</html>

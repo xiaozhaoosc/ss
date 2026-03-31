@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+
+<html class="light" lang="zh-CN">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Child Reward Shop</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&amp;family=Noto+Sans+SC:wght@400;500;700;900&amp;display=swap"
+    rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#8CD0A1",
+            "secondary": "#F5D76E",
+            "background-light": "#f2f7f4",
+            "background-dark": "#151d17",
+            "card-bg": "#ffffff",
+            "text-main": "#111813",
+            "text-sub": "#5f866c",
+          },
+          fontFamily: {
+            "display": ["Plus Jakarta Sans", "Noto Sans SC", "sans-serif"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.5rem",
+            "lg": "1rem",
+            "xl": "1.5rem",
+            "2xl": "1.25rem",
+            "3xl": "1.5rem",
+            "full": "9999px"
+          },
+          boxShadow: {
+            'soft': '0 8px 24px -4px rgba(139, 208, 161, 0.2)',
+            'card': '0 4px 12px rgba(0,0,0,0.05)',
+            'inner-light': 'inset 0 2px 4px 0 rgba(255, 255, 255, 0.5)',
+          }
+        },
+      },
+    }
+  </script>
+  <style>
+    /* Custom utility for the 'squircle' feel or soft shapes */
+    .blob-shape {
+      border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+    }
+
+    .nav-wave {
+      border-top-left-radius: 2rem;
+      border-top-right-radius: 2rem;
+    }
+  </style>
+  <style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+
+<body
+  class="bg-background-light dark:bg-background-dark font-display text-text-main antialiased selection:bg-primary selection:text-white">
+  <div class="relative flex h-full min-h-screen w-full flex-col overflow-x-hidden pb-24">
+    <!-- Header Section with Floating Star Balance -->
+    <header class="flex flex-col gap-4 p-5 pt-8">
+      <div class="flex items-center justify-between">
+        <!-- Back/Menu Icon (Optional placeholder for context) -->
+        <button
+          class="flex h-10 w-10 items-center justify-center rounded-full bg-white text-text-sub shadow-sm transition-transform active:scale-95">
+          <span class="material-symbols-outlined">arrow_back_ios_new</span>
+        </button>
+        <!-- User Profile / Avatar placeholder -->
+        <div class="h-10 w-10 overflow-hidden rounded-full border-2 border-white shadow-sm bg-secondary/30">
+          <div class="h-full w-full bg-cover bg-center" data-alt="Child cartoon avatar smiling"
+            style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBosOUr9r5tFVkKydl99KrHW9TFrfF3x_G5Kl0i75sVteQHA1GHPx8GNOPJkXvcYRGUUDjZz2aZO0XHwwREWgDTqkxa128ip9BARUNGe7BgM6tr31xSWJNxtZjHAT-C-lV6ILltscjfiSWRnwz567xQvUb-jLwEPyqRpPwXCXlQWj4_8J-bTUMqfAHIg55tp7WKOpWdV749Rt96IwAM1_EtV7V5UOWe9yBG6erW6j1AX-9jaV8f-SLOByg0S6U_UWaPD45NwnWhZ6w');">
+          </div>
+        </div>
+      </div>
+      <div class="flex items-center justify-between mt-2">
+        <div>
+          <h1 class="text-3xl font-extrabold tracking-tight text-text-main">奖励商店</h1>
+          <p class="text-sm font-medium text-text-sub mt-1">用星星兑换超棒的礼物！</p>
+        </div>
+        <!-- Gamified Balance Badge -->
+        <div
+          class="group relative flex items-center gap-2 rounded-full bg-white pl-3 pr-5 py-2 shadow-soft border border-primary/10">
+          <div
+            class="relative flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-secondary to-yellow-300 shadow-inner-light animate-[bounce_3s_infinite]">
+            <span class="material-symbols-outlined text-white text-[28px]"
+              style="font-variation-settings: 'FILL' 1;">star</span>
+          </div>
+          <div class="flex flex-col">
+            <span class="text-[10px] uppercase font-bold text-text-sub leading-none">我的星星</span>
+            <span class="text-xl font-black text-text-main leading-none">52</span>
+          </div>
+          <!-- Sparkle Decoration -->
+          <span
+            class="material-symbols-outlined absolute -top-1 -right-1 text-secondary text-sm animate-pulse">auto_awesome</span>
+        </div>
+      </div>
+    </header>
+    <!-- Reward Grid Section -->
+    <main class="flex-1 px-5">
+      <div class="grid grid-cols-2 gap-4 pb-4">
+        <!-- Card 1: Ice Cream -->
+        <div
+          class="group relative flex flex-col gap-3 rounded-3xl bg-white p-3 shadow-card transition-all hover:-translate-y-1 hover:shadow-soft active:scale-[0.98]">
+          <div class="relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-blue-50">
+            <div
+              class="absolute inset-0 bg-center bg-no-repeat bg-contain m-4 transition-transform duration-500 group-hover:scale-110"
+              data-alt="3D illustration of a colorful ice cream cone"
+              style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDSeDZTqWI4hzDXiu2J5oxyebHDY7h3QJHfakeAN_DSXnLSNkLAhuxQ4i3EFA3sYEODFAfwVurGxyc-Vtyb0KsKUsq3VBs395mQXw--DFZl4Kh5S-vH4faPsNJmf130ABfPSfWXqFDI4jBunAVzhcIeXZhBzHXrKxk5SFJoqfWcaG5goJU-GDCauwNndD8ZGLQJbWbxcZ6A0yIFaOL8GZKjXq-4hiDjKlnMz1XANJsiV_hJ3Js1CP0wIT-YYbZzKacO4qusjpgjKq0');">
+            </div>
+            <!-- Price Tag Badge -->
+            <div
+              class="absolute top-2 right-2 flex items-center gap-1 rounded-full bg-white/90 px-2 py-1 shadow-sm backdrop-blur-sm">
+              <span class="material-symbols-outlined text-secondary text-sm"
+                style="font-variation-settings: 'FILL' 1;">star</span>
+              <span class="text-xs font-bold text-text-main">15</span>
+            </div>
+          </div>
+          <div class="px-1 pb-1">
+            <h3 class="text-lg font-bold text-text-main leading-tight">冰淇淋</h3>
+            <div
+              class="mt-3 flex w-full items-center justify-center rounded-xl bg-primary/10 py-2 text-sm font-bold text-primary group-hover:bg-primary group-hover:text-white transition-colors">
+              兑换
+            </div>
+          </div>
+        </div>
+        <!-- Card 2: Game Time -->
+        <div
+          class="group relative flex flex-col gap-3 rounded-3xl bg-white p-3 shadow-card transition-all hover:-translate-y-1 hover:shadow-soft active:scale-[0.98]">
+          <div class="relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-purple-50">
+            <div
+              class="absolute inset-0 bg-center bg-no-repeat bg-contain m-4 transition-transform duration-500 group-hover:scale-110"
+              data-alt="3D illustration of a game controller"
+              style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDHyPKD3Xve5z8OS2IlJfgCrN_FYLw5jdrvQdqD3wrX0Ka2Cda9KUVhJ03GLrwdeGup2vHmWLCxqc0JDeYb7tNF7JMDndRG1P02LIDlTLMli5ojXChnK28CgIATOC7XM8AvfALgNg_v4SyxsEPKqPS1DMnOzmchu9HqhROkPULH4UJeGjNPn5u-j-1S0yvJNc8YmY_BYHMVLwI5QnmAWUOKAb5DQ8l3HfZmziht8xDDcc83SxD6a62Re9jB1DlJEChMfLS1Hl01Bns');">
+            </div>
+            <div
+              class="absolute top-2 right-2 flex items-center gap-1 rounded-full bg-white/90 px-2 py-1 shadow-sm backdrop-blur-sm">
+              <span class="material-symbols-outlined text-secondary text-sm"
+                style="font-variation-settings: 'FILL' 1;">star</span>
+              <span class="text-xs font-bold text-text-main">20</span>
+            </div>
+          </div>
+          <div class="px-1 pb-1">
+            <h3 class="text-lg font-bold text-text-main leading-tight">游戏时间</h3>
+            <div
+              class="mt-3 flex w-full items-center justify-center rounded-xl bg-primary/10 py-2 text-sm font-bold text-primary group-hover:bg-primary group-hover:text-white transition-colors">
+              兑换
+            </div>
+          </div>
+        </div>
+        <!-- Card 3: Dessert -->
+        <div
+          class="group relative flex flex-col gap-3 rounded-3xl bg-white p-3 shadow-card transition-all hover:-translate-y-1 hover:shadow-soft active:scale-[0.98]">
+          <div class="relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-pink-50">
+            <div
+              class="absolute inset-0 bg-center bg-no-repeat bg-contain m-4 transition-transform duration-500 group-hover:scale-110"
+              data-alt="3D illustration of a delicious strawberry cake"
+              style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBTft98MhbIS1-FhBqwC5lgShEpY3MdxCnkOxS1mCmO0wP_WQJaJtfcQBD6I2r92VJjP-nTSX6b35TmcJhm5QmPkljYYHlag2u0xt69KkFmKqOSmi-oI3rA2BYvLaK2Qx_pLFVBfjjZvkRXuXbkQt1aJwOlP2UMz9dQI92Ieu9sYMqnq9HNLuj6IhPtXbP6veTEVsABo3MmnZxc9xcbfk2lNg3o0Zvi0DmE4XjV3r2mEKKAE1oGxkGJqzgK9H8Zkv8LBw9bMVe8lIA');">
+            </div>
+            <div
+              class="absolute top-2 right-2 flex items-center gap-1 rounded-full bg-white/90 px-2 py-1 shadow-sm backdrop-blur-sm">
+              <span class="material-symbols-outlined text-secondary text-sm"
+                style="font-variation-settings: 'FILL' 1;">star</span>
+              <span class="text-xs font-bold text-text-main">10</span>
+            </div>
+          </div>
+          <div class="px-1 pb-1">
+            <h3 class="text-lg font-bold text-text-main leading-tight">甜点</h3>
+            <div
+              class="mt-3 flex w-full items-center justify-center rounded-xl bg-primary/10 py-2 text-sm font-bold text-primary group-hover:bg-primary group-hover:text-white transition-colors">
+              兑换
+            </div>
+          </div>
+        </div>
+        <!-- Card 4: New Toy (Expensive but affordable) -->
+        <div
+          class="group relative flex flex-col gap-3 rounded-3xl bg-white p-3 shadow-card transition-all hover:-translate-y-1 hover:shadow-soft active:scale-[0.98]">
+          <div class="relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-yellow-50">
+            <div
+              class="absolute inset-0 bg-center bg-no-repeat bg-contain m-4 transition-transform duration-500 group-hover:scale-110"
+              data-alt="3D illustration of a cute teddy bear"
+              style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCJ0ioiIGPORy2xc0ohELPrLHI7fafYMmjlyc-iLaScm_vrZNCsbqle0LIrtYXCcmcThnHkUz99dIpNbWv1yU5Xa7VtJ1ICOM0tkmZ3CYnR8PIOfsUzyXHBvzMXxbkXgrvjIZfxXGEi33yaLc9cLhnRUCoIwE5u-k1YNKh_nsg41RQNhdkGH7kRTs5L19mkl-1QlYrtJzXp3xKUtwLiNWUhRE8WxX69Fu9bypMIVlKvs_7232vfJqOCZwN8QNYsGpiFAr7DimZvKxg');">
+            </div>
+            <div
+              class="absolute top-2 right-2 flex items-center gap-1 rounded-full bg-white/90 px-2 py-1 shadow-sm backdrop-blur-sm">
+              <span class="material-symbols-outlined text-secondary text-sm"
+                style="font-variation-settings: 'FILL' 1;">star</span>
+              <span class="text-xs font-bold text-text-main">50</span>
+            </div>
+          </div>
+          <div class="px-1 pb-1">
+            <h3 class="text-lg font-bold text-text-main leading-tight">新玩具</h3>
+            <div
+              class="mt-3 flex w-full items-center justify-center rounded-xl bg-primary/10 py-2 text-sm font-bold text-primary group-hover:bg-primary group-hover:text-white transition-colors">
+              兑换
+            </div>
+          </div>
+        </div>
+        <!-- Card 5: Robot (Too Expensive Example - > 52 Stars) -->
+        <div class="group relative flex flex-col gap-3 rounded-3xl bg-gray-100 p-3 opacity-90 grayscale-[0.3]">
+          <div class="relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-gray-200">
+            <div class="absolute inset-0 bg-center bg-no-repeat bg-contain m-4 opacity-70"
+              data-alt="3D illustration of a cool robot toy"
+              style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCanwopD7ujDPUl_k9gnroQU596I-9H9GJW0mQl_Tw56VBZ6KWnvWYjAYtEPHPlWaAHxhQ-lhZ6TNAcyAGPDHQT6_dEo4RlNt7uKvF2a4rOshh9ei_dVmrzRaWh6UwEhIfrx0kPScJtP8pgLJH9yXe0NbY7xY-3HWQriFzzwlQzoGZK8Ity4-pmqeaBkcskIYikJH7CbNbJ5OlyUm5mLcYazxakUyxQ-faPK_S2J7v6W9V3tsmSatqXppKJT8ySu9MX-euvUyKyTYE');">
+            </div>
+            <!-- Lock Overlay -->
+            <div class="absolute inset-0 flex items-center justify-center bg-black/5">
+              <span class="material-symbols-outlined text-gray-500 text-4xl">lock</span>
+            </div>
+            <div class="absolute top-2 right-2 flex items-center gap-1 rounded-full bg-gray-300 px-2 py-1 shadow-sm">
+              <span class="material-symbols-outlined text-gray-500 text-sm"
+                style="font-variation-settings: 'FILL' 1;">star</span>
+              <span class="text-xs font-bold text-gray-600">60</span>
+            </div>
+          </div>
+          <div class="px-1 pb-1">
+            <h3 class="text-lg font-bold text-gray-500 leading-tight">机器人</h3>
+            <div
+              class="mt-3 flex w-full items-center justify-center rounded-xl bg-gray-200 py-2 text-sm font-bold text-gray-400 cursor-not-allowed">
+              还差 8 颗星
+            </div>
+          </div>
+        </div>
+        <!-- Card 6: Sticker Pack -->
+        <div
+          class="group relative flex flex-col gap-3 rounded-3xl bg-white p-3 shadow-card transition-all hover:-translate-y-1 hover:shadow-soft active:scale-[0.98]">
+          <div class="relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-green-50">
+            <div
+              class="absolute inset-0 bg-center bg-no-repeat bg-contain m-4 transition-transform duration-500 group-hover:scale-110"
+              data-alt="3D illustration of a sticker pack"
+              style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBJlyZ1cgFqXmLfdowLeOYUSs8dIkuneRHkNj6UkaMvSZF02GZAgshVQR_uUuikQd2elR2xXbXMXzCkoKMKZGSRkPRBwPZqgmfj4QMdaEMRMAgUgP6dPavxjF6PPfs21lbDTTjgmL5R7Se36h8jqPpqgHeRIRbKeERSYNQYXk6_J7yYbjnJZyBsKO6_Z5XOG1p0UmpfA-OUAGx9dJGL5yBkMmRhHHEqixwvL0O_dYRsSBW0YluvzVtrbWdQ1f4Q-2dOhJ5MdL3hcFE');">
+            </div>
+            <div
+              class="absolute top-2 right-2 flex items-center gap-1 rounded-full bg-white/90 px-2 py-1 shadow-sm backdrop-blur-sm">
+              <span class="material-symbols-outlined text-secondary text-sm"
+                style="font-variation-settings: 'FILL' 1;">star</span>
+              <span class="text-xs font-bold text-text-main">5</span>
+            </div>
+          </div>
+          <div class="px-1 pb-1">
+            <h3 class="text-lg font-bold text-text-main leading-tight">贴纸包</h3>
+            <div
+              class="mt-3 flex w-full items-center justify-center rounded-xl bg-primary/10 py-2 text-sm font-bold text-primary group-hover:bg-primary group-hover:text-white transition-colors">
+              兑换
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <!-- Bottom Navigation: Immersive Map Path Style -->
+    <div class="fixed bottom-0 w-full z-50 px-4 pb-4">
+      <!-- The "Map Path" Container -->
+      <div
+        class="nav-wave relative flex h-20 items-center justify-around bg-white shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-white/50 backdrop-blur-lg">
+        <!-- Decorative "Path" Line in background -->
+        <svg class="absolute bottom-0 left-0 w-full h-full opacity-10 pointer-events-none" fill="none"
+          viewbox="0 0 375 80" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0 40C40 40 60 70 100 70C150 70 160 20 187.5 20C215 20 225 70 275 70C315 70 335 40 375 40"
+            stroke="#8CD0A1" stroke-dasharray="8 8" stroke-linecap="round" stroke-width="4"></path>
+        </svg>
+        <!-- Nav Item: Home -->
+        <a class="group relative flex flex-col items-center justify-center gap-1 p-2 transition-transform active:scale-95"
+          href="#">
+          <div
+            class="flex h-10 w-10 items-center justify-center rounded-full bg-gray-50 text-gray-400 transition-colors group-hover:bg-primary/10 group-hover:text-primary">
+            <span class="material-symbols-outlined text-[28px]"
+              style="font-variation-settings: 'FILL' 1;">cottage</span>
+          </div>
+          <span class="text-[10px] font-bold text-gray-400 group-hover:text-primary">主页</span>
+        </a>
+        <!-- Nav Item: Tasks -->
+        <a class="group relative flex flex-col items-center justify-center gap-1 p-2 transition-transform active:scale-95"
+          href="#">
+          <div
+            class="flex h-10 w-10 items-center justify-center rounded-full bg-gray-50 text-gray-400 transition-colors group-hover:bg-primary/10 group-hover:text-primary">
+            <span class="material-symbols-outlined text-[28px]" style="font-variation-settings: 'FILL' 1;">map</span>
+          </div>
+          <span class="text-[10px] font-bold text-gray-400 group-hover:text-primary">任务</span>
+        </a>
+        <!-- Nav Item: Shop (Active) -->
+        <a class="group relative -mt-8 flex flex-col items-center justify-center gap-1 transition-transform active:scale-95"
+          href="#">
+          <!-- Floating Active Indicator -->
+          <div
+            class="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-white shadow-lg ring-4 ring-white transition-all group-hover:shadow-xl group-hover:ring-primary/20">
+            <span class="material-symbols-outlined text-[32px]"
+              style="font-variation-settings: 'FILL' 1;">storefront</span>
+          </div>
+          <span
+            class="rounded-full bg-white/80 px-2 py-0.5 text-[10px] font-bold text-primary shadow-sm backdrop-blur-md">商店</span>
+        </a>
+        <!-- Nav Item: Profile (Extra for balance) -->
+        <a class="group relative flex flex-col items-center justify-center gap-1 p-2 transition-transform active:scale-95"
+          href="#">
+          <div
+            class="flex h-10 w-10 items-center justify-center rounded-full bg-gray-50 text-gray-400 transition-colors group-hover:bg-primary/10 group-hover:text-primary">
+            <span class="material-symbols-outlined text-[28px]"
+              style="font-variation-settings: 'FILL' 1;">backpack</span>
+          </div>
+          <span class="text-[10px] font-bold text-gray-400 group-hover:text-primary">背包</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gamified Nav added by Antigravity -->
+  <nav
+    style="position: fixed; bottom: 0; width: 100%; background: #F0F9FF; border-top: 2px solid #8CD0A1; display: flex; justify-content: space-around; padding: 15px 0; border-radius: 20px 20px 0 0; box-shadow: 0 -4px 10px rgba(0,0,0,0.05); z-index: 50;">
+    <a href="./child_home.html"
+      style="text-decoration: none; color: #111827; background: #FFF; border: 2px solid #FFD54F; padding: 6px 14px; border-radius: 20px;">🏠
+      主页</a>
+    <a href="./child_task_execute.html"
+      style="text-decoration: none; color: #111827; background: #FFF; border: 2px solid #FFD54F; padding: 6px 14px; border-radius: 20px;">🎯
+      任务</a>
+    <a href="./child_reward_shop.html"
+      style="text-decoration: none; color: #111827; font-weight: bold; background: #FFD54F; padding: 8px 16px; border-radius: 20px; box-shadow: 0 4px 0 #E0A800;">🎁
+      商店</a>
+    <a href="./child_avatar_editor.html"
+      style="text-decoration: none; color: #111827; background: #FFF; border: 2px solid #FFD54F; padding: 6px 14px; border-radius: 20px;">🤖
+      换装</a>
+  </nav>
+</body>
+
+</html>

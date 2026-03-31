@@ -1,0 +1,89 @@
+# 项目名称 (在 .env 中定义 PROJECT_NAME=small-steps)
+name: ${PROJECT_NAME}
+
+# =================================================================
+# 🇨🇳 中国大陆网络特别说明
+# -----------------------------------------------------------------
+# 为了解决 Docker Hub 拉取慢的问题，所有 image 指令都使用了
+# ${DOCKER_IMAGE_PREFIX} 变量。
+# 请在 .env 文件中配置代理前缀，例如:
+# DOCKER_IMAGE_PREFIX=docker.m.daocloud.io/
+# =================================================================
+
+# 网络配置
+networks:
+  ss_net:
+    driver: bridge
+
+# 通用配置锚点 (复用配置，减少代码冗余)
+x-common-opts: &common-opts
+  restart: always
+  networks:
+    - ss_net
+  # 日志轮转配置 (防止日志文件无限增长占满磁盘)
+  logging:
+    driver: "json-file"
+    options:
+      max-size: "10m"
+      max-file: "3"
+
+services:
+  # PostgreSQL 数据库服务
+  postgres:
+    <<: *common-opts
+    container_name: ss-postgres
+    image: ${DOCKER_IMAGE_PREFIX}postgres:15-alpine
+    environment:
+      - TZ=${TZ}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    ports:
+      - "15432:5432"
+    volumes:
+      - ./pg_data:/var/lib/postgresql/data
+
+  # Redis 缓存服务
+  redis:
+    <<: *common-opts
+    container_name: ss-redis
+    image: ${DOCKER_IMAGE_PREFIX}redis:7-alpine
+    environment:
+      - TZ=${TZ}
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis_data:/data
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+
+  # 后端核心服务
+  backend-core:
+    <<: *common-opts
+    container_name: ss-api
+    build:
+      context: ..
+      dockerfile: smallsteps-admin/Dockerfile
+      tags:
+        - small-steps-backend-core:0.0.1
+    environment:
+      - TZ=${TZ}
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=${POSTGRES_DB}
+      - DB_USER=${POSTGRES_USER}
+      - DB_PASS=${POSTGRES_PASSWORD}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASS=${REDIS_PASSWORD}
+      # SnailJob Server Configuration
+      - SNAIL_JOB_SERVER_HOST=smallsteps-snailjob-server
+      - SNAIL_JOB_SERVER_PORT=17888
+    ports:
+      - "8081:8080"
+    depends_on:
+      - postgres
+      - redis
+
+# 数据卷配置
+volumes:
+  # 使用 Bind Mounts (./pg_data, ./redis_data) 代替 Named Volumes

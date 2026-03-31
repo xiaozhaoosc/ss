@@ -1,0 +1,80 @@
+# 📋 任务列表：ADHD 辅助系统设计
+
+- [x] **设计文档汉化**
+    - [x] `SYSTEM_DESIGN.md` (硬件视觉规范) 转换为中文 <!-- id: 0 -->
+    - [x] `APP_DESIGN.md` (App 交互规范) 转换为中文 <!-- id: 1 -->
+- [x] **设计图重新生成 (尝试中文渲染)**
+    - [x] 硬件端 UI 草图 (UI_v1.0.0/ui_sketch.png) <!-- id: 2 -->
+    - [x] 移动端 App 草图 (UI_v1.0.0/app_sketch.png) <!-- id: 3 -->
+- [x] **设计说明书更新**
+    - [x] `readme.md` 增加 App 设计理念章节 <!-- id: 4 -->
+- [x] **家长端 APP 深度设计 (Parent App Design)** (v1.0.0 Completed)
+    - [x] `PARENT_APP_PAGES.md` (页面详细规格书) <!-- id: 5 -->
+    - [x] 关键页面 UI 高保真草图 <!-- id: 6 -->
+        - [x] 首页仪表盘 (parent_dashboard.png)
+        - [x] 任务生成器 (parent_task_creator.png)
+        - [x] 情绪详情页 (parent_emotion_detail.png)
+        - [x] 数据洞察页 (parent_insights.png)
+        - [x] 个人中心页 (parent_profile.png)
+        - [x] 奖励配置页 (parent_reward_config.png) <!-- id: 11 -->
+        - [x] 父母课堂页 (parent_guide.png) <!-- id: 12 -->
+        - [x] 初始引导与配对 (parent_onboarding.png) <!-- id: 13 -->
+- [x] **儿童端 APP 深度设计 (Child App Design)** (v1.0.0 Completed)
+    - [x] `CHILD_APP_PAGES.md` (页面详细规格书) <!-- id: 7 -->
+    - [x] 关键页面 UI 高保真草图 <!-- id: 8 -->
+        - [x] 奖杯陈列室 (child_home.png)
+        - [x] Star挑战/任务页 (child_task.png)
+        - [x] 成就墙 (child_achievements.png)
+        - [x] 奖励兑换页 (child_rewards.png)
+        - [x] 角色换装页 (child_avatar_editor.png) <!-- id: 9 -->
+        - [x] 角色换装页 (child_avatar_editor.png) <!-- id: 9 -->
+        - [x] 扫描/同步页 (child_scan_ui.png) <!-- id: 10 -->
+
+- [x] **设计迭代 v1.1 (Revisions)**
+    - [x] 文档更新: 支持邮箱登录 & 硬件非必须 (PARENT/CHILD_PAGES.md) <!-- id: 14 -->
+    - [x] 文档更新: 支持邮箱登录 & 硬件非必须 (PARENT/CHILD_PAGES.md) <!-- id: 14 -->
+    - [x] 交互更新: 纯 App 模式下的星星收集逻辑 <!-- id: 15 -->
+    - [x] 视觉更新 v1.1 <!-- id: 16 -->
+        - [x] 初始引导页 (含邮箱登录) (parent_onboarding_v1.1.png)
+        - [x] 儿童端首页 (软件模式/长按交互) (child_home_software.png)
+
+- [x] **APP UI 设计 (Stitch MCP)** (v1.0.0 Completed)
+    - [x] 生成核心页面 (Home, Task, Reward) <!-- id: 31 -->
+    - [x] 补全缺失页面 (Gap Filling) <!-- id: 32 -->
+        - [x] 情绪详情页 (Emotion Detail)
+        - [x] 奖励配置页 (Reward Config)
+        - [x] 父母学堂 (Parenting Guide)
+        - [x] 初始引导 (Onboarding)
+    - [x] **儿童端 UI 生成 (Child App Stitch)**
+        - [x] 任务执行页 (Task Execute)
+        - [x] 奖励兑换页 (Reward Shop)
+        - [x] 角色换装页 (Avatar Editor)
+        - [x] 角色换装页 (Avatar Editor)
+        - [x] 角色换装页 (Avatar Editor)
+        - [x] 扫码同步页 (Scan/Sync)
+        - [x] 成就墙 (Hall of Fame) (Manual)
+        - [x] 任务完成庆祝 (Mission Success) (Manual)
+
+
+
+- [ ] **系统集成与调试 (System Integration)**
+    - [x] 修复 Stitch MCP 连接 (调试 405/HTML 响应问题) <!-- id: 17 -->
+    - [x] 配置数据库与 MCP Toolbox <!-- id: 18 -->
+        - [x] 读取 application-dev.yml 获取凭据
+        - [x] 配置 mcp-toolbox-for-databases
+        - [x] 验证数据库连接权限
+    - [x] 系统与数据库调研 <!-- id: 19 -->
+        - [x] 查询现有数据库表结构
+        - [x] 梳理项目目录结构
+        - [x] 生成架构与数据字典文档
+
+- [ ] **数据库实施 (Database Implementation)**
+    - [x] 编写 init_smallsteps.sql (核心表结构) <!-- id: 20 -->
+    - [x] 完善业务表 (情绪/内容/任务拆解) v1.1 <!-- id: 23 -->
+    - [x] 增强配置化 (数据字典/等级配置) v1.4 <!-- id: 24 -->
+    - [x] 执行 SQL 建表 (18 tables) <!-- id: 21 -->
+    - [ ] 生成后端 Entity/Mapper 代码 (RuoYi Gen) <!-- id: 22 -->
+
+- [ ] **系统环境配置 (System Environment)**
+    - [x] 调整后端端口 (8098) 与 api 路径 (/ssapi) <!-- id: 25 -->
+    - [x] 同步 Admin UI 与 App 代理配置 <!-- id: 26 -->

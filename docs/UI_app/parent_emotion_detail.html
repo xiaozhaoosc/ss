@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+
+<html class="light" lang="zh-CN">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Parent Emotion Detail</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Noto+Sans+SC:wght@400;500;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#6b9bd1",
+                        "primary-dark": "#5a82b0",
+                        "background-light": "#f8f9fb",
+                        "background-dark": "#14191e",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1e242b",
+                        "text-main": "#101419",
+                        "text-secondary": "#5b718b",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "Noto Sans SC", "sans-serif"],
+                        "body": ["Inter", "Noto Sans SC", "sans-serif"],
+                    },
+                    borderRadius: { "DEFAULT": "0.5rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans SC', sans-serif;
+        }
+
+        /* Hide scrollbar for clean UI */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+    <style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark text-text-main dark:text-white transition-colors duration-200">
+    <div
+        class="relative flex h-full min-h-screen w-full max-w-md mx-auto flex-col overflow-hidden bg-background-light dark:bg-background-dark shadow-2xl">
+        <!-- Top App Bar -->
+        <header
+            class="flex items-center px-4 py-4 justify-between bg-background-light dark:bg-background-dark sticky top-0 z-10">
+            <button
+                class="flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-surface-dark transition-colors text-text-main dark:text-white">
+                <span class="material-symbols-outlined" style="font-size: 24px;">arrow_back</span>
+            </button>
+            <h1
+                class="text-text-main dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center">
+                情感详情</h1>
+            <div class="size-10 shrink-0"></div> <!-- Spacer for centering -->
+        </header>
+        <main class="flex-1 flex flex-col gap-6 px-4 pb-24 overflow-y-auto no-scrollbar">
+            <!-- Media Player Section -->
+            <section class="mt-2">
+                <div
+                    class="flex flex-col gap-4 rounded-xl bg-surface-light dark:bg-surface-dark p-5 shadow-sm border border-gray-100 dark:border-gray-800">
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="relative size-16 shrink-0 overflow-hidden rounded-xl shadow-inner bg-gray-100 dark:bg-gray-800">
+                            <!-- Abstract playful pattern for child recording -->
+                            <div class="w-full h-full bg-cover bg-center"
+                                data-alt="Abstract soft blue shapes representing child's audio"
+                                style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDAKbTSgFUG4tO8fG6Mj7-aEQbZYBHnnnRiC3nr8hKUHntAsqfQyVMRLadvC94V-h3F9ROliE-tekIGcRZwcDC_fhfBKmRYWTDzEJfVKf027emv1NU1eEcPqJOGCLUXbzXlOuMg_EHG0uMu2NcIzP0fRWrjrGGZM9tw7ZXxaena7DIedlMstaGy-cwHLayuET22bH-Ghz_wakvHPmbxp89X5ki21Ut8Tnc-u7WYEPWJebwBLuuXqKZtzHGeMHqQqWyLJ4fE_drWK98');">
+                            </div>
+                            <div class="absolute inset-0 bg-primary/10 flex items-center justify-center">
+                                <span class="material-symbols-outlined text-white drop-shadow-md"
+                                    style="font-size: 28px;">graphic_eq</span>
+                            </div>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h2 class="text-text-main dark:text-white text-base font-bold leading-tight truncate mb-1">
+                                10月24日 - 树洞录音</h2>
+                            <p class="text-text-secondary dark:text-gray-400 text-xs font-normal truncate">下午 4:32 • 星期二
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Waveform Visual -->
+                    <div class="flex items-center justify-center h-12 gap-1 px-2 my-1">
+                        <!-- Simulated Waveform -->
+                        <div class="w-1 h-3 bg-primary/30 rounded-full"></div>
+                        <div class="w-1 h-5 bg-primary/30 rounded-full"></div>
+                        <div class="w-1 h-8 bg-primary rounded-full animate-pulse"></div>
+                        <div class="w-1 h-4 bg-primary rounded-full"></div>
+                        <div class="w-1 h-6 bg-primary rounded-full"></div>
+                        <div class="w-1 h-10 bg-primary rounded-full"></div>
+                        <div class="w-1 h-5 bg-primary rounded-full"></div>
+                        <div class="w-1 h-3 bg-primary/30 rounded-full"></div>
+                        <div class="w-1 h-6 bg-primary/40 rounded-full"></div>
+                        <div class="w-1 h-4 bg-primary/30 rounded-full"></div>
+                        <div class="w-1 h-8 bg-primary/80 rounded-full"></div>
+                        <div class="w-1 h-5 bg-primary/60 rounded-full"></div>
+                        <div class="w-1 h-3 bg-primary/30 rounded-full"></div>
+                        <div class="w-1 h-6 bg-primary/30 rounded-full"></div>
+                        <div class="w-1 h-10 bg-primary/30 rounded-full"></div>
+                        <div class="w-1 h-4 bg-primary/30 rounded-full"></div>
+                        <div class="w-1 h-6 bg-primary/30 rounded-full"></div>
+                        <div class="w-1 h-3 bg-primary/30 rounded-full"></div>
+                        <div class="w-1 h-5 bg-primary/30 rounded-full"></div>
+                        <div class="w-1 h-3 bg-primary/30 rounded-full"></div>
+                        <div class="w-1 h-4 bg-primary/30 rounded-full"></div>
+                        <div class="w-1 h-6 bg-primary/30 rounded-full"></div>
+                        <div class="w-1 h-8 bg-primary/30 rounded-full"></div>
+                        <div class="w-1 h-3 bg-primary/30 rounded-full"></div>
+                    </div>
+                    <!-- Controls -->
+                    <div class="flex items-center gap-4">
+                        <span
+                            class="text-text-secondary dark:text-gray-400 text-xs font-medium w-10 text-right">00:15</span>
+                        <div class="relative flex-1 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                            <div class="absolute top-0 left-0 h-full w-1/4 bg-primary rounded-full"></div>
+                        </div>
+                        <span class="text-text-secondary dark:text-gray-400 text-xs font-medium w-10">01:30</span>
+                    </div>
+                    <div class="flex justify-center mt-1">
+                        <button
+                            class="flex items-center justify-center rounded-full size-12 bg-primary hover:bg-primary-dark transition-colors text-white shadow-lg shadow-primary/30">
+                            <span class="material-symbols-outlined" style="font-size: 28px;">play_arrow</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+            <!-- AI Analysis Card -->
+            <section>
+                <div
+                    class="flex flex-col gap-4 rounded-xl bg-surface-light dark:bg-surface-dark p-5 shadow-sm border border-gray-100 dark:border-gray-800">
+                    <div class="flex items-center gap-2 mb-1">
+                        <div class="p-1.5 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+                            <span class="material-symbols-outlined text-purple-600 dark:text-purple-400"
+                                style="font-size: 20px;">auto_awesome</span>
+                        </div>
+                        <h3 class="text-text-main dark:text-white text-base font-bold">AI 分析报告</h3>
+                    </div>
+                    <!-- Chips -->
+                    <div class="flex gap-2 flex-wrap">
+                        <div
+                            class="flex items-center justify-center gap-x-1.5 rounded-full bg-orange-50 dark:bg-orange-900/20 border border-orange-100 dark:border-orange-800/30 px-3 py-1.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>
+                            <p class="text-orange-700 dark:text-orange-300 text-xs font-medium">数学焦虑</p>
+                        </div>
+                        <div
+                            class="flex items-center justify-center gap-x-1.5 rounded-full bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800/30 px-3 py-1.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                            <p class="text-red-700 dark:text-red-300 text-xs font-medium">高强度</p>
+                        </div>
+                        <div
+                            class="flex items-center justify-center gap-x-1.5 rounded-full bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800/30 px-3 py-1.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                            <p class="text-primary dark:text-blue-300 text-xs font-medium">寻求关注</p>
+                        </div>
+                    </div>
+                    <!-- Text Content -->
+                    <div class="relative pl-3 border-l-2 border-primary/30">
+                        <p class="text-text-secondary dark:text-gray-300 text-sm leading-relaxed">
+                            检测到孩子在谈论数学考试时<span class="text-text-main dark:text-white font-medium">语速加快</span>，<span
+                                class="text-text-main dark:text-white font-medium">声调升高</span>，表现出明显的焦虑情绪。这通常反映了对成绩的过分担忧。建议给予鼓励而非压力。
+                        </p>
+                    </div>
+                </div>
+            </section>
+            <!-- Transcript Section (Markdown Support) -->
+            <section>
+                <div
+                    class="flex flex-col gap-4 rounded-xl bg-surface-light dark:bg-surface-dark p-5 shadow-sm border border-gray-100 dark:border-gray-800">
+                    <div class="flex items-center justify-between mb-1">
+                        <div class="flex items-center gap-2">
+                            <div class="p-1.5 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                                <span class="material-symbols-outlined text-green-600 dark:text-green-400"
+                                    style="font-size: 20px;">description</span>
+                            </div>
+                            <h3 class="text-text-main dark:text-white text-base font-bold">录音文稿</h3>
+                        </div>
+                        <span
+                            class="text-[10px] bg-gray-100 dark:bg-gray-700 text-gray-500 px-2 py-0.5 rounded">Markdown
+                            格式</span>
+                    </div>
+
+                    <!-- Markdown Content Simulation -->
+                    <div class="prose prose-sm dark:prose-invert max-w-none text-text-secondary dark:text-gray-300">
+                        <p><strong>(00:00)</strong> 既然说到了数学考试，我就觉得... <span
+                                class="bg-red-50 text-red-600 px-1 rounded">特别紧张</span>。</p>
+                        <p><strong>(00:05)</strong> 每次看到那些数字，我就感觉头有点晕。我不想要不及格，那样会被同学笑话。</p>
+                        <blockquote>
+                            "就像有个大石头压在胸口一样。"
+                        </blockquote>
+                        <p><strong>(00:12)</strong> 其实我也复习了，但是一进考场就忘光了。</p>
+                    </div>
+
+                    <div class="w-full h-px bg-gray-100 dark:bg-gray-800 my-2"></div>
+                    <button
+                        class="w-full text-center text-sm font-semibold text-primary hover:text-primary-dark transition-colors py-1">
+                        查看更多
+                    </button>
+                </div>
+            </section>
+        </main>
+        <!-- Parent Reply Section / Bottom Sheet -->
+        <footer
+            class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-surface-light dark:bg-surface-dark border-t border-gray-100 dark:border-gray-800 p-5 pb-8 z-20 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] rounded-t-2xl">
+            <h3 class="text-text-main dark:text-white text-base font-bold mb-4 px-1">家长回复</h3>
+            <div class="flex gap-3">
+                <button
+                    class="flex-1 flex flex-col items-center justify-center gap-2 p-3 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all active:scale-95 group">
+                    <div
+                        class="size-10 rounded-full bg-white dark:bg-gray-700 shadow-sm flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <span class="material-symbols-outlined text-primary" style="font-size: 24px;">mic</span>
+                    </div>
+                    <span class="text-text-main dark:text-white text-sm font-medium">录制语音</span>
+                </button>
+                <button
+                    class="flex-1 flex flex-col items-center justify-center gap-2 p-3 rounded-xl bg-primary/10 dark:bg-primary/20 border border-primary/20 hover:bg-primary/20 dark:hover:bg-primary/30 transition-all active:scale-95 group">
+                    <div
+                        class="size-10 rounded-full bg-primary text-white shadow-sm flex items-center justify-center group-hover:scale-110 transition-transform shadow-primary/30">
+                        <span class="material-symbols-outlined" style="font-size: 24px;">magic_button</span>
+                    </div>
+                    <span class="text-primary dark:text-blue-200 text-sm font-medium">使用 AI 建议</span>
+                </button>
+            </div>
+        </footer>
+    </div>
+</body>
+
+</html>

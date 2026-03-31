@@ -1,0 +1,62 @@
+# 测试环境配置
+server:
+  port: 8080
+
+spring:
+  application:
+    name: smallsteps-generator-test
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://192.168.1.21:15432/smallsteps_db?useUnicode=true&characterEncoding=utf8&useSSL=true&autoReconnect=true&reWriteBatchedInserts=true
+    username: smallsteps
+    password: "abdSSsaf#1236548^"
+    dynamic:
+      primary: master
+      strict: true
+      datasource:
+        master:
+          driver-class-name: org.postgresql.Driver
+          url: jdbc:postgresql://192.168.1.21:15432/smallsteps_db?useUnicode=true&characterEncoding=utf8&useSSL=true&autoReconnect=true&reWriteBatchedInserts=true
+          username: smallsteps
+          password: "abdSSsaf#1236548^"
+  data:
+    redis:
+      host: 192.168.1.21
+      port: 6379
+      password: "abdSSsaf#1236548^"
+      database: 10
+      timeout: 10s
+  # 禁用 Admin Client
+  boot:
+    admin:
+      client:
+        enabled: false
+
+mybatis-plus:
+  mapperPackage: com.kenzhao.smallsteps.**.mapper
+
+# Redisson 配置 (适配 common-redis)
+redisson:
+  keyPrefix: "smallsteps:"
+  singleServerConfig:
+    address: redis://192.168.1.21:6379
+    password: "abdSSsaf#1236548^"
+    clientName: SmallSteps-Generator-Test
+    connectionMinimumIdleSize: 8
+    connectionPoolSize: 32
+    idleConnectionTimeout: 10000
+    timeout: 3000
+
+# 禁用不必要的服务
+snail-job:
+  enabled: false
+
+xxl:
+  job:
+    enabled: false
+
+sms:
+  enabled: false
+
+mail:
+  enabled: false

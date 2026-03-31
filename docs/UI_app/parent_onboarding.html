@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+
+<html class="light" lang="zh-CN">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Parent Onboarding &amp; Pairing</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#6b9bd1", // Soft Blue from requirements
+                        "primary-dark": "#5a84b3",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#14191e",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1e242b",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "PingFang SC", "Noto Sans SC", "sans-serif"],
+                        "body": ["Inter", "PingFang SC", "Noto Sans SC", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem", // 8px as requested
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'ping-slow': 'ping 3s cubic-bezier(0, 0, 0.2, 1) infinite',
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        /* Custom Ping Animation Delay Utility */
+        .delay-1000 {
+            animation-delay: 1000ms;
+        }
+
+        .delay-2000 {
+            animation-delay: 2000ms;
+        }
+    </style>
+    <style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark font-display text-gray-900 dark:text-gray-100 antialiased overflow-x-hidden transition-colors duration-200">
+    <div
+        class="relative flex h-full min-h-screen w-full flex-col max-w-md mx-auto bg-background-light dark:bg-background-dark shadow-xl overflow-hidden">
+        <!-- Top Status Bar Area Spacer (iOS safe area simulation) -->
+        <div class="h-12 w-full bg-transparent"></div>
+        <!-- Header Section -->
+        <div class="flex-none px-6 pt-4 pb-6 text-center z-10">
+            <!-- Logo Placeholder -->
+            <div
+                class="mx-auto mb-6 h-20 w-20 flex items-center justify-center rounded-2xl bg-white dark:bg-surface-dark shadow-sm border border-gray-100 dark:border-gray-700">
+                <span class="material-symbols-outlined text-primary text-5xl">footprint</span>
+            </div>
+            <h1 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white mb-2">
+                开启育儿新篇章
+            </h1>
+            <p class="text-gray-500 dark:text-gray-400 text-base leading-relaxed">
+                Small Steps 陪伴您每一步
+            </p>
+        </div>
+        <!-- Main Content Area -->
+        <div class="flex flex-1 flex-col px-6 gap-6 pb-8">
+            <!-- Auth Buttons -->
+            <div class="flex flex-col gap-3 w-full">
+                <!-- WeChat Login - Primary -->
+                <button
+                    class="relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-lg bg-[#07C160] hover:bg-[#06ad56] text-white h-12 px-5 font-bold transition-all active:scale-[0.98]">
+                    <!-- WeChat Icon SVG approximation using text for this constraint -->
+                    <span class="material-symbols-outlined text-[20px]">chat</span>
+                    <span class="text-base">微信登录</span>
+                </button>
+                <!-- Phone Login - Secondary -->
+                <button
+                    class="relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-lg bg-white dark:bg-surface-dark border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-900 dark:text-white h-12 px-5 font-bold transition-all active:scale-[0.98]">
+                    <span class="material-symbols-outlined text-gray-500 text-[20px]">smartphone</span>
+                    <span class="text-base">手机号登录</span>
+                </button>
+                <!-- Email Login - Tertiary -->
+                <button
+                    class="relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-lg bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400 h-10 px-5 font-medium transition-all text-sm">
+                    <span>邮箱登录</span>
+                </button>
+            </div>
+            <!-- Spacer to push pairing card down slightly but keep it visible -->
+            <div class="flex-1 min-h-[20px]"></div>
+            <!-- Pairing Card -->
+            <div
+                class="relative w-full overflow-hidden rounded-xl bg-white dark:bg-surface-dark shadow-sm border border-gray-100 dark:border-gray-800 p-6 flex flex-col items-center justify-center text-center">
+                <!-- Header -->
+                <div class="flex items-center justify-between w-full mb-6">
+                    <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">bluetooth_searching</span>
+                        StarBuddy 设备配对
+                    </h3>
+                    <button class="text-xs font-medium text-primary hover:text-primary-dark transition-colors">
+                        帮助
+                    </button>
+                </div>
+                <!-- Animation Container -->
+                <div class="relative flex items-center justify-center h-32 w-32 mb-4">
+                    <!-- Ripple Effects -->
+                    <div class="absolute inset-0 rounded-full bg-primary/20 animate-ping-slow"></div>
+                    <div class="absolute inset-0 rounded-full bg-primary/10 animate-ping-slow delay-1000"></div>
+                    <!-- Center Device Icon -->
+                    <div
+                        class="relative z-10 flex h-16 w-16 items-center justify-center rounded-full bg-primary text-white shadow-lg shadow-primary/30">
+                        <span class="material-symbols-outlined text-3xl animate-pulse">toys</span>
+                    </div>
+                </div>
+                <!-- Status Text -->
+                <p class="text-gray-800 dark:text-gray-200 font-medium mb-1">
+                    正在寻找您的 StarBuddy...
+                </p>
+                <p class="text-gray-400 text-xs">
+                    请确保设备已开启并在附近
+                </p>
+            </div>
+            <!-- Footer Terms -->
+            <div class="mt-4 text-center">
+                <p class="text-sm font-medium text-primary mb-2 cursor-pointer hover:underline">
+                    没有账号？立即注册
+                </p>
+                <p class="text-[10px] text-gray-400 dark:text-gray-500">
+                    登录即代表您同意我们的 <a class="underline decoration-gray-300" href="#">服务条款</a> 和 <a
+                        class="underline decoration-gray-300" href="#">隐私政策</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

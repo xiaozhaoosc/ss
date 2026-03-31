@@ -1,0 +1,6 @@
+com.kenzhao.smallsteps.common.translation.config.TranslationConfig
+com.kenzhao.smallsteps.common.translation.core.impl.DeptNameTranslationImpl
+com.kenzhao.smallsteps.common.translation.core.impl.DictTypeTranslationImpl
+com.kenzhao.smallsteps.common.translation.core.impl.OssUrlTranslationImpl
+com.kenzhao.smallsteps.common.translation.core.impl.UserNameTranslationImpl
+com.kenzhao.smallsteps.common.translation.core.impl.NicknameTranslationImpl

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>smallsteps</artifactId>
+        <groupId>com.kenzhao.smallsteps</groupId>
+        <version>${revision}</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <modules>
+        <module>smallsteps-common-bom</module>
+        <module>smallsteps-common-social</module>
+        <module>smallsteps-common-core</module>
+        <module>smallsteps-common-doc</module>
+        <module>smallsteps-common-excel</module>
+        <module>smallsteps-common-idempotent</module>
+        <module>smallsteps-common-job</module>
+        <module>smallsteps-common-log</module>
+        <module>smallsteps-common-mail</module>
+        <module>smallsteps-common-mybatis</module>
+        <module>smallsteps-common-oss</module>
+        <module>smallsteps-common-ratelimiter</module>
+        <module>smallsteps-common-redis</module>
+        <module>smallsteps-common-satoken</module>
+        <module>smallsteps-common-security</module>
+        <module>smallsteps-common-sms</module>
+        <module>smallsteps-common-web</module>
+        <module>smallsteps-common-translation</module>
+        <module>smallsteps-common-sensitive</module>
+        <module>smallsteps-common-json</module>
+        <module>smallsteps-common-encrypt</module>
+        <module>smallsteps-common-tenant</module>
+        <module>smallsteps-common-websocket</module>
+        <module>smallsteps-common-sse</module>
+        <module>smallsteps-ai</module>
+    </modules>
+
+    <artifactId>smallsteps-common</artifactId>
+    <packaging>pom</packaging>
+
+    <description>
+        common 通用模块
+    </description>
+
+</project>

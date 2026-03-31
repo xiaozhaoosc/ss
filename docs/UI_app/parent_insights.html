@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+
+<html class="light" lang="zh-CN">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Parent Insights</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Noto+Sans+SC:wght@400;500;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#6b9bd1",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#14191e",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1e2429",
+                        "text-primary-light": "#101419",
+                        "text-primary-dark": "#ffffff",
+                        "text-secondary-light": "#5b718b",
+                        "text-secondary-dark": "#94a3b8",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "Noto Sans SC", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans SC', sans-serif;
+        }
+
+        /* Hide scrollbar for cleaner mobile look */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+    <style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark text-text-primary-light dark:text-text-primary-dark transition-colors duration-200">
+    <div
+        class="relative flex min-h-screen w-full flex-col max-w-md mx-auto bg-background-light dark:bg-background-dark overflow-x-hidden shadow-xl border-x border-gray-100 dark:border-gray-800">
+        <!-- Header -->
+        <header
+            class="sticky top-0 z-10 bg-surface-light/95 dark:bg-surface-dark/95 backdrop-blur-md px-4 py-3 flex items-center justify-between border-b border-gray-100 dark:border-gray-800">
+            <h2 class="text-xl font-bold tracking-tight text-text-primary-light dark:text-white">家长洞察</h2>
+            <div class="flex items-center gap-3">
+                <button class="flex items-center bg-gray-100 dark:bg-gray-800 rounded-full p-1 h-8">
+                    <span class="px-3 py-0.5 rounded-full text-xs font-bold bg-primary text-white shadow-sm">CN</span>
+                    <span
+                        class="px-3 py-0.5 rounded-full text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark">EN</span>
+                </button>
+                <div class="size-8 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden relative">
+                    <img alt="User profile avatar" class="w-full h-full object-cover"
+                        data-alt="Close up portrait of a smiling woman"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7jCrPmqsU5v_30-eXXRkR2Cp24_fIpYZCTKKWSXX8JdxIsuUVW0sDHQHOmdUTdCYPFyttrPok-ES2IBpsEusm3N-_6cHkHul5smSZoIhpiC2hvmSUbjg52u55CZLjOpuUjTz7yugUNad0ADG1id2CoHr1Dtn0LU-OpMQjTF8warJD_R3WstFBk2Kqag0dhysJAURc4-dxnTWGsYNPhvOLV4fMeV1kGZkwXj85MS54N9CawFso5LpFE8_3BbPyAhQZIdP2veKkn9w" />
+                </div>
+            </div>
+        </header>
+        <!-- Main Content -->
+        <main class="flex-1 px-4 py-6 space-y-6">
+            <!-- Weekly Focus Section -->
+            <section class="space-y-3">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-lg font-bold text-text-primary-light dark:text-white">每周重点</h3>
+                    <button class="text-primary text-sm font-medium flex items-center gap-0.5">
+                        详情 <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+                    </button>
+                </div>
+                <div
+                    class="bg-surface-light dark:bg-surface-dark rounded-xl p-5 shadow-sm border border-gray-100 dark:border-gray-800">
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <p class="text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark">
+                                能力发展总览</p>
+                            <div class="flex items-baseline gap-2 mt-1">
+                                <h4 class="text-2xl font-bold text-text-primary-light dark:text-white">总体良好</h4>
+                                <span
+                                    class="inline-flex items-center text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 px-1.5 py-0.5 rounded text-xs font-bold">
+                                    <span class="material-symbols-outlined text-[12px] mr-0.5">trending_up</span>
+                                    +5%
+                                </span>
+                            </div>
+                        </div>
+                        <div class="size-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                            <span class="material-symbols-outlined">bar_chart</span>
+                        </div>
+                    </div>
+                    <!-- Chart -->
+                    <div class="grid grid-cols-4 gap-4 h-[160px] items-end px-2">
+                        <!-- Math -->
+                        <div class="flex flex-col items-center gap-2 h-full justify-end group cursor-pointer">
+                            <div
+                                class="relative w-full bg-gray-100 dark:bg-gray-800 rounded-t-lg h-full overflow-hidden flex items-end">
+                                <div class="w-full bg-primary/80 group-hover:bg-primary transition-all duration-300 rounded-t-lg relative"
+                                    style="height: 65%;">
+                                    <!-- Tooltip hint -->
+                                    <div
+                                        class="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
+                                        65%</div>
+                                </div>
+                            </div>
+                            <span
+                                class="text-xs font-medium text-text-secondary-light dark:text-text-secondary-dark">数学</span>
+                        </div>
+                        <!-- Social -->
+                        <div class="flex flex-col items-center gap-2 h-full justify-end group cursor-pointer">
+                            <div
+                                class="relative w-full bg-gray-100 dark:bg-gray-800 rounded-t-lg h-full overflow-hidden flex items-end">
+                                <div class="w-full bg-primary/60 group-hover:bg-primary transition-all duration-300 rounded-t-lg relative"
+                                    style="height: 42%;">
+                                    <div
+                                        class="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
+                                        42%</div>
+                                </div>
+                            </div>
+                            <span
+                                class="text-xs font-medium text-text-secondary-light dark:text-text-secondary-dark">社交</span>
+                        </div>
+                        <!-- Focus -->
+                        <div class="flex flex-col items-center gap-2 h-full justify-end group cursor-pointer">
+                            <div
+                                class="relative w-full bg-gray-100 dark:bg-gray-800 rounded-t-lg h-full overflow-hidden flex items-end">
+                                <div class="w-full bg-primary group-hover:bg-primary transition-all duration-300 rounded-t-lg relative"
+                                    style="height: 85%;">
+                                    <div
+                                        class="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
+                                        85%</div>
+                                </div>
+                            </div>
+                            <span
+                                class="text-xs font-medium text-text-secondary-light dark:text-text-secondary-dark">专注</span>
+                        </div>
+                        <!-- Creative -->
+                        <div class="flex flex-col items-center gap-2 h-full justify-end group cursor-pointer">
+                            <div
+                                class="relative w-full bg-gray-100 dark:bg-gray-800 rounded-t-lg h-full overflow-hidden flex items-end">
+                                <div class="w-full bg-primary/40 group-hover:bg-primary transition-all duration-300 rounded-t-lg relative"
+                                    style="height: 30%;">
+                                    <div
+                                        class="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
+                                        30%</div>
+                                </div>
+                            </div>
+                            <span
+                                class="text-xs font-medium text-text-secondary-light dark:text-text-secondary-dark">创造</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- Monthly Emotion Heatmap -->
+            <section class="space-y-3">
+                <h3 class="text-lg font-bold text-text-primary-light dark:text-white">月度情绪热力图</h3>
+                <div
+                    class="bg-surface-light dark:bg-surface-dark rounded-xl p-5 shadow-sm border border-gray-100 dark:border-gray-800">
+                    <!-- Calendar Header -->
+                    <div class="flex items-center justify-between mb-4">
+                        <button
+                            class="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-text-primary-light dark:text-text-primary-dark">
+                            <span class="material-symbols-outlined text-[20px]">chevron_left</span>
+                        </button>
+                        <h4 class="text-base font-bold text-text-primary-light dark:text-white">2023年 10月</h4>
+                        <button
+                            class="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-text-primary-light dark:text-text-primary-dark">
+                            <span class="material-symbols-outlined text-[20px]">chevron_right</span>
+                        </button>
+                    </div>
+                    <!-- Weekday Headers -->
+                    <div class="grid grid-cols-7 mb-2 text-center">
+                        <span
+                            class="text-xs font-medium text-text-secondary-light dark:text-text-secondary-dark uppercase">日</span>
+                        <span
+                            class="text-xs font-medium text-text-secondary-light dark:text-text-secondary-dark uppercase">一</span>
+                        <span
+                            class="text-xs font-medium text-text-secondary-light dark:text-text-secondary-dark uppercase">二</span>
+                        <span
+                            class="text-xs font-medium text-text-secondary-light dark:text-text-secondary-dark uppercase">三</span>
+                        <span
+                            class="text-xs font-medium text-text-secondary-light dark:text-text-secondary-dark uppercase">四</span>
+                        <span
+                            class="text-xs font-medium text-text-secondary-light dark:text-text-secondary-dark uppercase">五</span>
+                        <span
+                            class="text-xs font-medium text-text-secondary-light dark:text-text-secondary-dark uppercase">六</span>
+                    </div>
+                    <!-- Calendar Grid -->
+                    <div class="grid grid-cols-7 gap-y-3 gap-x-1 justify-items-center">
+                        <!-- Empty cells for start of month -->
+                        <span></span><span></span><span></span><span></span>
+                        <!-- Days -->
+                        <button
+                            class="size-8 flex items-center justify-center text-sm rounded-full text-text-secondary-light relative">
+                            1
+                            <span class="absolute bottom-1 size-1 rounded-full bg-gray-300"></span>
+                        </button>
+                        <button
+                            class="size-8 flex items-center justify-center text-sm rounded-full text-text-secondary-light relative">
+                            2
+                            <span class="absolute bottom-1 size-1 rounded-full bg-yellow-400"></span>
+                        </button>
+                        <button
+                            class="size-8 flex items-center justify-center text-sm rounded-full text-text-secondary-light relative">
+                            3
+                            <span class="absolute bottom-1 size-1 rounded-full bg-primary"></span>
+                        </button>
+                        <button
+                            class="size-8 flex items-center justify-center text-sm rounded-full text-text-secondary-light relative">
+                            4
+                            <span class="absolute bottom-1 size-1 rounded-full bg-primary"></span>
+                        </button>
+                        <!-- Selected Day -->
+                        <button
+                            class="size-8 flex items-center justify-center text-sm font-bold rounded-full bg-primary text-white shadow-md shadow-primary/30 relative">
+                            5
+                        </button>
+                        <button
+                            class="size-8 flex items-center justify-center text-sm rounded-full text-text-secondary-light relative">
+                            6
+                            <span class="absolute bottom-1 size-1 rounded-full bg-yellow-400"></span>
+                        </button>
+                        <button
+                            class="size-8 flex items-center justify-center text-sm rounded-full text-text-secondary-light relative">
+                            7
+                            <span class="absolute bottom-1 size-1 rounded-full bg-gray-300"></span>
+                        </button>
+                        <button
+                            class="size-8 flex items-center justify-center text-sm rounded-full text-text-secondary-light relative">
+                            8
+                            <span class="absolute bottom-1 size-1 rounded-full bg-primary"></span>
+                        </button>
+                        <button
+                            class="size-8 flex items-center justify-center text-sm rounded-full text-text-secondary-light relative">
+                            9
+                            <span class="absolute bottom-1 size-1 rounded-full bg-primary"></span>
+                        </button>
+                        <button
+                            class="size-8 flex items-center justify-center text-sm rounded-full text-text-secondary-light relative">
+                            10
+                            <span class="absolute bottom-1 size-1 rounded-full bg-yellow-400"></span>
+                        </button>
+                        <button
+                            class="size-8 flex items-center justify-center text-sm rounded-full text-text-secondary-light relative">
+                            11
+                            <span class="absolute bottom-1 size-1 rounded-full bg-yellow-400"></span>
+                        </button>
+                        <button
+                            class="size-8 flex items-center justify-center text-sm rounded-full text-text-secondary-light relative">
+                            12
+                            <span class="absolute bottom-1 size-1 rounded-full bg-primary"></span>
+                        </button>
+                        <button
+                            class="size-8 flex items-center justify-center text-sm rounded-full text-text-secondary-light relative">
+                            13
+                            <span class="absolute bottom-1 size-1 rounded-full bg-primary"></span>
+                        </button>
+                        <button
+                            class="size-8 flex items-center justify-center text-sm rounded-full text-text-secondary-light relative">
+                            14
+                            <span class="absolute bottom-1 size-1 rounded-full bg-gray-300"></span>
+                        </button>
+                    </div>
+                    <!-- Legend -->
+                    <div
+                        class="flex items-center justify-center gap-6 mt-6 pt-4 border-t border-gray-100 dark:border-gray-800">
+                        <div class="flex items-center gap-2">
+                            <span class="size-2 rounded-full bg-primary"></span>
+                            <span class="text-xs text-text-secondary-light dark:text-text-secondary-dark">平静/开心</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="size-2 rounded-full bg-yellow-400"></span>
+                            <span class="text-xs text-text-secondary-light dark:text-text-secondary-dark">兴奋</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="size-2 rounded-full bg-gray-300"></span>
+                            <span class="text-xs text-text-secondary-light dark:text-text-secondary-dark">一般</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- Achievement Highlights -->
+            <section class="space-y-3 pb-6">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-lg font-bold text-text-primary-light dark:text-white">成就亮点</h3>
+                    <button class="text-primary text-sm font-medium">查看全部</button>
+                </div>
+                <div class="flex flex-col gap-3">
+                    <!-- Achievement Card 1 -->
+                    <div
+                        class="bg-surface-light dark:bg-surface-dark rounded-xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 flex items-start gap-4">
+                        <div
+                            class="size-12 rounded-full bg-yellow-50 dark:bg-yellow-900/20 flex items-center justify-center shrink-0">
+                            <span
+                                class="material-symbols-outlined text-yellow-500 dark:text-yellow-400">emoji_events</span>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="text-base font-bold text-text-primary-light dark:text-white mb-1">本周阅读时长达标</h4>
+                            <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark mb-2">累计阅读超过 120
+                                分钟，表现很棒！</p>
+                            <span
+                                class="text-xs text-text-secondary-light/70 dark:text-text-secondary-dark/70">10月12日</span>
+                        </div>
+                    </div>
+                    <!-- Achievement Card 2 -->
+                    <div
+                        class="bg-surface-light dark:bg-surface-dark rounded-xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 flex items-start gap-4">
+                        <div class="size-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                            <span class="material-symbols-outlined text-primary">clean_hands</span>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="text-base font-bold text-text-primary-light dark:text-white mb-1">第一次主动收拾玩具</h4>
+                            <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark mb-2">
+                                在没有任何提醒的情况下完成了整理。</p>
+                            <span
+                                class="text-xs text-text-secondary-light/70 dark:text-text-secondary-dark/70">10月10日</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <!-- Bottom Navigation -->
+        <nav
+            class="sticky bottom-0 bg-surface-light dark:bg-surface-dark border-t border-gray-100 dark:border-gray-800 pb-safe pt-2 px-6">
+            <div class="flex justify-between items-center h-16">
+                <button
+                    class="flex flex-col items-center gap-1 text-text-secondary-light dark:text-text-secondary-dark w-12 group">
+                    <span
+                        class="material-symbols-outlined text-[24px] group-hover:text-primary transition-colors">home</span>
+                    <span class="text-[10px] font-medium group-hover:text-primary transition-colors">首页</span>
+                </button>
+                <button class="flex flex-col items-center gap-1 text-primary w-12">
+                    <span class="material-symbols-outlined text-[24px] fill-current">insights</span>
+                    <span class="text-[10px] font-bold">洞察</span>
+                </button>
+                <button
+                    class="flex flex-col items-center gap-1 text-text-secondary-light dark:text-text-secondary-dark w-12 group">
+                    <span
+                        class="material-symbols-outlined text-[24px] group-hover:text-primary transition-colors">calendar_month</span>
+                    <span class="text-[10px] font-medium group-hover:text-primary transition-colors">日程</span>
+                </button>
+                <button
+                    class="flex flex-col items-center gap-1 text-text-secondary-light dark:text-text-secondary-dark w-12 group">
+                    <span
+                        class="material-symbols-outlined text-[24px] group-hover:text-primary transition-colors">person</span>
+                    <span class="text-[10px] font-medium group-hover:text-primary transition-colors">我的</span>
+                </button>
+            </div>
+        </nav>
+    </div>
+    <!-- Safe area padding for bottom nav on mobile -->
+    <style>
+        .pb-safe {
+            padding-bottom: env(safe-area-inset-bottom, 20px);
+        }
+    </style>
+
+    <!-- Navigation Links added by Antigravity -->
+    <nav
+        style="position: fixed; bottom: 0; width: 100%; background: white; border-top: 1px solid #eee; display: flex; justify-content: space-around; padding: 10px 0;">
+        <a href="./parent_dashboard.html" style="text-decoration: none; color: #666;">首页</a>
+        <a href="./parent_task_creator.html" style="text-decoration: none; color: #666;">任务</a>
+        <a href="./parent_insights.html" style="text-decoration: none; color: #6C9BD2; font-weight: bold;">洞察</a>
+        <a href="./parent_profile.html" style="text-decoration: none; color: #666;">我的</a>
+    </nav>
+</body>
+
+</html>

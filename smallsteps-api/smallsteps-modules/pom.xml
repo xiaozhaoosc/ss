@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>smallsteps</artifactId>
+        <groupId>com.kenzhao.smallsteps</groupId>
+        <version>${revision}</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <modules>
+        <module>smallsteps-demo</module>
+        <module>smallsteps-generator</module>
+        <module>smallsteps-job</module>
+        <module>smallsteps-system</module>
+        <module>smallsteps-workflow</module>
+        <module>smallsteps-parent</module>
+        <module>smallsteps-child</module>
+    </modules>
+
+    <artifactId>smallsteps-modules</artifactId>
+    <packaging>pom</packaging>
+
+    <description>
+        smallsteps-modules 业务模块
+    </description>
+
+</project>

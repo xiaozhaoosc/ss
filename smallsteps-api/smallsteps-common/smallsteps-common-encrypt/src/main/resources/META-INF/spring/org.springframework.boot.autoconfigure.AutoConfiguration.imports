@@ -1,0 +1,3 @@
+com.kenzhao.smallsteps.common.encrypt.config.EncryptorAutoConfiguration
+com.kenzhao.smallsteps.common.encrypt.config.ApiDecryptAutoConfiguration
+

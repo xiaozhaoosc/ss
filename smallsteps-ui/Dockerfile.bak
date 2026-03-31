@@ -1,0 +1,30 @@
+# Build arguments
+ARG DOCKER_IMAGE_PREFIX
+
+# Build stage
+FROM ${DOCKER_IMAGE_PREFIX}node:24-alpine AS build-stage
+
+WORKDIR /app
+
+# Install dependencies
+COPY package.json pnpm-lock.yaml* ./
+RUN npm install -g pnpm && pnpm install
+
+# Copy source code
+COPY . .
+
+# Build the project
+RUN pnpm run build:prod
+
+# Production stage
+FROM ${DOCKER_IMAGE_PREFIX}nginx:alpine AS production-stage
+
+# Copy build artifacts to Nginx
+COPY --from=build-stage /app/dist /usr/share/nginx/html
+
+# Expose port 80
+EXPOSE 80
+
+# Nginx config will be mounted or copied via docker-compose
+# 启动时将构建产物复制到 /dist_export (映射到宿主机 dist 目录)，然后启动 Nginx
+CMD ["/bin/sh", "-c", "cp -r /usr/share/nginx/html/* /dist_export/ && nginx -g 'daemon off;'"]

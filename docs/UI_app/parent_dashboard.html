@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Small Steps Parent Dashboard</title>
+    <!-- Google Fonts: Manrope -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap"
+        rel="stylesheet" />
+    <!-- Material Symbols -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- Theme Config -->
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#5e8dde", // Soft Blue
+                        "primary-dark": "#4a7bc9",
+                        "background-light": "#f6f7f8", // Light Grey/Off-white
+                        "background-dark": "#121720", // Dark Blue/Grey
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1c222e",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            /* IE and Edge */
+            scrollbar-width: none;
+            /* Firefox */
+        }
+    </style>
+    <style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark font-display text-[#0f131a] dark:text-gray-100 antialiased selection:bg-primary/30">
+    <div class="relative flex min-h-screen w-full flex-col overflow-hidden pb-20">
+        <!-- Added pb-20 for bottom nav space -->
+        <!-- TopAppBar -->
+        <div
+            class="sticky top-0 z-30 flex items-center bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm p-4 justify-between border-b border-gray-100 dark:border-gray-800 transition-colors">
+            <div class="flex items-center gap-3">
+                <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 ring-2 ring-white dark:ring-gray-700 shadow-sm"
+                    data-alt="Portrait of a smiling young mother"
+                    style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBXSaBUjkmzRo1U3JyO-es_moeOQg_OvUxIvbH0ROD2h5i3fJBnVg38LUIDigs7AdcXWRqhOZxpc1Q0CCxrokZ9tm_6QYGs88bUR--C-6E5k2kxM1xrC-Qc0P_pHpYsHksNowi3cROSk01tNRc69_TAGf7XTIDVeJO5aWaoWURVxTh90LTxk3yIQ2nIbd_0CbqBt6dtKXVYLtYKujugHTIrITJN6LFKhy5LwJxXrmN-3Jp-am186GV7mkFQAJNC1_DM8KNyeajRDH4");'>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-xs text-gray-500 dark:text-gray-400 font-medium">Welcome back,</span>
+                    <h2 class="text-gray-900 dark:text-white text-lg font-bold leading-none tracking-tight">Sarah</h2>
+                </div>
+            </div>
+            <div class="flex items-center justify-end">
+                <button onclick="document.getElementById('notificationDropdown').classList.toggle('hidden')"
+                    class="flex items-center justify-center rounded-full size-10 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 shadow-sm border border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors relative">
+                    <span class="material-symbols-outlined">notifications</span>
+                    <span
+                        class="absolute top-2 right-2.5 size-2 bg-red-500 rounded-full border border-white dark:border-gray-800"></span>
+                </button>
+
+                <!-- Notification Dropdown -->
+                <div id="notificationDropdown"
+                    class="hidden absolute top-16 right-4 w-72 bg-white dark:bg-surface-dark rounded-xl shadow-xl border border-gray-100 dark:border-gray-700 z-50 overflow-hidden">
+                    <div
+                        class="px-4 py-3 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center">
+                        <h3 class="font-bold text-sm text-gray-900 dark:text-white">Notifications</h3>
+                        <span class="text-xs text-primary cursor-pointer">Mark all read</span>
+                    </div>
+                    <div class="max-h-64 overflow-y-auto">
+                        <div
+                            class="p-3 border-b border-gray-50 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer">
+                            <div class="flex gap-3">
+                                <div
+                                    class="size-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center shrink-0">
+                                    <span class="material-symbols-outlined text-sm">check</span>
+                                </div>
+                                <div>
+                                    <p class="text-xs font-bold text-gray-800 dark:text-gray-200">Leo finished "Math
+                                        Task"</p>
+                                    <p class="text-[10px] text-gray-400">2 mins ago</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer">
+                            <div class="flex gap-3">
+                                <div
+                                    class="size-8 rounded-full bg-yellow-100 text-yellow-600 flex items-center justify-center shrink-0">
+                                    <span class="material-symbols-outlined text-sm">shopping_bag</span>
+                                </div>
+                                <div>
+                                    <p class="text-xs font-bold text-gray-800 dark:text-gray-200">Reward Redeemed: Ice
+                                        Cream</p>
+                                    <p class="text-[10px] text-gray-400">1 hour ago</p>
+                                    <div class="mt-1 flex gap-2">
+                                        <button
+                                            class="bg-primary text-white text-[10px] px-2 py-1 rounded">Approve</button>
+                                        <button
+                                            class="bg-gray-100 text-gray-600 text-[10px] px-2 py-1 rounded">Deny</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- HeadlineText: Today's Focus -->
+        <div class="pt-6 px-4 pb-2 flex justify-between items-end">
+            <h2 class="text-gray-900 dark:text-white tracking-tight text-2xl font-bold leading-tight">Today's Focus</h2>
+            <button class="text-primary text-sm font-semibold hover:text-primary-dark transition-colors">See
+                all</button>
+        </div>
+        <!-- Stats (Horizontal Scroll) -->
+        <div class="flex overflow-x-auto no-scrollbar gap-4 px-4 pb-4">
+            <!-- Stat 1: Reading -->
+            <div
+                class="flex min-w-[160px] flex-col gap-3 rounded-2xl p-5 bg-white dark:bg-surface-dark shadow-sm border border-gray-100 dark:border-gray-800 relative group">
+                <div class="flex justify-between items-start">
+                    <div class="p-2 rounded-lg bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">
+                        <span class="material-symbols-outlined text-[20px]">menu_book</span>
+                    </div>
+                    <span
+                        class="text-green-600 dark:text-green-400 text-xs font-bold bg-green-50 dark:bg-green-900/20 px-2 py-1 rounded-full">+5m</span>
+                </div>
+                <div>
+                    <p class="text-gray-500 dark:text-gray-400 text-sm font-medium">Reading</p>
+                    <p class="text-gray-900 dark:text-white text-2xl font-bold">45m</p>
+                </div>
+            </div>
+            <!-- Stat 2: Tasks -->
+            <div
+                class="flex min-w-[160px] flex-col gap-3 rounded-2xl p-5 bg-white dark:bg-surface-dark shadow-sm border border-gray-100 dark:border-gray-800 relative group">
+                <div class="flex justify-between items-start">
+                    <div class="p-2 rounded-lg bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400">
+                        <span class="material-symbols-outlined text-[20px]">check_circle</span>
+                    </div>
+                    <span
+                        class="text-green-600 dark:text-green-400 text-xs font-bold bg-green-50 dark:bg-green-900/20 px-2 py-1 rounded-full">+1</span>
+                </div>
+                <div>
+                    <p class="text-gray-500 dark:text-gray-400 text-sm font-medium">Tasks</p>
+                    <p class="text-gray-900 dark:text-white text-2xl font-bold">3 <span
+                            class="text-sm font-normal text-gray-400">/ 5</span></p>
+                </div>
+            </div>
+            <!-- Stat 3: Sleep -->
+            <div
+                class="flex min-w-[160px] flex-col gap-3 rounded-2xl p-5 bg-white dark:bg-surface-dark shadow-sm border border-gray-100 dark:border-gray-800 relative group">
+                <div class="flex justify-between items-start">
+                    <div class="p-2 rounded-lg bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400">
+                        <span class="material-symbols-outlined text-[20px]">bedtime</span>
+                    </div>
+                    <span
+                        class="text-red-500 dark:text-red-400 text-xs font-bold bg-red-50 dark:bg-red-900/20 px-2 py-1 rounded-full">-30m</span>
+                </div>
+                <div>
+                    <p class="text-gray-500 dark:text-gray-400 text-sm font-medium">Sleep</p>
+                    <p class="text-gray-900 dark:text-white text-2xl font-bold">8h</p>
+                </div>
+            </div>
+        </div>
+        <!-- Emotion Alert Card -->
+        <div class="px-4 py-2">
+            <div
+                class="flex flex-col rounded-2xl shadow-sm bg-white dark:bg-surface-dark border-l-4 border-primary overflow-hidden">
+                <div class="flex flex-row p-4 gap-4 items-start">
+                    <div class="shrink-0">
+                        <div class="bg-center bg-no-repeat bg-cover rounded-xl size-20 shadow-inner"
+                            data-alt="Abstract soft gradient representing calm emotions"
+                            style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBEaBQ_WB33k57A56ucieYH4kZLwqVy9YhwGhLgjWTZ8izqGjhRXYbTCZ1FsnerZMj6M5yVO-OKQMxN1fXLcFlVS6V3CAmoCkF1pDqjopS5S1H2ZgaWfs75iLrJTBTl89NqE9rZ4q67EnmqxQgJLQUmBUxD_fbY85H7DCfbZASthgFdMaxStY8CZIvGr8ldkysJrcrQN__aRuc7VH7e1m01wdPxRodXI4-QsQU8ZLlpnRYpc_bFXEU4d871GZshVRTDV4JHS_pMPA0");'>
+                        </div>
+                    </div>
+                    <div class="flex flex-col flex-grow justify-center gap-1">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-gray-900 dark:text-white text-lg font-bold leading-tight">Emotion Alert</h3>
+                            <span aria-label="Alert Active"
+                                class="flex size-2 bg-red-500 rounded-full animate-pulse"></span>
+                        </div>
+                        <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed mb-1">Anxiety detected during
+                            Math Task. Recommended action: 5-minute break.</p>
+                        <div class="flex justify-end pt-1">
+                            <button
+                                class="text-xs font-bold text-primary hover:text-primary-dark uppercase tracking-wide flex items-center gap-1">
+                                View Details <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- HeadlineText: Daily Timeline -->
+        <div class="pt-6 px-4 pb-2">
+            <h2 class="text-gray-900 dark:text-white tracking-tight text-2xl font-bold leading-tight">Daily Timeline
+            </h2>
+        </div>
+        <!-- Vertical Timeline Component -->
+        <div class="px-4 py-2 relative">
+            <!-- Connector Line -->
+            <div class="absolute left-[31px] top-4 bottom-4 w-[2px] bg-gray-200 dark:bg-gray-700 rounded-full"></div>
+            <!-- Timeline Item 1 -->
+            <div class="group flex gap-4 mb-6 relative">
+                <div
+                    class="z-10 mt-1 flex size-8 shrink-0 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900 text-primary ring-4 ring-background-light dark:ring-background-dark">
+                    <span class="material-symbols-outlined text-[16px]">restaurant</span>
+                </div>
+                <div
+                    class="flex flex-1 flex-col rounded-xl bg-white dark:bg-surface-dark p-4 shadow-sm border border-gray-100 dark:border-gray-800">
+                    <div class="flex justify-between items-start mb-1">
+                        <span class="text-primary font-bold text-sm">08:00 AM</span>
+                        <span
+                            class="text-xs font-medium text-gray-400 bg-gray-50 dark:bg-gray-800 px-2 py-0.5 rounded-md">Completed</span>
+                    </div>
+                    <h3 class="text-gray-900 dark:text-white font-bold text-base">Breakfast &amp; Vitamins</h3>
+                    <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">Healthy start with fruits and Omega-3.</p>
+                </div>
+            </div>
+            <!-- Timeline Item 2 -->
+            <div class="group flex gap-4 mb-6 relative">
+                <div
+                    class="z-10 mt-1 flex size-8 shrink-0 items-center justify-center rounded-full bg-purple-100 dark:bg-purple-900 text-purple-600 ring-4 ring-background-light dark:ring-background-dark">
+                    <span class="material-symbols-outlined text-[16px]">videocam</span>
+                </div>
+                <div
+                    class="flex flex-1 flex-col rounded-xl bg-white dark:bg-surface-dark p-4 shadow-sm border border-gray-100 dark:border-gray-800">
+                    <div class="flex justify-between items-start mb-1">
+                        <span class="text-primary font-bold text-sm">09:30 AM</span>
+                        <span
+                            class="text-xs font-medium text-gray-400 bg-gray-50 dark:bg-gray-800 px-2 py-0.5 rounded-md">Completed</span>
+                    </div>
+                    <h3 class="text-gray-900 dark:text-white font-bold text-base">Zoom Class - Science</h3>
+                    <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">Topic: Photosynthesis basics.</p>
+                    <!-- Small embedded image or attachment indicator -->
+                    <div class="mt-3 flex items-center gap-2">
+                        <div class="bg-center bg-no-repeat bg-cover rounded-md size-10"
+                            data-alt="Thumbnail of science class notes showing a green leaf"
+                            style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBaHLhk_0ELXWcDshYEI_pdPmZTlqF5DYpSvVhvLmDf3EtGdc1dqz2gPR5u5p0uNTsjUcVkNB1BKFC4ghF_0Eye_2SnaDjfqibDnay5ix_sosxY-YRP_yyhqL3_bfYSOyPQgW1pp7FcWhL51d9gvauk2v7QUsZsHSOkFEUqTrgS_WJ-x2GpeuiU6I7hZa6g70fQ-oyiY0FJw28MMj1W0CqHzxU2rQ6AJB0DU7H840Q3UzBkl6PP4EfBoXLZ7JOmvwnwQ0nFW31sIsI");'>
+                        </div>
+                        <div class="text-xs text-gray-500">Class_Notes.pdf</div>
+                    </div>
+                </div>
+            </div>
+            <!-- Timeline Item 3 (Current/Active) -->
+            <div class="group flex gap-4 mb-6 relative">
+                <div
+                    class="z-10 mt-1 flex size-8 shrink-0 items-center justify-center rounded-full bg-primary text-white ring-4 ring-background-light dark:ring-background-dark shadow-md shadow-primary/30">
+                    <span class="material-symbols-outlined text-[16px]">calculate</span>
+                </div>
+                <div
+                    class="flex flex-1 flex-col rounded-xl bg-white dark:bg-surface-dark p-4 shadow-md border-l-4 border-l-primary dark:border-gray-800">
+                    <div class="flex justify-between items-start mb-1">
+                        <span class="text-primary font-bold text-sm">14:00 PM</span>
+                        <span
+                            class="text-xs font-bold text-orange-500 bg-orange-50 dark:bg-orange-900/20 px-2 py-0.5 rounded-md animate-pulse">In
+                            Progress</span>
+                    </div>
+                    <h3 class="text-gray-900 dark:text-white font-bold text-base">Math Task</h3>
+                    <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">Algebra basics. 20 problems.</p>
+                </div>
+            </div>
+            <!-- Timeline Item 4 (Future) -->
+            <div class="group flex gap-4 mb-6 relative opacity-60">
+                <div
+                    class="z-10 mt-1 flex size-8 shrink-0 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700 text-gray-400 ring-4 ring-background-light dark:ring-background-dark">
+                    <span class="material-symbols-outlined text-[16px]">sports_soccer</span>
+                </div>
+                <div
+                    class="flex flex-1 flex-col rounded-xl bg-white dark:bg-surface-dark p-4 shadow-sm border border-dashed border-gray-300 dark:border-gray-700">
+                    <div class="flex justify-between items-start mb-1">
+                        <span class="text-gray-400 font-bold text-sm">16:00 PM</span>
+                        <span
+                            class="text-xs font-medium text-gray-400 border border-gray-200 dark:border-gray-700 px-2 py-0.5 rounded-md">Upcoming</span>
+                    </div>
+                    <h3 class="text-gray-900 dark:text-white font-bold text-base">Free Play</h3>
+                    <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">Outdoor activity recommended.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Bottom Navigation Bar -->
+    <div
+        class="fixed bottom-0 left-0 right-0 bg-white dark:bg-surface-dark border-t border-gray-200 dark:border-gray-800 px-6 py-3 pb-6 flex justify-between items-center z-40">
+        <button class="flex flex-col items-center gap-1 text-primary">
+            <span class="material-symbols-outlined text-[24px]">dashboard</span>
+            <span class="text-[10px] font-bold">Home</span>
+        </button>
+        <button
+            class="flex flex-col items-center gap-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors">
+            <span class="material-symbols-outlined text-[24px]">bar_chart</span>
+            <span class="text-[10px] font-medium">Reports</span>
+        </button>
+        <!-- Floating Action Button effect for center item -->
+        <button
+            class="flex items-center justify-center size-12 -mt-8 bg-primary text-white rounded-full shadow-lg shadow-primary/40 hover:bg-primary-dark transition-transform hover:-translate-y-1">
+            <span class="material-symbols-outlined text-[28px]">add</span>
+        </button>
+        <button
+            class="flex flex-col items-center gap-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors">
+            <span class="material-symbols-outlined text-[24px]">chat_bubble</span>
+            <span class="text-[10px] font-medium">Chat</span>
+        </button>
+        <button
+            class="flex flex-col items-center gap-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors">
+            <span class="material-symbols-outlined text-[24px]">settings</span>
+            <span class="text-[10px] font-medium">Settings</span>
+        </button>
+    </div>
+
+    <!-- Navigation Links added by Antigravity -->
+    <nav
+        style="position: fixed; bottom: 0; width: 100%; background: white; border-top: 1px solid #eee; display: flex; justify-content: space-around; padding: 10px 0; overflow-x: auto;">
+        <a href="./parent_dashboard.html" style="text-decoration: none; color: #6C9BD2; font-weight: bold;">首页</a>
+        <a href="./parent_task_creator.html" style="text-decoration: none; color: #666;">任务</a>
+        <a href="./parent_reward_config.html" style="text-decoration: none; color: #666;">奖励</a>
+        <a href="./parent_guide.html" style="text-decoration: none; color: #666;">学堂</a>
+        <a href="./parent_insights.html" style="text-decoration: none; color: #666;">洞察</a>
+        <a href="./parent_profile.html" style="text-decoration: none; color: #666;">我的</a>
+    </nav>
+</body>
+
+</html>
