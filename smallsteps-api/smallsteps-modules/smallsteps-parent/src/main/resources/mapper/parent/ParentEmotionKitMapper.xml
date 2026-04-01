@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kenzhao.smallsteps.parent.mapper.ParentEmotionKitMapper">
+    <resultMap type="com.kenzhao.smallsteps.parent.domain.ParentEmotionKit" id="ParentEmotionKitResult">
+        <id property="kitId" column="kit_id" />
+        <result property="childId" column="child_id" />
+        <result property="kitName" column="kit_name" />
+        <result property="emotionType" column="emotion_type" />
+        <result property="content" column="content" />
+        <result property="status" column="status" />
+        <result property="createBy" column="create_by" />
+        <result property="createTime" column="create_time" />
+        <result property="updateBy" column="update_by" />
+        <result property="updateTime" column="update_time" />
+    </resultMap>
+
+    <sql id="selectParentEmotionKitVo">
+        select kit_id, child_id, kit_name, emotion_type, content, status, create_by, create_time, update_by, update_time from parent_emotion_kit
+    </sql>
+
+    <select id="selectParentEmotionKitList" parameterType="com.kenzhao.smallsteps.parent.domain.ParentEmotionKit" resultMap="ParentEmotionKitResult">
+        <include refid="selectParentEmotionKitVo" />
+        <where>
+            <if test="childId != null"> and child_id = #{childId}</if>
+            <if test="kitName != null and kitName != ''"> and kit_name like concat('%', #{kitName}, '%')</if>
+            <if test="emotionType != null"> and emotion_type = #{emotionType}</if>
+            <if test="status != null"> and status = #{status}</if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectParentEmotionKitByKitId" parameterType="Long" resultMap="ParentEmotionKitResult">
+        <include refid="selectParentEmotionKitVo" />
+        where kit_id = #{kitId}
+    </select>
+
+    <insert id="insertParentEmotionKit" parameterType="com.kenzhao.smallsteps.parent.domain.ParentEmotionKit" useGeneratedKeys="true" keyProperty="kitId">
+        insert into parent_emotion_kit
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="childId != null">child_id,</if>
+            <if test="kitName != null">kit_name,</if>
+            <if test="emotionType != null">emotion_type,</if>
+            <if test="content != null">content,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="childId != null">#{childId},</if>
+            <if test="kitName != null">#{kitName},</if>
+            <if test="emotionType != null">#{emotionType},</if>
+            <if test="content != null">#{content},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateParentEmotionKit" parameterType="com.kenzhao.smallsteps.parent.domain.ParentEmotionKit">
+        update parent_emotion_kit
+        <set>
+            <if test="childId != null">child_id = #{childId},</if>
+            <if test="kitName != null">kit_name = #{kitName},</if>
+            <if test="emotionType != null">emotion_type = #{emotionType},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </set>
+        where kit_id = #{kitId}
+    </update>
+
+    <delete id="deleteParentEmotionKitByKitId" parameterType="Long">
+        delete from parent_emotion_kit where kit_id = #{kitId}
+    </delete>
+
+    <delete id="deleteParentEmotionKitByKitIds" parameterType="Long[]">
+        delete from parent_emotion_kit where kit_id in
+        <foreach item="kitId" collection="array" open="(" separator="," close=")">
+            #{kitId}
+        </foreach>
+    </delete>
+
+    <select id="selectParentEmotionKitByChildId" parameterType="Long" resultMap="ParentEmotionKitResult">
+        <include refid="selectParentEmotionKitVo" />
+        where child_id = #{childId}
+        order by emotion_type, create_time desc
+    </select>
+
+    <select id="selectParentEmotionKitByChildIdAndEmotionType" parameterType="Map" resultMap="ParentEmotionKitResult">
+        <include refid="selectParentEmotionKitVo" />
+        where child_id = #{childId} and emotion_type = #{emotionType}
+        order by create_time desc
+    </select>
+</mapper>

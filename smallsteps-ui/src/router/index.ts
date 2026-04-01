@@ -1,114 +1,424 @@
-import { createWebHistory, createRouter, RouteRecordRaw } from 'vue-router';
-/* Layout */
-import Layout from '@/layout/index.vue';
+import { createRouter, createWebHistory } from 'vue-router'
+import { useUserStoreHook } from '@/store/modules/user'
+import { ElMessage } from 'element-plus'
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
+NProgress.configure({ showSpinner: false })
 
-/**
- * Note: 路由配置项
- *
- * hidden: true                     // 当设置 true 的时候该路由不会再侧边栏出现 如401，login等页面，或者如一些编辑页面/edit/1
- * alwaysShow: true                 // 当你一个路由下面的 children 声明的路由大于1个时，自动会变成嵌套的模式--如组件页面
- *                                  // 只有一个时，会将那个子路由当做根路由显示在侧边栏--如引导页面
- *                                  // 若你想不管路由下面的 children 声明的个数都显示你的根路由
- *                                  // 你可以设置 alwaysShow: true，这样它就会忽略之前定义的规则，一直显示根路由
- * redirect: noRedirect             // 当设置 noRedirect 的时候该路由在面包屑导航中不可被点击
- * name:'router-name'               // 设定路由的名字，一定要填写不然使用<keep-alive>时会出现各种问题
- * query: '{"id": 1, "name": "ry"}' // 访问路由的默认传递参数
- * roles: ['admin', 'common']       // 访问路由的角色权限
- * permissions: ['a:a:a', 'b:b:b']  // 访问路由的菜单权限
- * meta : {
-    noCache: true                   // 如果设置为true，则不会被 <keep-alive> 缓存(默认 false)
-    title: 'title'                  // 设置该路由在侧边栏和面包屑中展示的名字
-    icon: 'svg-name'                // 设置该路由的图标，对应路径src/assets/icons/svg
-    breadcrumb: false               // 如果设置为false，则不会在breadcrumb面包屑中显示
-    activeMenu: '/system/user'      // 当路由设置了该属性，则会高亮相对应的侧边栏。
-  }
- */
-
-// 公共路由
-export const constantRoutes: RouteRecordRaw[] = [
-  {
-    path: '/redirect',
-    component: Layout,
-    hidden: true,
-    children: [
-      {
-        path: '/redirect/:path(.*)',
-        component: () => import('@/views/redirect/index.vue')
-      }
-    ]
-  },
-  {
-    path: '/social-callback',
-    hidden: true,
-    component: () => import('@/layout/components/SocialCallback/index.vue')
-  },
-  {
-    path: '/login',
-    component: () => import('@/views/login.vue'),
-    hidden: true
-  },
-  {
-    path: '/register',
-    component: () => import('@/views/register.vue'),
-    hidden: true
-  },
-  {
-    path: '/:pathMatch(.*)*',
-    component: () => import('@/views/error/404.vue'),
-    hidden: true
-  },
-  {
-    path: '/401',
-    component: () => import('@/views/error/401.vue'),
-    hidden: true
-  },
-  {
-    path: '',
-    component: Layout,
-    redirect: '/index',
-    children: [
-      {
-        path: '/index',
-        component: () => import('@/views/index.vue'),
-        name: 'Index',
-        meta: { title: '首页', icon: 'dashboard', affix: true }
-      }
-    ]
-  },
-  {
-    path: '/user',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'profile',
-        component: () => import('@/views/system/user/profile/index.vue'),
-        name: 'Profile',
-        meta: { title: '个人中心', icon: 'user' }
-      }
-    ]
-  }
-];
-
-// 动态路由，基于用户权限动态去加载
-export const dynamicRoutes: RouteRecordRaw[] = [
-
-];
-
-/**
- * 创建路由
- */
 const router = createRouter({
-  history: createWebHistory(import.meta.env.VITE_APP_CONTEXT_PATH),
-  routes: constantRoutes,
-  // 刷新时，滚动条位置还原
-  scrollBehavior(to, from, savedPosition) {
-    if (savedPosition) {
-      return savedPosition;
-    }
-    return { top: 0 };
-  }
-});
+  history: createWebHistory(),
+  routes: [
+    {
+      path: '/login',
+      component: () => import('@/views/login.vue'),
+      hidden: true
+    },
+    {
+      path: '/register',
+      component: () => import('@/views/register.vue'),
+      hidden: true
+    },
+    {
+      path: '/401',
+      component: () => import('@/views/error/401.vue'),
+      hidden: true
+    },
+    {
+      path: '/404',
+      component: () => import('@/views/error/404.vue'),
+      hidden: true
+    },
+    {
+      path: '/',
+      component: () => import('@/layout/index.vue'),
+      redirect: '/dashboard',
+      children: [
+        {
+          path: 'dashboard',
+          component: () => import('@/views/index.vue'),
+          name: 'Dashboard',
+          meta: {
+            title: '首页',
+            icon: 'dashboard',
+            affix: true
+          }
+        }
+      ]
+    },
+    {
+      path: '/system',
+      component: () => import('@/layout/index.vue'),
+      redirect: '/system/user',
+      name: 'System',
+      meta: {
+        title: '系统管理',
+        icon: 'system'
+      },
+      children: [
+        {
+          path: 'user',
+          component: () => import('@/views/system/user/index.vue'),
+          name: 'User',
+          meta: {
+            title: '用户管理',
+            icon: 'user'
+          }
+        },
+        {
+          path: 'role',
+          component: () => import('@/views/system/role/index.vue'),
+          name: 'Role',
+          meta: {
+            title: '角色管理',
+            icon: 'role'
+          }
+        },
+        {
+          path: 'menu',
+          component: () => import('@/views/system/menu/index.vue'),
+          name: 'Menu',
+          meta: {
+            title: '菜单管理',
+            icon: 'menu'
+          }
+        },
+        {
+          path: 'dept',
+          component: () => import('@/views/system/dept/index.vue'),
+          name: 'Dept',
+          meta: {
+            title: '部门管理',
+            icon: 'dept'
+          }
+        },
+        {
+          path: 'post',
+          component: () => import('@/views/system/post/index.vue'),
+          name: 'Post',
+          meta: {
+            title: '岗位管理',
+            icon: 'post'
+          }
+        },
+        {
+          path: 'dict',
+          component: () => import('@/views/system/dict/index.vue'),
+          name: 'Dict',
+          meta: {
+            title: '字典管理',
+            icon: 'dict'
+          }
+        },
+        {
+          path: 'config',
+          component: () => import('@/views/system/config/index.vue'),
+          name: 'Config',
+          meta: {
+            title: '配置管理',
+            icon: 'config'
+          }
+        },
+        {
+          path: 'notice',
+          component: () => import('@/views/system/notice/index.vue'),
+          name: 'Notice',
+          meta: {
+            title: '通知公告',
+            icon: 'notice'
+          }
+        },
+        {
+          path: 'client',
+          component: () => import('@/views/system/client/index.vue'),
+          name: 'Client',
+          meta: {
+            title: '客户端管理',
+            icon: 'client'
+          }
+        },
+        {
+          path: 'tenant',
+          component: () => import('@/views/system/tenant/index.vue'),
+          name: 'Tenant',
+          meta: {
+            title: '租户管理',
+            icon: 'tenant'
+          }
+        },
+        {
+          path: 'tenantPackage',
+          component: () => import('@/views/system/tenantPackage/index.vue'),
+          name: 'TenantPackage',
+          meta: {
+            title: '租户套餐',
+            icon: 'tenantPackage'
+          }
+        },
+        {
+          path: 'oss',
+          component: () => import('@/views/system/oss/index.vue'),
+          name: 'Oss',
+          meta: {
+            title: '文件管理',
+            icon: 'oss'
+          }
+        }
+      ]
+    },
+    {
+      path: '/monitor',
+      component: () => import('@/layout/index.vue'),
+      redirect: '/monitor/online',
+      name: 'Monitor',
+      meta: {
+        title: '监控中心',
+        icon: 'monitor'
+      },
+      children: [
+        {
+          path: 'online',
+          component: () => import('@/views/monitor/online/index.vue'),
+          name: 'Online',
+          meta: {
+            title: '在线用户',
+            icon: 'online'
+          }
+        },
+        {
+          path: 'operlog',
+          component: () => import('@/views/monitor/operlog/index.vue'),
+          name: 'Operlog',
+          meta: {
+            title: '操作日志',
+            icon: 'operlog'
+          }
+        },
+        {
+          path: 'logininfor',
+          component: () => import('@/views/monitor/logininfor/index.vue'),
+          name: 'Logininfor',
+          meta: {
+            title: '登录日志',
+            icon: 'logininfor'
+          }
+        },
+        {
+          path: 'cache',
+          component: () => import('@/views/monitor/cache/index.vue'),
+          name: 'Cache',
+          meta: {
+            title: '缓存监控',
+            icon: 'cache'
+          }
+        },
+        {
+          path: 'admin',
+          component: () => import('@/views/monitor/admin/index.vue'),
+          name: 'Admin',
+          meta: {
+            title: '服务监控',
+            icon: 'server'
+          }
+        },
+        {
+          path: 'snailjob',
+          component: () => import('@/views/monitor/snailjob/index.vue'),
+          name: 'Snailjob',
+          meta: {
+            title: '定时任务',
+            icon: 'job'
+          }
+        }
+      ]
+    },
+    {
+      path: '/workflow',
+      component: () => import('@/layout/index.vue'),
+      redirect: '/workflow/processDefinition',
+      name: 'Workflow',
+      meta: {
+        title: '工作流',
+        icon: 'workflow'
+      },
+      children: [
+        {
+          path: 'processDefinition',
+          component: () => import('@/views/workflow/processDefinition/index.vue'),
+          name: 'ProcessDefinition',
+          meta: {
+            title: '流程定义',
+            icon: 'process-definition'
+          }
+        },
+        {
+          path: 'processInstance',
+          component: () => import('@/views/workflow/processInstance/index.vue'),
+          name: 'ProcessInstance',
+          meta: {
+            title: '流程实例',
+            icon: 'process-instance'
+          }
+        },
+        {
+          path: 'task',
+          component: () => import('@/views/workflow/task/taskWaiting.vue'),
+          name: 'Task',
+          meta: {
+            title: '我的任务',
+            icon: 'my-task'
+          }
+        },
+        {
+          path: 'category',
+          component: () => import('@/views/workflow/category/index.vue'),
+          name: 'Category',
+          meta: {
+            title: '流程分类',
+            icon: 'category'
+          }
+        },
+        {
+          path: 'leave',
+          component: () => import('@/views/workflow/leave/index.vue'),
+          name: 'Leave',
+          meta: {
+            title: '请假流程',
+            icon: 'leave'
+          }
+        },
+        {
+          path: 'spel',
+          component: () => import('@/views/workflow/spel/index.vue'),
+          name: 'Spel',
+          meta: {
+            title: '表达式测试',
+            icon: 'spel'
+          }
+        }
+      ]
+    },
+    {
+      path: '/tool',
+      component: () => import('@/layout/index.vue'),
+      redirect: '/tool/gen',
+      name: 'Tool',
+      meta: {
+        title: '工具',
+        icon: 'tool'
+      },
+      children: [
+        {
+          path: 'gen',
+          component: () => import('@/views/tool/gen/index.vue'),
+          name: 'Gen',
+          meta: {
+            title: '代码生成',
+            icon: 'code'
+          }
+        }
+      ]
+    },
+    {
+      path: '/demo',
+      component: () => import('@/layout/index.vue'),
+      redirect: '/demo/demo',
+      name: 'Demo',
+      meta: {
+        title: '示例',
+        icon: 'example'
+      },
+      children: [
+        {
+          path: 'demo',
+          component: () => import('@/views/demo/demo/index.vue'),
+          name: 'Demo',
+          meta: {
+            title: '基础示例',
+            icon: 'demo'
+          }
+        },
+        {
+          path: 'tree',
+          component: () => import('@/views/demo/tree/index.vue'),
+          name: 'Tree',
+          meta: {
+            title: '树示例',
+            icon: 'tree'
+          }
+        }
+      ]
+    },
+    {
+      path: '/smallsteps',
+      component: () => import('@/layout/index.vue'),
+      redirect: '/smallsteps/task',
+      name: 'SmallSteps',
+      meta: {
+        title: 'Small Steps',
+        icon: 'star'
+      },
+      children: [
+        {
+          path: 'task',
+          component: () => import('@/views/smallsteps/task/index.vue'),
+          name: 'SmallStepsTask',
+          meta: {
+            title: '任务管理',
+            icon: 'task'
+          }
+        },
+        {
+          path: 'monitor',
+          component: () => import('@/views/smallsteps/monitor/index.vue'),
+          name: 'SmallStepsMonitor',
+          meta: {
+            title: '家长监控',
+            icon: 'monitor'
+          }
+        },
+        {
+          path: 'reward',
+          component: () => import('@/views/smallsteps/reward/index.vue'),
+          name: 'SmallStepsReward',
+          meta: {
+            title: '奖励管理',
+            icon: 'shopping'
+          }
+        }
+      ]
+    },
+    {
+      path: '/redirect',
+      component: () => import('@/layout/index.vue'),
+      hidden: true,
+      children: [
+        {
+          path: '/redirect/:path(.*)',
+          component: () => import('@/views/redirect/index.vue')
+        }
+      ]
+    },
+    { path: '/:pathMatch(.*)*', redirect: '/404', hidden: true }
+  ]
+})
 
-export default router;
+router.beforeEach((to, from, next) => {
+  NProgress.start()
+  if (to.path === '/login') {
+    next()
+  } else {
+    const userStore = useUserStoreHook()
+    if (userStore.token) {
+      next()
+    } else {
+      ElMessage.error('请先登录')
+      next('/login')
+    }
+  }
+})
+
+router.afterEach(() => {
+  NProgress.done()
+})
+
+export default router

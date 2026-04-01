@@ -76,9 +76,37 @@
       }
     },
     {
+      "path": "pages/child/achievements/index",
+      "style": {
+        "navigationStyle": "custom",
+        "backgroundColor": "#8CD0A1"
+      }
+    },
+    {
       "path": "pages/parent/profile/index",
       "style": {
         "navigationBarTitleText": "家长中心",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/parent/contract/index",
+      "style": {
+        "navigationBarTitleText": "亲子契约",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/parent/emotion-kit/index",
+      "style": {
+        "navigationBarTitleText": "情绪急救包",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/parent/device-config/index",
+      "style": {
+        "navigationBarTitleText": "设备配置",
         "navigationStyle": "custom"
       }
     },
