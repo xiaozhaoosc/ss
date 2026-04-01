@@ -12,7 +12,11 @@
         "build:mp-weixin": "uni build -p mp-weixin",
         "build:app": "uni build -p app",
         "test": "vitest",
-        "lint": "eslint --ext .js,.vue src"
+        "test:e2e": "playwright test",
+        "test:e2e:ui": "playwright test --ui",
+        "test:e2e:report": "playwright show-report",
+        "lint": "eslint --ext .js,.vue src",
+        "test:round": "node tests/scripts/run-test-round.js"
     },
     "dependencies": {
         "@dcloudio/uni-app": "3.0.0-alpha-5000320260310001",
@@ -43,7 +47,9 @@
         "@dcloudio/uni-cli-shared": "3.0.0-alpha-5000320260310001",
         "@dcloudio/uni-stacktracey": "3.0.0-alpha-5000320260310001",
         "@dcloudio/vite-plugin-uni": "3.0.0-alpha-5000320260310001",
+        "@playwright/test": "^1.48.4",
         "@vue/runtime-core": "3.5.30",
+        "allure-playwright": "^3.0.6",
         "autoprefixer": "^10.4.17",
         "postcss": "^8.4.35",
         "sass": "^1.97.3",

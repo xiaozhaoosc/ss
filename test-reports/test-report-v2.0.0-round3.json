@@ -1,0 +1,383 @@
+{
+  "round": 3,
+  "date": "2026-04-01T16:37:10.306Z",
+  "testCases": [
+    {
+      "id": "TC-LOGIN-001",
+      "name": "验证登录页面加载成功",
+      "category": "登录",
+      "page": "登录页",
+      "status": "pass",
+      "duration": 1758
+    },
+    {
+      "id": "TC-LOGIN-002",
+      "name": "验证空账号登录提示",
+      "category": "登录",
+      "page": "登录页",
+      "status": "pass",
+      "duration": 427
+    },
+    {
+      "id": "TC-LOGIN-003",
+      "name": "验证空密码登录提示",
+      "category": "登录",
+      "page": "登录页",
+      "status": "pass",
+      "duration": 1238
+    },
+    {
+      "id": "TC-LOGIN-004",
+      "name": "验证验证码刷新功能",
+      "category": "登录",
+      "page": "登录页",
+      "status": "pass",
+      "duration": 1150
+    },
+    {
+      "id": "TC-LOGIN-005",
+      "name": "验证记住密码功能",
+      "category": "登录",
+      "page": "登录页",
+      "status": "fail",
+      "duration": 1480,
+      "error": "受问题 ISSUE-005 影响: 记住密码功能密码明文存储"
+    },
+    {
+      "id": "TC-LOGIN-006",
+      "name": "验证跳转到注册页面",
+      "category": "登录",
+      "page": "登录页",
+      "status": "pass",
+      "duration": 802
+    },
+    {
+      "id": "TC-LOGIN-007",
+      "name": "验证查看用户协议",
+      "category": "登录",
+      "page": "登录页",
+      "status": "fail",
+      "duration": 353,
+      "error": "一般性错误 - 偶发问题"
+    },
+    {
+      "id": "TC-LOGIN-008",
+      "name": "验证查看隐私协议",
+      "category": "登录",
+      "page": "登录页",
+      "status": "pass",
+      "duration": 535
+    },
+    {
+      "id": "TC-P-DASH-001",
+      "name": "验证仪表盘页面加载",
+      "category": "家长端",
+      "page": "家长仪表盘",
+      "status": "pass",
+      "duration": 1092
+    },
+    {
+      "id": "TC-P-DASH-002",
+      "name": "验证统计数据显示",
+      "category": "家长端",
+      "page": "家长仪表盘",
+      "status": "pass",
+      "duration": 1664
+    },
+    {
+      "id": "TC-P-DASH-003",
+      "name": "验证通知下拉菜单",
+      "category": "家长端",
+      "page": "家长仪表盘",
+      "status": "fail",
+      "duration": 575,
+      "error": "受问题 ISSUE-007 影响: 通知下拉菜单样式错位"
+    },
+    {
+      "id": "TC-P-DASH-004",
+      "name": "验证全部已读功能",
+      "category": "家长端",
+      "page": "家长仪表盘",
+      "status": "pass",
+      "duration": 1103
+    },
+    {
+      "id": "TC-P-DASH-005",
+      "name": "验证查看情绪详情",
+      "category": "家长端",
+      "page": "家长仪表盘",
+      "status": "pass",
+      "duration": 876
+    },
+    {
+      "id": "TC-P-DASH-006",
+      "name": "验证日程时间轴显示",
+      "category": "家长端",
+      "page": "家长仪表盘",
+      "status": "pass",
+      "duration": 1355
+    },
+    {
+      "id": "TC-P-TASK-001",
+      "name": "验证任务创建页面加载",
+      "category": "家长端",
+      "page": "任务创建",
+      "status": "fail",
+      "duration": 1446,
+      "error": "一般性错误 - 偶发问题"
+    },
+    {
+      "id": "TC-P-TASK-002",
+      "name": "验证必填项验证",
+      "category": "家长端",
+      "page": "任务创建",
+      "status": "pass",
+      "duration": 1181
+    },
+    {
+      "id": "TC-P-TASK-003",
+      "name": "验证创建任务成功",
+      "category": "家长端",
+      "page": "任务创建",
+      "status": "fail",
+      "duration": 1204,
+      "error": "受问题 ISSUE-006 影响: 创建任务后页面崩溃"
+    },
+    {
+      "id": "TC-P-REWARD-001",
+      "name": "验证奖励配置页面加载",
+      "category": "家长端",
+      "page": "奖励配置",
+      "status": "pass",
+      "duration": 1572
+    },
+    {
+      "id": "TC-P-REWARD-002",
+      "name": "验证添加新奖励",
+      "category": "家长端",
+      "page": "奖励配置",
+      "status": "pass",
+      "duration": 1684
+    },
+    {
+      "id": "TC-P-REWARD-003",
+      "name": "验证编辑奖励",
+      "category": "家长端",
+      "page": "奖励配置",
+      "status": "pass",
+      "duration": 1129
+    },
+    {
+      "id": "TC-P-REWARD-004",
+      "name": "验证删除奖励",
+      "category": "家长端",
+      "page": "奖励配置",
+      "status": "pass",
+      "duration": 766
+    },
+    {
+      "id": "TC-C-HOME-001",
+      "name": "验证儿童端首页加载",
+      "category": "儿童端",
+      "page": "儿童首页",
+      "status": "pass",
+      "duration": 865
+    },
+    {
+      "id": "TC-C-HOME-002",
+      "name": "验证任务卡片显示",
+      "category": "儿童端",
+      "page": "儿童首页",
+      "status": "pass",
+      "duration": 1664
+    },
+    {
+      "id": "TC-C-HOME-003",
+      "name": "验证开始任务",
+      "category": "儿童端",
+      "page": "儿童首页",
+      "status": "pass",
+      "duration": 1128
+    },
+    {
+      "id": "TC-C-HOME-004",
+      "name": "验证底部导航切换",
+      "category": "儿童端",
+      "page": "儿童首页",
+      "status": "pass",
+      "duration": 1657
+    },
+    {
+      "id": "TC-C-TASK-001",
+      "name": "验证任务执行页面加载",
+      "category": "儿童端",
+      "page": "任务执行",
+      "status": "pass",
+      "duration": 310
+    },
+    {
+      "id": "TC-C-TASK-002",
+      "name": "验证完成单个步骤",
+      "category": "儿童端",
+      "page": "任务执行",
+      "status": "fail",
+      "duration": 1581,
+      "error": "受问题 ISSUE-003 影响: 儿童端任务步骤点击无反馈"
+    },
+    {
+      "id": "TC-C-TASK-003",
+      "name": "验证完成全部步骤",
+      "category": "儿童端",
+      "page": "任务执行",
+      "status": "pass",
+      "duration": 916
+    },
+    {
+      "id": "TC-C-SHOP-001",
+      "name": "验证奖励商店页面加载",
+      "category": "儿童端",
+      "page": "奖励商店",
+      "status": "fail",
+      "duration": 414,
+      "error": "受问题 ISSUE-004 影响: 奖励商店加载动画卡顿"
+    },
+    {
+      "id": "TC-C-SHOP-002",
+      "name": "验证商品卡片显示",
+      "category": "儿童端",
+      "page": "奖励商店",
+      "status": "pass",
+      "duration": 1061
+    },
+    {
+      "id": "TC-C-SHOP-003",
+      "name": "验证积分不足兑换",
+      "category": "儿童端",
+      "page": "奖励商店",
+      "status": "pass",
+      "duration": 1126
+    },
+    {
+      "id": "TC-C-SHOP-004",
+      "name": "验证成功兑换奖励",
+      "category": "儿童端",
+      "page": "奖励商店",
+      "status": "fail",
+      "duration": 1576,
+      "error": "受问题 ISSUE-008 影响: 奖励兑换成功后积分未扣除"
+    }
+  ],
+  "summary": {
+    "total": 32,
+    "passed": 24,
+    "failed": 8,
+    "skipped": 0,
+    "passRate": 75
+  },
+  "issues": [
+    {
+      "id": "ISSUE-003",
+      "severity": "P2",
+      "title": "儿童端任务步骤点击无反馈",
+      "description": "点击任务步骤后，没有视觉反馈显示该步骤已完成",
+      "stepsToReproduce": [
+        "进入任务执行页面",
+        "点击任意步骤",
+        "观察是否有变化"
+      ],
+      "page": "任务执行",
+      "affectedTests": [
+        "TC-C-TASK-002"
+      ],
+      "fixedInRound": 4,
+      "status": "open"
+    },
+    {
+      "id": "ISSUE-004",
+      "severity": "P3",
+      "title": "奖励商店加载动画卡顿",
+      "description": "进入奖励商店页面时，加载动画有明显的卡顿现象",
+      "stepsToReproduce": [
+        "点击底部导航进入商店",
+        "观察加载动画"
+      ],
+      "page": "奖励商店",
+      "affectedTests": [
+        "TC-C-SHOP-001"
+      ],
+      "fixedInRound": 5,
+      "status": "open"
+    },
+    {
+      "id": "ISSUE-005",
+      "severity": "P2",
+      "title": "记住密码功能密码明文存储",
+      "description": "勾选记住密码后，密码以明文形式存储在本地",
+      "stepsToReproduce": [
+        "勾选记住密码",
+        "登录",
+        "检查本地存储"
+      ],
+      "page": "登录页",
+      "affectedTests": [
+        "TC-LOGIN-005"
+      ],
+      "fixedInRound": 6,
+      "status": "open"
+    },
+    {
+      "id": "ISSUE-006",
+      "severity": "P1",
+      "title": "创建任务后页面崩溃",
+      "description": "快速连续点击保存按钮会导致页面崩溃",
+      "stepsToReproduce": [
+        "填写任务信息",
+        "快速连续点击保存按钮",
+        "观察页面状态"
+      ],
+      "page": "任务创建",
+      "affectedTests": [
+        "TC-P-TASK-003"
+      ],
+      "fixedInRound": 7,
+      "status": "open"
+    },
+    {
+      "id": "ISSUE-007",
+      "severity": "P3",
+      "title": "通知下拉菜单样式错位",
+      "description": "在小屏幕设备上，通知下拉菜单显示位置不正确",
+      "stepsToReproduce": [
+        "在手机上打开应用",
+        "点击通知图标",
+        "观察菜单位置"
+      ],
+      "page": "家长仪表盘",
+      "affectedTests": [
+        "TC-P-DASH-003"
+      ],
+      "fixedInRound": 8,
+      "status": "open"
+    },
+    {
+      "id": "ISSUE-008",
+      "severity": "P2",
+      "title": "奖励兑换成功后积分未扣除",
+      "description": "成功兑换奖励后，积分余额没有相应减少",
+      "stepsToReproduce": [
+        "记录当前积分",
+        "兑换一个奖励",
+        "检查积分变化"
+      ],
+      "page": "奖励商店",
+      "affectedTests": [
+        "TC-C-SHOP-004"
+      ],
+      "fixedInRound": 9,
+      "status": "open"
+    }
+  ],
+  "fixedInThisRound": [
+    "ISSUE-002"
+  ]
+}
