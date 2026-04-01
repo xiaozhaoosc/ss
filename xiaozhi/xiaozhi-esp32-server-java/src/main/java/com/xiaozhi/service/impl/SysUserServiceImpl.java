@@ -72,9 +72,10 @@ public class SysUserServiceImpl extends BaseServiceImpl implements SysUserServic
     private EmailUtils emailUtils;
 
     /**
-     * 
-     * @param username
-     * @param password
+     * 用户登录（支持用户名、邮箱、手机号登录）
+     *
+     * @param username 用户名/邮箱/手机号
+     * @param password 密码
      * @return 用户登录信息
      * @throws UsernameNotFoundException
      * @throws UserPasswordNotMatchException
@@ -83,6 +84,14 @@ public class SysUserServiceImpl extends BaseServiceImpl implements SysUserServic
     public SysUser login(String username, String password)
             throws UsernameNotFoundException, UserPasswordNotMatchException {
         SysUser user = userMapper.selectUserByUsername(username);
+        // 如果用户名查不到，尝试用邮箱查询
+        if (ObjectUtils.isEmpty(user)) {
+            user = userMapper.selectUserByEmail(username);
+        }
+        // 如果邮箱也查不到，尝试用手机号查询
+        if (ObjectUtils.isEmpty(user)) {
+            user = userMapper.selectUserByTel(username);
+        }
         if (ObjectUtils.isEmpty(user)) {
             throw new UsernameNotFoundException();
         } else if (!authenticationService.isPasswordValid(password, user.getPassword())) {
@@ -117,31 +126,31 @@ public class SysUserServiceImpl extends BaseServiceImpl implements SysUserServic
     }
 
     @Override
-    @Cacheable(value = CACHE_NAME, key = "#userId")
+    @Cacheable(value = CACHE_NAME, key = "#userId", unless = "#result == null")
     public SysUser selectUserByUserId(Integer userId) {
         return userMapper.selectUserByUserId(userId);
     }
 
     @Override
-    @Cacheable(value = CACHE_NAME, key = "'username:' + #username")
+    @Cacheable(value = CACHE_NAME, key = "'username:' + #username", unless = "#result == null")
     public SysUser selectUserByUsername(String username) {
         return userMapper.selectUserByUsername(username);
     }
 
     @Override
-    @Cacheable(value = CACHE_NAME, key = "'wxOpenId:' + #wxOpenId")
+    @Cacheable(value = CACHE_NAME, key = "'wxOpenId:' + #wxOpenId", unless = "#result == null")
     public SysUser selectUserByWxOpenId(String wxOpenId) {
         return userMapper.selectUserByWxOpenId(wxOpenId);
     }
 
     @Override
-    @Cacheable(value = CACHE_NAME, key = "'email:' + #email")
+    @Cacheable(value = CACHE_NAME, key = "'email:' + #email", unless = "#result == null")
     public SysUser selectUserByEmail(String email) {
         return userMapper.selectUserByEmail(email);
     }
 
     @Override
-    @Cacheable(value = CACHE_NAME, key = "'tel:' + #tel")
+    @Cacheable(value = CACHE_NAME, key = "'tel:' + #tel", unless = "#result == null")
     public SysUser selectUserByTel(String tel) {
         return userMapper.selectUserByTel(tel);
     }

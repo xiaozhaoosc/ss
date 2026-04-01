@@ -7,6 +7,7 @@ import { ref } from 'vue'
 import { message } from 'ant-design-vue'
 import { queryConfigs } from '@/services/config'
 import { queryAgents } from '@/services/agent'
+import { querySherpaVoices } from '@/services/role'
 import type { ModelOption, VoiceOption, SttOption, VoiceProvider } from '@/types/role'
 import type { Config } from '@/types/config'
 import type { Agent } from '@/types/agent'
@@ -137,14 +138,17 @@ export function useRoleManager() {
         ttsConfigs.value = ttsRes.data.list
       }
 
-      // 2. 并行加载所有语音JSON文件
-      const [edgeVoices, aliyunVoices, aliyunNlsVoices, volcengineVoices, xfyunVoices, minimaxVoices] = await Promise.all([
+      // 2. 并行加载所有语音JSON文件和 sherpa-onnx 动态音色
+      const sherpaConfig = ttsConfigs.value.find(c => c.provider === 'sherpa-onnx')
+      const [edgeVoices, aliyunVoices, aliyunNlsVoices, volcengineVoices, xfyunVoices, minimaxVoices, tencentVoices, sherpaRes] = await Promise.all([
         loadVoiceJson('/static/assets/edgeVoicesList.json', 'edge'),
         loadVoiceJson('/static/assets/aliyunVoicesList.json', 'aliyun'),
         loadVoiceJson('/static/assets/aliyunNlsVoicesList.json', 'aliyun-nls'),
         loadVoiceJson('/static/assets/volcengineVoicesList.json', 'volcengine'),
         loadVoiceJson('/static/assets/xfyunVoicesList.json', 'xfyun'),
-        loadVoiceJson('/static/assets/minimaxVoicesList.json', 'minimax')
+        loadVoiceJson('/static/assets/minimaxVoicesList.json', 'minimax'),
+        loadVoiceJson('/static/assets/tencentVoicesList.json', 'tencent'),
+        sherpaConfig ? querySherpaVoices().catch(() => ({ data: [] })) : Promise.resolve({ data: [] })
       ])
 
       // 3. 合并所有语音，并关联TTS配置
@@ -153,31 +157,42 @@ export function useRoleManager() {
       // Edge语音（不需要TTS配置）
       voices.push(...edgeVoices.map(v => ({
         ...v,
-        ttsId: -1 // Edge使用-1作为特殊标记
+        ttsId: -1
       })))
 
-      // 其他提供商的语音（需要关联TTS配置）
-      const providerVoicesMap = {
+      // 云服务提供商语音（需要关联TTS配置）
+      const providerVoicesMap: Record<string, VoiceOption[]> = {
         aliyun: aliyunVoices,
         'aliyun-nls': aliyunNlsVoices,
         volcengine: volcengineVoices,
         xfyun: xfyunVoices,
-        minimax: minimaxVoices
+        minimax: minimaxVoices,
+        tencent: tencentVoices,
       }
 
       Object.entries(providerVoicesMap).forEach(([provider, providerVoices]) => {
-        // 找到该提供商的TTS配置
         const ttsConfig = ttsConfigs.value.find(c => c.provider === provider)
         if (ttsConfig) {
-          // 只添加有TTS配置的提供商的语音
           providerVoices.forEach((v: VoiceOption) => {
-            voices.push({
-              ...v,
-              ttsId: ttsConfig.configId
-            })
+            voices.push({ ...v, ttsId: ttsConfig.configId })
           })
         }
       })
+
+      // sherpa-onnx 动态音色
+      if (sherpaConfig) {
+        const items = (sherpaRes as { data?: Record<string, string>[] }).data ?? []
+        items.forEach((item: Record<string, string>) => {
+          voices.push({
+            label: item.label,
+            value: item.value,
+            gender: (item.gender as 'male' | 'female' | '') || '',
+            provider: 'sherpa-onnx',
+            model: item.model,
+            ttsId: sherpaConfig.configId
+          })
+        })
+      }
 
       allVoices.value = voices
     } catch (error) {
@@ -279,10 +294,16 @@ export function useRoleManager() {
 
   /**
    * 根据语音名称获取语音信息
+   * @param voiceName 语音名称/ID
    */
   function getVoiceInfo(voiceName?: string) {
     if (!voiceName) return null
-    return allVoices.value.find(v => v.value === voiceName)
+
+    // 先在标准音色中查找
+    const voice = allVoices.value.find(v => v.value === voiceName)
+    if (voice) return voice
+
+    return null
   }
 
   /**
@@ -297,6 +318,7 @@ export function useRoleManager() {
       xfyun: '讯飞云',
       minimax: 'Minimax',
       tencent: '腾讯云',
+      'sherpa-onnx': 'Sherpa-ONNX',
       coze: 'Coze',
       dify: 'Dify',
       xingchen: 'XingChen'
@@ -314,9 +336,17 @@ export function useRoleManager() {
       'aliyun-nls': 'orange',
       volcengine: 'blue',
       xfyun: 'cyan',
-      minimax: 'red'
+      minimax: 'red',
+      'sherpa-onnx': 'purple'
     }
     return colors[provider || 'edge'] || 'green'
+  }
+
+  /**
+   * 获取所有可用音色
+   */
+  function getAllVoices(): VoiceOption[] {
+    return [...allVoices.value]
   }
 
   return {
@@ -341,7 +371,8 @@ export function useRoleManager() {
     getModelInfo,
     getVoiceInfo,
     formatProviderName,
-    getVoiceTagColor
+    getVoiceTagColor,
+    getAllVoices
   }
 }
 

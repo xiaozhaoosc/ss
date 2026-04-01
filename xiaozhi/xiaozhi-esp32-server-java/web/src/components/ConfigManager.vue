@@ -99,7 +99,7 @@ const columns = computed(() => {
     {
       title: t('common.createTime'),
       dataIndex: 'createTime',
-      width: 150,
+      width: 200,
       align: 'center' as const,
     },
     {
@@ -201,9 +201,7 @@ async function handleSubmit() {
     }
 
     // 处理 isDefault：将 boolean 转换为后端需要的 string enum ('0'/'1')
-    if (props.configType !== 'tts') {
-      submitData.isDefault = formData.value.isDefault == '1' ? '1' : '0'
-    }
+    submitData.isDefault = formData.value.isDefault == '1' ? '1' : '0'
 
     // LLM 特殊验证
     if (props.configType === 'llm') {
@@ -566,6 +564,24 @@ fetchData()
               size="small"
               :bordered="false"
             >
+              <!-- 本地模型使用说明 -->
+              <a-alert
+                v-if="currentType === 'sherpa-onnx' && configType === 'tts'"
+                type="info"
+                show-icon
+                style="margin-bottom: 16px"
+              >
+                <template #message>本地语音合成（Sherpa-ONNX）使用说明</template>
+                <template #description>
+                  <div style="font-size: 13px; line-height: 2">
+                    <p style="margin: 0">无需填写任何参数，保存后即可在角色配置中选择本地音色。</p>
+                    <p style="margin: 0">支持 <strong>VITS</strong>、<strong>Kokoro</strong>、<strong>Matcha</strong> 三种模型架构，系统自动识别。</p>
+                    <p style="margin: 0">模型存放目录：<code>models/tts/</code>，每个子目录对应一个模型。</p>
+                    <p style="margin: 0">Matcha 模型需额外下载 vocoder 文件（如 <code>vocos-16khz-univ.onnx</code>）放入模型目录。</p>
+                    <p style="margin: 0">中文模型若缺少 <code>dict/</code> 目录，可软链接至其他模型的 dict 目录共用。</p>
+                  </div>
+                </template>
+              </a-alert>
               <a-row :gutter="20">
                 <a-col
                   v-for="field in currentTypeFields"
@@ -582,7 +598,7 @@ fetchData()
                   >
                     <a-input
                       v-model:value="formData[field.name]"
-                      :placeholder="editingConfigId && ['apiKey', 'apiSecret', 'ak', 'sk'].includes(field.name) ? '不修改请留空' : (field.placeholder || t('config.enterField', { field: field.label }))"
+                      :placeholder="(editingConfigId && ['apiKey', 'apiSecret', 'ak', 'sk'].includes(field.name) && currentType !== 'sherpa-onnx') ? '不修改请留空' : (field.placeholder || t('config.enterField', { field: field.label }))"
                       :type="field.inputType || 'text'"
                     >
                       <template v-if="field.suffix" #suffix>

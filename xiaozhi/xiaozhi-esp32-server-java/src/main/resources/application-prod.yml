@@ -8,7 +8,14 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/xiaozhi?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8&useSSL=false&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true
     username: xiaozhi
-    password: ui123456789~
+    password: 123456
+
+  # Neo4j 配置
+  neo4j:
+    uri: bolt://localhost:7687
+    authentication:
+      username: neo4j
+      password: 12345678
 
 # 生产环境邮箱配置
 email:
@@ -37,3 +44,7 @@ sms:
 xiaozhi:
   server:
     domain: connectai.chat
+    
+dashscope:
+  api:
+    key: xxx

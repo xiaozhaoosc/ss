@@ -3,6 +3,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -77,26 +78,7 @@ public class AgentController extends BaseController {
     public ResultMessage create(@Valid @RequestBody AgentAddParam param) {
         try {
             SysAgent agent = new SysAgent();
-            agent.setAgentName(param.getAgentName());
-            agent.setBotId(param.getBotId());
-            agent.setAgentDesc(param.getAgentDesc());
-            agent.setIconUrl(param.getIconUrl());
-            agent.setPublishTime(param.getPublishTime());
-            agent.setDeviceId(param.getDeviceId());
-            agent.setRoleId(param.getRoleId());
-            agent.setConfigName(param.getConfigName());
-            agent.setConfigDesc(param.getConfigDesc());
-            agent.setConfigType(param.getConfigType());
-            agent.setModelType(param.getModelType());
-            agent.setProvider(param.getProvider());
-            agent.setAppId(param.getAppId());
-            agent.setApiKey(param.getApiKey());
-            agent.setApiSecret(param.getApiSecret());
-            agent.setAk(param.getAk());
-            agent.setSk(param.getSk());
-            agent.setApiUrl(param.getApiUrl());
-            agent.setState(param.getState());
-            agent.setIsDefault(param.getIsDefault());
+            BeanUtils.copyProperties(param, agent);
             agent.setUserId(CmsUtils.getUserId());
 
             agentService.add(agent);
@@ -122,27 +104,8 @@ public class AgentController extends BaseController {
     public ResultMessage update(@PathVariable Integer agentId, @Valid @RequestBody AgentUpdateParam param) {
         try {
             SysAgent agent = new SysAgent();
+            BeanUtils.copyProperties(param, agent);
             agent.setAgentId(agentId);
-            agent.setAgentName(param.getAgentName());
-            agent.setBotId(param.getBotId());
-            agent.setAgentDesc(param.getAgentDesc());
-            agent.setIconUrl(param.getIconUrl());
-            agent.setPublishTime(param.getPublishTime());
-            agent.setDeviceId(param.getDeviceId());
-            agent.setRoleId(param.getRoleId());
-            agent.setConfigName(param.getConfigName());
-            agent.setConfigDesc(param.getConfigDesc());
-            agent.setConfigType(param.getConfigType());
-            agent.setModelType(param.getModelType());
-            agent.setProvider(param.getProvider());
-            agent.setAppId(param.getAppId());
-            agent.setApiKey(param.getApiKey());
-            agent.setApiSecret(param.getApiSecret());
-            agent.setAk(param.getAk());
-            agent.setSk(param.getSk());
-            agent.setApiUrl(param.getApiUrl());
-            agent.setState(param.getState());
-            agent.setIsDefault(param.getIsDefault());
 
             agentService.update(agent);
 

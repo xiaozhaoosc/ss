@@ -32,6 +32,7 @@ export default {
     update: '/role',
     delete: '/role',
     testVoice: '/role/testVoice',
+    sherpaVoices: '/role/sherpaVoices',
   },
   template: {
     query: '/template',
@@ -49,9 +50,19 @@ export default {
     add: '/config',
     query: '/config',
     update: '/config',
-    getModels: '/config/getModels',
+  },
+  mcpTool: {
+    toggleStatus: '/mcpTool/toggleStatus',
+    toggleGlobalStatus: '/mcpTool/toggleGlobalStatus',
+    batchSetExcludeTools: '/mcpTool/batchSetExcludeTools',
+    getDisabledTools: '/mcpTool/getDisabledTools',
+    getSystemGlobalTools: '/mcpTool/getSystemGlobalTools',
+    refreshCache: '/mcpTool/refreshCache',
   },
   upload: '/api/file/upload',
+  memory: {
+    summary: '/memory/summary',
+  },
 }
 
 

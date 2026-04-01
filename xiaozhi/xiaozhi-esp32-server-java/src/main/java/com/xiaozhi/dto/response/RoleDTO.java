@@ -87,6 +87,9 @@ public class RoleDTO {
     @Schema(description = "数据集ID", example = "dataset_001")
     private String datasetId;
 
+    @Schema(description = "记忆类型", example = "long")
+    private String memoryType;
+
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     @Schema(description = "创建时间", example = "2024-01-01 00:00:00")
     private Date createTime;

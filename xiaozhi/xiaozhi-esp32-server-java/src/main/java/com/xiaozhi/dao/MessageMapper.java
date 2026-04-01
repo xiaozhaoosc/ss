@@ -15,7 +15,7 @@ public interface MessageMapper {
 
   int add(SysMessage message);
 
-  void saveAll(List<SysMessage> messages);
+  int saveAll(List<SysMessage> messages);
 
   int delete(SysMessage message);
 
@@ -31,4 +31,9 @@ public interface MessageMapper {
      * @param sysMessage
      */
   void updateMessageByAudioFile(SysMessage sysMessage);
+
+  /**
+   * 根据消息ID查询消息
+   */
+  SysMessage findById(Integer messageId);
 }
