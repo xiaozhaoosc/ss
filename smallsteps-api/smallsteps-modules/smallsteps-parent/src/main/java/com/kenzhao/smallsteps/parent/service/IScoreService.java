@@ -1,41 +1,51 @@
 package com.kenzhao.smallsteps.parent.service;
 
+import com.kenzhao.smallsteps.common.mybatis.core.page.PageQuery;
+import com.kenzhao.smallsteps.common.mybatis.core.page.TableDataInfo;
 import com.kenzhao.smallsteps.parent.domain.ChildScore;
-import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.Map;
 
 /**
  * 积分服务接口
- * 
- * @author kenzhao
- * @date 2026-02-03
  */
-public interface IScoreService extends IService<ChildScore> {
+public interface IScoreService {
     /**
-     * 获取用户当前积分信息
-     * 
+     * 获取用户积分
+     *
      * @param userId 用户ID
-     * @return 积分信息
+     * @return 用户积分
      */
-    ChildScore getChildScore(Long userId);
+    public ChildScore getChildScore(Long userId);
 
     /**
-     * 增加积分
-     * 
-     * @param userId   用户ID
-     * @param points   积分数
-     * @param sourceId 来源ID (任务ID)
-     * @param reason   原因
+     * 添加积分
+     *
+     * @param userId 用户ID
+     * @param points 积分数量
+     * @param taskId 任务ID
+     * @param reason 原因
+     * @return 结果
      */
-    void addPoints(Long userId, Integer points, Long sourceId, String reason);
+    public boolean addPoints(Long userId, int points, Long taskId, String reason);
 
     /**
-     * 扣除积分 (兑换)
-     * 
-     * @param userId   用户ID
-     * @param points   积分数
-     * @param sourceId 来源ID (奖励ID)
-     * @param reason   原因
-     * @return 是否成功
+     * 扣除积分
+     *
+     * @param userId 用户ID
+     * @param points 积分数量
+     * @param rewardId 奖励ID
+     * @param reason 原因
+     * @return 结果
      */
-    boolean deductPoints(Long userId, Integer points, Long sourceId, String reason);
+    public boolean deductPoints(Long userId, int points, Long rewardId, String reason);
+
+    /**
+     * 获取积分历史
+     *
+     * @param userId 用户ID
+     * @param pageQuery 分页参数
+     * @return 积分历史
+     */
+    public TableDataInfo<Map<String, Object>> getScoreHistory(Long userId, PageQuery pageQuery);
 }
