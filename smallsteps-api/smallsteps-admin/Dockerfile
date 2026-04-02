@@ -2,7 +2,7 @@
 ARG DOCKER_IMAGE_PREFIX
 
 # 基础镜像使用 OpenJDK 21 (Eclipse Temurin)
-FROM ${DOCKER_IMAGE_PREFIX}eclipse-temurin:21-jdk-jammy
+FROM swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/eclipse-temurin:21-jdk-jammy
 
 # 设置工作目录
 WORKDIR /app

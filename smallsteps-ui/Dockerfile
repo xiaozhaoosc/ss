@@ -2,7 +2,7 @@
 ARG DOCKER_IMAGE_PREFIX
 
 # Build stage
-FROM node:18-alpine AS build-stage
+FROM swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/node:20-alpine AS build-stage
 
 # Set working directory
 WORKDIR /app
@@ -11,7 +11,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm install
+RUN npm config set registry https://registry.npmmirror.com && npm install
 
 # Copy project files
 COPY . .
@@ -20,7 +20,7 @@ COPY . .
 RUN npm run build:prod
 
 # Production stage
-FROM ${DOCKER_IMAGE_PREFIX}nginx:alpine AS production-stage
+FROM swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/nginx:alpine AS production-stage
 
 # Copy build artifacts from build stage
 COPY --from=build-stage /app/dist /usr/share/nginx/html

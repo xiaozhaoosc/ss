@@ -70,15 +70,15 @@
             <artifactId>smallsteps-system</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.kenzhao.smallsteps</groupId>
-            <artifactId>smallsteps-parent</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.kenzhao.smallsteps</groupId>-->
+<!--            <artifactId>smallsteps-parent</artifactId>-->
+<!--        </dependency>-->
 
-        <dependency>
-            <groupId>com.kenzhao.smallsteps</groupId>
-            <artifactId>smallsteps-child</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.kenzhao.smallsteps</groupId>-->
+<!--            <artifactId>smallsteps-child</artifactId>-->
+<!--        </dependency>-->
 
 
 <!--        <dependency>-->

@@ -15,8 +15,6 @@
         <module>smallsteps-job</module>
         <module>smallsteps-system</module>
         <module>smallsteps-workflow</module>
-        <module>smallsteps-child</module>
-        <module>smallsteps-parent</module>
     </modules>
 
     <artifactId>smallsteps-modules</artifactId>
