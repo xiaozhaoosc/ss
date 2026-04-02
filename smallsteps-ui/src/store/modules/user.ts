@@ -84,3 +84,10 @@ export const useUserStore = defineStore('user', () => {
     setAvatar
   };
 });
+
+/**
+ * 在非 setup 环境下使用
+ */
+export function useUserStoreHook() {
+  return useUserStore();
+}

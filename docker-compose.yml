@@ -107,16 +107,16 @@ services:
   # ==================== smallsteps-app 服务 ====================
   
   # Nginx 服务（移动应用 H5 版本）
-  # frontend-app:
-  #   <<: *common-opts
-  #   container_name: ss-app
-  #   build:
-  #     context: ./smallsteps-app
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "8082:80"
-  #   depends_on:
-  #     - backend-core
+  frontend-app:
+    <<: *common-opts
+    container_name: ss-app
+    build:
+      context: ./smallsteps-app
+      dockerfile: Dockerfile
+    ports:
+      - "8082:80"
+    depends_on:
+      - backend-core
 
   # ==================== xiaozhi-esp32-server-java 服务 ====================
   
