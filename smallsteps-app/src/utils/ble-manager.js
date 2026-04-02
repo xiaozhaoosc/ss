@@ -1,8 +1,10 @@
 /**
  * BLE 管理器
  * 封装 uni-app 的蓝牙 API，提供简洁的接口
+ * 临时注释掉 ESP32 相关功能
  */
 
+/*
 class BLEManager {
     constructor() {
         this.deviceId = null
@@ -299,6 +301,65 @@ class BLEManager {
             str += String.fromCharCode(dataView.getUint8(i))
         }
         return str
+    }
+}
+*/
+
+// 临时替代实现，返回模拟数据
+class BLEManager {
+    constructor() {
+        console.log('[BLE] 临时替代实现，返回模拟数据')
+    }
+
+    async init() {
+        console.log('[BLE] 模拟初始化成功')
+        return Promise.resolve()
+    }
+
+    async scan(duration = 10000) {
+        console.log('[BLE] 模拟扫描设备')
+        return Promise.resolve([
+            {
+                deviceId: 'mock-device-1',
+                name: 'SmallSteps Device',
+                RSSI: -45
+            }
+        ])
+    }
+
+    async connect(deviceId) {
+        console.log('[BLE] 模拟连接设备:', deviceId)
+        return Promise.resolve()
+    }
+
+    async disconnect() {
+        console.log('[BLE] 模拟断开连接')
+        return Promise.resolve()
+    }
+
+    async getServices() {
+        console.log('[BLE] 模拟获取服务')
+        return Promise.resolve([])
+    }
+
+    async getCharacteristics() {
+        console.log('[BLE] 模拟获取特征值')
+        return Promise.resolve([])
+    }
+
+    async enableNotifications() {
+        console.log('[BLE] 模拟启用通知')
+        return Promise.resolve()
+    }
+
+    async readCharacteristic(charId) {
+        console.log('[BLE] 模拟读取特征值:', charId)
+        return Promise.resolve('mock-value')
+    }
+
+    async writeCharacteristic(charId, value) {
+        console.log('[BLE] 模拟写入特征值:', charId, value)
+        return Promise.resolve()
     }
 }
 
