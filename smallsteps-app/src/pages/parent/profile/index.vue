@@ -10,8 +10,8 @@
     </top-bar>
 
     <scroll-view scroll-y class="main-content no-scrollbar">
-      <!-- Device Status Card -->
-      <view class="section">
+      <!-- Device Status Card (Temporarily Disabled) -->
+      <!-- <view class="section">
         <view class="device-card" @click="showDeviceModal = true">
           <view class="device-info">
             <text class="label">设备状态</text>
@@ -28,7 +28,7 @@
             <image class="device-image" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCdOjbuDRV_9s9SX7I4wtdTwjubQMRl1JUlr4VFPN5N3he7m81Jfp9Y7VTN_F_QZqfxf0n3jtSgGNZkaaA_3GgRuEiJG24_JQnK_nDfqDnaSRgN6lVOZ8zZ-13l8yzntIVhsOV5Cj_PzlyLehxqfSX1wmi_HTlmw5rA-YgeeVBZ9lkvRqz4cjaXNrIIfFPd0dbQuVxvRkaX79hV7e91jSb4-nYIi3O9QzelSLVOj-bH7qQqstSlYEYj12WFxEIF-srchtR45wJ1wfA" mode="aspectFit" />
           </view>
         </view>
-      </view>
+      </view> -->
 
       <!-- Child Profile Section -->
       <view class="section">
@@ -99,11 +99,11 @@
       <view class="spacer"></view>
     </scroll-view>
 
-    <!-- Modal -->
-    <device-settings-modal 
+    <!-- Modal (Temporarily Disabled) -->
+    <!-- <device-settings-modal 
       v-model="showDeviceModal"
       v-model:volume="deviceVolume"
-    />
+    /> -->
 
     <!-- Bottom Nav -->
     <bottom-nav mode="parent" />
@@ -114,15 +114,11 @@
 import { ref } from 'vue'
 import TopBar from '@/components/common/top-bar/top-bar.vue'
 import BottomNav from '@/components/common/bottom-nav/bottom-nav.vue'
-import DeviceSettingsModal from '@/components/parent/device-settings-modal/device-settings-modal.vue'
 import { useUserStore } from '@/store/modules/user'
 
 const userStore = useUserStore()
 
 const isDarkMode = ref(false)
-const isOnline = ref(true)
-const showDeviceModal = ref(false)
-const deviceVolume = ref(60)
 
 const settings = ref([
   { title: '通知设置', icon: 'notifications', colorClass: 'blue' },
