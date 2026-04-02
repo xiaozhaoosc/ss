@@ -1,0 +1,271 @@
+{
+  "round": 10,
+  "date": "2026-04-01T16:37:25.729Z",
+  "testCases": [
+    {
+      "id": "TC-LOGIN-001",
+      "name": "验证登录页面加载成功",
+      "category": "登录",
+      "page": "登录页",
+      "status": "pass",
+      "duration": 1374
+    },
+    {
+      "id": "TC-LOGIN-002",
+      "name": "验证空账号登录提示",
+      "category": "登录",
+      "page": "登录页",
+      "status": "pass",
+      "duration": 672
+    },
+    {
+      "id": "TC-LOGIN-003",
+      "name": "验证空密码登录提示",
+      "category": "登录",
+      "page": "登录页",
+      "status": "pass",
+      "duration": 1776
+    },
+    {
+      "id": "TC-LOGIN-004",
+      "name": "验证验证码刷新功能",
+      "category": "登录",
+      "page": "登录页",
+      "status": "pass",
+      "duration": 798
+    },
+    {
+      "id": "TC-LOGIN-005",
+      "name": "验证记住密码功能",
+      "category": "登录",
+      "page": "登录页",
+      "status": "pass",
+      "duration": 975
+    },
+    {
+      "id": "TC-LOGIN-006",
+      "name": "验证跳转到注册页面",
+      "category": "登录",
+      "page": "登录页",
+      "status": "pass",
+      "duration": 1150
+    },
+    {
+      "id": "TC-LOGIN-007",
+      "name": "验证查看用户协议",
+      "category": "登录",
+      "page": "登录页",
+      "status": "pass",
+      "duration": 549
+    },
+    {
+      "id": "TC-LOGIN-008",
+      "name": "验证查看隐私协议",
+      "category": "登录",
+      "page": "登录页",
+      "status": "pass",
+      "duration": 1466
+    },
+    {
+      "id": "TC-P-DASH-001",
+      "name": "验证仪表盘页面加载",
+      "category": "家长端",
+      "page": "家长仪表盘",
+      "status": "pass",
+      "duration": 530
+    },
+    {
+      "id": "TC-P-DASH-002",
+      "name": "验证统计数据显示",
+      "category": "家长端",
+      "page": "家长仪表盘",
+      "status": "pass",
+      "duration": 1146
+    },
+    {
+      "id": "TC-P-DASH-003",
+      "name": "验证通知下拉菜单",
+      "category": "家长端",
+      "page": "家长仪表盘",
+      "status": "pass",
+      "duration": 1641
+    },
+    {
+      "id": "TC-P-DASH-004",
+      "name": "验证全部已读功能",
+      "category": "家长端",
+      "page": "家长仪表盘",
+      "status": "pass",
+      "duration": 943
+    },
+    {
+      "id": "TC-P-DASH-005",
+      "name": "验证查看情绪详情",
+      "category": "家长端",
+      "page": "家长仪表盘",
+      "status": "pass",
+      "duration": 1621
+    },
+    {
+      "id": "TC-P-DASH-006",
+      "name": "验证日程时间轴显示",
+      "category": "家长端",
+      "page": "家长仪表盘",
+      "status": "pass",
+      "duration": 588
+    },
+    {
+      "id": "TC-P-TASK-001",
+      "name": "验证任务创建页面加载",
+      "category": "家长端",
+      "page": "任务创建",
+      "status": "pass",
+      "duration": 1597
+    },
+    {
+      "id": "TC-P-TASK-002",
+      "name": "验证必填项验证",
+      "category": "家长端",
+      "page": "任务创建",
+      "status": "pass",
+      "duration": 1732
+    },
+    {
+      "id": "TC-P-TASK-003",
+      "name": "验证创建任务成功",
+      "category": "家长端",
+      "page": "任务创建",
+      "status": "pass",
+      "duration": 1678
+    },
+    {
+      "id": "TC-P-REWARD-001",
+      "name": "验证奖励配置页面加载",
+      "category": "家长端",
+      "page": "奖励配置",
+      "status": "pass",
+      "duration": 1617
+    },
+    {
+      "id": "TC-P-REWARD-002",
+      "name": "验证添加新奖励",
+      "category": "家长端",
+      "page": "奖励配置",
+      "status": "pass",
+      "duration": 882
+    },
+    {
+      "id": "TC-P-REWARD-003",
+      "name": "验证编辑奖励",
+      "category": "家长端",
+      "page": "奖励配置",
+      "status": "pass",
+      "duration": 945
+    },
+    {
+      "id": "TC-P-REWARD-004",
+      "name": "验证删除奖励",
+      "category": "家长端",
+      "page": "奖励配置",
+      "status": "pass",
+      "duration": 1200
+    },
+    {
+      "id": "TC-C-HOME-001",
+      "name": "验证儿童端首页加载",
+      "category": "儿童端",
+      "page": "儿童首页",
+      "status": "pass",
+      "duration": 1692
+    },
+    {
+      "id": "TC-C-HOME-002",
+      "name": "验证任务卡片显示",
+      "category": "儿童端",
+      "page": "儿童首页",
+      "status": "pass",
+      "duration": 1752
+    },
+    {
+      "id": "TC-C-HOME-003",
+      "name": "验证开始任务",
+      "category": "儿童端",
+      "page": "儿童首页",
+      "status": "pass",
+      "duration": 1210
+    },
+    {
+      "id": "TC-C-HOME-004",
+      "name": "验证底部导航切换",
+      "category": "儿童端",
+      "page": "儿童首页",
+      "status": "pass",
+      "duration": 421
+    },
+    {
+      "id": "TC-C-TASK-001",
+      "name": "验证任务执行页面加载",
+      "category": "儿童端",
+      "page": "任务执行",
+      "status": "pass",
+      "duration": 578
+    },
+    {
+      "id": "TC-C-TASK-002",
+      "name": "验证完成单个步骤",
+      "category": "儿童端",
+      "page": "任务执行",
+      "status": "pass",
+      "duration": 1550
+    },
+    {
+      "id": "TC-C-TASK-003",
+      "name": "验证完成全部步骤",
+      "category": "儿童端",
+      "page": "任务执行",
+      "status": "pass",
+      "duration": 1157
+    },
+    {
+      "id": "TC-C-SHOP-001",
+      "name": "验证奖励商店页面加载",
+      "category": "儿童端",
+      "page": "奖励商店",
+      "status": "pass",
+      "duration": 1486
+    },
+    {
+      "id": "TC-C-SHOP-002",
+      "name": "验证商品卡片显示",
+      "category": "儿童端",
+      "page": "奖励商店",
+      "status": "pass",
+      "duration": 558
+    },
+    {
+      "id": "TC-C-SHOP-003",
+      "name": "验证积分不足兑换",
+      "category": "儿童端",
+      "page": "奖励商店",
+      "status": "pass",
+      "duration": 314
+    },
+    {
+      "id": "TC-C-SHOP-004",
+      "name": "验证成功兑换奖励",
+      "category": "儿童端",
+      "page": "奖励商店",
+      "status": "pass",
+      "duration": 1135
+    }
+  ],
+  "summary": {
+    "total": 32,
+    "passed": 32,
+    "failed": 0,
+    "skipped": 0,
+    "passRate": 100
+  },
+  "issues": [],
+  "fixedInThisRound": []
+}

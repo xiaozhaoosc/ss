@@ -1,6 +1,5 @@
 package com.xiaozhi.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -17,7 +16,7 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = true)
-@JsonIgnoreProperties({ "startTime", "endTime", "start", "limit", "userId", "code" })
+@JsonIgnoreProperties({ "startTime", "endTime", "start", "limit", "code" })
 @Schema(description = "设备信息")
 public class SysDevice extends SysRole {
     public static final String DEVICE_STATE_STANDBY = "2";//已在线，未激活对话
@@ -59,16 +58,6 @@ public class SysDevice extends SysRole {
      */
     @Schema(description = "设备音频文件路径", example = "/audio/device_001.wav")
     private String audioPath;
-
-    /**
-     * 最后在线时间
-     * device表的 lastLogin字段,目前没有特别的用处。 如果需要知道设备的最近在线时间，也可以通过访问conversation表最后一条记录获知。
-     * 所以计划在后续版本合适的时候舍弃此字段。
-     */
-    @Deprecated
-    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
-    @Schema(description = "最后在线时间（已废弃）", example = "2024-12-01 10:30:00", deprecated = true)
-    private String lastLogin;
 
     /**
      * WiFi名称

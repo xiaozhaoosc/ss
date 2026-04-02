@@ -6,13 +6,13 @@
 export type ModelType = 'llm' | 'agent'
 
 // 语音提供商类型
-export type VoiceProvider = 'edge' | 'aliyun' | 'aliyun-nls' | 'volcengine' | 'xfyun' | 'minimax'
+export type VoiceProvider = 'edge' | 'aliyun' | 'aliyun-nls' | 'volcengine' | 'xfyun' | 'minimax' | 'tencent' | 'sherpa-onnx'
 
 // 语音性别
 export type VoiceGender = '' | 'male' | 'female'
 
 // 记忆类型
-export type MemoryType = 'window'
+export type MemoryType = 'window' | 'summary'
 
 // 角色数据
 export interface Role {
@@ -56,8 +56,8 @@ export interface RoleQueryParams extends BaseQueryParams {
 
 // 语音选项
 export interface VoiceOption {
-  label: string
-  value: string
+  label?: string
+  value?: string
   gender: VoiceGender
   provider: VoiceProvider
   ttsId?: number // 关联的TTS配置ID

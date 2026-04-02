@@ -79,4 +79,7 @@ public class RoleAddParam {
 
     @Schema(description = "数据集ID", example = "dataset_001")
     private String datasetId;
+
+    @Schema(description = "记忆类型", example = "long")
+    private String memoryType;
 }
