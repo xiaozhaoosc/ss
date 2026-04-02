@@ -210,4 +210,3 @@ services:
       - redis
     volumes:
       - ./config:/app/config
-p/config
