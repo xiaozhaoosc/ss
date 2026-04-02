@@ -41,7 +41,7 @@ services:
   postgres:
     <<: *common-opts
     container_name: ss-postgres
-    image: swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/library/postgres:15-alpine
+    image: registry.cn-shanghai.aliyuncs.com/ken_projects/postgres:15-alpine
     environment:
       - TZ=Asia/Shanghai
       - POSTGRES_USER=smallsteps
@@ -56,7 +56,7 @@ services:
   redis:
     <<: *common-opts
     container_name: ss-redis
-    image: swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/library/redis:7-alpine
+    image: registry.cn-shanghai.aliyuncs.com/ken_projects/redis:7-alpine
     environment:
       - TZ=Asia/Shanghai
     ports:
@@ -92,7 +92,7 @@ services:
 
   # ==================== smallsteps-ui 服务 ====================
   
-  # Nginx 服务（前端）
+  # Nginx 服务（前端管理后台）
   frontend-ui:
     <<: *common-opts
     container_name: ss-ui

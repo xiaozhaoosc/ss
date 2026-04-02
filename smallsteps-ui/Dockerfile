@@ -1,8 +1,5 @@
-# Build arguments
-ARG DOCKER_IMAGE_PREFIX
-
 # Build stage
-FROM swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/node:20-alpine AS build-stage
+FROM node:18-alpine AS build-stage
 
 # Set working directory
 WORKDIR /app
@@ -11,7 +8,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm config set registry https://registry.npmmirror.com && npm install
+RUN npm install
 
 # Copy project files
 COPY . .
@@ -20,18 +17,19 @@ COPY . .
 RUN npm run build:prod
 
 # Production stage
-FROM swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/nginx:alpine AS production-stage
+FROM nginx:alpine AS production-stage
 
-# 关键：将构建产物放到子目录下以匹配 VITE_APP_CONTEXT_PATH
-COPY --from=build-stage /app/dist /usr/share/nginx/html/webadminss/
-
-# 复制自定义 Nginx 配置
+# Copy custom nginx config
 COPY nginx.conf /etc/nginx/nginx.conf
 
-# Fix permissions
+# Copy build artifacts from build stage
+COPY --from=build-stage /app/dist /usr/share/nginx/html
+
+# Fix permissions for Nginx
 RUN chmod -R 755 /usr/share/nginx/html
 
 # Expose port 80
 EXPOSE 80
 
+# Start Nginx
 CMD ["nginx", "-g", "daemon off;"]

@@ -1,10 +1,16 @@
-# Build arguments
-ARG DOCKER_IMAGE_PREFIX
+# 基础构建阶段：使用 Maven 构建
+FROM maven:3.9-eclipse-temurin-21 AS builder
+WORKDIR /src
 
-# 基础镜像使用 OpenJDK 21 (Eclipse Temurin)
-FROM swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/eclipse-temurin:21-jdk-jammy
+# 复制整个项目上下文
+COPY . .
 
-# 设置工作目录
+# 执行 Maven 打包
+RUN mvn clean package -pl smallsteps-admin -am -DskipTests && \
+    cp smallsteps-admin/target/smallsteps-admin.jar /app.jar
+
+# 运行阶段
+FROM eclipse-temurin:21-jdk-jammy
 WORKDIR /app
 
 # 创建配置目录并声明为挂载点
@@ -18,9 +24,8 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 # 暴露端口
 EXPOSE 8080 28080
 
-# 复制 jar 包
-# 假设构建上下文是 projects/smallsteps-api
-COPY smallsteps-admin/target/smallsteps-admin.jar app.jar
+# 从 builder 阶段复制最终的 jar 包
+COPY --from=builder /app.jar app.jar
 
 # 启动命令
 ENTRYPOINT ["java", \
