@@ -1,0 +1,184 @@
+# 统一部署配置文件
+# 包含 smallsteps-api、smallsteps-ui、smallsteps-app 和 xiaozhi-esp32-server-java 项目
+
+version: '3.8'
+
+# 项目名称
+name: small-steps
+
+# 网络配置
+networks:
+  ss_net:
+    driver: bridge
+
+# 通用配置锚点
+x-common-opts:
+  &common-opts
+  restart: always
+  networks:
+    - ss_net
+  logging:
+    driver: "json-file"
+    options:
+      max-size: "10m"
+      max-file: "3"
+
+# 数据卷配置
+volumes:
+  # smallsteps-api 数据卷
+  pg_data:
+  redis_data:
+  # xiaozhi 数据卷
+  mysql_data:
+  maven_repo:
+  vosk_models:
+
+# 服务配置
+services:
+  # ==================== smallsteps-api 服务 ====================
+  
+  # PostgreSQL 数据库服务
+  postgres:
+    <<: *common-opts
+    container_name: ss-postgres
+    image: registry.cn-shanghai.aliyuncs.com/ken_projects/postgres:15-alpine
+    environment:
+      - TZ=Asia/Shanghai
+      - POSTGRES_USER=smallsteps
+      - POSTGRES_PASSWORD=ui123456789~
+      - POSTGRES_DB=smallsteps_db
+    ports:
+      - "15432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+  # Redis 缓存服务
+  redis:
+    <<: *common-opts
+    container_name: ss-redis
+    image: registry.cn-shanghai.aliyuncs.com/ken_projects/redis:7-alpine
+    environment:
+      - TZ=Asia/Shanghai
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --requirepass ui123456789~
+
+  # 后端核心服务
+  backend-core:
+    <<: *common-opts
+    container_name: ss-api
+    build:
+      context: ./smallsteps-api
+      dockerfile: smallsteps-admin/Dockerfile
+      tags:
+        - small-steps-backend-core:0.0.1
+    environment:
+      - TZ=Asia/Shanghai
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=smallsteps_db
+      - DB_USER=smallsteps
+      - DB_PASS=ui123456789~
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASS=ui123456789~
+    ports:
+      - "8081:8080"
+    depends_on:
+      - postgres
+      - redis
+
+  # ==================== smallsteps-ui 服务 ====================
+  
+  # Nginx 服务（前端）
+  # frontend-ui:
+  #   <<: *common-opts
+  #   container_name: ss-ui
+  #   build:
+  #     context: ./smallsteps-ui
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "8080:80"
+  #   depends_on:
+  #     - backend-core
+
+  # ==================== smallsteps-app 服务 ====================
+  
+  # Nginx 服务（移动应用 H5 版本）
+  # frontend-app:
+  #   <<: *common-opts
+  #   container_name: ss-app
+  #   build:
+  #     context: ./smallsteps-app
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "8082:80"
+  #   depends_on:
+  #     - backend-core
+
+  # ==================== xiaozhi-esp32-server-java 服务 ====================
+  
+  # MySQL 数据库服务
+  # xiaozhi-mysql:
+  #   <<: *common-opts
+  #   container_name: xz-mysql
+  #   build:
+  #     context: ./xiaozhi/xiaozhi-esp32-server-java
+  #     dockerfile: Dockerfile-mysql
+  #   ports:
+  #     - "13306:3306"
+  #   volumes:
+  #     - mysql_data:/var/lib/mysql
+  #   healthcheck:
+  #     test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "xiaozhi", "-p123456"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+  #     start_period: 30s
+
+  # Redis 服务（小吱）
+  # xiaozhi-redis:
+  #   <<: *common-opts
+  #   container_name: xz-redis
+  #   image: redis:latest
+  #   depends_on:
+  #     - xiaozhi-mysql
+
+  # 小吱后端服务
+  # xiaozhi-server:
+  #   <<: *common-opts
+  #   container_name: xz-server
+  #   build:
+  #     context: ./xiaozhi/xiaozhi-esp32-server-java
+  #     dockerfile: Dockerfile-server
+  #     args:
+  #       - VOSK_MODEL_SIZE=small
+  #   ports:
+  #     - "8091:8091"
+  #   environment:
+  #     - SPRING_DATA_REDIS_HOST=xiaozhi-redis
+  #     - SPRING_DATASOURCE_URL=jdbc:mysql://xiaozhi-mysql:3306/xiaozhi?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+  #     - SPRING_DATASOURCE_USERNAME=xiaozhi
+  #     - SPRING_DATASOURCE_PASSWORD=ui123456789~
+  #   volumes:
+  #     - maven_repo:/root/.m2/repository
+  #     - vosk_models:/vosk_cache
+  #   depends_on:
+  #     - xiaozhi-mysql
+  #     - xiaozhi-redis
+
+  # 小吱前端服务
+  # xiaozhi-node:
+  #   <<: *common-opts
+  #   container_name: xz-node
+  #   build:
+  #     context: ./xiaozhi/xiaozhi-esp32-server-java
+  #     dockerfile: Dockerfile-node
+  #   ports:
+  #     - "8084:8084"
+  #   environment:
+  #     - API_URL=http://xiaozhi-server:8091
+  #   depends_on:
+  #     - xiaozhi-server
