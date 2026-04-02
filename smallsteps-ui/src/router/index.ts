@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { useUserStoreHook } from '@/store/modules/user'
+import { useUserStore } from '@/store/modules/user'
 import { ElMessage } from 'element-plus'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
@@ -348,45 +348,45 @@ const router = createRouter({
         }
       ]
     },
-    {
-      path: '/smallsteps',
-      component: () => import('@/layout/index.vue'),
-      redirect: '/smallsteps/task',
-      name: 'SmallSteps',
-      meta: {
-        title: 'Small Steps',
-        icon: 'star'
-      },
-      children: [
-        {
-          path: 'task',
-          component: () => import('@/views/smallsteps/task/index.vue'),
-          name: 'SmallStepsTask',
-          meta: {
-            title: '任务管理',
-            icon: 'task'
-          }
-        },
-        {
-          path: 'monitor',
-          component: () => import('@/views/smallsteps/monitor/index.vue'),
-          name: 'SmallStepsMonitor',
-          meta: {
-            title: '家长监控',
-            icon: 'monitor'
-          }
-        },
-        {
-          path: 'reward',
-          component: () => import('@/views/smallsteps/reward/index.vue'),
-          name: 'SmallStepsReward',
-          meta: {
-            title: '奖励管理',
-            icon: 'shopping'
-          }
-        }
-      ]
-    },
+    // {
+    //   path: '/smallsteps',
+    //   component: () => import('@/layout/index.vue'),
+    //   redirect: '/smallsteps/task',
+    //   name: 'SmallSteps',
+    //   meta: {
+    //     title: 'Small Steps',
+    //     icon: 'star'
+    //   },
+    //   children: [
+    //     {
+    //       path: 'task',
+    //       component: () => import('@/views/smallsteps/task/index.vue'),
+    //       name: 'SmallStepsTask',
+    //       meta: {
+    //         title: '任务管理',
+    //         icon: 'task'
+    //       }
+    //     },
+    //     {
+    //       path: 'monitor',
+    //       component: () => import('@/views/smallsteps/monitor/index.vue'),
+    //       name: 'SmallStepsMonitor',
+    //       meta: {
+    //         title: '家长监控',
+    //         icon: 'monitor'
+    //       }
+    //     },
+    //     {
+    //       path: 'reward',
+    //       component: () => import('@/views/smallsteps/reward/index.vue'),
+    //       name: 'SmallStepsReward',
+    //       meta: {
+    //         title: '奖励管理',
+    //         icon: 'shopping'
+    //       }
+    //     }
+    //   ]
+    // },
     {
       path: '/redirect',
       component: () => import('@/layout/index.vue'),
@@ -407,7 +407,7 @@ router.beforeEach((to, from, next) => {
   if (to.path === '/login') {
     next()
   } else {
-    const userStore = useUserStoreHook()
+    const userStore = useUserStore()
     if (userStore.token) {
       next()
     } else {

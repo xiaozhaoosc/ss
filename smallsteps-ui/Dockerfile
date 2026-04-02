@@ -1,6 +1,3 @@
-# Build arguments
-ARG DOCKER_IMAGE_PREFIX
-
 # Build stage
 FROM node:18-alpine AS build-stage
 
@@ -20,7 +17,10 @@ COPY . .
 RUN npm run build:prod
 
 # Production stage
-FROM ${DOCKER_IMAGE_PREFIX}nginx:alpine AS production-stage
+FROM nginx:alpine AS production-stage
+
+# Copy custom nginx config
+COPY nginx.conf /etc/nginx/nginx.conf
 
 # Copy build artifacts from build stage
 COPY --from=build-stage /app/dist /usr/share/nginx/html
@@ -31,5 +31,5 @@ RUN chmod -R 755 /usr/share/nginx/html
 # Expose port 80
 EXPOSE 80
 
-# Nginx config will be mounted or copied via docker-compose
+# Start Nginx
 CMD ["nginx", "-g", "daemon off;"]

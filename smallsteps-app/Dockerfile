@@ -19,8 +19,11 @@ RUN npm run build:h5
 # 生产阶段
 FROM nginx:alpine AS production-stage
 
-# 复制构建产物到 Nginx 目录
-COPY --from=build-stage /app/dist /usr/share/nginx/html
+# 复制自定义 nginx 配置
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# 复制构建产物到 Nginx 目录（UniApp H5 构建输出目录是 dist/build/h5）
+COPY --from=build-stage /app/dist/build/h5 /usr/share/nginx/html
 
 # 修复权限
 RUN chmod -R 755 /usr/share/nginx/html

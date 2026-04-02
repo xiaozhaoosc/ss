@@ -92,31 +92,31 @@ services:
 
   # ==================== smallsteps-ui 服务 ====================
   
-  # Nginx 服务（前端）
-  # frontend-ui:
-  #   <<: *common-opts
-  #   container_name: ss-ui
-  #   build:
-  #     context: ./smallsteps-ui
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "8080:80"
-  #   depends_on:
-  #     - backend-core
+  # Nginx 服务（前端管理后台）
+  frontend-ui:
+    <<: *common-opts
+    container_name: ss-ui
+    build:
+      context: ./smallsteps-ui
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend-core
 
   # ==================== smallsteps-app 服务 ====================
   
   # Nginx 服务（移动应用 H5 版本）
-  # frontend-app:
-  #   <<: *common-opts
-  #   container_name: ss-app
-  #   build:
-  #     context: ./smallsteps-app
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "8082:80"
-  #   depends_on:
-  #     - backend-core
+  frontend-app:
+    <<: *common-opts
+    container_name: ss-app
+    build:
+      context: ./smallsteps-app
+      dockerfile: Dockerfile
+    ports:
+      - "8082:80"
+    depends_on:
+      - backend-core
 
   # ==================== xiaozhi-esp32-server-java 服务 ====================
   
