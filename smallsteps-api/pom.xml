@@ -373,8 +373,8 @@
     </dependencyManagement>
 
     <modules>
-        <module>smallsteps-admin</module>
         <module>smallsteps-common</module>
+        <module>smallsteps-admin</module>
         <module>smallsteps-extend</module>
         <module>smallsteps-modules</module>
     </modules>

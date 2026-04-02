@@ -19,6 +19,10 @@
         <!-- 通用模块 -->
         <dependency>
             <groupId>com.kenzhao.smallsteps</groupId>
+            <artifactId>smallsteps-child</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.kenzhao.smallsteps</groupId>
             <artifactId>smallsteps-common-core</artifactId>
         </dependency>
         <dependency>

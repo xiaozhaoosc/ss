@@ -15,17 +15,17 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class ParentEmotionKitBo extends ParentEmotionKit {
 
-    /**
-     * 新增时校验
-     */
-    public interface AddGroup extends AddGroup {
-    }
-
-    /**
-     * 修改时校验
-     */
-    public interface EditGroup extends EditGroup {
-    }
+//    /**
+//     * 新增时校验
+//     */
+//    public interface AddGroup extends AddGroup {
+//    }
+//
+//    /**
+//     * 修改时校验
+//     */
+//    public interface EditGroup extends EditGroup {
+//    }
 
     @NotNull(message = "孩子ID不能为空", groups = {AddGroup.class, EditGroup.class})
     @Override
