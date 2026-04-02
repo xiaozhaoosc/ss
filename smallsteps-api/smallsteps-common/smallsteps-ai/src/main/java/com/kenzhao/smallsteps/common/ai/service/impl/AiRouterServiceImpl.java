@@ -1,84 +1,40 @@
 package com.kenzhao.smallsteps.common.ai.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.kenzhao.smallsteps.common.ai.domain.AiModel;
-import com.kenzhao.smallsteps.common.ai.domain.AiProvider;
-import com.kenzhao.smallsteps.common.ai.domain.AiRoute;
 import com.kenzhao.smallsteps.common.ai.mapper.AiModelMapper;
-import com.kenzhao.smallsteps.common.ai.mapper.AiProviderMapper;
-import com.kenzhao.smallsteps.common.ai.mapper.AiRouteMapper;
 import com.kenzhao.smallsteps.common.ai.service.IAiRouterService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * AI路由服务实现
- * 
- * @author kenzhao
- * @date 2026-02-01
  */
-@Slf4j
 @RequiredArgsConstructor
 @Service
 public class AiRouterServiceImpl implements IAiRouterService {
 
-    private final AiRouteMapper routeMapper;
-    private final AiModelMapper modelMapper;
-    private final AiProviderMapper providerMapper;
+    private final AiModelMapper aiModelMapper;
 
+    /**
+     * 根据场景和用户上下文选择最佳模型
+     * @param sceneKey 业务场景 (chat/image/etc)
+     * @param userId   用户ID (可选)
+     * @return 选中的模型配置
+     */
     @Override
     public AiModel route(String sceneKey, Long userId) {
-        // 1. 获取路由策略
-        AiRoute route = routeMapper.selectById(sceneKey);
-        if (route == null) {
-            // 默认策略: 查找默认场景或直接返回系统默认模型
-            log.warn("Scene definition not found for key: {}. Using default.", sceneKey);
-            // 简化处理：如果没有配置路由，尝试找一个免费的
-            return findBestFreeModel();
-        }
-
-        // 2. 根据策略选择
-        // 注意：此处是简化逻辑，完整实现需要结合 用户权益(UserQuota) 模块
-        // 假设策略是 "PRIORITY_LEVEL" (免费 -> 低价)
-
-        // 2.1 查找所有可用模型
-        List<AiModel> allModels = modelMapper.selectList(new LambdaQueryWrapper<AiModel>()
-                .eq(AiModel::getStatus, "0")
-                .eq(AiModel::getDelFlag, "0"));
-
-        // 过滤掉停用供应商的模型
-        // (实际生产中应该用缓存优化，不要每次查库)
-
-        // 3. 执行核心优先级逻辑
-        // P0: 免费模型 (若用户有免费额度 - 需调用外部服务判断，此处略)
-        List<AiModel> freeModels = allModels.stream()
-                .filter(m -> "1".equals(m.getIsFreeTier()))
-                .collect(Collectors.toList());
-
-        if (!freeModels.isEmpty()) {
-            return freeModels.get(0); // 返回第一个免费模型
-        }
-
-        // P1: 按价格排序 (低 -> 高)
-        allModels.sort(Comparator.comparing(AiModel::getCostInput)
-                .thenComparing(AiModel::getCostOutput));
-
-        if (!allModels.isEmpty()) {
-            return allModels.get(0);
-        }
-
-        throw new RuntimeException("No available AI models found for scene: " + sceneKey);
-    }
-
-    private AiModel findBestFreeModel() {
-        return modelMapper.selectOne(new LambdaQueryWrapper<AiModel>()
-                .eq(AiModel::getIsFreeTier, "1")
-                .eq(AiModel::getStatus, "0")
-                .last("LIMIT 1"));
+        // TODO: 实现模型路由逻辑
+        // 1. 根据场景和用户ID查询合适的模型
+        // 2. 考虑模型的可用性、性能、成本等因素
+        // 3. 返回最佳模型配置
+        
+        // 这里返回一个默认模型作为示例
+        AiModel model = new AiModel();
+        model.setModelId(1L);
+        model.setModelName("default-model");
+        model.setProvider("openai");
+        model.setSceneKey(sceneKey);
+        model.setStatus(1);
+        return model;
     }
 }
