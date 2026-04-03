@@ -23,10 +23,10 @@ FROM nginx:alpine AS production-stage
 COPY nginx.conf /etc/nginx/nginx.conf
 
 # Copy build artifacts from build stage
-COPY --from=build-stage /app/dist /usr/share/nginx/html
+COPY --from=build-stage /app/dist /usr/share/nginx/html/webadminss
 
 # Fix permissions for Nginx
-RUN chmod -R 755 /usr/share/nginx/html
+RUN chmod -R 755 /usr/share/nginx/html/webadminss
 
 # Expose port 80
 EXPOSE 80
