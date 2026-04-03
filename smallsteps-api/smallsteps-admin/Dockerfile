@@ -6,7 +6,7 @@ WORKDIR /src
 COPY . .
 
 # 执行 Maven 打包
-RUN mvn clean package -pl smallsteps-admin -am -DskipTests && \
+RUN mvn clean install -DskipTests && \
     cp smallsteps-admin/target/smallsteps-admin.jar /app.jar
 
 # 运行阶段

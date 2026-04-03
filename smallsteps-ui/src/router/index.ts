@@ -5,9 +5,7 @@ import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 NProgress.configure({ showSpinner: false })
 
-const router = createRouter({
-  history: createWebHistory(),
-  routes: [
+export const constantRoutes = [
     {
       path: '/login',
       component: () => import('@/views/login.vue'),
@@ -348,45 +346,6 @@ const router = createRouter({
         }
       ]
     },
-    // {
-    //   path: '/smallsteps',
-    //   component: () => import('@/layout/index.vue'),
-    //   redirect: '/smallsteps/task',
-    //   name: 'SmallSteps',
-    //   meta: {
-    //     title: 'Small Steps',
-    //     icon: 'star'
-    //   },
-    //   children: [
-    //     {
-    //       path: 'task',
-    //       component: () => import('@/views/smallsteps/task/index.vue'),
-    //       name: 'SmallStepsTask',
-    //       meta: {
-    //         title: '任务管理',
-    //         icon: 'task'
-    //       }
-    //     },
-    //     {
-    //       path: 'monitor',
-    //       component: () => import('@/views/smallsteps/monitor/index.vue'),
-    //       name: 'SmallStepsMonitor',
-    //       meta: {
-    //         title: '家长监控',
-    //         icon: 'monitor'
-    //       }
-    //     },
-    //     {
-    //       path: 'reward',
-    //       component: () => import('@/views/smallsteps/reward/index.vue'),
-    //       name: 'SmallStepsReward',
-    //       meta: {
-    //         title: '奖励管理',
-    //         icon: 'shopping'
-    //       }
-    //     }
-    //   ]
-    // },
     {
       path: '/redirect',
       component: () => import('@/layout/index.vue'),
@@ -400,6 +359,12 @@ const router = createRouter({
     },
     { path: '/:pathMatch(.*)*', redirect: '/404', hidden: true }
   ]
+
+export const dynamicRoutes = []
+
+const router = createRouter({
+  history: createWebHistory(),
+  routes: constantRoutes
 })
 
 router.beforeEach((to, from, next) => {

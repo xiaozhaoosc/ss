@@ -30,11 +30,10 @@ public class AiRouterServiceImpl implements IAiRouterService {
         
         // 这里返回一个默认模型作为示例
         AiModel model = new AiModel();
-        model.setModelId(1L);
-        model.setModelName("default-model");
-        model.setProvider("openai");
-        model.setSceneKey(sceneKey);
-        model.setStatus(1);
+        model.setId(1L);
+        model.setName("default-model");
+        model.setModelCode("gpt-3.5-turbo");
+        model.setStatus("0");
         return model;
     }
 }

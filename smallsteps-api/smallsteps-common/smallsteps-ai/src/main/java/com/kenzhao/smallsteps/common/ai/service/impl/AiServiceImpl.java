@@ -38,7 +38,7 @@ public class AiServiceImpl implements IAiService {
                     childAge, taskName, taskDesc);
 
             // 调用大模型
-            String response = openAIClient.completion(prompt, model.getId());
+            String response = openAIClient.completion(prompt, String.valueOf(model.getId()));
             if (response == null) {
                 log.warn("AI API call failed, using mock data");
                 return getMockTaskBreakdown(taskName, taskDesc, childAge);
@@ -67,7 +67,7 @@ public class AiServiceImpl implements IAiService {
             String prompt = String.format("请分析以下内容中儿童的情绪状态：\n%s\n\n请以JSON格式返回分析结果，包含emotion（情绪类型）、level（情绪强度1-5）、suggestion（建议）字段。", content);
 
             // 调用大模型
-            String response = openAIClient.completion(prompt, model.getId());
+            String response = openAIClient.completion(prompt, String.valueOf(model.getId()));
             if (response == null) {
                 log.warn("AI API call failed, using mock data");
                 return getMockEmotionAnalysis(childId, content);

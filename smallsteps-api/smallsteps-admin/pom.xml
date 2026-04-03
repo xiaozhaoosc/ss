@@ -70,6 +70,12 @@
             <artifactId>smallsteps-system</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.kenzhao.smallsteps</groupId>
+            <artifactId>smallsteps-common-ai</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
 <!--        <dependency>-->
 <!--            <groupId>com.kenzhao.smallsteps</groupId>-->
 <!--            <artifactId>smallsteps-parent</artifactId>-->
