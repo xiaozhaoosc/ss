@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小步 (Small Steps) - 每一个小小的进步，都值得被看见</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-light: #818cf8;
+            --secondary: #f43f5e;
+            --accent: #10b981;
+            --warning: #f59e0b;
+            --bg: #f8fafc;
+            --glass: rgba(255, 255, 255, 0.7);
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Outfit', 'Noto Sans SC', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Gradient Backgrounds */
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(244, 63, 94, 0.08) 0%, transparent 40%);
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.5rem 10%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(248, 250, 252, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .btn-cta {
+            background: var(--primary);
+            color: white;
+            padding: 0.8rem 1.8rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            box-shadow: 0 10px 20px -10px var(--primary);
+            transition: all 0.3s;
+        }
+
+        .btn-cta:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px -10px var(--primary);
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 10%;
+            position: relative;
+        }
+
+        .hero-title {
+            font-size: 4.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 1s ease;
+        }
+
+        .hero-title span {
+            display: block;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-desc {
+            font-size: 1.4rem;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin-bottom: 3rem;
+            animation: fadeInUp 1.2s ease backwards;
+        }
+
+        /* Eco-System Section */
+        .section {
+            padding: 8rem 10%;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 4rem;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2.5rem;
+        }
+
+        .card {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            padding: 3rem 2rem;
+            border-radius: 32px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.03);
+            text-align: center;
+            transition: all 0.4s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-15px);
+            border-color: var(--primary-light);
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            display: inline-block;
+        }
+
+        .card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .card p {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        /* Features Section */
+        .features {
+            background: white;
+            padding: 8rem 10%;
+            border-radius: 80px 80px 0 0;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 4rem;
+            margin-bottom: 6rem;
+        }
+
+        .feature-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .feature-content {
+            flex: 1;
+        }
+
+        .feature-tag {
+            color: var(--primary);
+            text-transform: uppercase;
+            font-weight: 800;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .feature-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-content p {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+        }
+
+        .feature-img {
+            flex: 1;
+            height: 400px;
+            background: var(--bg);
+            border-radius: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            box-shadow: inset 0 0 50px rgba(0,0,0,0.02);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-img::after {
+            content: '';
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            background: linear-gradient(45deg, transparent 40%, rgba(99, 102, 241, 0.05) 50%, transparent 60%);
+            animation: shine 5s infinite linear;
+        }
+
+        /* Footer */
+        footer {
+            padding: 5rem 10%;
+            background: #0f172a;
+            color: white;
+            text-align: center;
+        }
+
+        .footer-logo {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 2rem;
+            display: block;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            list-style: none;
+        }
+
+        .footer-links a {
+            color: #94a3b8;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .copyright {
+            color: #475569;
+            font-size: 0.9rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes shine {
+            from { transform: translateX(-100%) translateY(-100%); }
+            to { transform: translateX(100%) translateY(100%); }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .grid-3 { grid-template-columns: 1fr 1fr; }
+            .hero-title { font-size: 3.5rem; }
+        }
+
+        @media (max-width: 768px) {
+            .grid-3 { grid-template-columns: 1fr; }
+            .feature-item { flex-direction: column !important; text-align: center; }
+            .hero-title { font-size: 2.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    
+    <nav>
+        <div class="logo">✨ Small Steps</div>
+        <ul class="nav-links">
+            <li><a href="#ecosystem">生态</a></li>
+            <li><a href="#features">功能</a></li>
+            <li><a href="#vision">愿景</a></li>
+        </ul>
+        <a href="#" class="btn-cta">立即开始</a>
+    </nav>
+
+    <header class="hero">
+        <h1 class="hero-title">
+            每一个小小的进步
+            <span>都值得被看见</span>
+        </h1>
+        <p class="hero-desc">
+            Small Steps 是一款专为 ADHD 儿童及其家庭设计的支架式行为辅助系统。我们通过科学的激励、明确的任务拆解与温暖的互动，帮助孩子建立自信，陪伴家庭共同成长。
+        </p>
+        <div style="display: flex; gap: 1rem;">
+            <a href="#ecosystem" class="btn-cta">了解更多</a>
+            <a href="#" style="padding: 0.8rem 1.8rem; border-radius: 50px; text-decoration: none; color: var(--text-main); font-weight: 700; border: 2px solid var(--primary);">演示视频</a>
+        </div>
+    </header>
+
+    <section id="ecosystem" class="section">
+        <h2 class="section-title">三位一体的科学干预生态</h2>
+        <div class="grid-3">
+            <div class="card">
+                <div class="card-icon">📱</div>
+                <h3>Small Steps APP</h3>
+                <p>亲子互动的核心。儿童端采用游戏化任务流，家长端提供快速状态监控与奖励审批。时刻连接物理与数字世界。</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">💻</div>
+                <h3>Small Steps UI</h3>
+                <p>专业的管理大脑。为教育机构与干预师提供全局数据大盘、任务银行配置与多家庭业务管理，让干预更科学。</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">⚙️</div>
+                <h3>Small Steps API</h3>
+                <p>强悍的动力引擎。基于 Spring Boot 3 + Java 21 开发，提供多级任务拆解算法、积分银行与极速响应的后端服务。</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="features">
+        <div class="feature-item">
+            <div class="feature-content">
+                <span class="feature-tag">Scaffolding</span>
+                <h2>支架式任务拆解</h2>
+                <p>我们不仅仅是列出清单。小步系统支持将复杂的任务（如“整理房间”）拆解为微小的、可执行的操作单元，降低孩子的心理门槛，引导他们一步步走向成功。</p>
+            </div>
+            <div class="feature-img">🧩</div>
+        </div>
+
+        <div class="feature-item">
+            <div class="feature-content">
+                <span class="feature-tag">Motivation</span>
+                <h2>积分银行与奖励商店</h2>
+                <p>建立即时的正向反馈循环。通过完成任务收集能量积分，在精心配置的奖励商店兑换亲子特权或实物奖品，让内在动力在成就感中持续迸发。</p>
+            </div>
+            <div class="feature-img">💎</div>
+        </div>
+
+        <div class="feature-item">
+            <div class="feature-content">
+                <span class="feature-tag">Data Insight</span>
+                <h2>全方位的行为洞察</h2>
+                <p>通过多维度的积分流水与任务曲线，系统为家长和专家提供直观的数据反馈。不再凭感觉判断，而是通过真实的数据看见孩子的每一次进步与转折。</p>
+            </div>
+            <div class="feature-img">📊</div>
+        </div>
+    </section>
+
+    <section id="vision" class="section" style="text-align: center; background: linear-gradient(180deg, white, transparent);">
+        <h2 style="font-size: 3rem; margin-bottom: 2rem;">让关注力，化作生长的力量</h2>
+        <p style="max-width: 800px; margin: 0 auto 3rem; font-size: 1.2rem; color: var(--text-muted);">
+            ADHD 不是一种缺陷，而是一种不同。小步的使命是提供那个“稳定的支点”，让每一个孩子都能在适合自己的节奏中，发现自己的光芒。
+        </p>
+        <div style="background: var(--primary); padding: 4rem; border-radius: 40px; color: white; display: inline-block; max-width: 1000px; width: 100%;">
+            <h3 style="font-size: 2rem; margin-bottom: 1rem;">加入我们的“小步计划”</h3>
+            <p style="margin-bottom: 2rem; opacity: 0.9;">目前的测试名额有限，我们诚邀 100 位家庭参与首批深度体验与共创。</p>
+            <a href="#" style="background: white; color: var(--primary); padding: 1.2rem 3rem; border-radius: 50px; text-decoration: none; font-weight: 800; font-size: 1.2rem; display: inline-block;">立即登记意向</a>
+        </div>
+    </section>
+
+    <footer>
+        <span class="footer-logo">✨ Small Steps</span>
+        <ul class="footer-links">
+            <li><a href="#">关于我们</a></li>
+            <li><a href="#">技术博客</a></li>
+            <li><a href="#">加入我们</a></li>
+            <li><a href="#">隐私协议</a></li>
+        </ul>
+        <div class="copyright">
+            © 2026 Small Steps Project. Built with Science, Care & Modern Tech (Spring Boot 3 / Vue 3).
+        </div>
+    </footer>
+
+    <script>
+        // Simple reveal on scroll
+        const observeHeader = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = 1;
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.card, .feature-item').forEach(el => {
+            el.style.opacity = 0;
+            el.style.transform = 'translateY(40px)';
+            el.style.transition = 'all 0.8s cubic-bezier(0.165, 0.84, 0.44, 1)';
+            observeHeader.observe(el);
+        });
+    </script>
+</body>
+</html>

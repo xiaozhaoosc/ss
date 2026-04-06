@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Small Steps 系统结构层次图</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0ea5e9;
+            --primary-bg: #e0f2fe;
+            --secondary: #6366f1;
+            --accent: #10b981;
+            --border: #bae6fd;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --line-color: #94a3b8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', 'Noto Sans SC', sans-serif;
+            background-color: #f8fafc;
+            padding: 50px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-dark);
+        }
+
+        .canvas {
+            position: relative;
+            width: 100%;
+            max-width: 1100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Root Node */
+        .node-root {
+            background-color: var(--primary);
+            color: white;
+            padding: 15px 40px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            box-shadow: 0 10px 15px -3px rgba(14, 165, 233, 0.3);
+            z-index: 10;
+            margin-bottom: 60px;
+            text-align: center;
+        }
+
+        /* Connector Container */
+        .connectors {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Tier 2 Container */
+        .tier-2 {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            gap: 30px;
+            position: relative;
+        }
+
+        .system-box {
+            flex: 1;
+            background-color: var(--primary-bg);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            position: relative;
+            z-index: 5;
+            min-height: 450px;
+        }
+
+        .system-header {
+            text-align: center;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed var(--border);
+        }
+
+        .system-header span {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 400;
+            margin-top: 4px;
+        }
+
+        /* Module Boxes */
+        .module-group {
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid white;
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .group-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        .sub-modules {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .leaf-node {
+            background-color: white;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .leaf-node:hover {
+            background-color: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* SVG Lines Styling */
+        svg line {
+            stroke: var(--line-color);
+            stroke-width: 2;
+        }
+
+        footer {
+            margin-top: 50px;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 900px) {
+            .tier-2 { flex-direction: column; align-items: center; }
+            .system-box { width: 100%; min-height: auto; }
+            .connectors { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="canvas">
+        <!-- SVG lines drawn manually based on relative boxes -->
+        <svg class="connectors" width="1100" height="800">
+            <!-- Root to Horizontal line -->
+            <line x1="550" y1="52" x2="550" y2="85" />
+            <!-- Horizontal bridge line -->
+            <line x1="183" y1="85" x2="916" y2="85" />
+            <!-- Vertical drops to boxes -->
+            <line x1="183" y1="85" x2="183" y2="110" />
+            <line x1="550" y1="85" x2="550" y2="110" />
+            <line x1="916" y1="85" x2="916" y2="110" />
+        </svg>
+
+        <div class="node-root">
+            Small Steps (小步) 全系统
+        </div>
+
+        <div class="tier-2">
+            <!-- smallsteps-app -->
+            <div class="system-box">
+                <div class="system-header">
+                    smallsteps-app
+                    <span>移动端应用 - UniApp X</span>
+                </div>
+                
+                <div class="module-group">
+                    <div class="group-title">家长模式</div>
+                    <div class="sub-modules">
+                        <div class="leaf-node">任务发布与配置</div>
+                        <div class="leaf-node">情绪/行为报告</div>
+                        <div class="leaf-node">奖励审批中心</div>
+                        <div class="leaf-node">设备远程联动</div>
+                    </div>
+                </div>
+
+                <div class="module-group">
+                    <div class="group-title">儿童模式</div>
+                    <div class="sub-modules">
+                        <div class="leaf-node">Task Crusher: 执行</div>
+                        <div class="leaf-node">多感官激励反馈</div>
+                        <div class="leaf-node">勋章/成就系统</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- smallsteps-api -->
+            <div class="system-box" style="--primary: #6366f1; --border: #c7d2fe; --primary-bg: #eef2ff;">
+                <div class="system-header" style="color: #4338ca;">
+                    smallsteps-api
+                    <span>后端服务 / AI 中枢 - SpringBoot</span>
+                </div>
+
+                <div class="module-group">
+                    <div class="group-title">核心业务引擎</div>
+                    <div class="sub-modules">
+                        <div class="leaf-node">Scaffolding: 支架算法</div>
+                        <div class="leaf-node">Task Crusher: 拆解引擎</div>
+                        <div class="leaf-node">多级积分银行逻辑</div>
+                    </div>
+                </div>
+
+                <div class="module-group">
+                    <div class="group-title">底层架构</div>
+                    <div class="sub-modules">
+                        <div class="leaf-node">Sa-Token 鉴权中心</div>
+                        <div class="leaf-node">Mind Echo: 情感分析</div>
+                        <div class="leaf-node">多端消息路由</div>
+                        <div class="leaf-node">数据持久化层</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- smallsteps-ui -->
+            <div class="system-box" style="--primary: #10b981; --border: #a7f3d0; --primary-bg: #ecfdf5;">
+                <div class="system-header" style="color: #047857;">
+                    smallsteps-ui
+                    <span>机构/专家管理后台 - Vue 3</span>
+                </div>
+
+                <div class="module-group">
+                    <div class="group-title">运营管理</div>
+                    <div class="sub-modules">
+                        <div class="leaf-node">任务模版银行</div>
+                        <div class="leaf-node">机构/家庭管理</div>
+                        <div class="leaf-node">权限角色分派</div>
+                    </div>
+                </div>
+
+                <div class="module-group">
+                    <div class="group-title">数据看板</div>
+                    <div class="sub-modules">
+                        <div class="leaf-node">行为趋势分析</div>
+                        <div class="leaf-node">干预效果评估</div>
+                        <div class="leaf-node">多维度报表导出</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <footer>
+        © 2026 Small Steps Ecosystem | Hierarchical Architecture Diagram
+    </footer>
+
+</body>
+</html>
