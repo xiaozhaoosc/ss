@@ -69,10 +69,14 @@ export const useUserStore = defineStore('user', {
     getUserInfo() {
       return new Promise<void>((resolve, reject) => {
         getInfo().then((res: any) => {
-          this.setUserInfo(res)
-          // 同步更新角色信息以便权限拦截器使用
-          const roles = res.roles || []
-          if (roles.includes('child')) {
+          const data = res.data
+          this.setUserInfo(data)
+          
+          // 确定角色类型 (优先基于 user_type: 3-儿童, 2-家长)
+          const userType = data.user?.userType
+          const roles = data.roles || []
+          
+          if (userType === '3' || userType === 3 || roles.includes('child')) {
             this.updateRole('child')
           } else {
             this.updateRole('parent')

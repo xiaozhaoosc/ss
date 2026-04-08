@@ -155,6 +155,15 @@ const handleQuickLink = (name: string) => {
 }
 
 onShow(() => {
+  // 角色校验：防止家长误入儿童界面
+  if (userStore.role !== 'child') {
+    uni.reLaunch({ url: '/pages/parent/dashboard/index' })
+    return
+  }
+  
+  // 强制隐藏原生 TabBar，确保使用自定义导航
+  uni.hideTabBar()
+  
   loadData()
   userStore.fetchBalance()
 })

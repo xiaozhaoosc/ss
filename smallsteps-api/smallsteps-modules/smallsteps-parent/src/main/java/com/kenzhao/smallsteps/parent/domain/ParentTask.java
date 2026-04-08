@@ -28,6 +28,11 @@ public class ParentTask extends BaseEntity {
     private Long taskId;
 
     /**
+     * 父任务ID (用于任务拆解)
+     */
+    private Long parentId;
+
+    /**
      * 用户ID
      */
     private Long userId;
@@ -53,12 +58,32 @@ public class ParentTask extends BaseEntity {
     private Integer difficulty;
 
     /**
+     * 支架强度/辅助强度(1-5)
+     */
+    private Integer promptLevel;
+
+    /**
+     * 循环类型(0单次 1每日 2每周)
+     */
+    private Integer cycleType;
+
+    /**
      * 奖励积分
      */
     private Integer rewardPoints;
 
     /**
-     * 状态(0正常 1停用)
+     * 灯光效果代码
+     */
+    private String lightEffect;
+
+    /**
+     * 音频索引代码
+     */
+    private String audioEffect;
+
+    /**
+     * 状态(0进行中 1已完成 2已过期)
      */
     private String status;
 
