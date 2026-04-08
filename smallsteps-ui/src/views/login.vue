@@ -44,23 +44,6 @@
         </div>
       </el-form-item>
       <el-checkbox v-model="loginForm.rememberMe" style="margin: 0 0 25px 0">{{ proxy.$t('login.rememberPassword') }}</el-checkbox>
-      <el-form-item style="float: right">
-        <el-button circle :title="proxy.$t('login.social.wechat')" @click="doSocialLogin('wechat')">
-          <svg-icon icon-class="wechat" />
-        </el-button>
-        <el-button circle :title="proxy.$t('login.social.maxkey')" @click="doSocialLogin('maxkey')">
-          <svg-icon icon-class="maxkey" />
-        </el-button>
-        <el-button circle :title="proxy.$t('login.social.topiam')" @click="doSocialLogin('topiam')">
-          <svg-icon icon-class="topiam" />
-        </el-button>
-        <el-button circle :title="proxy.$t('login.social.gitee')" @click="doSocialLogin('gitee')">
-          <svg-icon icon-class="gitee" />
-        </el-button>
-        <el-button circle :title="proxy.$t('login.social.github')" @click="doSocialLogin('github')">
-          <svg-icon icon-class="github" />
-        </el-button>
-      </el-form-item>
       <el-form-item style="width: 100%">
         <el-button :loading="loading" size="large" type="primary" style="width: 100%" @click.prevent="handleLogin">
           <span v-if="!loading">{{ proxy.$t('login.login') }}</span>
@@ -73,7 +56,7 @@
     </el-form>
     <!--  底部  -->
     <div class="el-login-footer">
-      <span>Copyright © 2018-2026 疯狂的狮子Li All Rights Reserved.</span>
+      <span>Copyright © 2025-2026 kenzhao All Rights Reserved.</span>
     </div>
   </div>
 </template>
@@ -113,9 +96,9 @@ const loginRules: ElFormRules = {
 const codeUrl = ref('');
 const loading = ref(false);
 // 验证码开关
-const captchaEnabled = ref(true);
+const captchaEnabled = ref(false);
 // 租户开关
-const tenantEnabled = ref(true);
+const tenantEnabled = ref(false);
 
 // 注册开关
 const register = ref(false);
@@ -174,7 +157,7 @@ const handleLogin = () => {
 const getCode = async () => {
   const res = await getCodeImg();
   const { data } = res;
-  captchaEnabled.value = data.captchaEnabled === undefined ? true : data.captchaEnabled;
+  captchaEnabled.value = data.captchaEnabled === undefined ? false : data.captchaEnabled;
   if (captchaEnabled.value) {
     // 刷新验证码时清空输入框
     loginForm.value.code = '';
@@ -201,7 +184,7 @@ const getLoginData = () => {
  */
 const initTenantList = async () => {
   const { data } = await getTenantList(false);
-  tenantEnabled.value = data.tenantEnabled === undefined ? true : data.tenantEnabled;
+  tenantEnabled.value = data.tenantEnabled === undefined ? false : data.tenantEnabled;
   if (tenantEnabled.value) {
     tenantList.value = data.voList;
     if (tenantList.value != null && tenantList.value.length !== 0) {

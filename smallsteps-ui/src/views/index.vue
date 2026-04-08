@@ -33,17 +33,6 @@
           * 部署方式 Docker 容器编排 一键部署业务集群<br />
           * 国际化 SpringMessage Spring标准国际化方案<br />
         </p>
-        <p><b>当前版本:</b> <span>v5.5.2</span></p>
-        <p>
-          <el-tag type="danger">&yen;免费开源</el-tag>
-        </p>
-        <p>
-          <el-button type="primary" icon="Cloudy" plain @click="goTarget('https://gitee.com/smallsteps/SmallSteps-Vue-Plus')">访问码云</el-button>
-          <el-button type="primary" icon="Cloudy" plain @click="goTarget('https://github.com/smallsteps/SmallSteps-Vue-Plus')">访问GitHub</el-button>
-          <el-button type="primary" icon="Cloudy" plain @click="goTarget('https://plus-doc.smallsteps.org/#/smallsteps-vue-plus/changlog')"
-            >更新日志</el-button
-          >
-        </p>
       </el-col>
 
       <el-col :sm="24" :lg="12" style="padding-left: 20px">
@@ -76,17 +65,6 @@
           * 分布式日志中心 ELK 业界成熟解决方案<br />
           * 分布式监控 Prometheus、Grafana 全方位性能监控<br />
           * 其余与 Vue 版本一致<br />
-        </p>
-        <p><b>当前版本:</b> <span>v2.5.2</span></p>
-        <p>
-          <el-tag type="danger">&yen;免费开源</el-tag>
-        </p>
-        <p>
-          <el-button type="primary" icon="Cloudy" plain @click="goTarget('https://gitee.com/smallsteps/SmallSteps-Cloud-Plus')">访问码云</el-button>
-          <el-button type="primary" icon="Cloudy" plain @click="goTarget('https://github.com/smallsteps/SmallSteps-Cloud-Plus')">访问GitHub</el-button>
-          <el-button type="primary" icon="Cloudy" plain @click="goTarget('https://plus-doc.smallsteps.org/#/smallsteps-cloud-plus/changlog')"
-            >更新日志</el-button
-          >
         </p>
       </el-col>
     </el-row>

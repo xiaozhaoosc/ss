@@ -112,7 +112,7 @@
   }
 
   const codeUrl = ref("")
-  const captchaEnabled = ref(true)
+  const captchaEnabled = ref(false)
   const isLoggingIn = ref(false)
   const tenantEnabled = ref(false)
   const tenantList = ref([])
@@ -156,7 +156,7 @@
     try {
       const res = await getCodeImg()
       const data = res.data || {}
-      captchaEnabled.value = data.captchaEnabled === undefined ? true : data.captchaEnabled
+      captchaEnabled.value = data.captchaEnabled === undefined ? false : data.captchaEnabled
       if (captchaEnabled.value) {
         codeUrl.value = 'data:image/gif;base64,' + data.img
         loginForm.value.uuid = data.uuid
@@ -173,7 +173,7 @@
     try {
       const res = await getTenantList()
       const data = res.data || {}
-      tenantEnabled.value = data.tenantEnabled === undefined ? true : data.tenantEnabled
+      tenantEnabled.value = data.tenantEnabled === undefined ? false : data.tenantEnabled
       if (tenantEnabled.value) {
         tenantList.value = data.voList || []
         if (tenantList.value.length > 0) {

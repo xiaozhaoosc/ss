@@ -24,7 +24,7 @@ export default defineConfig(({ mode, command }) => {
       open: true,
       proxy: {
         [env.VITE_APP_BASE_API]: {
-          target: 'http://localhost:8098/ssapi',
+          target: 'http://localhost:8081/ssapi',
           changeOrigin: true,
           ws: true,
           rewrite: (path) => path.replace(new RegExp('^' + env.VITE_APP_BASE_API), '')

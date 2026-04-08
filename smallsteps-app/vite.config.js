@@ -11,10 +11,10 @@ export default defineConfig({
         port: 9090,
         host: '0.0.0.0',
         proxy: {
-            '/dev-api': {
-                target: 'http://192.168.1.9:8098',
+            '/ssapi': {
+                target: 'http://localhost:8081/ssapi',
                 changeOrigin: true,
-                rewrite: (path) => path.replace(/^\/dev-api/, '/ssapi')
+                rewrite: (path) => path.replace(/^\/ssapi/, '')
             }
         }
     },
