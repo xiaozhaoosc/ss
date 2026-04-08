@@ -21,3 +21,12 @@
 ### 4. UI 自动化测试环境准备 (Playwright)
 - **观察**: [2026-04-08] 在执行 UI 自动化测试方案时，配置了 `autotests/20260408/ui_tests.js` 脚本。但在执行前，Playwright 需要下载 Chromium 浏览器内核，由于网络连接重置 (`ECONNRESET`) 导致下载失败并被取消，UI 测试任务已中断挂起。
 - **建议 / 下一步行动**: 下次启动或继续任务时，需要优先解决 Playwright 浏览器内核的下载网络问题（例如配置代理或使用国内淘宝镜像源 `set PLAYWRIGHT_DOWNLOAD_HOST=https://npmmirror.com/mirrors/playwright/`），完成 `npx playwright install chromium` 安装后，继续执行 `node autotests/20260408/ui_tests.js` 以完成系统核心页面的截图回归测试。
+
+## [2026-04-09] 观察发现
+
+### 1. Docker Build 持久化执行 (Long-running Builds)
+- **观察**: 本地镜像构建命令 `docker-compose build` 已运行超过 1 小时，且仍处于基础层下载阶段。
+- **背景**: 基础 Docker 镜像（java/node）通常较大，在特定网络环境下极易导致会话中断或构建失败。
+- **行动点**: 
+    - **镜像预拉取**: 如果构建频繁失败，建议先手动执行 `docker pull node:20-alpine` 和 `docker pull eclipse-temurin:21-jdk-jammy`。
+    - **持久化记录**: 记录当前 Command ID `78c8c2f7-a2f2-4644-9c48-838e9ea528dc`，以便下次进入会话后通过 `command_status` 确认结果。
