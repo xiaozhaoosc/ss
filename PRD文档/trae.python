@@ -1,0 +1,269 @@
+# -*- coding: utf-8 -*-
+"""
+v8.1 论文格式修复脚本
+=====================
+使用 pywin32 (Word COM接口) 将论文的样式/格式严格同步为学校模板。
+
+原理：
+  Word 文档的样式存储在 styles.xml 中，而 pywin32 通过 Word COM 接口
+  调用 AttachedTemplate + UpdateStyles()，让 Word 自身引擎完成样式同步，
+  这是保证格式100%一致的最可靠方式。
+
+依赖：
+  pip install pywin32
+  需要安装 Microsoft Word（Windows 环境）
+
+用法：
+  python fix_thesis_format.py
+
+作者：AI Assistant
+日期：2026-04-03
+"""
+
+import os
+import sys
+import win32com.client
+from win32com.client import constants as wc
+import pythoncom
+import time
+
+
+def get_abs_path(rel_path):
+    """获取脚本所在目录下的绝对路径"""
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    return os.path.join(script_dir, rel_path)
+
+
+def fix_thesis_format(
+    thesis_path: str,
+    template_path: str,
+    output_path: str,
+    verbose: bool = True,
+):
+    """
+    核心函数：使用 Word COM 接口修复论文格式
+
+    Args:
+        thesis_path:   论文文件路径（.doc 或 .docx）
+        template_path: 学校格式模板路径（.doc 或 .docx）
+        output_path:   输出文件路径
+        verbose:       是否打印详细日志
+    """
+
+    def log(msg):
+        if verbose:
+            print(f"[{time.strftime('%H:%M:%S')}] {msg}")
+
+    # ============================================================
+    # 第1步：路径检查
+    # ============================================================
+    if not os.path.exists(thesis_path):
+        raise FileNotFoundError(f"论文文件不存在: {thesis_path}")
+    if not os.path.exists(template_path):
+        raise FileNotFoundError(f"模板文件不存在: {template_path}")
+
+    thesis_abs = os.path.abspath(thesis_path)
+    template_abs = os.path.abspath(template_path)
+    output_abs = os.path.abspath(output_path)
+
+    log(f"论文文件: {thesis_abs}")
+    log(f"模板文件: {template_abs}")
+    log(f"输出文件: {output_abs}")
+
+    # ============================================================
+    # 第2步：启动 Word COM
+    # ============================================================
+    log("正在启动 Microsoft Word...")
+    pythoncom.CoInitialize()  # 初始化 COM（多线程环境必需）
+
+    word = win32com.client.Dispatch("Word.Application")
+    word.Visible = False       # 后台运行，不显示界面
+    word.DisplayAlerts = False  # 禁用所有弹窗
+
+    try:
+        # ============================================================
+        # 第3步：打开论文文档
+        # ============================================================
+        log("正在打开论文文档...")
+        doc = word.Documents.Open(
+            FileName=thesis_abs,
+            ConfirmConversions=False,
+            ReadOnly=False,
+            AddToRecentFiles=False,
+            Visible=False,
+        )
+        log(f"论文已打开，共 {doc.Paragraphs.Count} 个段落")
+
+        # ============================================================
+        # 第4步：附加模板并同步样式（核心操作）
+        # ============================================================
+        log("正在附加学校格式模板...")
+        doc.AttachedTemplate = template_abs
+
+        log("正在同步样式（UpdateStyles）...")
+        doc.UpdateStyles()
+        log("样式同步完成！")
+
+        # ============================================================
+        # 第5步：更新目录（如果存在）
+        # ============================================================
+        log("正在检查目录...")
+        toc_count = 0
+        for fld in doc.Fields:
+            if fld.Type == wc.wdFieldTOC:
+                toc_count += 1
+        if toc_count > 0:
+            log(f"发现 {toc_count} 个目录域，正在更新...")
+            doc.TablesOfContents(1).Update()
+            log("目录更新完成")
+        else:
+            log("未发现目录域，跳过目录更新")
+
+        # ============================================================
+        # 第6步：更新所有域（页码、交叉引用等）
+        # ============================================================
+        log("正在更新所有域...")
+        doc.Fields.Update()
+        log("域更新完成")
+
+        # ============================================================
+        # 第7步：逐段检查并修正样式应用
+        # ============================================================
+        log("正在逐段验证样式应用...")
+
+        # 定义需要检查的样式映射
+        # 键 = 段落文本特征（用于识别），值 = 应该应用的样式名
+        style_rules = []
+
+        # 通过段落样式名称统计
+        style_stats = {}
+        fixed_count = 0
+
+        for i, para in enumerate(doc.Paragraphs):
+            style_name = para.Style.NameLocal
+            style_stats[style_name] = style_stats.get(style_name, 0) + 1
+
+            # 检查 Heading2 是否有多余缩进（v7的已知问题）
+            if style_name == "Heading 2" or style_name == u"标题 2":
+                fmt = para.Format
+                if fmt.LeftIndent > 0 or fmt.FirstLineIndent > 0:
+                    fmt.LeftIndent = 0
+                    fmt.FirstLineIndent = 0
+                    fixed_count += 1
+
+        log(f"段落样式统计: {style_stats}")
+        if fixed_count > 0:
+            log(f"修正了 {fixed_count} 个 Heading2 的缩进问题")
+        else:
+            log("Heading2 缩进检查通过，无需修正")
+
+        # ============================================================
+        # 第8步：保存文档
+        # ============================================================
+        log(f"正在保存为: {output_abs}")
+
+        # 确保输出目录存在
+        output_dir = os.path.dirname(output_abs)
+        if output_dir and not os.path.exists(output_dir):
+            os.makedirs(output_dir)
+
+        # SaveAs2 支持 .docx 格式 (FileFormat=12 = wdFormatXMLDocument)
+        doc.SaveAs2(
+            FileName=output_abs,
+            FileFormat=12,  # wdFormatXMLDocument (.docx)
+            CompatibilityMode=15,  # Word 2013+
+        )
+        log("保存完成！")
+
+        # ============================================================
+        # 第9步：关闭文档和 Word
+        # ============================================================
+        doc.Close(SaveChanges=False)
+        log("文档已关闭")
+
+    except Exception as e:
+        log(f"处理过程中出错: {e}")
+        # 尝试关闭文档
+        try:
+            doc.Close(SaveChanges=False)
+        except:
+            pass
+        raise
+
+    finally:
+        word.Quit()
+        pythoncom.CoUninitialize()
+        log("Microsoft Word 已退出")
+
+    # ============================================================
+    # 第10步：验证输出
+    # ============================================================
+    if os.path.exists(output_abs):
+        size_kb = os.path.getsize(output_abs) / 1024
+        log(f"验证通过！输出文件大小: {size_kb:.1f} KB")
+        return True
+    else:
+        log("错误：输出文件未生成")
+        return False
+
+
+def main():
+    """主函数：交互式运行"""
+
+    print("=" * 60)
+    print("  v8.1 论文格式修复工具")
+    print("  基于 pywin32 (Word COM 接口)")
+    print("=" * 60)
+    print()
+
+    # ---- 配置文件路径 ----
+    # 请根据实际路径修改以下三个变量
+
+    # 论文文件（v7原始版本）
+    thesis_file = r"C:\Users\你的用户名\Desktop\v7_上海应用技术大学高等学历继续教育本科计算机专业毕业论文.doc"
+
+    # 学校格式模板
+    template_file = r"C:\Users\你的用户名\Desktop\3计算机专业-毕业论文格式模板.doc"
+
+    # 输出文件
+    output_file = r"C:\Users\你的用户名\Desktop\v8.1_上海应用技术大学高等学历继续教育本科计算机专业毕业论文.docx"
+
+    # ---- 也可以通过命令行参数指定 ----
+    if len(sys.argv) >= 3:
+        thesis_file = sys.argv[1]
+        template_file = sys.argv[2]
+    if len(sys.argv) >= 4:
+        output_file = sys.argv[3]
+
+    print(f"论文:   {thesis_file}")
+    print(f"模板:   {template_file}")
+    print(f"输出:   {output_file}")
+    print()
+
+    # ---- 执行格式修复 ----
+    success = fix_thesis_format(
+        thesis_path=thesis_file,
+        template_path=template_file,
+        output_path=output_file,
+        verbose=True,
+    )
+
+    if success:
+        print()
+        print("=" * 60)
+        print("  ✓ 格式修复完成！")
+        print(f"  输出文件: {output_file}")
+        print()
+        print("  请用 Microsoft Word 打开验证：")
+        print("  1. 检查各章节标题样式是否正确")
+        print("  2. 右键目录 → 更新域 → 更新整个目录")
+        print("  3. 检查页眉页脚和页码")
+        print("=" * 60)
+    else:
+        print()
+        print("✗ 格式修复失败，请检查错误信息")
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()

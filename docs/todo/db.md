@@ -12,33 +12,33 @@ erDiagram
     SYS_USER ||--o{ SS_PARENT_TASK : "发布/接收"
     SYS_USER ||--o{ SS_PARENT_CONTRACT : "签署"
     SYS_USER ||--o| SS_CHILD_SCORE : "拥有账户"
+    SYS_USER ||--o{ SS_PARENT_EMOTION_KIT : "配置"
     SS_PARENT_TASK ||--o{ SS_SCORE_HISTORY : "产生变动"
     SS_PARENT_REWARD ||--o{ SS_SCORE_HISTORY : "消耗积分"
     SYS_AI_MODEL ||--o{ SS_PARENT_TASK : "AI 拆解辅助"
     SYS_AI_PROVIDER ||--o{ SYS_AI_MODEL : "供应"
 
     SYS_USER {
-        bigint user_id PK
+        bigint user_id PK "用户唯一标识"
         string user_name "登录名"
-        string user_type "00:管理, 01:家长, 02:孩子"
-        string avatar "头像"
-        string phonenumber "手机号"
+        string user_type "类型(00:管理, 01:家长, 02:孩子)"
+        string avatar "个性化形象/勋章"
     }
 
     SS_PARENT_TASK {
         bigint task_id PK
-        bigint parent_id FK "发布者"
-        bigint child_id FK "执行者"
+        bigint parent_id FK "家长"
+        bigint child_id FK "被分配的孩子"
+        bigint parent_task_id "父任务ID (递归拆解)"
         string title "任务标题"
-        int reward_points "积分奖励"
-        char status "0:待执行, 1:进行中, 2:待审批, 3:已完成"
-        int difficulty "1-5 难度"
+        int reward_points "激励分值"
+        char status "状态(0待领, 1执行, 2审批, 3完成)"
     }
 
     SS_CHILD_SCORE {
-        bigint user_id PK
-        int balance "当前余额"
-        int total_earned "累计赚取"
+        bigint user_id PK "关联孩子ID"
+        int balance "当前可换奖励的能量"
+        int total_earned "成长总经验"
     }
 ```
 
@@ -52,53 +52,49 @@ erDiagram
 | 字段名 | 类型 | 说明 | 业务逻辑 |
 | :--- | :--- | :--- | :--- |
 | `user_id` | `bigint` | 主键 ID | 分布式雪花 ID |
-| `user_type` | `char(2)` | 用户类型 | **01: 家长** (拥有管理权), **02: 孩子** (拥有执行权) |
-| `dept_id` | `bigint` | 家庭 ID | 在系统中以“部门”概念模拟“家庭/机构”单位 |
-| `avatar` | `varchar(200)` | 形象标识 | 孩子端支持个性化头像，增加归属感 |
+| `user_type` | `char(2)` | 用户类型 | **01: 家长** (拥有管理权), **02: 孩子** (拥有执行权及成长权) |
+| `dept_id` | `bigint` | 家庭/机构 ID | 在系统中以部门概念模拟“家庭单位”，实现数据可见性隔离。 |
+| `avatar` | `varchar(200)` | 形象标识 | 孩子端支持由奖励系统解锁的“勋章头像”。 |
 
 ### 2.2 家长任务引擎表 (`ss_parent_task`)
-**核心特性**：支持任务的原子化拆解（Scaffolding）。
+**核心特性**：支持任务的原子化拆解（Task Crusher）。
 
 | 字段名 | 类型 | 约束 | 说明 |
 | :--- | :--- | :--- | :--- |
 | `task_id` | `bigint` | PK | - |
-| `parent_id` | `bigint` | Index | 关联 `sys_user`，发布任务的家长 |
-| `child_id` | `bigint` | Index | 关联 `sys_user`，接收任务的孩子 |
-| `parent_task_id` | `bigint` | - | 用于**任务拆解**。指向父任务 ID，实现递归逻辑 |
-| `is_atomic` | `char(1)` | Default '1' | 是否为原子任务。0:复合任务, 1:基础动作 |
-| `prompt_level` | `int` | - | **辅助强度**。定义该任务提供的提示级别 |
-| `reward_points` | `int` | > 0 | 成功完成后的积分收益 |
+| `parent_task_id` | `bigint` | Index | 用于**递归拆解**。指向父任务 ID。若为空则为顶层目标。 |
+| `is_atomic` | `char(1)` | Default '1' | 是否为原子动作。0:复合任务(需拆解), 1:原子任务(可直接执行)。 |
+| `reward_points` | `int` | > 0 | 完成后注入 `ss_child_score` 的分值。 |
+| `prompt_level` | `int` | - | **辅助强度**。定义该任务提供的视觉/声音提醒频次。 |
 
-### 2.3 积分资产与流水系统
-**ss_child_score (余额表) & ss_score_history (流水表)**
+### 2.3 情绪急救包配置 (`ss_parent_emotion_kit`)
+用于家长预设针对某种特定情绪的即时干预文本或音效。
 
-*   **设计原则**：余额表用于快速查询与显示，流水表用于防作弊审计与趋势分析。
-*   **流水类型**：
-    1.  `TASK_COMPLETED`: 任务奖励（入账）
-    2.  `REWARD_EXCHANGED`: 兑换奖品（出账）
-    3.  `MANUAL_ADJUST`: 家长手动干预（调账）
+| 字段名 | 类型 | 说明 | 示例 |
+| :--- | :--- | :--- | :--- |
+| `kit_id` | `bigint` | PK | - |
+| `child_id` | `bigint` | FK | 关联具体的目标儿童 |
+| `emotion_type` | `int` | 触发情绪 | 1:开心, 2:难过, 3:愤怒, 4:焦虑 |
+| `content` | `text` | 干预内容 | “深呼吸 3 次，抱抱你的小熊。” |
+| `status` | `char(1)` | 启用状态 | 0:激活, 1:关闭 |
 
 ---
 
-## 3. AI 中枢配置表
+## 3. AI 中枢与路由配置
 
-为了实现 **Mind Echo (情绪分析)** 和 **Task Crusher (任务拆解)**，引入了动态 AI 路由体系。
+支撑系统中的 AI 辅导（Task Crusher）与情绪分析（Mind Echo）。
 
-### 3.1 AI 供应商表 (`sys_ai_provider`)
-| 字段名 | 说明 | 示例 |
+### 3.1 AI 供应商与模型配置 (`sys_ai_provider` / `sys_ai_model`)
+| 字段名 | 说明 | 备注 |
 | :--- | :--- | :--- |
-| `type` | 驱动类型 | `deepseek`, `zhipuai`, `openai` |
-| `api_key` | 密钥 | 存储加密后的 API Key |
-
-### 3.2 AI 路由策略 (`sys_ai_route`)
-根据业务场景（`scene_key`）动态决定使用哪个模型。
-*   `TASK_SPLIT`: 侧重逻辑推理，使用大参数模型。
-*   `EMOTION_ANALYSIS`: 侧重语义情感，使用专用微调模型。
+| `provider.type` | 驱动类型 | 如 `deepseek`, `zhipuai`, `openai` |
+| `model.cost_input` | 输入成本 | 用于管理运营费用，实现精细化成本控制。 |
+| `model.is_free_tier`| 免费层级 | 用于区分提供给免费用户与付费专业用户的模型精度。 |
 
 ---
 
-## 4. 索引与性能优化建议
+## 4. 设计原则与优化
 
-1.  **高频检索项**：对 `ss_parent_task` 的 `child_id + status` 建立复合索引，加速移动端“今日待办”加载。
-2.  **安全性**：`ss_parent_contract` 的 `signature_img` 存储建议使用对象存储 (OSS) 的持久化链接。
-3.  **统计加速**：积分变动表 `ss_score_history` 建议按 `user_id` 分区，便于进行月度、年度行为报告生产。
+1.  **数据的“支架”化**: `ss_parent_task` 的设计允许任务从复杂到简单的物理拆解，数据库支持多级树状结构。
+2.  **安全性 (Family Isolation)**: 所有业务表均通过 `dept_id` 进行逻辑隔离。即使 API 被穿透，通过全局过滤器也能确保家长 A 无法查看孩子 B 的行为记录。
+3.  **高频检索优化**: 对 `ss_score_history` 的 `user_id` 与 `create_time` 建立复合索引，支撑移动端“行为日报”的秒级渲染。
