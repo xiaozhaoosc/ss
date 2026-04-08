@@ -91,7 +91,7 @@ import MissionCard from '@/components/child/mission-card/mission-card.vue'
 import ChildBottomNav from '@/components/child/child-bottom-nav/child-bottom-nav.vue'
 import { useUserStore } from '@/store/modules/user'
 import { getInfo } from '@/api/auth'
-import { listTask, updateTask } from '@/api/task'
+import { getChildTaskList, updateTaskStatus } from '@/api/child'
 
 const userStore = useUserStore()
 const streak = ref(3) // Mock: Backend needs 'streak' field
@@ -111,9 +111,9 @@ async function loadData() {
     }
 
     // 2. Get Task (First active task)
-    const res: any = await listTask({ pageNum: 1, pageSize: 1, status: '0' })
-    if (res.rows && res.rows.length > 0) {
-      const task = res.rows[0]
+    const res: any = await getChildTaskList(userStore.userInfo?.user?.userId || 1)
+    if (res && res.length > 0) {
+      const task = res[0]
       currentMission.value = {
         taskId: task.taskId,
         title: task.title,
@@ -138,8 +138,8 @@ const handleMissionComplete = () => {
   // Call API to complete task (mock update for now, ideally status='2')
   if (currentMission.value && currentMission.value.taskId) {
      uni.showLoading({ title: '正在提交...' })
-     // Assuming status '2' is completed.
-     updateTask({ taskId: currentMission.value.taskId, status: '1' }).then(() => {
+     // Assuming status '1' is completed.
+     updateTaskStatus({ taskId: currentMission.value.taskId, status: '1' }).then(() => {
         // stars.value += currentMission.value.points // managed by backend
         uni.hideLoading()
         uni.showToast({ title: `+${currentMission.value.points} Stars!`, icon: 'success' })

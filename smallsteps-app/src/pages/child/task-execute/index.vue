@@ -61,7 +61,7 @@ import { ref } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import MissionTimer from '@/components/child/mission-timer/mission-timer.vue'
 import ChildBottomNav from '@/components/child/child-bottom-nav/child-bottom-nav.vue'
-import { updateTask, getTask } from '@/api/task'
+import { updateTaskStatus, getChildTask } from '@/api/child'
 
 const isDarkMode = ref(false)
 const taskId = ref(null)
@@ -90,7 +90,7 @@ const handleComplete = () => {
   isLoading.value = true
   uni.showLoading({ title: '提交中...' })
   
-  updateTask({ taskId: taskId.value, status: '1' }).then(() => {
+  updateTaskStatus({ taskId: taskId.value, status: '1' }).then(() => {
     uni.hideLoading()
     uni.showToast({ title: '太棒了！任务完成！', icon: 'success' })
     setTimeout(() => {
