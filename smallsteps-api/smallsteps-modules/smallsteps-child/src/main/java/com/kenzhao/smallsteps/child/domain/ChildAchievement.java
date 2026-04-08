@@ -5,22 +5,17 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 /**
- * 儿童任务执行实体
+ * 儿童成就系统实体
  */
 @Data
-@TableName("child_task")
-public class ChildTask {
+@TableName("child_achievement")
+public class ChildAchievement {
 
     /**
-     * 任务ID
+     * 成就ID
      */
     @TableId
-    private Long taskId;
-
-    /**
-     * 家长任务ID
-     */
-    private Long parentTaskId;
+    private Long achievementId;
 
     /**
      * 用户ID
@@ -28,39 +23,34 @@ public class ChildTask {
     private Long userId;
 
     /**
-     * 任务标题
+     * 成就名称
      */
-    private String title;
+    private String achievementName;
 
     /**
-     * 任务描述
+     * 成就描述
      */
     private String description;
 
     /**
-     * 任务状态
+     * 勇气碎片数量
+     */
+    private Integer shardCount;
+
+    /**
+     * 星星数量
+     */
+    private Integer starCount;
+
+    /**
+     * 成就状态
      */
     private String status;
 
     /**
-     * 奖励点数
+     * 获得时间
      */
-    private Integer rewardPoints;
-
-    /**
-     * NFC ID
-     */
-    private String nfcId;
-
-    /**
-     * 开始时间
-     */
-    private String startTime;
-
-    /**
-     * 完成时间
-     */
-    private String completeTime;
+    private String obtainTime;
 
     /**
      * 创建时间

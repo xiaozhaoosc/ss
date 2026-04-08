@@ -1,31 +1,17 @@
-package com.kenzhao.smallsteps.child.domain;
+package com.kenzhao.smallsteps.child.domain.vo;
 
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 /**
- * 儿童任务执行实体
+ * 儿童任务执行视图对象
  */
 @Data
-@TableName("child_task")
-public class ChildTask {
+public class ChildTaskVo {
 
     /**
      * 任务ID
      */
-    @TableId
     private Long taskId;
-
-    /**
-     * 家长任务ID
-     */
-    private Long parentTaskId;
-
-    /**
-     * 用户ID
-     */
-    private Long userId;
 
     /**
      * 任务标题
@@ -48,11 +34,6 @@ public class ChildTask {
     private Integer rewardPoints;
 
     /**
-     * NFC ID
-     */
-    private String nfcId;
-
-    /**
      * 开始时间
      */
     private String startTime;
@@ -63,12 +44,12 @@ public class ChildTask {
     private String completeTime;
 
     /**
-     * 创建时间
+     * 语音反馈
      */
-    private String createTime;
+    private String voiceFeedback;
 
     /**
-     * 更新时间
+     * 灯光效果
      */
-    private String updateTime;
+    private String lightEffect;
 }
