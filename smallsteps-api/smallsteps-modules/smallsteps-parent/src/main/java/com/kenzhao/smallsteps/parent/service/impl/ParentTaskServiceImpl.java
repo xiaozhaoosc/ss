@@ -48,12 +48,17 @@ public class ParentTaskServiceImpl implements IParentTaskService {
     public boolean insertByBo(ParentTaskBo bo) {
         ParentTask parentTask = new ParentTask();
         // 复制属性
+        parentTask.setParentId(bo.getParentId());
         parentTask.setUserId(bo.getUserId());
         parentTask.setTitle(bo.getTitle());
         parentTask.setDescription(bo.getDescription());
         parentTask.setStatus(bo.getStatus());
+        parentTask.setDifficulty(bo.getDifficulty());
+        parentTask.setPromptLevel(bo.getPromptLevel());
+        parentTask.setCycleType(bo.getCycleType());
         parentTask.setRewardPoints(bo.getRewardPoints());
-        parentTask.setDeadline(bo.getDeadline());
+        parentTask.setLightEffect(bo.getLightEffect());
+        parentTask.setAudioEffect(bo.getAudioEffect());
         parentTask.setCreateBy(bo.getCreateBy());
         parentTask.setCreateTime(bo.getCreateTime());
         parentTask.setUpdateBy(bo.getUpdateBy());
@@ -66,12 +71,17 @@ public class ParentTaskServiceImpl implements IParentTaskService {
         ParentTask parentTask = new ParentTask();
         // 复制属性
         parentTask.setTaskId(bo.getTaskId());
+        parentTask.setParentId(bo.getParentId());
         parentTask.setUserId(bo.getUserId());
         parentTask.setTitle(bo.getTitle());
         parentTask.setDescription(bo.getDescription());
         parentTask.setStatus(bo.getStatus());
+        parentTask.setDifficulty(bo.getDifficulty());
+        parentTask.setPromptLevel(bo.getPromptLevel());
+        parentTask.setCycleType(bo.getCycleType());
         parentTask.setRewardPoints(bo.getRewardPoints());
-        parentTask.setDeadline(bo.getDeadline());
+        parentTask.setLightEffect(bo.getLightEffect());
+        parentTask.setAudioEffect(bo.getAudioEffect());
         parentTask.setUpdateBy(bo.getUpdateBy());
         parentTask.setUpdateTime(bo.getUpdateTime());
         return parentTaskMapper.updateParentTask(parentTask) > 0;
@@ -145,6 +155,13 @@ public class ParentTaskServiceImpl implements IParentTaskService {
         result.put("abilityImprovement", Map.of("专注力", 10, "执行力", 15, "情绪管理", 5));
         
         return result;
+    }
+
+    @Override
+    public List<ParentTaskVo> selectSubTasks(Long taskId) {
+        ParentTaskBo bo = new ParentTaskBo();
+        bo.setParentId(taskId);
+        return queryList(bo);
     }
 
     /**

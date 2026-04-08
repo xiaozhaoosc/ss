@@ -38,6 +38,14 @@ public interface IParentTaskService {
     public ParentTaskVo queryById(Long taskId);
 
     /**
+     * 获取子任务列表
+     *
+     * @param taskId 任务ID
+     * @return 子任务列表
+     */
+    public List<ParentTaskVo> selectSubTasks(Long taskId);
+
+    /**
      * 新增家长任务发布
      *
      * @param bo 家长任务发布

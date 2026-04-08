@@ -1,11 +1,13 @@
 package com.kenzhao.smallsteps.parent.domain;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.kenzhao.smallsteps.common.mybatis.core.domain.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serial;
+import java.util.Date;
 
 /**
  * 家长任务发布对象 parent_task
@@ -81,6 +83,12 @@ public class ParentTask extends BaseEntity {
      * 音频索引代码
      */
     private String audioEffect;
+
+    /**
+     * 截止时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date deadline;
 
     /**
      * 状态(0进行中 1已完成 2已过期)

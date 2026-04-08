@@ -1,0 +1,52 @@
+package com.kenzhao.smallsteps.child.service;
+
+import com.kenzhao.smallsteps.child.domain.ChildAchievement;
+import java.util.List;
+
+/**
+ * 儿童成就服务接口
+ */
+public interface IChildAchievementService {
+
+    List<ChildAchievement> selectChildAchievementList(ChildAchievement childAchievement);
+
+    ChildAchievement selectChildAchievementByAchievementId(Long achievementId);
+
+    int insertChildAchievement(ChildAchievement childAchievement);
+
+    int updateChildAchievement(ChildAchievement childAchievement);
+
+    int deleteChildAchievementByAchievementId(Long achievementId);
+
+    int deleteChildAchievementByAchievementIds(Long[] achievementIds);
+
+    /**
+     * 奖励星星
+     */
+    int rewardStars(Long childId, Integer stars);
+
+    /**
+     * 奖励勇气碎片
+     */
+    int rewardCourageFragments(Long childId, Integer fragments);
+
+    /**
+     * 兑换奖励
+     */
+    int exchangeReward(Long childId, Integer costStars, String rewardName);
+
+    /**
+     * 查询成就统计
+     */
+    List<ChildAchievement> selectAchievementStatsByChildId(Long childId);
+
+    /**
+     * 总星星数
+     */
+    Integer selectTotalStarsByChildId(Long childId);
+
+    /**
+     * 总勇气碎片数
+     */
+    Integer selectTotalCourageFragmentsByChildId(Long childId);
+}

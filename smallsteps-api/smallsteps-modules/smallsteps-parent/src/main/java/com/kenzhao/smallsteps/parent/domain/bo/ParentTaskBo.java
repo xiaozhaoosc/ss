@@ -7,6 +7,8 @@ import jakarta.validation.constraints.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.Date;
+
 /**
  * 家长任务发布业务对象 parent_task
  *
@@ -22,6 +24,11 @@ public class ParentTaskBo extends BaseEntity {
      */
     @NotNull(message = "任务ID不能为空", groups = { EditGroup.class })
     private Long taskId;
+
+    /**
+     * 父任务ID (用于任务拆解)
+     */
+    private Long parentId;
 
     /**
      * 用户ID
@@ -48,7 +55,21 @@ public class ParentTaskBo extends BaseEntity {
     /**
      * 难度等级(1-5)
      */
+    @Max(value = 5, message = "难度不能超过5")
+    @Min(value = 1, message = "难度不能低于1")
     private Integer difficulty;
+
+    /**
+     * 支架强度/辅助强度(1-5)
+     */
+    @Max(value = 5, message = "支架强度不能超过5")
+    @Min(value = 1, message = "支架强度不能低于1")
+    private Integer promptLevel;
+
+    /**
+     * 循环类型(0单次 1每日 2每周)
+     */
+    private Integer cycleType;
 
     /**
      * 奖励积分
@@ -56,7 +77,22 @@ public class ParentTaskBo extends BaseEntity {
     private Integer rewardPoints;
 
     /**
-     * 状态(0正常 1停用)
+     * 灯光效果代码
+     */
+    private String lightEffect;
+
+    /**
+     * 音频索引代码
+     */
+    private String audioEffect;
+
+    /**
+     * 截止时间
+     */
+    private Date deadline;
+
+    /**
+     * 状态(0进行中 1已完成 2已过期)
      */
     private String status;
 

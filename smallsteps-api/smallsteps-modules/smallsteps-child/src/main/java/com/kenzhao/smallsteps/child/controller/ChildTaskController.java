@@ -1,110 +1,68 @@
 package com.kenzhao.smallsteps.child.controller;
 
 import com.kenzhao.smallsteps.child.domain.ChildTask;
+import com.kenzhao.smallsteps.child.domain.vo.ChildTaskVo;
 import com.kenzhao.smallsteps.child.service.IChildTaskService;
 import com.kenzhao.smallsteps.common.core.domain.R;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.kenzhao.smallsteps.common.web.core.BaseController;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 /**
- * 儿童任务Controller
+ * 儿童任务执行控制层 (现代化重构 + 支持 VO)
+ *
+ * @author 赵轩
+ * @date 2026-04-08
  */
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/child/task")
-public class ChildTaskController {
+public class ChildTaskController extends BaseController {
 
-    @Autowired
-    private IChildTaskService childTaskService;
+    private final IChildTaskService childTaskService;
 
     /**
-     * 查询儿童任务列表
+     * 查询儿童任务执行列表 (带硬件反馈信息)
      */
     @GetMapping("/list")
-    public R<List<ChildTask>> list(ChildTask childTask) {
-        List<ChildTask> list = childTaskService.selectChildTaskList(childTask);
+    public R<List<ChildTaskVo>> list(ChildTask childTask) {
+        List<ChildTaskVo> list = childTaskService.selectChildTaskList(childTask);
         return R.ok(list);
     }
 
     /**
-     * 根据任务ID查询儿童任务
+     * 根据执行记录ID查询任务详情
      */
     @GetMapping("/info/{taskId}")
-    public R<ChildTask> info(@PathVariable("taskId") Long taskId) {
-        ChildTask childTask = childTaskService.selectChildTaskByTaskId(taskId);
+    public R<ChildTaskVo> info(@PathVariable("taskId") Long taskId) {
+        ChildTaskVo childTask = childTaskService.selectChildTaskByTaskId(taskId);
         return R.ok(childTask);
     }
 
     /**
-     * 新增儿童任务
-     */
-    @PostMapping("/add")
-    public R<String> add(@RequestBody ChildTask childTask) {
-        int result = childTaskService.insertChildTask(childTask);
-        return result > 0 ? R.ok("新增成功") : R.fail("新增失败");
-    }
-
-    /**
-     * 修改儿童任务
-     */
-    @PutMapping("/edit")
-    public R<String> edit(@RequestBody ChildTask childTask) {
-        int result = childTaskService.updateChildTask(childTask);
-        return result > 0 ? R.ok("修改成功") : R.fail("修改失败");
-    }
-
-    /**
-     * 删除儿童任务
-     */
-    @DeleteMapping("/remove/{taskId}")
-    public R<String> remove(@PathVariable("taskId") Long taskId) {
-        int result = childTaskService.deleteChildTaskByTaskId(taskId);
-        return result > 0 ? R.ok("删除成功") : R.fail("删除失败");
-    }
-
-    /**
-     * 批量删除儿童任务
-     */
-    @DeleteMapping("/remove/batch")
-    public R<String> removeBatch(@RequestBody Long[] taskIds) {
-        int result = childTaskService.deleteChildTaskByTaskIds(taskIds);
-        return result > 0 ? R.ok("删除成功") : R.fail("删除失败");
-    }
-
-    /**
-     * 开始执行任务
+     * [ADHD] 开始执行任务 - 触发硬件灯光/音效预警
      */
     @PostMapping("/start")
-    public R<String> startTask(@RequestParam("taskId") Long taskId, @RequestParam("childId") Long childId) {
-        int result = childTaskService.startTask(taskId, childId);
-        return result > 0 ? R.ok("任务开始成功") : R.fail("任务开始失败");
+    public R<Void> startTask(@RequestParam("taskId") Long taskId, @RequestParam("childId") Long childId) {
+        return toAjax(childTaskService.startTask(taskId, childId));
     }
 
     /**
-     * 完成任务
+     * [ADHD] 完成任务 - 触发奖励
      */
     @PostMapping("/complete")
-    public R<String> completeTask(@RequestParam("taskId") Long taskId, @RequestParam("childId") Long childId) {
-        int result = childTaskService.completeTask(taskId, childId);
-        return result > 0 ? R.ok("任务完成成功") : R.fail("任务完成失败");
-    }
-
-    /**
-     * 失败任务
-     */
-    @PostMapping("/fail")
-    public R<String> failTask(@RequestParam("taskId") Long taskId, @RequestParam("childId") Long childId) {
-        int result = childTaskService.failTask(taskId, childId);
-        return result > 0 ? R.ok("任务失败成功") : R.fail("任务失败失败");
+    public R<Void> completeTask(@RequestParam("taskId") Long taskId, @RequestParam("childId") Long childId) {
+        return toAjax(childTaskService.completeTask(taskId, childId));
     }
 
     /**
      * 查询儿童待执行任务
      */
     @GetMapping("/pending/{childId}")
-    public R<List<ChildTask>> pendingTasks(@PathVariable("childId") Long childId) {
-        List<ChildTask> list = childTaskService.selectPendingTasksByChildId(childId);
+    public R<List<ChildTaskVo>> pendingTasks(@PathVariable("childId") Long childId) {
+        List<ChildTaskVo> list = childTaskService.selectPendingTasksByChildId(childId);
         return R.ok(list);
     }
 
@@ -112,17 +70,19 @@ public class ChildTaskController {
      * 查询儿童正在执行的任务
      */
     @GetMapping("/current/{childId}")
-    public R<ChildTask> currentTask(@PathVariable("childId") Long childId) {
-        ChildTask childTask = childTaskService.selectCurrentTaskByChildId(childId);
+    public R<ChildTaskVo> currentTask(@PathVariable("childId") Long childId) {
+        ChildTaskVo childTask = childTaskService.selectCurrentTaskByChildId(childId);
         return R.ok(childTask);
     }
 
-    /**
-     * NFC刷卡签到
-     */
-    @PostMapping("/nfc/checkin")
-    public R<String> nfcCheckIn(@RequestParam("nfcId") String nfcId, @RequestParam("childId") Long childId) {
-        int result = childTaskService.nfcCheckIn(nfcId, childId);
-        return result > 0 ? R.ok("签到成功") : R.fail("签到失败");
+    // CRUD 基础操作保留 (省略或根据需要完善)
+    @PostMapping("/add")
+    public R<Void> add(@RequestBody ChildTask childTask) {
+        return toAjax(childTaskService.insertChildTask(childTask));
+    }
+
+    @DeleteMapping("/remove/{taskId}")
+    public R<Void> remove(@PathVariable("taskId") Long taskId) {
+        return toAjax(childTaskService.deleteChildTaskByTaskId(taskId));
     }
 }
