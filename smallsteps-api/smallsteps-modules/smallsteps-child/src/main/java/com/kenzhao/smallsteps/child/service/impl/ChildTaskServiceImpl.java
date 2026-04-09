@@ -2,8 +2,10 @@ package com.kenzhao.smallsteps.child.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.kenzhao.smallsteps.child.domain.ChildTask;
+import com.kenzhao.smallsteps.child.domain.vo.ChildTaskVo;
 import com.kenzhao.smallsteps.child.mapper.ChildTaskMapper;
 import com.kenzhao.smallsteps.child.service.IChildTaskService;
+import com.kenzhao.smallsteps.parent.service.IParentTaskService;
 import com.kenzhao.smallsteps.parent.service.IScoreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,7 @@ public class ChildTaskServiceImpl implements IChildTaskService {
 
     private final ChildTaskMapper childTaskMapper;
     private final IScoreService scoreService;
+    private final IParentTaskService parentTaskService;
 
     @Override
     public List<ChildTask> selectChildTaskList(ChildTask childTask) {
