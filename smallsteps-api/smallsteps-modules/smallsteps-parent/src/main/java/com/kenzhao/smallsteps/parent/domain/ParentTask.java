@@ -30,6 +30,11 @@ public class ParentTask extends BaseEntity {
     private Long taskId;
 
     /**
+     * 家庭ID (对应 sys_dept.dept_id)
+     */
+    private Long deptId;
+
+    /**
      * 父任务ID (用于任务拆解)
      */
     private Long parentId;

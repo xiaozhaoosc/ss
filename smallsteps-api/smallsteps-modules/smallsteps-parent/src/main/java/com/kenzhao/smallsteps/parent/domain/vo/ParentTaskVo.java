@@ -1,6 +1,6 @@
 package com.kenzhao.smallsteps.parent.domain.vo;
 
-import com.kenzhao.smallsteps.common.excel.annotation.ExcelProperty;
+import com.alibaba.excel.annotation.ExcelProperty;
 import lombok.Data;
 
 import java.io.Serial;

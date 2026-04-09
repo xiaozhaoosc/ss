@@ -30,6 +30,11 @@ public class ChildTask extends BaseEntity {
     private Long logId;
 
     /**
+     * 家庭ID (对应 sys_dept.dept_id)
+     */
+    private Long deptId;
+
+    /**
      * 关联任务定义ID (对应 ss_parent_task.task_id)
      */
     private Long taskId;

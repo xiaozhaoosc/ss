@@ -1,6 +1,6 @@
 package com.kenzhao.smallsteps.parent.domain;
 
-import com.kenzhao.smallsteps.common.core.domain.BaseEntity;
+import com.kenzhao.smallsteps.common.mybatis.core.domain.BaseEntity;
 
 /**
  * 情绪急救包配置
