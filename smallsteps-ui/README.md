@@ -6,10 +6,10 @@
 
 ## 配套后端代码仓库地址
 
-| 介绍         | 项目名              | 项目地址                                                                                                                                                                           |
-|------------|:-----------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 介绍              | 项目名                | 项目地址                                                                                                                                                                                               |
+| ----------------- | :-------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | 🔥 分布式集群框架 | SmallSteps-Vue-Plus   | - [Gitee](https://gitee.com/smallsteps/SmallSteps-Vue-Plus)<br> - [GitHub](https://github.com/smallsteps/SmallSteps-Vue-Plus)<br> - [GitCode](https://gitcode.com/smallsteps/SmallSteps-Vue-Plus)      |
-| 🔥 微服务框架   | SmallSteps-Cloud-Plus | - [Gitee](https://gitee.com/smallsteps/SmallSteps-Cloud-Plus)<br>- [GitHub](https://github.com/smallsteps/SmallSteps-Cloud-Plus)<br> - [GitCode](https://gitcode.com/smallsteps/SmallSteps-Cloud-Plus) |
+| 🔥 微服务框架     | SmallSteps-Cloud-Plus | - [Gitee](https://gitee.com/smallsteps/SmallSteps-Cloud-Plus)<br>- [GitHub](https://github.com/smallsteps/SmallSteps-Cloud-Plus)<br> - [GitCode](https://gitcode.com/smallsteps/SmallSteps-Cloud-Plus) |
 
 ## 分支说明
 
@@ -33,7 +33,7 @@ npm run build:prod
 
 ## 本框架与SmallSteps的业务差异
 
-| 业务         | 功能说明                                                      | 本框架 | SmallSteps                         |
+| 业务         | 功能说明                                                      | 本框架 | SmallSteps                    |
 | ------------ | ------------------------------------------------------------- | ------ | ----------------------------- |
 | 租户管理     | 系统内租户的管理 如:租户套餐、过期时间、用户数量、企业信息等  | 支持   | 无                            |
 | 租户套餐管理 | 系统内租户所能使用的套餐管理 如:套餐内所包含的菜单等          | 支持   | 无                            |
@@ -57,4 +57,3 @@ npm run build:prod
 | 缓存监控     | 对系统的缓存信息查询，命令统计等。                            | 支持   | 支持                          |
 | 在线构建器   | 拖动表单元素生成相应的HTML代码。                              | 支持   | 支持                          |
 | 使用案例     | 系统的一些功能案例                                            | 支持   | 不支持                        |
-

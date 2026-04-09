@@ -157,4 +157,3 @@ export function initDevToolsProtection(): void {
     lastHeight = currentHeight;
   });
 }
-

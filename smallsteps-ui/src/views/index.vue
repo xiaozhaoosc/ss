@@ -83,7 +83,9 @@
         </p>
         <p>
           <el-button type="primary" icon="Cloudy" plain @click="goTarget('https://gitee.com/smallsteps/SmallSteps-Cloud-Plus')">访问码云</el-button>
-          <el-button type="primary" icon="Cloudy" plain @click="goTarget('https://github.com/smallsteps/SmallSteps-Cloud-Plus')">访问GitHub</el-button>
+          <el-button type="primary" icon="Cloudy" plain @click="goTarget('https://github.com/smallsteps/SmallSteps-Cloud-Plus')"
+            >访问GitHub</el-button
+          >
           <el-button type="primary" icon="Cloudy" plain @click="goTarget('https://plus-doc.smallsteps.org/#/smallsteps-cloud-plus/changlog')"
             >更新日志</el-button
           >
