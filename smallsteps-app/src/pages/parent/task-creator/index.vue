@@ -109,7 +109,6 @@ const handleAiBreakdown = () => {
   }
   
   isBreakingDown.value = true
-  // 模拟 AI 拆解过程
   setTimeout(() => {
     isBreakingDown.value = false
     steps.value = [
@@ -140,10 +139,11 @@ const handleSubmit = () => {
   }
   isSubmitting.value = true
   
-  // Format steps into description
   const stepsDesc = steps.value.map((s, i) => `${i+1}. ${s.title}: ${s.description}`).join('\n')
   
+  // 注入真实的 userId (Parent ID) 等必要参数
   const newTask = {
+    userId: userStore.id || 1, // Fallback for dev if store is empty
     title: taskInput.value,
     description: stepsDesc,
     icon: 'task',
@@ -160,6 +160,7 @@ const handleSubmit = () => {
     }, 1500)
   }).catch(() => {
     isSubmitting.value = false
+    uni.showToast({ title: '发布失败，请重试', icon: 'error' })
   })
 }
 </script>
