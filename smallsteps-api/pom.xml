@@ -50,6 +50,11 @@
         <!-- 工作流配置 -->
         <warm-flow.version>1.8.4</warm-flow.version>
 
+        <!-- 测试相关版本 -->
+        <rest-assured.version>5.4.0</rest-assured.version>
+        <assertj.version>3.25.3</assertj.version>
+        <allure.version>2.25.0</allure.version>
+
         <!-- 插件版本 -->
         <maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
         <maven-war-plugin.version>3.4.0</maven-war-plugin.version>
@@ -367,6 +372,26 @@
                 <groupId>com.kenzhao.smallsteps</groupId>
                 <artifactId>smallsteps-child</artifactId>
                 <version>${revision}</version>
+            </dependency>
+
+            <!-- Test Dependencies -->
+            <dependency>
+                <groupId>io.rest-assured</groupId>
+                <artifactId>rest-assured</artifactId>
+                <version>${rest-assured.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.assertj</groupId>
+                <artifactId>assertj-core</artifactId>
+                <version>${assertj.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.qameta.allure</groupId>
+                <artifactId>allure-junit5</artifactId>
+                <version>${allure.version}</version>
+                <scope>test</scope>
             </dependency>
 
         </dependencies>
