@@ -63,7 +63,7 @@
         <view class="card calendar-card">
           <view class="calendar-header">
             <text class="nav-arrow"><</text>
-            <text class="calendar-month">2023年 10月</text>
+            <text class="calendar-month">{{ currentMonthStr }}</text>
             <text class="nav-arrow">></text>
           </view>
           
@@ -72,10 +72,12 @@
           </view>
           
           <view class="calendar-grid">
-            <view v-for="n in 4" :key="'empty-'+n" class="day-cell"></view>
-            <view v-for="day in 14" :key="day" class="day-cell" :class="{ 'selected': day === 5 }">
-              <text class="day-num">{{day}}</text>
-              <view v-if="day !== 5" class="dot" :style="{ background: getEmotionColor(day) }"></view>
+            <view v-for="(day, index) in calendarDays" :key="index" 
+                  class="day-cell" :class="{ 'selected': day.isToday }">
+              <template v-if="!day.empty">
+                <text class="day-num">{{ day.day }}</text>
+                <view v-if="!day.isToday" class="dot" :style="{ background: getEmotionColor(day.date) }"></view>
+              </template>
             </view>
           </view>
           
@@ -129,7 +131,7 @@
 import { ref } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
 import BottomNav from '@/components/common/bottom-nav/bottom-nav.vue'
-import { listChildAchievement, getAbilityRadar } from '@/api/child'
+import { listChildAchievement, getAbilityRadar, getEmotionTrend } from '@/api/child'
 import { useUserStore } from '@/store/modules/user'
 
 const userStore = useUserStore()
@@ -137,6 +139,11 @@ const userStore = useUserStore()
 const abilityData = ref([])
 
 const achievements = ref([])
+
+// 情绪热力图相关
+const emotionData = ref([])
+const calendarDays = ref([])
+const currentMonthStr = ref('')
 
 onShow(() => {
   loadData()
@@ -179,11 +186,71 @@ const loadData = () => {
   }).catch(err => {
     console.error('Failed to load insights achievements:', err)
   })
+
+  loadEmotionHeatmap(childId)
 }
 
-const getEmotionColor = (day) => {
-  const colors = ['#6b9bd1', '#fbbf24', '#d1d5db']
-  return colors[day % 3]
+const loadEmotionHeatmap = (childId) => {
+  const now = new Date()
+  const year = now.getFullYear()
+  const month = now.getMonth()
+  currentMonthStr.value = `${year}年 ${month + 1}月`
+
+  // 获取本月第一天是周几
+  const firstDay = new Date(year, month, 1)
+  const startingDay = firstDay.getDay()
+  
+  // 获取本月天数
+  const daysInMonth = new Date(year, month + 1, 0).getDate()
+  
+  const days = []
+  // 填充月初空白
+  for (let i = 0; i < startingDay; i++) {
+    days.push({ empty: true })
+  }
+  
+  const today = now.getDate()
+  
+  for (let i = 1; i <= daysInMonth; i++) {
+    const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`
+    days.push({
+      day: i,
+      date: dateStr,
+      isToday: i === today && month === now.getMonth() && year === now.getFullYear()
+    })
+  }
+  calendarDays.value = days
+
+  // 获取情绪趋势数据 (最近30天)
+  getEmotionTrend(childId, 30).then(res => {
+    emotionData.value = res.data || []
+  }).catch(err => {
+    console.error('Failed to load emotion trend:', err)
+  })
+}
+
+const getEmotionColor = (dateStr) => {
+  if (!dateStr) return 'transparent'
+  
+  const entry = emotionData.value.find(item => {
+    const itemDate = item.createTime ? item.createTime.substring(0, 10) : ''
+    return itemDate === dateStr
+  })
+  
+  if (!entry) return '#f3f4f6'
+  
+  // 1: 开心, 2: 难过, 3: 愤怒, 4: 焦虑, 5: 平静
+  switch (entry.emotionType) {
+    case 1:
+    case 5:
+      return '#6b9bd1' // 平静/开心
+    case 3:
+      return '#fbbf24' // 兴奋/愤怒 (High Arousal)
+    case 2:
+    case 4:
+    default:
+      return '#d1d5db' // 一般/其他
+  }
 }
 </script>
 
