@@ -1,3 +1,38 @@
+<script setup>
+import { ref } from 'vue'
+import { onShow } from '@dcloudio/uni-app'
+import ChildBottomNav from '@/components/child/child-bottom-nav/child-bottom-nav.vue'
+import { listChildAchievement } from '@/api/child'
+import { useUserStore } from '@/store/modules/user'
+
+const userStore = useUserStore()
+const isDarkMode = ref(false)
+const achievements = ref([])
+
+const handleBack = () => {
+  uni.navigateBack()
+}
+
+onShow(() => {
+  loadAchievements()
+})
+
+const loadAchievements = () => {
+  const childId = userStore.id || 1
+  listChildAchievement(childId).then(res => {
+    const list = res.data || res.rows || []
+    achievements.value = list.map(item => ({
+      id: item.achievementId,
+      title: item.achievementName || '新成就',
+      desc: item.description || '完成了一个里程碑',
+      date: item.obtainTime ? item.obtainTime.substring(0, 10) : '刚刚'
+    }))
+  }).catch(err => {
+    console.error('Failed to fetch achievements:', err)
+  })
+}
+</script>
+
 <template>
   <view class="achievements-page" :class="{ 'dark': isDarkMode }">
     <view class="header">
@@ -8,29 +43,29 @@
       <view class="spacer"></view>
     </view>
 
-    <view class="main-content">
-      <view class="empty-state">
+    <scroll-view scroll-y class="main-content">
+      <view v-if="achievements.length === 0" class="empty-state">
         <text class="material-symbols-outlined empty-icon">star</text>
         <text class="empty-text">暂无成就</text>
         <text class="empty-desc">完成任务后可以获得成就哦！</text>
       </view>
-    </view>
+      
+      <view v-else class="achievement-list">
+        <view v-for="item in achievements" :key="item.id" class="ach-card">
+           <view class="ach-icon"><text class="material-symbols-outlined">military_tech</text></view>
+           <view class="ach-info">
+             <text class="ach-title">{{ item.title }}</text>
+             <text class="ach-desc">{{ item.desc }}</text>
+           </view>
+           <text class="ach-date">{{ item.date }}</text>
+        </view>
+      </view>
+    </scroll-view>
 
     <view class="bg-gradient"></view>
     <child-bottom-nav active="home" />
   </view>
 </template>
-
-<script setup>
-import { ref } from 'vue'
-import ChildBottomNav from '@/components/child/child-bottom-nav/child-bottom-nav.vue'
-
-const isDarkMode = ref(false)
-
-const handleBack = () => {
-  uni.navigateBack()
-}
-</script>
 
 <style lang="scss" scoped>
 .achievements-page {
@@ -125,4 +160,40 @@ const handleBack = () => {
   font-size: 16px;
   color: rgba(255, 255, 255, 0.8);
 }
+
+.achievement-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+  width: 100%;
+}
+.ach-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 16px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+.ach-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #fef3c7;
+  color: #f59e0b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .material-symbols-outlined { font-size: 28px; }
+}
+.ach-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  .ach-title { font-weight: bold; font-size: 16px; color: #1e293b; }
+  .ach-desc { font-size: 12px; color: #64748b; margin-top: 4px; }
+}
+.ach-date { font-size: 12px; color: #94a3b8; }
 </style>
