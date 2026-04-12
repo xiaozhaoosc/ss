@@ -127,8 +127,14 @@
 
 <script setup>
 import { ref } from 'vue'
+import { onShow } from '@dcloudio/uni-app'
 import BottomNav from '@/components/common/bottom-nav/bottom-nav.vue'
+import { listChildAchievement } from '@/api/child'
+import { useUserStore } from '@/store/modules/user'
 
+const userStore = useUserStore()
+
+// Keep abilityData mocked until backend API is ready
 const abilityData = ref([
   { label: '数学', value: 65 },
   { label: '社交', value: 42 },
@@ -136,22 +142,28 @@ const abilityData = ref([
   { label: '创造', value: 30 }
 ])
 
-const achievements = ref([
-  { 
-    title: '本周阅读时长达标', 
-    desc: '累计阅读超过 120 分钟，表现很棒！', 
-    date: '10月12日',
-    icon: '🏆',
-    bgColor: '#fef3c7'
-  },
-  { 
-    title: '第一次主动收拾玩具', 
-    desc: '在没有任何提醒的情况下完成了整理。', 
-    date: '10月10日',
-    icon: '🧼',
-    bgColor: '#e0f2fe'
-  }
-])
+const achievements = ref([])
+
+onShow(() => {
+  loadData()
+})
+
+const loadData = () => {
+  const childId = userStore.currentChildId || 1 
+  listChildAchievement(childId).then(res => {
+    const list = res.data || res.rows || []
+    achievements.value = list.map((item, index) => ({
+      id: item.achievementId,
+      title: item.achievementName || '新成就',
+      desc: item.description || '完成了一个阶段性目标',
+      date: item.obtainTime ? item.obtainTime.substring(5, 10) : '今日',
+      icon: index % 2 === 0 ? '🏆' : '🌟',
+      bgColor: index % 2 === 0 ? '#fef3c7' : '#e0f2fe'
+    }))
+  }).catch(err => {
+    console.error('Failed to load insights achievements:', err)
+  })
+}
 
 const getEmotionColor = (day) => {
   const colors = ['#6b9bd1', '#fbbf24', '#d1d5db']
