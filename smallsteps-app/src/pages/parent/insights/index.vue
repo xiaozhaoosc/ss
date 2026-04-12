@@ -129,18 +129,12 @@
 import { ref } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
 import BottomNav from '@/components/common/bottom-nav/bottom-nav.vue'
-import { listChildAchievement } from '@/api/child'
+import { listChildAchievement, getAbilityRadar } from '@/api/child'
 import { useUserStore } from '@/store/modules/user'
 
 const userStore = useUserStore()
 
-// Keep abilityData mocked until backend API is ready
-const abilityData = ref([
-  { label: '数学', value: 65 },
-  { label: '社交', value: 42 },
-  { label: '专注', value: 85 },
-  { label: '创造', value: 30 }
-])
+const abilityData = ref([])
 
 const achievements = ref([])
 
@@ -150,6 +144,28 @@ onShow(() => {
 
 const loadData = () => {
   const childId = userStore.currentChildId || 1 
+
+  // 获取能力发展雷达图数据
+  getAbilityRadar(childId).then(res => {
+    const list = res.data || []
+    if (list.length > 0) {
+      abilityData.value = list.map(item => ({
+        label: item.dimension,
+        value: item.score
+      }))
+    } else {
+      // 如果没有数据，使用默认占位数据
+      abilityData.value = [
+        { label: '数学', value: 65 },
+        { label: '社交', value: 42 },
+        { label: '专注', value: 85 },
+        { label: '创造', value: 30 }
+      ]
+    }
+  }).catch(err => {
+    console.error('Failed to load ability radar data:', err)
+  })
+
   listChildAchievement(childId).then(res => {
     const list = res.data || res.rows || []
     achievements.value = list.map((item, index) => ({

@@ -210,3 +210,10 @@ export function getEmotionTrend(childId: number, days: number = 7) {
         params: { childId, days }
     })
 }
+
+export function getAbilityRadar(childId: number) {
+    return request({
+        url: '/parent/insight/ability/radar/' + childId,
+        method: 'GET'
+    })
+}
