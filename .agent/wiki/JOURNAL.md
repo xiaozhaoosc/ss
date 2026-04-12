@@ -13,6 +13,13 @@
 ### 任务复盘 [Project_Reflection]
 | 目标 | 状态 | 详情 |
 | :--- | :--- | :--- |
-| API 补全 | 🟢 完成 | 创建了 `child.ts`, `reward.ts`, `device.ts` |
-| 任务管理 UI | 🟡 进行中 | 正在编写 `smallsteps/task/index.vue` |
-| 权限验证 | ⚪ 待开始 | 需验证 `sys_role_menu` 映射 |
+| Wiki 体系初始化 | 🟢 完成 | 建立了 .agent/wiki 持久化大脑 |
+| API 补全 | 🟢 完成 | 创建了 child.ts, reward.ts, device.ts, task.ts (P/C) |
+| 家长端 UI | 🟡 进展过半 | 完成 ParentTask, ParentReward |
+| 儿童端 UI | 🟡 进展过半 | 完成 ChildTask (大按钮风格) |
+| 权限验证 | ⚪ 待开始 | 需在下次启动时验证菜单挂载 |
+
+### [Daily_Summary] 2026-04-09
+今日重点解决了 `smallsteps-ui` 业务组件缺失的问题。基于 ADHD 认知支架理论，重构了儿童端任务执行界面，引入了“专注能量球”视觉隐喻。完成了家长端核心的任务配置流（含硬件反馈码配置）。
+**下次启动指令建议**: `继续补全 smallsteps/child 和 smallsteps/device 页面，并执行全流程逻辑验证。`
+
