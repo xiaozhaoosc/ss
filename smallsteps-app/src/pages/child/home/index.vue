@@ -91,13 +91,14 @@ import MissionCard from '@/components/child/mission-card/mission-card.vue'
 import ChildBottomNav from '@/components/child/child-bottom-nav/child-bottom-nav.vue'
 import { useUserStore } from '@/store/modules/user'
 import { getInfo } from '@/api/auth'
-import { listTask, updateTask } from '@/api/task'
+import { getPendingTasks } from '@/api/child'
 
 const userStore = useUserStore()
 const streak = ref(3) // Mock: Backend needs 'streak' field
 // Balance is now in userStore
 const childName = ref(userStore.userInfo?.user?.nickName || 'Star Hero')
 const currentMission = ref<any>(null)
+const pendingTasks = ref<any[]>([])
 
 async function loadData() {
   try {
@@ -111,22 +112,31 @@ async function loadData() {
     }
 
     // 2. Get Task (First active task)
-    const res: any = await listTask({ pageNum: 1, pageSize: 1, status: '0' })
-    if (res.rows && res.rows.length > 0) {
-      const task = res.rows[0]
+    loadPendingTasks()
+  } catch (e) {
+    console.error(e)
+  }
+}
+
+const loadPendingTasks = () => {
+  const childId = userStore.id || 1
+  getPendingTasks(childId).then((res: any) => {
+    pendingTasks.value = res.data || []
+    if (pendingTasks.value.length > 0) {
+      const task = pendingTasks.value[0]
       currentMission.value = {
         taskId: task.taskId,
-        title: task.title,
+        title: task.taskName || task.title,
         subtitle: task.description || '加油完成任务！',
         icon: task.icon || 'star', // Default icon
-        points: task.rewardPoints || 5
+        points: task.rewardStars || task.rewardPoints || 5
       }
     } else {
       currentMission.value = null
     }
-  } catch (e) {
-    console.error(e)
-  }
+  }).catch((err: any) => {
+    console.error('Failed to load pending tasks:', err)
+  })
 }
 
 const handleSettings = () => {
@@ -135,19 +145,15 @@ const handleSettings = () => {
 }
 
 const handleMissionComplete = () => {
-  // Call API to complete task (mock update for now, ideally status='2')
   if (currentMission.value && currentMission.value.taskId) {
-     uni.showLoading({ title: '正在提交...' })
-     // Assuming status '2' is completed.
-     updateTask({ taskId: currentMission.value.taskId, status: '1' }).then(() => {
-        // stars.value += currentMission.value.points // managed by backend
-        uni.hideLoading()
-        uni.showToast({ title: `+${currentMission.value.points} Stars!`, icon: 'success' })
-        // Refresh balance
-        userStore.fetchBalance()
-        loadData() // Reload to get next task
-     })
+     navigateToTask(currentMission.value.taskId)
   }
+}
+
+const navigateToTask = (taskId: number) => {
+  uni.navigateTo({
+    url: `/pages/child/task-execute/index?taskId=${taskId}`
+  })
 }
 
 const handleQuickLink = (name: string) => {

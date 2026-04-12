@@ -61,15 +61,17 @@ import { ref } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import MissionTimer from '@/components/child/mission-timer/mission-timer.vue'
 import ChildBottomNav from '@/components/child/child-bottom-nav/child-bottom-nav.vue'
-import { startTask, completeTask } from '@/api/child'
+import { completeTask } from '@/api/child'
+import { useUserStore } from '@/store/modules/user'
 
+const userStore = useUserStore()
 const isDarkMode = ref(false)
 const taskId = ref(null)
 const isLoading = ref(false)
 
 onLoad((options) => {
   if (options.taskId) {
-    taskId.value = options.taskId
+    taskId.value = parseInt(options.taskId)
   }
 })
 
@@ -87,8 +89,8 @@ const handleComplete = () => {
     return
   }
   
-  // 这里应该从全局状态或参数中获取childId
-  const childId = 1 // 临时值，实际应该从store或props中获取
+  // 动态获取当前登录的儿童 ID
+  const childId = userStore.id || 1 
   
   isLoading.value = true
   uni.showLoading({ title: '提交中...' })
@@ -102,6 +104,7 @@ const handleComplete = () => {
   }).catch(() => {
     uni.hideLoading()
     isLoading.value = false
+    uni.showToast({ title: '网络开小差了，再试一次吧', icon: 'error' })
   })
 }
 </script>
