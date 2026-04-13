@@ -12,19 +12,26 @@
 # Error details
 
 ```
-Error: page.goto: NS_ERROR_CONNECTION_REFUSED
+Error: expect(locator).toBeVisible() failed
+
+Locator: locator('.achievement-stats, .stats-card')
+Expected: visible
+Timeout: 5000ms
+Error: element(s) not found
+
 Call log:
-  - navigating to "http://localhost:8080/child/achievement", waiting until "load"
+  - Expect "toBeVisible" with timeout 5000ms
+  - waiting for locator('.achievement-stats, .stats-card')
 
 ```
 
 # Page snapshot
 
 ```yaml
-- generic [ref=e3]:
-  - heading [level=1] [ref=e5]
-  - paragraph
-  - paragraph
+- generic [active] [ref=e1]:
+  - heading "404 Not Found" [level=1] [ref=e3]
+  - separator [ref=e4]
+  - generic [ref=e5]: nginx/1.29.4
 ```
 
 # Test source
@@ -34,10 +41,10 @@ Call log:
   2  | 
   3  | test.describe('Children Achievement UI', () => {
   4  |   test('should display achievement stats for a child', async ({ page }) => {
-> 5  |     await page.goto('/child/achievement'); // 假设成就页面路径
-     |                ^ Error: page.goto: NS_ERROR_CONNECTION_REFUSED
+  5  |     await page.goto('/child/achievement'); // 假设成就页面路径
   6  |     const statsContainer = page.locator('.achievement-stats, .stats-card');
-  7  |     await expect(statsContainer).toBeVisible();
+> 7  |     await expect(statsContainer).toBeVisible();
+     |                                  ^ Error: expect(locator).toBeVisible() failed
   8  |     
   9  |     // 检查是否有星星数量显示
   10 |     const starCount = page.locator('text=/星星|Stars/');

@@ -186,6 +186,13 @@ export function getTotalCourageFragments(childId: number) {
     })
 }
 
+export function getStreak(childId: number) {
+    return request({
+        url: '/child/achievement/streak/' + childId,
+        method: 'GET'
+    })
+}
+
 // 儿童AI相关API
 export function chatWithAI(childId: number, userInput: string) {
     return request({

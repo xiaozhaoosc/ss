@@ -12,10 +12,26 @@
 # Error details
 
 ```
-Error: page.goto: Could not connect to server
-Call log:
-  - navigating to "http://localhost:8080/system/device", waiting until "load"
+Error: expect(locator).toBeVisible() failed
 
+Locator: locator('.el-table, table')
+Expected: visible
+Timeout: 5000ms
+Error: element(s) not found
+
+Call log:
+  - Expect "toBeVisible" with timeout 5000ms
+  - waiting for locator('.el-table, table')
+
+```
+
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - heading "404 Not Found" [level=1] [ref=e3]
+  - separator [ref=e4]
+  - generic [ref=e5]: nginx/1.29.4
 ```
 
 # Test source
@@ -50,10 +66,10 @@ Call log:
   27 | 
   28 | test.describe('Device Monitoring UI', () => {
   29 |   test('should show device list and online status', async ({ page }) => {
-> 30 |     await page.goto('/system/device'); // 假设设备监控路径
-     |                ^ Error: page.goto: Could not connect to server
+  30 |     await page.goto('/system/device'); // 假设设备监控路径
   31 |     const deviceTable = page.locator('.el-table, table');
-  32 |     await expect(deviceTable).toBeVisible();
+> 32 |     await expect(deviceTable).toBeVisible();
+     |                               ^ Error: expect(locator).toBeVisible() failed
   33 | 
   34 |     // 检查是否有在线/离线状态标识
   35 |     const statusTag = page.locator('.el-tag, .status-dot').first();

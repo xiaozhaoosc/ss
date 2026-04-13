@@ -91,10 +91,10 @@ import MissionCard from '@/components/child/mission-card/mission-card.vue'
 import ChildBottomNav from '@/components/child/child-bottom-nav/child-bottom-nav.vue'
 import { useUserStore } from '@/store/modules/user'
 import { getInfo } from '@/api/auth'
-import { getPendingTasks } from '@/api/child'
+import { getPendingTasks, getStreak } from '@/api/child'
 
 const userStore = useUserStore()
-const streak = ref(3) // Mock: Backend needs 'streak' field
+const streak = ref(0)
 // Balance is now in userStore
 const childName = ref(userStore.userInfo?.user?.nickName || 'Star Hero')
 const currentMission = ref<any>(null)
@@ -107,11 +107,16 @@ async function loadData() {
        const infoRes: any = await getInfo()
        userStore.setUserInfo(infoRes)
        childName.value = infoRes.user?.nickName || 'Star Hero'
-       // TODO: Parse stars/streak from infoRes if available
-       // stars.value = infoRes.user?.remark ? parseInt(infoRes.user.remark) : 0
     }
 
-    // 2. Get Task (First active task)
+    const childId = userStore.id || 1
+    
+    // 2. Get Streak
+    getStreak(childId).then((res: any) => {
+      streak.value = res.data || 0
+    })
+
+    // 3. Get Task (First active task)
     loadPendingTasks()
   } catch (e) {
     console.error(e)

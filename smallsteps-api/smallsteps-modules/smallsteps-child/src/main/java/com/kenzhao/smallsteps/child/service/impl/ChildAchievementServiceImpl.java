@@ -18,6 +18,26 @@ import java.util.List;
 public class ChildAchievementServiceImpl implements IChildAchievementService {
 
     private final ChildAchievementMapper childAchievementMapper;
+    private final com.kenzhao.smallsteps.parent.mapper.ChildTaskMapper childTaskMapper;
+
+    @Override
+    public Integer selectStreakByChildId(Long childId) {
+        List<String> dates = childTaskMapper.selectFinishedDatesByChildId(childId);
+        if (dates == null || dates.isEmpty()) {
+            return 0;
+        }
+        java.time.LocalDate today = java.time.LocalDate.now();
+        int streak = 0;
+        java.time.LocalDate currentCheck = today;
+        if (!dates.contains(today.toString())) {
+            currentCheck = today.minusDays(1);
+        }
+        while (dates.contains(currentCheck.toString())) {
+            streak++;
+            currentCheck = currentCheck.minusDays(1);
+        }
+        return streak;
+    }
 
     @Override
     public List<ChildAchievement> selectChildAchievementList(ChildAchievement childAchievement) {

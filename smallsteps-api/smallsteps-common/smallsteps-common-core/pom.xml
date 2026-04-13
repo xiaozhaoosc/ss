@@ -94,6 +94,11 @@
             <artifactId>ip2region</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.kenzhao.smallsteps</groupId>
+            <artifactId>smallsteps-common-excel</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>

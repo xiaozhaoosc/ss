@@ -6,23 +6,23 @@ test.describe('SATS Full-Cycle Workflow: Device to Parent UI', () => {
   const parentId = 100;
 
   test('should complete the full cycle from device trigger to parent UI check', async ({ page, request }) => {
-    // Step 1: 设备触发 - 模拟设备发送激活/任务触发心跳
-    const deviceResponse = await request.post('/api/device/activation', {
+    // Step 1: 璁惧瑙﹀彂 - 妯℃嫙璁惧鍙戦€佹縺娲/浠诲姟瑙﹀彂蹇冭烦
+    const deviceResponse = await request.post('http://127.0.0.1:8081/api/device/activation', {
       headers: { 'Device-Id': deviceId },
       data: { mac: deviceId, type: 'ESP32-S3', status: 'online' }
     });
-    // 如果未部署则跳过断言或接受 404/401
+    // 濡傛灉鏈儴缃插垯璺宠繃鏂█鎴栨帴鍙 404/401
     console.log('Step 1: Device activated');
 
-    // Step 2: 儿童完成任务 - 模拟儿童端 API 提交任务完成
-    // 假设 taskId 为 1
-    const taskCompleteResponse = await request.post('/child/task/complete', {
+    // Step 2: 鍎跨瀹屾垚浠诲姟 - 妯℃嫙鍎跨绔 API 鎻愪氦浠诲姟瀹屾垚
+    // 鍋囪 taskId 涓 1
+    const taskCompleteResponse = await request.post('http://127.0.0.1:8081/child/task/complete', {
       params: { taskId: 1, childId: childId }
     });
     console.log('Step 2: Child task completed');
 
-    // Step 3: 系统自动发放星星 - 验证 API 返回的星星总数是否增加
-    const starResponse = await request.get(`/child/achievement/stars/${childId}`);
+    // Step 3: 绯荤粺鑷姩鍙戦€樼槦鏄 - 楠岃瘉 API 杩斿洖鐨勬槦鏄熸€绘暟鏄惁澧炲姞
+    const starResponse = await request.get(`http://127.0.0.1:8081/child/achievement/stars/${childId}`);
     if (starResponse.ok()) {
         const stars = await starResponse.json();
         console.log(`Step 3: System awarded stars. Current total: ${stars.data}`);

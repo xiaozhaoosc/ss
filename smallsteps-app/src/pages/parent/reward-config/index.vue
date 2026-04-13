@@ -95,19 +95,20 @@ import TopBar from '@/components/common/top-bar/top-bar.vue'
 import BottomNav from '@/components/common/bottom-nav/bottom-nav.vue'
 import RewardRequestCard from '@/components/parent/reward-request-card/reward-request-card.vue'
 import RewardConfigItem from '@/components/parent/reward-config-item/reward-config-item.vue'
-import { listReward, updateReward } from '@/api/reward'
+import { listReward, updateReward, listRedemptions, approveRedemption, rejectRedemption } from '@/api/reward'
+import { useUserStore } from '@/store/modules/user'
 
+const userStore = useUserStore()
 const isDarkMode = ref(false)
 const activeTab = ref('config')
 
-const pendingRequests = ref([
-  { id: 1, childName: '小明', rewardName: '乐高玩具套装', points: 100 }
-])
-
+const pendingRequests = ref([])
 const rewards = ref([])
+const history = ref([])
 
 async function loadData() {
   try {
+     // 1. 加载奖励配置
      const res = await listReward({ pageNum: 1, pageSize: 50 })
      if (res.rows) {
        rewards.value = res.rows.map(r => ({
@@ -116,6 +117,29 @@ async function loadData() {
          points: r.pointsRequired,
          icon: r.icon || 'star',
          active: r.status === '0'
+       }))
+     }
+
+     // 2. 加载待处理申请
+     const redRes = await listRedemptions({ status: '0', pageNum: 1, pageSize: 20 })
+     if (redRes.rows) {
+       pendingRequests.value = redRes.rows.map(r => ({
+         id: r.redemptionId,
+         childName: '孩子', // 实际开发中需通过关联查询或前端缓存映射
+         rewardName: r.rewardName || '奖品',
+         points: r.pointsCost
+       }))
+     }
+
+     // 3. 加载历史记录 (已批准和已拒绝)
+     const histRes = await listRedemptions({ pageNum: 1, pageSize: 20 })
+     if (histRes.rows) {
+       history.value = histRes.rows.filter(r => r.status !== '0').map(r => ({
+         id: r.redemptionId,
+         rewardName: r.rewardName || '奖品',
+         date: r.createTime ? r.createTime.substring(0, 16) : '',
+         status: r.status === '1' ? 'approved' : 'denied',
+         statusText: r.status === '1' ? '已批准' : '已拒绝'
        }))
      }
   } catch (e) {
@@ -127,27 +151,43 @@ onShow(() => {
   loadData()
 })
 
-const history = ref([
-  { id: 1, rewardName: '额外屏幕时间', date: '2026-02-01 14:20', status: 'approved', statusText: '已批准' },
-  { id: 2, rewardName: '双倍周末甜点', date: '2026-01-31 10:05', status: 'denied', statusText: '已拒绝' }
-])
-
 const handleApprove = (req) => {
   uni.showModal({
     title: '确认批准',
-    content: `准备消耗 ${req.childName} 的 ${req.points} 颗星兑换“${req.rewardName}”吗？`,
+    content: `准备消耗 ${req.points} 颗星兑换“${req.rewardName}”吗？`,
     success: (res) => {
       if (res.confirm) {
-        pendingRequests.value = pendingRequests.value.filter(r => r.id !== req.id)
-        uni.showToast({ title: '已批准 (Mock)', icon: 'success' })
+        uni.showLoading({ title: '处理中...' })
+        approveRedemption(req.id).then(() => {
+          uni.hideLoading()
+          uni.showToast({ title: '已批准', icon: 'success' })
+          loadData() // 刷新列表
+        }).catch(err => {
+          uni.hideLoading()
+          uni.showToast({ title: err.msg || '批准失败', icon: 'error' })
+        })
       }
     }
   })
 }
 
 const handleDeny = (req) => {
-  pendingRequests.value = pendingRequests.value.filter(r => r.id !== req.id)
-  uni.showToast({ title: '已拒绝 (Mock)', icon: 'none' })
+  uni.showModal({
+    title: '确认拒绝',
+    content: `确定要拒绝该兑换申请吗？`,
+    success: (res) => {
+      if (res.confirm) {
+        uni.showLoading({ title: '处理中...' })
+        rejectRedemption(req.id).then(() => {
+          uni.hideLoading()
+          uni.showToast({ title: '已拒绝', icon: 'none' })
+          loadData()
+        }).catch(() => {
+          uni.hideLoading()
+        })
+      }
+    }
+  })
 }
 
 const handleAddReward = () => {

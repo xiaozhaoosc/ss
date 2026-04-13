@@ -37,10 +37,6 @@
             <groupId>com.kenzhao.smallsteps</groupId>
             <artifactId>smallsteps-common-log</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.kenzhao.smallsteps</groupId>
-            <artifactId>smallsteps-parent</artifactId>
-        </dependency>
     </dependencies>
 
 </project>

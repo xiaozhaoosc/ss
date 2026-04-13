@@ -37,6 +37,34 @@ public class ParentRewardController extends BaseController {
 
     private final IParentRewardService parentRewardService;
     private final com.kenzhao.smallsteps.parent.service.IScoreService scoreService;
+    private final com.kenzhao.smallsteps.parent.service.IParentRewardRedemptionService redemptionService;
+
+    /**
+     * 查询奖励兑换申请列表
+     */
+    @SaCheckPermission("parent:reward:list")
+    @GetMapping("/redemption/list")
+    public TableDataInfo<com.kenzhao.smallsteps.parent.domain.vo.ParentRewardRedemptionVo> redemptionList(com.kenzhao.smallsteps.parent.domain.bo.ParentRewardRedemptionBo bo, PageQuery pageQuery) {
+        return redemptionService.queryPageList(bo, pageQuery);
+    }
+
+    /**
+     * 批准兑换申请
+     */
+    @SaCheckPermission("parent:reward:edit")
+    @PostMapping("/redemption/approve/{redemptionId}")
+    public R<Void> approve(@PathVariable Long redemptionId) {
+        return toAjax(redemptionService.approve(redemptionId));
+    }
+
+    /**
+     * 拒绝兑换申请
+     */
+    @SaCheckPermission("parent:reward:edit")
+    @PostMapping("/redemption/reject/{redemptionId}")
+    public R<Void> reject(@PathVariable Long redemptionId) {
+        return toAjax(redemptionService.reject(redemptionId));
+    }
 
     /**
      * 查询家长奖励配置列表
@@ -89,7 +117,7 @@ public class ParentRewardController extends BaseController {
     }
 
     /**
-     * 兑换奖励
+     * 兑换奖励 (发起申请)
      */
     @cn.dev33.satoken.annotation.SaCheckLogin
     @Log(title = "兑换奖励", businessType = BusinessType.UPDATE)
@@ -103,30 +131,20 @@ public class ParentRewardController extends BaseController {
         if (reward == null) {
             return R.fail("奖励不存在");
         }
-        if (reward.getPointsRequired() == null || reward.getPointsRequired() <= 0) {
-            return R.fail("无需积分"); // Or handle as free
+        
+        // 预检查积分
+        com.kenzhao.smallsteps.parent.domain.ChildScore score = scoreService.getChildScore(bo.getUserId());
+        if (score == null || score.getBalance() < reward.getPointsRequired()) {
+            return R.fail("积分不足");
         }
 
-        // Stock check
-        if (reward.getStock() != null && reward.getStock() != -1) {
-            if (reward.getStock() <= 0) {
-                return R.fail("库存不足");
-            }
-        }
-
-        boolean success = scoreService.deductPoints(bo.getUserId(), reward.getPointsRequired(), bo.getRewardId(),
-                "兑换: " + reward.getName());
-        if (success) {
-            // Decrement stock if not infinite
-            if (reward.getStock() != null && reward.getStock() != -1) {
-                ParentRewardBo updateBo = new ParentRewardBo();
-                updateBo.setRewardId(reward.getRewardId());
-                updateBo.setStock(reward.getStock() - 1);
-                parentRewardService.updateByBo(updateBo);
-            }
-            return R.ok();
-        }
-        return R.fail("积分不足");
+        // 创建申请记录
+        com.kenzhao.smallsteps.parent.domain.bo.ParentRewardRedemptionBo redemptionBo = new com.kenzhao.smallsteps.parent.domain.bo.ParentRewardRedemptionBo();
+        redemptionBo.setRewardId(bo.getRewardId());
+        redemptionBo.setUserId(bo.getUserId());
+        redemptionBo.setPointsCost(reward.getPointsRequired());
+        
+        return toAjax(redemptionService.insertByBo(redemptionBo));
     }
 
     /**

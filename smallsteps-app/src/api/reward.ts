@@ -71,6 +71,31 @@ export function redeemReward(data: { rewardId: number, userId: number }) {
     })
 }
 
+// List Redemption Requests
+export function listRedemptions(query: any) {
+    return request({
+        url: '/parent/reward/redemption/list',
+        method: 'GET',
+        params: query
+    })
+}
+
+// Approve Redemption
+export function approveRedemption(redemptionId: number) {
+    return request({
+        url: '/parent/reward/redemption/approve/' + redemptionId,
+        method: 'POST'
+    })
+}
+
+// Reject Redemption
+export function rejectRedemption(redemptionId: number) {
+    return request({
+        url: '/parent/reward/redemption/reject/' + redemptionId,
+        method: 'POST'
+    })
+}
+
 // Get Score
 export function getScore(userId: number) {
     return request({

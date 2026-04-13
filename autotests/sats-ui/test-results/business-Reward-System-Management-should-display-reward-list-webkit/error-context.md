@@ -12,10 +12,26 @@
 # Error details
 
 ```
-Error: page.goto: Could not connect to server
-Call log:
-  - navigating to "http://localhost:8080/parent/reward", waiting until "load"
+Error: expect(locator).toBeVisible() failed
 
+Locator: locator('.el-table, .ant-table, table')
+Expected: visible
+Timeout: 5000ms
+Error: element(s) not found
+
+Call log:
+  - Expect "toBeVisible" with timeout 5000ms
+  - waiting for locator('.el-table, .ant-table, table')
+
+```
+
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - heading "404 Not Found" [level=1] [ref=e3]
+  - separator [ref=e4]
+  - generic [ref=e5]: nginx/1.29.4
 ```
 
 # Test source
@@ -26,14 +42,14 @@ Call log:
   3  | test.describe('Reward System Management', () => {
   4  |   test.beforeEach(async ({ page }) => {
   5  |     // 假设已经登录，后续可以使用 storageState 优化
-> 6  |     await page.goto('/parent/reward');
-     |                ^ Error: page.goto: Could not connect to server
+  6  |     await page.goto('/parent/reward');
   7  |   });
   8  | 
   9  |   test('should display reward list', async ({ page }) => {
   10 |     // 检查是否有表格或列表容器
   11 |     const table = page.locator('.el-table, .ant-table, table');
-  12 |     await expect(table).toBeVisible();
+> 12 |     await expect(table).toBeVisible();
+     |                         ^ Error: expect(locator).toBeVisible() failed
   13 |   });
   14 | 
   15 |   test('should open add reward dialog', async ({ page }) => {
