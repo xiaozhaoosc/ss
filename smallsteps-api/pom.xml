@@ -453,6 +453,7 @@
                     </annotationProcessorPaths>
                     <compilerArgs>
                         <arg>-parameters</arg>
+                        <arg>-J-Dfile.encoding=UTF-8</arg>
                     </compilerArgs>
                 </configuration>
             </plugin>

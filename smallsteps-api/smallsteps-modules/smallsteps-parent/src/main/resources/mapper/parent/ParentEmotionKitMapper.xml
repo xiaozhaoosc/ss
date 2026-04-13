@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kenzhao.smallsteps.parent.mapper.ParentEmotionKitMapper">
-    <resultMap type="com.kenzhao.smallsteps.parent.domain.ParentEmotionKit" id="ParentEmotionKitResult">
+    <resultMap type="com.kenzhao.smallsteps.common.ss.domain.ParentEmotionKit" id="ParentEmotionKitResult">
         <id property="kitId" column="kit_id" />
         <result property="childId" column="child_id" />
         <result property="kitName" column="kit_name" />
@@ -20,7 +20,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select kit_id, child_id, kit_name, emotion_type, content, status, create_by, create_time, update_by, update_time from parent_emotion_kit
     </sql>
 
-    <select id="selectParentEmotionKitList" parameterType="com.kenzhao.smallsteps.parent.domain.ParentEmotionKit" resultMap="ParentEmotionKitResult">
+    <select id="selectParentEmotionKitList" parameterType="com.kenzhao.smallsteps.common.ss.domain.ParentEmotionKit" resultMap="ParentEmotionKitResult">
         <include refid="selectParentEmotionKitVo" />
         <where>
             <if test="childId != null"> and child_id = #{childId}</if>
@@ -36,7 +36,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where kit_id = #{kitId}
     </select>
 
-    <insert id="insertParentEmotionKit" parameterType="com.kenzhao.smallsteps.parent.domain.ParentEmotionKit" useGeneratedKeys="true" keyProperty="kitId">
+    <insert id="insertParentEmotionKit" parameterType="com.kenzhao.smallsteps.common.ss.domain.ParentEmotionKit" useGeneratedKeys="true" keyProperty="kitId">
         insert into parent_emotion_kit
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="childId != null">child_id,</if>
@@ -62,7 +62,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </trim>
     </insert>
 
-    <update id="updateParentEmotionKit" parameterType="com.kenzhao.smallsteps.parent.domain.ParentEmotionKit">
+    <update id="updateParentEmotionKit" parameterType="com.kenzhao.smallsteps.common.ss.domain.ParentEmotionKit">
         update parent_emotion_kit
         <set>
             <if test="childId != null">child_id = #{childId},</if>

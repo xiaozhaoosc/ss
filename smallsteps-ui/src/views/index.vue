@@ -1,143 +1,220 @@
 <template>
-  <div class="app-container home">
-    <el-row :gutter="20">
-      <el-col :sm="24" :lg="12" style="padding-left: 20px">
-        <h2>Small Steps (小步) 可视化管理系统</h2>
-        <p>
-          SmallSteps-Vue-Plus 是基于 SmallSteps-Vue 针对 分布式集群 场景升级(不兼容原框架)
-          <br />
-          * 前端开发框架 Vue3、TS、Element Plus<br />
-          * 后端开发框架 Spring Boot<br />
-          * 容器框架 Undertow 基于 Netty 的高性能容器<br />
-          * 权限认证框架 Sa-Token 支持多终端认证系统<br />
-          * 关系数据库 MySQL 适配 8.X 最低 5.7<br />
-          * 缓存数据库 Redis 适配 6.X 最低 4.X<br />
-          * 数据库框架 Mybatis-Plus 快速 CRUD 增加开发效率<br />
-          * 数据库框架 p6spy 更强劲的 SQL 分析<br />
-          * 多数据源框架 dynamic-datasource 支持主从与多种类数据库异构<br />
-          * 序列化框架 Jackson 统一使用 jackson 高效可靠<br />
-          * Redis客户端 Redisson 性能强劲、API丰富<br />
-          * 分布式限流 Redisson 全局、请求IP、集群ID 多种限流<br />
-          * 分布式锁 Lock4j 注解锁、工具锁 多种多样<br />
-          * 分布式幂等 Lock4j 基于分布式锁实现<br />
-          * 分布式链路追踪 SkyWalking 支持链路追踪、网格分析、度量聚合、可视化<br />
-          * 分布式任务调度 SnailJob 高性能 高可靠 易扩展<br />
-          * 文件存储 Minio 本地存储<br />
-          * 文件存储 七牛、阿里、腾讯 云存储<br />
-          * 监控框架 SpringBoot-Admin 全方位服务监控<br />
-          * 校验框架 Validation 增强接口安全性 严谨性<br />
-          * Excel框架 FastExcel(原Alibaba EasyExcel) 性能优异 扩展性强<br />
-          * 文档框架 SpringDoc、javadoc 无注解零入侵基于java注释<br />
-          * 工具类框架 Hutool、Lombok 减少代码冗余 增加安全性<br />
-          * 代码生成器 适配MP、SpringDoc规范化代码 一键生成前后端代码<br />
-          * 部署方式 Docker 容器编排 一键部署业务集群<br />
-          * 国际化 SpringMessage Spring标准国际化方案<br />
-        </p>
-      </el-col>
+  <div class="app-container home-container bg-[#f4f7fc] min-h-screen">
+    <!-- Hero Section -->
+    <div class="hero-section mb-6 p-8 rounded-[30px] bg-white shadow-sm overflow-hidden relative">
+      <div class="relative z-10 flex items-center justify-between">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-800">早安, 小步守护者</h1>
+          <p class="mt-2 text-gray-500 max-w-lg">今天是守护 ADHD 儿童成长的第 128 天。AI 伴侣已就绪，正在实时监测孩子的专注时长与情绪波动。</p>
+          <div class="mt-6 flex gap-3">
+            <el-button type="primary" round icon="Plus" class="!px-6">发布新任务</el-button>
+            <el-button round icon="VideoPlay" class="!px-6">查看实时状态</el-button>
+          </div>
+        </div>
+        <div class="hidden md:block">
+          <img src="https://img.icons8.com/fluency/240/rocket.png" class="w-48 animate-bounce-slow" alt="Hero Icon" />
+        </div>
+      </div>
+      <div class="absolute top-[-50px] right-[-50px] w-64 h-64 bg-blue-50 rounded-full blur-3xl opacity-50"></div>
+    </div>
 
-      <el-col :sm="24" :lg="12" style="padding-left: 20px">
-        <h2>Small Steps (小步) 加密微服务管理系统</h2>
-        <p>
-          SmallSteps-Cloud-Plus 微服务通用权限管理系统 重写 SmallSteps-Cloud 全方位升级(不兼容原框架)
-          <br />
-          * 前端开发框架 Vue3、TS、Element UI<br />
-          * 后端开发框架 Spring Boot<br />
-          * 微服务开发框架 Spring Cloud、Spring Cloud Alibaba<br />
-          * 容器框架 Undertow 基于 XNIO 的高性能容器<br />
-          * 权限认证框架 Sa-Token、Jwt 支持多终端认证系统<br />
-          * 关系数据库 MySQL 适配 8.X 最低 5.7<br />
-          * 关系数据库 Oracle 适配 11g 12c<br />
-          * 关系数据库 PostgreSQL 适配 13 14<br />
-          * 关系数据库 SQLServer 适配 2017 2019<br />
-          * 缓存数据库 Redis 适配 6.X 最低 5.X<br />
-          * 分布式注册中心 Alibaba Nacos 采用2.X 基于GRPC通信高性能<br />
-          * 分布式配置中心 Alibaba Nacos 采用2.X 基于GRPC通信高性能<br />
-          * 服务网关 Spring Cloud Gateway 响应式高性能网关<br />
-          * 负载均衡 Spring Cloud Loadbalancer 负载均衡处理<br />
-          * RPC远程调用 Apache Dubbo 原生态使用体验、高性能<br />
-          * 分布式限流熔断 Alibaba Sentinel 无侵入、高扩展<br />
-          * 分布式事务 Alibaba Seata 无侵入、高扩展 支持 四种模式<br />
-          * 分布式消息队列 Apache Kafka 高性能高速度<br />
-          * 分布式消息队列 Apache RocketMQ 高可用功能多样<br />
-          * 分布式消息队列 RabbitMQ 支持各种扩展插件功能多样性<br />
-          * 分布式搜索引擎 ElasticSearch 业界知名<br />
-          * 分布式链路追踪 Apache SkyWalking 链路追踪、网格分析、度量聚合、可视化<br />
-          * 分布式日志中心 ELK 业界成熟解决方案<br />
-          * 分布式监控 Prometheus、Grafana 全方位性能监控<br />
-          * 其余与 Vue 版本一致<br />
-        </p>
+    <!-- Stats Grid -->
+    <el-row :gutter="20" class="mb-6">
+      <el-col v-for="(stat, index) in topStats" :key="index" :xs="24" :sm="12" :md="6">
+        <el-card shadow="never" class="stat-card border-none rounded-[24px] hover:shadow-md transition-shadow">
+          <div class="flex items-center justify-between">
+            <div :class="`p-3 rounded-[16px] bg-${stat.color}-50 text-${stat.color}-600`">
+              <el-icon :size="28"><component :is="stat.icon" /></el-icon>
+            </div>
+            <div class="text-right">
+              <div class="text-gray-400 text-sm mb-1">{{ stat.label }}</div>
+              <div class="text-2xl font-bold">{{ stat.value }}</div>
+            </div>
+          </div>
+          <div class="mt-4 flex items-center gap-2">
+            <el-progress :percentage="stat.progress" :color="stat.hexColor" :show-text="false" class="flex-1" />
+            <span class="text-xs text-gray-400">{{ stat.trend }}</span>
+          </div>
+        </el-card>
       </el-col>
     </el-row>
-    <el-divider />
+
+    <!-- Charts & Lists -->
+    <el-row :gutter="20" class="mb-6">
+      <el-col :span="16">
+        <el-card shadow="never" class="!border-none rounded-[30px] h-full">
+          <template #header>
+            <div class="flex justify-between items-center">
+              <span class="font-bold text-lg">守护洞察：任务执行与情绪相关性</span>
+              <el-select v-model="timeRange" size="small" placeholder="时间范围" class="!w-[100px]">
+                <el-option label="本周" value="week" />
+                <el-option label="本月" value="month" />
+              </el-select>
+            </div>
+          </template>
+          <div ref="mainChartRef" style="height: 400px"></div>
+        </el-card>
+      </el-col>
+      <el-col :span="8">
+        <el-card shadow="never" class="!border-none rounded-[30px] h-full">
+          <template #header>
+            <span class="font-bold text-lg">正在执行中的小步</span>
+          </template>
+          <div class="timeline-container px-2">
+            <el-timeline>
+              <el-timeline-item
+                v-for="(task, index) in activeTasks"
+                :key="index"
+                :type="task.type"
+                :color="task.color"
+                :hollow="task.hollow"
+                :timestamp="task.time"
+              >
+                <div class="flex flex-col gap-1">
+                  <span class="font-semibold text-gray-700">{{ task.title }}</span>
+                  <span class="text-xs text-gray-400">当前阶段: {{ task.stage }}</span>
+                </div>
+              </el-timeline-item>
+            </el-timeline>
+            <el-empty v-if="activeTasks.length === 0" description="没有进行中的任务" :image-size="100" />
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
+
+    <!-- Bottom Row (Achievements & Support) -->
+    <el-row :gutter="20">
+      <el-col :span="12">
+        <el-card shadow="never" class="!border-none rounded-[30px]">
+          <template #header>
+            <span class="font-bold text-lg">最新成就墙</span>
+          </template>
+          <div class="flex gap-4 overflow-x-auto py-2 scrollbar-none">
+            <div v-for="i in 5" :key="i" class="achievement-item shrink-0 p-4 bg-gray-50 rounded-[20px] w-[140px] text-center hover:bg-yellow-50 transition-colors cursor-pointer">
+              <div class="w-16 h-16 mx-auto mb-3 bg-white rounded-full flex items-center justify-center shadow-sm">
+                 <img :src="`https://img.icons8.com/bubbles/100/medal-first-place.png`" class="w-10 h-10" />
+              </div>
+              <div class="font-bold text-sm truncate">专注小达人</div>
+              <div class="text-[10px] text-gray-400 mt-1">2024-03-22</div>
+            </div>
+          </div>
+        </el-card>
+      </el-col>
+      <el-col :span="12">
+        <el-card shadow="never" class="!border-none rounded-[30px] bg-gradient-to-r from-indigo-500 to-purple-600 text-white">
+          <div class="flex items-center gap-6 p-4">
+            <el-icon :size="64" class="opacity-80"><MagicStick /></el-icon>
+            <div>
+              <h3 class="text-xl font-bold">AI 分步引导优化建议</h3>
+              <p class="mt-2 text-indigo-100 opacity-90 text-sm">根据 Leo 最近的情况，建议将“写作业”任务进一步拆解为“整理桌面”、“打开第32页”等具体动作以降低阻碍感。</p>
+              <el-button type="success" size="small" class="mt-4 !bg-white !text-indigo-600 border-none font-bold">一键优化所有任务</el-button>
+            </div>
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
-<script setup name="Index" lang="ts">
-const goTarget = (url: string) => {
-  window.open(url, '__blank');
-};
+<script setup lang="ts">
+import * as echarts from 'echarts';
+import { Collection, Timer, Sunny, Monitor, MagicStick } from '@element-plus/icons-vue';
+
+const mainChartRef = ref();
+const timeRange = ref('week');
+
+const topStats = [
+  { label: '在线儿童', value: '42', icon: Monitor, color: 'blue', hexColor: '#409EFF', progress: 85, trend: '+12%' },
+  { label: '任务完成率', value: '78.5%', icon: Collection, color: 'green', hexColor: '#67C23A', progress: 78, trend: '较昨日 +5%' },
+  { label: '平均专注时长', value: '45m', icon: Timer, color: 'orange', hexColor: '#E6A23C', progress: 65, trend: '稳定' },
+  { label: '情绪平衡度', value: '优', icon: Sunny, color: 'purple', hexColor: '#B37FEB', progress: 92, trend: '显著改善' }
+];
+
+const activeTasks = [
+  { title: '晨间洗漱挑战', stage: '刷牙中', time: '10分钟前', type: 'primary', color: '#409EFF', hollow: false },
+  { title: '数学口算练习', stage: '准备阶段', time: '正在开始', type: 'success', color: '#67C23A', hollow: true },
+  { title: '自主整理书包', stage: '已待命', time: '预计 18:00', type: 'info', color: '#909399', hollow: true }
+];
+
+let mainChart: echarts.ECharts | null = null;
+
+onMounted(() => {
+  initMainChart();
+  window.addEventListener('resize', () => mainChart?.resize());
+});
+
+function initMainChart() {
+  if (mainChartRef.value) {
+    mainChart = echarts.init(mainChartRef.value);
+    mainChart.setOption({
+      tooltip: { trigger: 'axis', axisPointer: { type: 'cross' } },
+      legend: { data: ['完成量', '情绪指数'], bottom: 0 },
+      grid: { left: '3%', right: '4%', bottom: '10%', containLabel: true },
+      xAxis: { type: 'category', data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'], axisLine: { lineStyle: { color: '#eee' } }, axisLabel: { color: '#999' } },
+      yAxis: [
+        { type: 'value', name: '任务数', splitLine: { lineStyle: { type: 'dashed' } } },
+        { type: 'value', name: '评分', min: 0, max: 10, splitLine: { show: false } }
+      ],
+      series: [
+        {
+          name: '完成量',
+          type: 'bar',
+          barWidth: 15,
+          itemStyle: { color: '#409EFF', borderRadius: [4, 4, 0, 0] },
+          data: [12, 19, 15, 22, 18, 10, 8]
+        },
+        {
+          name: '情绪指数',
+          type: 'line',
+          yAxisIndex: 1,
+          smooth: true,
+          symbolSize: 10,
+          lineStyle: { width: 4, color: '#67C23A' },
+          itemStyle: { color: '#67C23A', borderColor: '#fff', borderWidth: 2 },
+          data: [6.5, 7.2, 5.8, 8.5, 8.1, 9.0, 9.2]
+        }
+      ]
+    });
+  }
+}
 </script>
 
-<style lang="scss" scoped>
-.home {
-  blockquote {
-    padding: 10px 20px;
-    margin: 0 0 20px;
-    font-size: 17.5px;
-    border-left: 5px solid #eee;
-  }
-  hr {
-    margin-top: 20px;
-    margin-bottom: 20px;
-    border: 0;
-    border-top: 1px solid #eee;
-  }
-  .col-item {
-    margin-bottom: 20px;
-  }
+<style scoped lang="scss">
+.home-container {
+  padding: 30px;
+}
 
-  ul {
-    padding: 0;
-    margin: 0;
-  }
+.animate-bounce-slow {
+  animation: bounce 3s infinite;
+}
 
-  font-family: 'open sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font-size: 13px;
-  color: #676a6c;
-  overflow-x: hidden;
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
 
-  ul {
-    list-style-type: none;
-  }
+.stat-card {
+  height: 140px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 
-  h4 {
-    margin-top: 0px;
-  }
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
 
-  h2 {
-    margin-top: 10px;
-    font-size: 26px;
-    font-weight: 100;
-  }
+.timeline-container {
+  max-height: 400px;
+  overflow-y: auto;
+}
 
-  p {
-    margin-top: 10px;
+:deep(.el-timeline-item__node) {
+  box-shadow: 0 0 0 4px rgba(64, 158, 255, 0.1);
+}
 
-    b {
-      font-weight: 700;
-    }
-  }
-
-  .update-log {
-    ol {
-      display: block;
-      list-style-type: decimal;
-      margin-block-start: 1em;
-      margin-block-end: 1em;
-      margin-inline-start: 0;
-      margin-inline-end: 0;
-      padding-inline-start: 40px;
-    }
-  }
+:deep(.el-card__header) {
+  border-bottom: 2px solid #f6f8fb;
+  padding: 20px 25px;
 }
 </style>

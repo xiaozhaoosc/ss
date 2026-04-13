@@ -57,6 +57,10 @@
             <groupId>com.kenzhao.smallsteps</groupId>
             <artifactId>smallsteps-common-doc</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.kenzhao.smallsteps</groupId>
+            <artifactId>smallsteps-common-ss</artifactId>
+        </dependency>
 
         <!-- Test dependencies -->
         <dependency>

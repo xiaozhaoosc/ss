@@ -1,32 +1,62 @@
 package com.kenzhao.smallsteps.child.service.impl;
 
-import com.kenzhao.smallsteps.child.domain.ChildAI;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.kenzhao.smallsteps.common.ss.domain.ChildAI;
 import com.kenzhao.smallsteps.child.service.IChildAIService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import java.util.ArrayList;
+
 import java.util.List;
 
 /**
- * 儿童AI交互Service实现 (Mock版本用于通过编译与演示)
+ * 儿童AI交互记录服务实现
  */
 @Service
+@RequiredArgsConstructor
 public class ChildAIServiceImpl implements IChildAIService {
+
     @Override
-    public List<ChildAI> selectChildAIList(ChildAI childAI) { return new ArrayList<>(); }
+    public List<ChildAI> selectChildAIList(ChildAI childAI) {
+        return List.of();
+    }
+
     @Override
-    public ChildAI selectChildAIByAiId(Long aiId) { return new ChildAI(); }
+    public ChildAI selectChildAIByAiId(Long aiId) {
+        return null;
+    }
+
     @Override
-    public int insertChildAI(ChildAI childAI) { return 1; }
+    public int insertChildAI(ChildAI childAI) {
+        return 0;
+    }
+
     @Override
-    public int updateChildAI(ChildAI childAI) { return 1; }
+    public int updateChildAI(ChildAI childAI) {
+        return 0;
+    }
+
     @Override
-    public int deleteChildAIByAiId(Long aiId) { return 1; }
+    public int deleteChildAIByAiId(Long aiId) {
+        return 0;
+    }
+
     @Override
-    public int deleteChildAIByAiIds(Long[] aiIds) { return aiIds.length; }
+    public int deleteChildAIByAiIds(Long[] aiIds) {
+        return 0;
+    }
+
     @Override
-    public String chatWithAI(Long childId, String userInput, Integer emotionType) { return "你好，我是小步AI助教。"; }
+    public String chatWithAI(Long childId, String userInput, Integer emotionType) {
+        return "AI Response Mock";
+    }
+
     @Override
-    public List<ChildAI> selectRecentInteractionsByChildId(Long childId, Integer limit) { return new ArrayList<>(); }
+    public List<ChildAI> selectRecentInteractionsByChildId(Long childId, Integer limit) {
+        return List.of();
+    }
+
     @Override
-    public List<ChildAI> selectEmotionTrendByChildId(Long childId, Integer days) { return new ArrayList<>(); }
+    public List<ChildAI> selectEmotionTrendByChildId(Long childId, Integer days) {
+        return List.of();
+    }
 }

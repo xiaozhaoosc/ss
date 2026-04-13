@@ -1,6 +1,6 @@
 package com.kenzhao.smallsteps.parent;
 
-import com.kenzhao.smallsteps.parent.domain.bo.ParentRewardBo;
+import com.kenzhao.smallsteps.common.ss.domain.bo.ParentRewardBo;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;

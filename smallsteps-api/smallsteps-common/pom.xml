@@ -34,6 +34,7 @@
         <module>smallsteps-common-tenant</module>
         <module>smallsteps-common-websocket</module>
         <module>smallsteps-common-sse</module>
+        <module>smallsteps-common-ss</module>
         <module>smallsteps-ai</module>
     </modules>
 

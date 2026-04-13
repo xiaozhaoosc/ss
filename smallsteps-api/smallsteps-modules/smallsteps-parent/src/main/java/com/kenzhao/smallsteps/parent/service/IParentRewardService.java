@@ -1,7 +1,7 @@
 package com.kenzhao.smallsteps.parent.service;
 
-import com.kenzhao.smallsteps.parent.domain.vo.ParentRewardVo;
-import com.kenzhao.smallsteps.parent.domain.bo.ParentRewardBo;
+import com.kenzhao.smallsteps.common.ss.domain.vo.ParentRewardVo;
+import com.kenzhao.smallsteps.common.ss.domain.bo.ParentRewardBo;
 import com.kenzhao.smallsteps.common.mybatis.core.page.TableDataInfo;
 import com.kenzhao.smallsteps.common.mybatis.core.page.PageQuery;
 

@@ -1,8 +1,8 @@
 package com.kenzhao.smallsteps.parent.mapper;
 
 import com.kenzhao.smallsteps.common.mybatis.core.mapper.BaseMapperPlus;
-import com.kenzhao.smallsteps.parent.domain.ParentContract;
-import com.kenzhao.smallsteps.parent.domain.vo.ParentContractVo;
+import com.kenzhao.smallsteps.common.ss.domain.ParentContract;
+import com.kenzhao.smallsteps.common.ss.domain.vo.ParentContractVo;
 
 /**
  * 亲子契约Mapper接口

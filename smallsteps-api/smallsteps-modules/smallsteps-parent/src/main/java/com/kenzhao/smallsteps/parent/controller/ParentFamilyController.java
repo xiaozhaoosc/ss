@@ -4,7 +4,7 @@ import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.kenzhao.smallsteps.common.core.domain.R;
 import com.kenzhao.smallsteps.common.satoken.utils.LoginHelper;
 import com.kenzhao.smallsteps.common.web.core.BaseController;
-import com.kenzhao.smallsteps.system.domain.SysUser;
+import com.kenzhao.smallsteps.system.domain.bo.SysUserBo;
 import com.kenzhao.smallsteps.system.domain.vo.SysUserVo;
 import com.kenzhao.smallsteps.system.service.ISysUserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,9 +41,7 @@ public class ParentFamilyController extends BaseController {
         if (deptId == null) {
             return R.fail("当前用户未关联家庭");
         }
-        SysUser userQuery = new SysUser();
-        userQuery.setDeptId(deptId);
-        List<SysUserVo> list = userService.selectUserList(userQuery);
+        List<SysUserVo> list = userService.selectUserListByDept(deptId);
         return R.ok(list);
     }
 
@@ -59,13 +57,13 @@ public class ParentFamilyController extends BaseController {
             return R.fail("家长尚未归属任何家庭，请先联系管理员创建家庭。");
         }
 
-        SysUser child = userService.selectUserByUserName(bindDTO.getUserName());
+        SysUserVo child = userService.selectUserByUserName(bindDTO.getUserName());
         if (child == null) {
             return R.fail("未找到该儿童账号");
         }
 
         // 修改儿童的所属部门
-        SysUser updateChild = new SysUser();
+        SysUserBo updateChild = new SysUserBo();
         updateChild.setUserId(child.getUserId());
         updateChild.setDeptId(deptId);
         

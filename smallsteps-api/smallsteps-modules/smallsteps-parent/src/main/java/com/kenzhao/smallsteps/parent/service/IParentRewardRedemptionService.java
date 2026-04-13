@@ -2,8 +2,8 @@ package com.kenzhao.smallsteps.parent.service;
 
 import com.kenzhao.smallsteps.common.mybatis.core.page.PageQuery;
 import com.kenzhao.smallsteps.common.mybatis.core.page.TableDataInfo;
-import com.kenzhao.smallsteps.parent.domain.bo.ParentRewardRedemptionBo;
-import com.kenzhao.smallsteps.parent.domain.vo.ParentRewardRedemptionVo;
+import com.kenzhao.smallsteps.common.ss.domain.bo.ParentRewardRedemptionBo;
+import com.kenzhao.smallsteps.common.ss.domain.vo.ParentRewardRedemptionVo;
 
 /**
  * 奖励兑换记录Service接口

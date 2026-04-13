@@ -1,21 +1,21 @@
 <template>
   <div class="p-2">
     <transition :enter-active-class="proxy?.animate.searchAnimate.enter" :leave-active-class="proxy?.animate.searchAnimate.leave">
-      <div v-show="showSearch" class="mb-[10px]">
-        <el-card shadow="hover">
+      <div v-show="showSearch" class="mb-[20px]">
+        <el-card shadow="hover" class="search-card border-none bg-opacity-80 backdrop-blur-sm">
           <el-form ref="queryFormRef" :model="queryParams" :inline="true">
             <el-form-item label="任务标题" prop="title">
-              <el-input v-model="queryParams.title" placeholder="请输入任务标题" clearable @keyup.enter="handleQuery" />
+              <el-input v-model="queryParams.title" placeholder="请输入任务标题" clearable @keyup.enter="handleQuery" class="!w-[240px]" />
             </el-form-item>
             <el-form-item label="任务状态" prop="status">
-              <el-select v-model="queryParams.status" placeholder="任务状态" clearable>
+              <el-select v-model="queryParams.status" placeholder="任务状态" clearable class="!w-[160px]">
                 <el-option label="进行中" value="0" />
                 <el-option label="已完成" value="1" />
                 <el-option label="已过期" value="2" />
               </el-select>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
+              <el-button type="primary" icon="Search" @click="handleQuery" class="gradient-btn">搜索</el-button>
               <el-button icon="Refresh" @click="resetQuery">重置</el-button>
             </el-form-item>
           </el-form>
@@ -23,53 +23,67 @@
       </div>
     </transition>
 
-    <el-card shadow="hover">
-      <template #header>
-        <el-row :gutter="10">
-          <el-col :span="1.5">
-            <el-button v-has-permi="['parent:task:add']" type="primary" plain icon="Plus" @click="handleAdd">新增任务</el-button>
-          </el-col>
-          <el-col :span="1.5">
-            <el-button v-has-permi="['parent:task:edit']" type="success" plain :disabled="single" icon="Edit" @click="handleUpdate">修改</el-button>
-          </el-col>
-          <el-col :span="1.5">
-            <el-button v-has-permi="['parent:task:remove']" type="danger" plain :disabled="multiple" icon="Delete" @click="handleDelete">删除</el-button>
-          </el-col>
-          <right-toolbar v-model:show-search="showSearch" @query-table="getList"></right-toolbar>
-        </el-row>
-      </template>
+    <div class="mb-[15px] flex items-center justify-between">
+      <div class="flex gap-2">
+        <el-button v-has-permi="['parent:task:add']" type="primary" icon="Plus" @click="handleAdd" class="action-btn">新增任务</el-button>
+        <el-button v-has-permi="['parent:task:remove']" type="danger" plain :disabled="multiple" icon="Delete" @click="handleDelete">批量删除</el-button>
+      </div>
+      <right-toolbar v-model:show-search="showSearch" @query-table="getList"></right-toolbar>
+    </div>
 
-      <el-table v-loading="loading" :data="taskList" @selection-change="handleSelectionChange">
-        <el-table-column type="selection" width="55" align="center" />
-        <el-table-column label="任务编号" align="center" prop="taskId" />
-        <el-table-column label="标题" align="center" prop="title" :show-overflow-tooltip="true" />
-        <el-table-column label="难度" align="center" prop="difficulty">
-          <template #default="scope">
-            <el-rate v-model="scope.row.difficulty" disabled />
-          </template>
-        </el-table-column>
-        <el-table-column label="支架强度" align="center" prop="promptLevel">
-          <template #default="scope">
-            <el-tag :type="scope.row.promptLevel > 3 ? 'danger' : 'success'">
-              LV.{{ scope.row.promptLevel }}
-            </el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column label="奖励积分" align="center" prop="rewardPoints" />
-        <el-table-column label="状态" align="center" prop="status">
-          <template #default="scope">
-            <el-tag :type="scope.row.status === '0' ? 'primary' : (scope.row.status === '1' ? 'success' : 'info')">
-              {{ scope.row.status === '0' ? '进行中' : (scope.row.status === '1' ? '已完成' : '已过期') }}
-            </el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" align="center" width="180">
-          <template #default="scope">
-            <el-button v-has-permi="['parent:task:edit']" link type="primary" icon="Edit" @click="handleUpdate(scope.row)">修改</el-button>
-            <el-button v-has-permi="['parent:task:remove']" link type="primary" icon="Delete" @click="handleDelete(scope.row)">删除</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
+    <div v-loading="loading">
+      <el-row :gutter="20" class="task-gallery">
+        <el-col v-for="(item, index) in taskList" :key="item.taskId" :xs="24" :sm="12" :md="8" :lg="6">
+          <el-card 
+            class="task-card mb-[20px] transition-all hover:-translate-y-1 hover:shadow-xl border-none animate__animated animate__fadeInUp"
+            :style="{ 'animation-delay': (index * 0.05) + 's' }"
+            shadow="always"
+          >
+            <template #header>
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-lg truncate flex-1 pr-2" :title="item.title">{{ item.title }}</span>
+                <el-tag :type="getStatusType(item.status)" effect="dark" round size="small">
+                  {{ getStatusLabel(item.status) }}
+                </el-tag>
+              </div>
+            </template>
+            
+            <div class="task-body py-2">
+              <p class="text-sm text-gray-500 mb-3 h-[40px] line-clamp-2">{{ item.description || '暂无描述' }}</p>
+              
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs text-gray-400">难度系数</span>
+                <el-rate v-model="item.difficulty" disabled size="small" />
+              </div>
+              
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs text-gray-400">支架强度</span>
+                <el-tag :type="item.promptLevel > 3 ? 'danger' : 'success'" size="small" effect="plain">
+                  LV.{{ item.promptLevel }}
+                </el-tag>
+              </div>
+
+              <div class="flex items-center justify-between">
+                <span class="text-xs text-gray-400">奖励积分</span>
+                <span class="text-orange-500 font-bold font-mono">+{{ item.rewardPoints }}</span>
+              </div>
+            </div>
+
+            <div class="task-footer mt-4 pt-4 border-t border-gray-100 flex justify-end gap-2">
+              <el-tooltip content="编辑" placement="top">
+                <el-button v-has-permi="['parent:task:edit']" circle icon="Edit" @click="handleUpdate(item)" />
+              </el-tooltip>
+              <el-tooltip content="删除" placement="top">
+                <el-button v-has-permi="['parent:task:remove']" circle type="danger" plain icon="Delete" @click="handleDelete(item)" />
+              </el-tooltip>
+            </div>
+          </el-card>
+        </el-col>
+      </el-row>
+      
+      <div v-if="taskList.length === 0" class="flex flex-col items-center justify-center py-20 bg-white rounded-lg shadow-sm">
+        <el-empty description="暂无发布任务" />
+      </div>
 
       <pagination
         v-show="total > 0"
@@ -78,7 +92,7 @@
         :total="total"
         @pagination="getList"
       />
-    </el-card>
+    </div>
 
     <!-- 添加或修改对话框 -->
     <el-dialog v-model="open" :title="title" width="600px" append-to-body>
@@ -278,5 +292,79 @@ function handleDelete(row?: any) {
   }).catch(() => {});
 }
 
+/** 获取状态类型 */
+function getStatusType(status: string) {
+  switch (status) {
+    case '0': return 'primary';
+    case '1': return 'success';
+    case '2': return 'info';
+    default: return 'info';
+  }
+}
+
+/** 获取状态标签 */
+function getStatusLabel(status: string) {
+  switch (status) {
+    case '0': return '进行中';
+    case '1': return '已完成';
+    case '2': return '已过期';
+    default: return '未知';
+  }
+}
+
 getList();
 </script>
+
+<style scoped lang="scss">
+.search-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(240, 248, 255, 0.9) 100%);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.07);
+}
+
+.gradient-btn {
+  background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+  border: none;
+  &:hover {
+    opacity: 0.9;
+    transform: scale(1.02);
+  }
+}
+
+.action-btn {
+  border-radius: 10px;
+  font-weight: bold;
+}
+
+.task-card {
+  border-radius: 20px;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  
+  :deep(.el-card__header) {
+    background: #fdfdfd;
+    border-bottom: 1px solid #f0f0f0;
+    padding: 15px 20px;
+  }
+  
+  &:hover {
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.task-gallery {
+  padding: 10px 0;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* 针对 ADHD 的温馨提示：使用圆润的边框和非侵入式的动画 */
+:deep(.el-rate__icon) {
+  margin-right: 2px;
+}
+</style>

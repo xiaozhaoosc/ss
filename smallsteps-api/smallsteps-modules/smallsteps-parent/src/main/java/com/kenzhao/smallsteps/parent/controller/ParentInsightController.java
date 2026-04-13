@@ -4,11 +4,11 @@ import com.kenzhao.smallsteps.common.core.domain.R;
 import com.kenzhao.smallsteps.common.mybatis.core.page.PageQuery;
 import com.kenzhao.smallsteps.common.mybatis.core.page.TableDataInfo;
 import com.kenzhao.smallsteps.common.web.core.BaseController;
-import com.kenzhao.smallsteps.parent.domain.vo.ParentTaskVo;
-import com.kenzhao.smallsteps.parent.service.IParentTaskService;
-import com.kenzhao.smallsteps.parent.service.IScoreService;
+import com.kenzhao.smallsteps.common.ss.domain.vo.ParentTaskVo;
+import com.kenzhao.smallsteps.child.service.IParentTaskService;
+import com.kenzhao.smallsteps.child.service.IScoreService;
 import com.kenzhao.smallsteps.child.service.IChildAIService;
-import com.kenzhao.smallsteps.child.domain.ChildAI;
+import com.kenzhao.smallsteps.common.ss.domain.ChildAI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

@@ -2,9 +2,9 @@ package com.kenzhao.smallsteps.parent.service.impl;
 
 import com.kenzhao.smallsteps.common.mybatis.core.page.PageQuery;
 import com.kenzhao.smallsteps.common.mybatis.core.page.TableDataInfo;
-import com.kenzhao.smallsteps.parent.domain.ParentEmotionKit;
-import com.kenzhao.smallsteps.parent.domain.bo.ParentEmotionKitBo;
-import com.kenzhao.smallsteps.parent.domain.vo.ParentEmotionKitVo;
+import com.kenzhao.smallsteps.common.ss.domain.ParentEmotionKit;
+import com.kenzhao.smallsteps.common.ss.domain.bo.ParentEmotionKitBo;
+import com.kenzhao.smallsteps.common.ss.domain.vo.ParentEmotionKitVo;
 import com.kenzhao.smallsteps.parent.mapper.ParentEmotionKitMapper;
 import com.kenzhao.smallsteps.parent.service.IParentEmotionKitService;
 import lombok.RequiredArgsConstructor;

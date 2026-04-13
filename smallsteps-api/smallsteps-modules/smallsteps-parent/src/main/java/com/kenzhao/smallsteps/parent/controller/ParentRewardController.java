@@ -11,8 +11,8 @@ import com.kenzhao.smallsteps.common.log.enums.BusinessType;
 import com.kenzhao.smallsteps.common.mybatis.core.page.PageQuery;
 import com.kenzhao.smallsteps.common.mybatis.core.page.TableDataInfo;
 import com.kenzhao.smallsteps.common.web.core.BaseController;
-import com.kenzhao.smallsteps.parent.domain.bo.ParentRewardBo;
-import com.kenzhao.smallsteps.parent.domain.vo.ParentRewardVo;
+import com.kenzhao.smallsteps.common.ss.domain.bo.ParentRewardBo;
+import com.kenzhao.smallsteps.common.ss.domain.vo.ParentRewardVo;
 import com.kenzhao.smallsteps.parent.service.IParentRewardService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotEmpty;
@@ -36,7 +36,7 @@ import java.util.List;
 public class ParentRewardController extends BaseController {
 
     private final IParentRewardService parentRewardService;
-    private final com.kenzhao.smallsteps.parent.service.IScoreService scoreService;
+    private final com.kenzhao.smallsteps.child.service.IScoreService scoreService;
     private final com.kenzhao.smallsteps.parent.service.IParentRewardRedemptionService redemptionService;
 
     /**
@@ -44,7 +44,7 @@ public class ParentRewardController extends BaseController {
      */
     @SaCheckPermission("parent:reward:list")
     @GetMapping("/redemption/list")
-    public TableDataInfo<com.kenzhao.smallsteps.parent.domain.vo.ParentRewardRedemptionVo> redemptionList(com.kenzhao.smallsteps.parent.domain.bo.ParentRewardRedemptionBo bo, PageQuery pageQuery) {
+    public TableDataInfo<com.kenzhao.smallsteps.common.ss.domain.vo.ParentRewardRedemptionVo> redemptionList(com.kenzhao.smallsteps.common.ss.domain.bo.ParentRewardRedemptionBo bo, PageQuery pageQuery) {
         return redemptionService.queryPageList(bo, pageQuery);
     }
 
@@ -112,7 +112,7 @@ public class ParentRewardController extends BaseController {
      * 获取用户积分
      */
     @GetMapping("/score/{userId}")
-    public R<com.kenzhao.smallsteps.parent.domain.ChildScore> getScore(@PathVariable Long userId) {
+    public R<com.kenzhao.smallsteps.common.ss.domain.ChildScore> getScore(@PathVariable Long userId) {
         return R.ok(scoreService.getChildScore(userId));
     }
 
@@ -133,13 +133,13 @@ public class ParentRewardController extends BaseController {
         }
         
         // 预检查积分
-        com.kenzhao.smallsteps.parent.domain.ChildScore score = scoreService.getChildScore(bo.getUserId());
+        com.kenzhao.smallsteps.common.ss.domain.ChildScore score = scoreService.getChildScore(bo.getUserId());
         if (score == null || score.getBalance() < reward.getPointsRequired()) {
             return R.fail("积分不足");
         }
 
         // 创建申请记录
-        com.kenzhao.smallsteps.parent.domain.bo.ParentRewardRedemptionBo redemptionBo = new com.kenzhao.smallsteps.parent.domain.bo.ParentRewardRedemptionBo();
+        com.kenzhao.smallsteps.common.ss.domain.bo.ParentRewardRedemptionBo redemptionBo = new com.kenzhao.smallsteps.common.ss.domain.bo.ParentRewardRedemptionBo();
         redemptionBo.setRewardId(bo.getRewardId());
         redemptionBo.setUserId(bo.getUserId());
         redemptionBo.setPointsCost(reward.getPointsRequired());

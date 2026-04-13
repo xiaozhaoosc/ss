@@ -1,6 +1,6 @@
 package com.kenzhao.smallsteps.parent;
 
-import com.kenzhao.smallsteps.parent.domain.bo.ParentTaskBo;
+import com.kenzhao.smallsteps.common.ss.domain.bo.ParentTaskBo;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,7 +31,7 @@ public class ParentTaskIT {
     public void should_create_task_successfully() {
         ParentTaskBo bo = new ParentTaskBo();
         bo.setTitle("测试任务-" + System.currentTimeMillis());
-        bo.setContent("完成每日阅读 30 分钟");
+        bo.setDescription("完成每日阅读 30 分钟");
         bo.setRewardPoints(10);
         bo.setStatus("0"); // 待发布/进行中
 

@@ -11,9 +11,9 @@ import com.kenzhao.smallsteps.common.log.enums.BusinessType;
 import com.kenzhao.smallsteps.common.mybatis.core.page.PageQuery;
 import com.kenzhao.smallsteps.common.mybatis.core.page.TableDataInfo;
 import com.kenzhao.smallsteps.common.web.core.BaseController;
-import com.kenzhao.smallsteps.parent.domain.bo.ParentTaskBo;
-import com.kenzhao.smallsteps.parent.domain.vo.ParentTaskVo;
-import com.kenzhao.smallsteps.parent.service.IParentTaskService;
+import com.kenzhao.smallsteps.common.ss.domain.bo.ParentTaskBo;
+import com.kenzhao.smallsteps.common.ss.domain.vo.ParentTaskVo;
+import com.kenzhao.smallsteps.child.service.IParentTaskService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -36,7 +36,7 @@ import java.util.List;
 public class ParentTaskController extends BaseController {
 
     private final IParentTaskService parentTaskService;
-    private final com.kenzhao.smallsteps.parent.service.IScoreService scoreService;
+    private final com.kenzhao.smallsteps.child.service.IScoreService scoreService;
 
     /**
      * 查询家长任务发布列表

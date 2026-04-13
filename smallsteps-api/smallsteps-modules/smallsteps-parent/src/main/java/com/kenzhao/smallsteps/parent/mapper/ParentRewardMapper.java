@@ -1,8 +1,8 @@
 package com.kenzhao.smallsteps.parent.mapper;
 
 import com.kenzhao.smallsteps.common.mybatis.core.mapper.BaseMapperPlus;
-import com.kenzhao.smallsteps.parent.domain.ParentReward;
-import com.kenzhao.smallsteps.parent.domain.vo.ParentRewardVo;
+import com.kenzhao.smallsteps.common.ss.domain.ParentReward;
+import com.kenzhao.smallsteps.common.ss.domain.vo.ParentRewardVo;
 
 /**
  * 家长奖励配置Mapper接口

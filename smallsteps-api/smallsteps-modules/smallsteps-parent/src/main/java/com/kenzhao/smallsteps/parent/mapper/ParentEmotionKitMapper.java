@@ -1,6 +1,6 @@
 package com.kenzhao.smallsteps.parent.mapper;
 
-import com.kenzhao.smallsteps.parent.domain.ParentEmotionKit;
+import com.kenzhao.smallsteps.common.ss.domain.ParentEmotionKit;
 
 import java.util.List;
 
