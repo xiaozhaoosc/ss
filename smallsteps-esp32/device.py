@@ -163,7 +163,13 @@ class DeviceManager:
     #         print(f"NFC Init Failed: {e}")
     #         self.nfc = None
 
-    def record_audio(self, filename="rec.wav", duration_sec=5):
+    def set_led_ring(self, color, brightness=1.0):
+        r, g, b = color
+        for i in range(HardwareConfig.RGB_COUNT):
+            self.np[i] = (int(r * brightness), int(g * brightness), int(b * brightness))
+        self.np.write()
+
+    def record_audio(self, filename="rec.wav", duration_sec=5, update_cb=None):
         # Basic I2S Recording Implementation
         try:
             audio_in = I2S(0,
@@ -174,10 +180,9 @@ class DeviceManager:
                            bits=16,
                            format=I2S.MONO,
                            rate=16000,
-                           ibuf=20000)
+                           ibuf=32768)
             
-            # Create a simple WAV header
-            # Constants
+            # WAV Header
             SAMPLE_RATE = 16000
             BITS_PER_SAMPLE = 16
             NUM_CHANNELS = 1
@@ -186,12 +191,11 @@ class DeviceManager:
             DATA_SIZE = SAMPLE_RATE * duration_sec * BLOCK_ALIGN
             
             with open(filename, 'wb') as f:
-                # WAV Header
                 f.write(b'RIFF')
                 f.write(struct.pack('<I', 36 + DATA_SIZE))
                 f.write(b'WAVEfmt ')
-                f.write(struct.pack('<I', 16)) # Subchunk1Size
-                f.write(struct.pack('<H', 1))  # AudioFormat (PCM)
+                f.write(struct.pack('<I', 16))
+                f.write(struct.pack('<H', 1))
                 f.write(struct.pack('<H', NUM_CHANNELS))
                 f.write(struct.pack('<I', SAMPLE_RATE))
                 f.write(struct.pack('<I', BYTE_RATE))
@@ -200,20 +204,23 @@ class DeviceManager:
                 f.write(b'data')
                 f.write(struct.pack('<I', DATA_SIZE))
                 
-                # Record loop
-                buf = bytearray(2048) # 2KB chunk
-                print("Recording...")
+                buf = bytearray(4096)
+                print(f"Recording to {filename}...")
                 
                 start_time = time.ticks_ms()
                 while time.ticks_diff(time.ticks_ms(), start_time) < duration_sec * 1000:
                     num_read = audio_in.readinto(buf)
                     if num_read > 0:
                         f.write(buf[:num_read])
+                    if update_cb:
+                        update_cb(time.ticks_diff(time.ticks_ms(), start_time))
                         
             audio_in.deinit()
             print("Recording Saved")
             return True
         except Exception as e:
             print(f"Recording Failed: {e}")
+            if 'audio_in' in locals():
+                audio_in.deinit()
             return False
 

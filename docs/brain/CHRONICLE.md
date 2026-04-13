@@ -11,9 +11,10 @@
 - **[DECISION]**: **SATS (SmallSteps Automated Testing Suite)** 设计方案定稿。
     - 确立了 API, UI, App, System 四位一体的自动化测试路径。
     - 引入 Superpowers 协议 (TDD/Verification) 作为核心质量门禁。
-- **[DECISION]**: **AOT Layout (Ahead-of-Time)** 确立为核心 UI 渲染协议。
-    - 深度研究 `chenglou/pretext` 源码，实现测量与渲染完全解耦。
-    - 建立了 [[AOT_Layout_Strategy]] 并在 [[esp-idf-principles]] 中强制执行“两阶段排版”原则。
+- **[AOT_LAYOUT_SETTLED]**: 深度研究 `chenglou/pretext` 源码，沉淀 AOT 排版策略。
+    - **Docs**: 建立了 [[AOT_Layout_Strategy]]。
+    - **Standards**: 将“两阶段排版”原则写入了 [[esp-idf-principles]]。
+    - **Refinement**: 确立了窗口式滑动预计算（3屏缓冲）与固定字阶 Bitmap Font 方案。
 
 ### [2026-04-12] 知识花园体系化
 - **事件**: 正式激活 `DEBT_LEADGER` 与 `CHRONICLE`。

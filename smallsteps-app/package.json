@@ -39,7 +39,8 @@
         "jsencrypt": "^3.5.4",
         "pinia": "^2.1.7",
         "vue": "3.5.30",
-        "vue-i18n": "9.14.4"
+        "vue-i18n": "9.14.4",
+        "@chenglou/pretext": "^0.0.5"
     },
     "devDependencies": {
         "@dcloudio/types": "3.4.28",

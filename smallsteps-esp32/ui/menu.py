@@ -7,6 +7,8 @@ class MenuPage(Page):
         self.items = [
             {"label": "Focus Mode", "action": "focus"},
             {"label": "To-Do List", "action": "list"},
+            {"label": "Read Story", "action": "story"},
+            {"label": "Voice Tree Hole", "action": "voice_hole"},
             {"label": "Hardware Test", "action": "test"}, # Placeholder for now
             {"label": "Settings", "action": "settings"}   # Placeholder
         ]
@@ -55,6 +57,10 @@ class MenuPage(Page):
             self.app.switch_to("focus")
         elif action == "list":
             self.app.switch_to("list")
+        elif action == "story":
+            self.app.switch_to("story")
+        elif action == "voice_hole":
+            self.app.switch_to("voice_hole")
         elif action == "test":
             print("Test Mode selected (Not implemented in UI yet)")
             # self.app.switch_to("test")

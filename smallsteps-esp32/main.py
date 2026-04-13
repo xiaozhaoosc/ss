@@ -15,6 +15,8 @@ def main():
     app.register_page("menu", ui.MenuPage)
     app.register_page("focus", ui.FocusPage)
     app.register_page("list", ui.ListPage)
+    app.register_page("story", ui.StoryPage)
+    app.register_page("voice_hole", ui.VoiceHolePage)
     
     # 4. Start
     app.switch_to("menu")
