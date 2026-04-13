@@ -31,4 +31,10 @@ description: ESP-IDF 开发与调试核心原则 (Human 3.0 Protocol 扩展)
 
 ## 4. 日志审计 (Log Audit Rule)
 如果是 C++ ESP-IDF 开发，报错绝不止于首行的可见错误。在审阅用户的 `build.log` 时：
-- **永远向上追溯**：`ld returned 1 exit status` 或 `ninja failed` 只是表象。真正的链接或变量覆盖错误往往在往上 10~50 行；必须使用关键词 `error:`、`undefined reference` 以及 `warning: implicit declaration` 在全日志中进行正则检索。
+## 5. UI 极致流畅度与文本排版原则 (AOT Layout Principle)
+**痛点回顾**：在高频率滚动的列表或长文本显示中，实时进行换行计算（Word Wrap）和字体度量（Metric calculation）会占用大量 CPU 周期，导致界面卡顿，增加 ADHD 儿童的焦虑感。
+
+**强制动作 (Mandatory Action)**：
+- **解耦测量与渲染**：引入 `chenglou/pretext` 的 **Two-Phase Architecture**。在数据合规或初始化时完成 `Prepare`（计算行索引、断句、缓存宽度），严禁在绘制循环 (`draw_callback`) 中进行任何复杂的字符串扫描。
+- **像素级平滑设计**：利用预计算的总高度（total_height）实现无缝像素滚动，而非基于“行”的粗糙跳转。
+- **跨端一致性校验**：所有涉及硬件显示的 UI 组件，必须参考 [AOT_Layout_Strategy.md](file:///d:/office/jushuang1/github/ss/docs/brain/AOT_Layout_Strategy.md) 定义的协议，确保 App 端的预览效果与硬件 1:1 对齐。
