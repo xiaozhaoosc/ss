@@ -1,0 +1,31 @@
+<div style="display:flex;align-items:center;justify-content:center;flex-direction:column;min-height:60vh">
+  <h2>当用户点击模板卡片“应用此模板”时，哪种交互流最合适？</h2>
+  <div class="options">
+    <div class="option" data-choice="a" onclick="toggleSelect(this)">
+      <div class="letter">A</div>
+      <div class="content">
+        <h3>全屏详情页 (Full Screen Detail)</h3>
+        <p>点击后跳转到新页面，展示模板完整步骤。底部固定“应用此模板”大按钮。</p>
+        <p class="label">优点：展示空间充足，沉浸感强。</p>
+      </div>
+    </div>
+    
+    <div class="option" data-choice="b" onclick="toggleSelect(this)">
+      <div class="letter">B</div>
+      <div class="content">
+        <h3>半屏弹窗 (Bottom Sheet/Modal)</h3>
+        <p>卡片点击后从底部弹出一个卡片，展示核心步骤列表及“添加至今日”按钮。</p>
+        <p class="label">优点：操作轻量，保持原页面的上下文，符合快进快出。</p>
+      </div>
+    </div>
+
+    <div class="option" data-choice="c" onclick="toggleSelect(this)">
+      <div class="letter">C</div>
+      <div class="content">
+        <h3>原位展开 (Inline Expand)</h3>
+        <p>在当前卡片列表页直接向下展开（手风琴效果），显示子步骤和“添加”按钮。</p>
+        <p class="label">优点：最直观的操作反馈。</p>
+      </div>
+    </div>
+  </div>
+</div>

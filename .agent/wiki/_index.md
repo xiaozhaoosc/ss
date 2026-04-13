@@ -3,8 +3,8 @@
 > **定位**: ADHD 儿童行为习惯辅助终端生态的“大脑”与决策库。
 
 ## 核心状态
-- **当前阶段**: V6 学术演示版完善 (Management Admin & Child UI Optimization)
-- **重点任务**: 补全 `smallsteps-ui` 中的“Small Steps”与“我的小步”子菜单。
+- **当前阶段**: ADHD 模板库 App 端实战模拟开发完成
+- **重点任务**: 修复 smallsteps-app 单元测试环境异常 (vue/compiler-sfc)，并在本地运行 App 预览验证 ADHD 模板库。
 
 ## 快速入口
 - [[JOURNAL]] - 每日执行流水账与 [Morning_Briefing]。

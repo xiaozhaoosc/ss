@@ -19,6 +19,7 @@
         "test:round": "node tests/scripts/run-test-round.js"
     },
     "dependencies": {
+        "@chenglou/pretext": "^0.0.5",
         "@dcloudio/uni-app": "3.0.0-alpha-5000320260310001",
         "@dcloudio/uni-app-harmony": "3.0.0-alpha-5000320260310001",
         "@dcloudio/uni-app-plus": "3.0.0-alpha-5000320260310001",
@@ -39,8 +40,7 @@
         "jsencrypt": "^3.5.4",
         "pinia": "^2.1.7",
         "vue": "3.5.30",
-        "vue-i18n": "9.14.4",
-        "@chenglou/pretext": "^0.0.5"
+        "vue-i18n": "9.14.4"
     },
     "devDependencies": {
         "@dcloudio/types": "3.4.28",
@@ -49,6 +49,7 @@
         "@dcloudio/uni-stacktracey": "3.0.0-alpha-5000320260310001",
         "@dcloudio/vite-plugin-uni": "3.0.0-alpha-5000320260310001",
         "@playwright/test": "^1.48.4",
+        "@vue/compiler-sfc": "^3.5.30",
         "@vue/runtime-core": "3.5.30",
         "allure-playwright": "^3.0.6",
         "autoprefixer": "^10.4.17",
