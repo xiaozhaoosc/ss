@@ -175,6 +175,21 @@
       "style": {
         "navigationBarTitleText": "浏览文本"
       }
+    },
+    {
+      "path": "pages/template/library",
+      "style": {
+        "navigationBarTitleText": "ADHD 模板库",
+        "enablePullDownRefresh": true
+      }
+    },
+    {
+      "path": "pages/template/detail",
+      "style": {
+        "navigationBarTitleText": "模板详情",
+        "navigationBarBackgroundColor": "#ffffff",
+        "navigationBarTextStyle": "black"
+      }
     }
   ],
   "tabBar": {
