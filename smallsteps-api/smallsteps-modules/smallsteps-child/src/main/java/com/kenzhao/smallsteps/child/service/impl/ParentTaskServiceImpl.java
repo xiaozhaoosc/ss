@@ -101,34 +101,34 @@ public class ParentTaskServiceImpl implements IParentTaskService {
     @Override
     public Map<String, Object> getTaskStatusByChildId(Long childId) {
         Map<String, Object> result = new HashMap<>();
-        
+
         // 模拟数据
         result.put("totalTasks", 10);
         result.put("completedTasks", 6);
         result.put("pendingTasks", 4);
         result.put("completionRate", 60);
-        
+
         return result;
     }
 
     @Override
     public Map<String, Object> getAbilityRadarByChildId(Long childId) {
         Map<String, Object> result = new HashMap<>();
-        
+
         // 模拟能力雷达图数据
         List<String> abilities = List.of("专注力", "执行力", "创造力", "社交能力", "情绪管理", "学习能力");
         List<Integer> scores = List.of(75, 80, 65, 70, 60, 85);
-        
+
         result.put("abilities", abilities);
         result.put("scores", scores);
-        
+
         return result;
     }
 
     @Override
     public Map<String, Object> getWeeklyReport(Long childId) {
         Map<String, Object> result = new HashMap<>();
-        
+
         // 模拟周报告数据
         result.put("weekStart", "2026-03-23");
         result.put("weekEnd", "2026-03-29");
@@ -137,14 +137,14 @@ public class ParentTaskServiceImpl implements IParentTaskService {
         result.put("totalPoints", 120);
         result.put("averageCompletionTime", "30分钟");
         result.put("emotionTrend", List.of(5, 4, 5, 3, 4, 5, 4));
-        
+
         return result;
     }
 
     @Override
     public Map<String, Object> getMonthlyReport(Long childId) {
         Map<String, Object> result = new HashMap<>();
-        
+
         // 模拟月报告数据
         result.put("month", "2026-03");
         result.put("totalTasks", 30);
@@ -153,7 +153,7 @@ public class ParentTaskServiceImpl implements IParentTaskService {
         result.put("bestDay", "2026-03-15");
         result.put("worstDay", "2026-03-10");
         result.put("abilityImprovement", Map.of("专注力", 10, "执行力", 15, "情绪管理", 5));
-        
+
         return result;
     }
 
@@ -195,10 +195,10 @@ public class ParentTaskServiceImpl implements IParentTaskService {
         vo.setCreateTime(parentTask.getCreateTime());
         vo.setUpdateBy(parentTask.getUpdateBy());
         vo.setUpdateTime(parentTask.getUpdateTime());
-        
+
         // 设置状态名称
         vo.setStatusName("1".equals(parentTask.getStatus()) ? "已完成" : "未完成");
-        
+
         return vo;
     }
 }

@@ -1162,29 +1162,45 @@ VALUES (102, '硬件同步间隔(秒)', 'ss.hw.sync_interval', '300', 'Y', 1, NO
 -- 1. 家长任务表
 CREATE TABLE IF NOT EXISTS ss_parent_task (
   task_id           bigint          NOT NULL,
+  dept_id           bigint          DEFAULT NULL,
+  parent_id         bigint          DEFAULT NULL,
   user_id           bigint          DEFAULT NULL,
   title             varchar(100)    DEFAULT '',
   description       varchar(500)    DEFAULT '',
   icon              varchar(100)    DEFAULT '',
   difficulty        integer         DEFAULT 1,
+  prompt_level      integer         DEFAULT 1,
+  cycle_type        integer         DEFAULT 0,
   reward_points     integer         DEFAULT 10,
+  light_effect      varchar(100)    DEFAULT '',
+  audio_effect      varchar(100)    DEFAULT '',
+  deadline          timestamp       DEFAULT NULL,
   status            char(1)         DEFAULT '0',
+  del_flag          char(1)         DEFAULT '0',
+  create_dept       bigint          DEFAULT NULL,
   create_by         bigint          DEFAULT NULL,
   create_time       timestamp       DEFAULT NULL,
   update_by         bigint          DEFAULT NULL,
   update_time       timestamp       DEFAULT NULL,
-  del_flag          char(1)         DEFAULT '0',
   PRIMARY KEY (task_id)
 );
 COMMENT ON TABLE ss_parent_task IS '家长任务发布表';
 COMMENT ON COLUMN ss_parent_task.task_id IS '任务ID';
+COMMENT ON COLUMN ss_parent_task.dept_id IS '家庭ID(部门ID)';
+COMMENT ON COLUMN ss_parent_task.parent_id IS '父任务ID(用于任务拆解)';
 COMMENT ON COLUMN ss_parent_task.user_id IS '所属用户ID';
 COMMENT ON COLUMN ss_parent_task.title IS '任务标题';
 COMMENT ON COLUMN ss_parent_task.description IS '任务描述';
 COMMENT ON COLUMN ss_parent_task.icon IS '图标';
 COMMENT ON COLUMN ss_parent_task.difficulty IS '难度等级(1-5)';
+COMMENT ON COLUMN ss_parent_task.prompt_level IS '支架强度/辅助强度(1-5)';
+COMMENT ON COLUMN ss_parent_task.cycle_type IS '循环类型(0单次 1每日 2每周)';
 COMMENT ON COLUMN ss_parent_task.reward_points IS '奖励积分';
+COMMENT ON COLUMN ss_parent_task.light_effect IS '灯光效果代码';
+COMMENT ON COLUMN ss_parent_task.audio_effect IS '音频索引代码';
+COMMENT ON COLUMN ss_parent_task.deadline IS '截止时间';
 COMMENT ON COLUMN ss_parent_task.status IS '状态(0进行中 1已完成 2已过期)';
+COMMENT ON COLUMN ss_parent_task.create_dept IS '创建部门';
 COMMENT ON COLUMN ss_parent_task.create_by IS '创建者';
 COMMENT ON COLUMN ss_parent_task.create_time IS '创建时间';
 COMMENT ON COLUMN ss_parent_task.update_by IS '更新者';
@@ -1248,6 +1264,42 @@ COMMENT ON COLUMN ss_parent_contract.create_time IS '创建时间';
 COMMENT ON COLUMN ss_parent_contract.update_by IS '更新者';
 COMMENT ON COLUMN ss_parent_contract.update_time IS '更新时间';
 COMMENT ON COLUMN ss_parent_contract.del_flag IS '删除标志(0代表存在 2代表删除)';
+
+-- 4. 儿童任务执行日志表 (ss_task_log)
+CREATE TABLE IF NOT EXISTS ss_task_log (
+  log_id            bigint          NOT NULL,
+  dept_id           bigint          DEFAULT NULL,
+  task_id           bigint          NOT NULL,
+  child_id          bigint          NOT NULL,
+  target_date       date            DEFAULT NULL,
+  actual_duration   integer         DEFAULT 0,
+  status            integer         DEFAULT 0,
+  start_time        timestamp       DEFAULT NULL,
+  end_time          timestamp       DEFAULT NULL,
+  del_flag          char(1)         DEFAULT '0',
+  create_dept       bigint          DEFAULT NULL,
+  create_by         bigint          DEFAULT NULL,
+  create_time       timestamp       DEFAULT NULL,
+  update_by         bigint          DEFAULT NULL,
+  update_time       timestamp       DEFAULT NULL,
+  PRIMARY KEY (log_id)
+);
+COMMENT ON TABLE ss_task_log IS '儿童任务执行日志表';
+COMMENT ON COLUMN ss_task_log.log_id IS '日志ID';
+COMMENT ON COLUMN ss_task_log.dept_id IS '家庭ID(部门ID)';
+COMMENT ON COLUMN ss_task_log.task_id IS '任务ID';
+COMMENT ON COLUMN ss_task_log.child_id IS '孩子ID';
+COMMENT ON COLUMN ss_task_log.target_date IS '预定执行日期';
+COMMENT ON COLUMN ss_task_log.actual_duration IS '实际专注时长(秒)';
+COMMENT ON COLUMN ss_task_log.status IS '状态(0未开始 1进行中 2已完成 3已跳过)';
+COMMENT ON COLUMN ss_task_log.start_time IS '开始时间';
+COMMENT ON COLUMN ss_task_log.end_time IS '完成时间';
+COMMENT ON COLUMN ss_task_log.create_dept IS '创建部门';
+COMMENT ON COLUMN ss_task_log.create_by IS '创建者';
+COMMENT ON COLUMN ss_task_log.create_time IS '创建时间';
+COMMENT ON COLUMN ss_task_log.update_by IS '更新者';
+COMMENT ON COLUMN ss_task_log.update_time IS '更新时间';
+COMMENT ON COLUMN ss_task_log.del_flag IS '删除标志(0代表存在 2代表删除)';
 
 insert into sys_role_menu values ('3', '1507');
 insert into sys_role_menu values ('3', '1508');

@@ -74,6 +74,8 @@ import { listReward, getReward, deleteReward, addReward, updateReward } from "@/
 
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
 
+const rewardFormRef = ref<ElFormInstance>();
+
 const rewardList = ref<any[]>([]);
 const open = ref(false);
 const loading = ref(true);
@@ -107,6 +109,7 @@ function reset() {
     icon: undefined,
     status: "0"
   };
+  rewardFormRef.value?.resetFields();
 }
 
 function handleAdd() {
@@ -125,7 +128,7 @@ function handleUpdate(row: any) {
 }
 
 function submitForm() {
-  proxy?.$refs["rewardFormRef"].validate((valid: boolean) => {
+  rewardFormRef.value?.validate((valid: boolean) => {
     if (valid) {
       if (form.value.rewardId != undefined) {
         updateReward(form.value).then(() => {

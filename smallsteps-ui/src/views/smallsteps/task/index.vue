@@ -164,6 +164,9 @@ import { listTask, getTask, deleteTask, addTask, updateTask } from "@/api/smalls
 
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
 
+const queryFormRef = ref<ElFormInstance>();
+const taskFormRef = ref<ElFormInstance>();
+
 const taskList = ref<any[]>([]);
 const open = ref(false);
 const loading = ref(true);
@@ -220,7 +223,7 @@ function reset() {
     audioEffect: "001",
     status: "0"
   };
-  proxy?.resetForm("taskFormRef");
+  taskFormRef.value?.resetFields();
 }
 
 /** 搜索按钮操作 */
@@ -231,7 +234,7 @@ function handleQuery() {
 
 /** 重置按钮操作 */
 function resetQuery() {
-  proxy?.resetForm("queryFormRef");
+  queryFormRef.value?.resetFields();
   handleQuery();
 }
 
@@ -262,7 +265,7 @@ function handleUpdate(row?: any) {
 
 /** 提交按钮 */
 function submitForm() {
-  proxy?.$refs["taskFormRef"].validate((valid: boolean) => {
+  taskFormRef.value?.validate((valid: boolean) => {
     if (valid) {
       if (form.value.taskId != undefined) {
         updateTask(form.value).then(response => {
