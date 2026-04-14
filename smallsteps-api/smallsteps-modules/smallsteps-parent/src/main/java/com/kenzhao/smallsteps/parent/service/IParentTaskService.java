@@ -1,4 +1,4 @@
-package com.kenzhao.smallsteps.child.service;
+package com.kenzhao.smallsteps.parent.service;
 
 import com.kenzhao.smallsteps.common.mybatis.core.page.PageQuery;
 import com.kenzhao.smallsteps.common.mybatis.core.page.TableDataInfo;

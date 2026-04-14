@@ -1,4 +1,4 @@
-package com.kenzhao.smallsteps.child.mapper;
+package com.kenzhao.smallsteps.parent.mapper;
 
 import com.kenzhao.smallsteps.common.mybatis.core.mapper.BaseMapperPlus;
 import com.kenzhao.smallsteps.common.ss.domain.ParentTask;

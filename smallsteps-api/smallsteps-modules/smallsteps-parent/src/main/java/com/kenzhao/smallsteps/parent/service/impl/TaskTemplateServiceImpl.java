@@ -4,7 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.kenzhao.smallsteps.child.mapper.ParentTaskMapper;
+import com.kenzhao.smallsteps.parent.mapper.ParentTaskMapper;
 import com.kenzhao.smallsteps.common.mybatis.core.page.PageQuery;
 import com.kenzhao.smallsteps.common.mybatis.core.page.TableDataInfo;
 import com.kenzhao.smallsteps.common.ss.domain.ParentTask;
@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * ADHD 标准任务模板服务实现
@@ -79,7 +78,7 @@ public class TaskTemplateServiceImpl implements ITaskTemplateService {
         parentTask.setDeptId(deptId);
         parentTask.setUserId(userId);
         parentTask.setStatus("0"); // 进行中
-        
+
         parentTaskMapper.insert(parentTask);
         Long mainTaskId = parentTask.getTaskId();
 
@@ -96,9 +95,9 @@ public class TaskTemplateServiceImpl implements ITaskTemplateService {
             subTask.setUserId(userId);
             subTask.setStatus("0");
             // 子任务继承父任务的基础属性
-            subTask.setDifficulty(parentTask.getDifficulty()); 
+            subTask.setDifficulty(parentTask.getDifficulty());
             subTask.setPromptLevel(parentTask.getPromptLevel());
-            
+
             parentTaskMapper.insert(subTask);
         }
 

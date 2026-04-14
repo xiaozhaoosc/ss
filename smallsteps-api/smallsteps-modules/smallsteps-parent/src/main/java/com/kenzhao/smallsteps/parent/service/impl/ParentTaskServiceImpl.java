@@ -1,13 +1,13 @@
-package com.kenzhao.smallsteps.child.service.impl;
+package com.kenzhao.smallsteps.parent.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.kenzhao.smallsteps.common.mybatis.core.page.PageQuery;
 import com.kenzhao.smallsteps.common.mybatis.core.page.TableDataInfo;
 import com.kenzhao.smallsteps.common.ss.domain.ParentTask;
 import com.kenzhao.smallsteps.common.ss.domain.bo.ParentTaskBo;
 import com.kenzhao.smallsteps.common.ss.domain.vo.ParentTaskVo;
-import com.kenzhao.smallsteps.child.mapper.ParentTaskMapper;
-import com.kenzhao.smallsteps.child.service.IParentTaskService;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.kenzhao.smallsteps.parent.mapper.ParentTaskMapper;
+import com.kenzhao.smallsteps.parent.service.IParentTaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

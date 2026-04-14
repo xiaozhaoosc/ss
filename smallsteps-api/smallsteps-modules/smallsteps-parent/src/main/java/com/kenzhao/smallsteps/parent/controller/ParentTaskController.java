@@ -13,7 +13,7 @@ import com.kenzhao.smallsteps.common.mybatis.core.page.TableDataInfo;
 import com.kenzhao.smallsteps.common.web.core.BaseController;
 import com.kenzhao.smallsteps.common.ss.domain.bo.ParentTaskBo;
 import com.kenzhao.smallsteps.common.ss.domain.vo.ParentTaskVo;
-import com.kenzhao.smallsteps.child.service.IParentTaskService;
+import com.kenzhao.smallsteps.parent.service.IParentTaskService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
