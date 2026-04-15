@@ -272,3 +272,24 @@ warm-flow:
   node-tooltip: true
   # 默认Authorization，如果有多个token，用逗号分隔
   token-name: ${sa-token.token-name},clientid
+
+--- # AI 配置
+ai:
+  vllm:
+    baseUrl: http://192.168.1.9:8002/v1
+    apiKey: ken2zhao589612
+    api: openai-completions
+    models:
+      - id: qwen3.5-9b-q8_0
+        name: qwen3.5-9b-q8_0
+        reasoning: false
+        input:
+          - text
+          - image
+        cost:
+          input: 0
+          output: 0
+          cacheRead: 0
+          cacheWrite: 0
+        contextWindow: 24576
+        maxTokens: 8192
