@@ -9,3 +9,6 @@
 | 2026-04-12 | `global` | `BaseEntity` 包路径冲突 (`common-core` vs `common-mybatis`) | 中 | 待处理 | - |
 | 2026-04-12 | `global` | UI 自动化测试环境 (Playwright) 下载超时 | 中 | 待处理 | [[INBOX]] |
 | 2026-04-12 | `global` | Docker 镜像构建极慢，缺乏国内镜像加速配置 | 低 | 待处理 | [[INBOX]] |
+| 2026-04-14 | `docs` | 论文 v2/v4 技术栈描述不一致（MySQL vs Postgres），需统一叙述口径 | 高 | 待处理 | [[INBOX]] |
+| 2026-04-14 | `docs` | 参考文献格式未严格对齐 GB/T 7714-2015，v2/v4间存在微小差异 | 中 | 待处理 | [[INBOX]] |
+| 2026-04-14 | `docs` | 论文目录占位+页眉页脚需 Word 手动补全，非自动化 | 低 | 待处理 | [[thesis_docx_pipeline]] |

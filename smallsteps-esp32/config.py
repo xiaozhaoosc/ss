@@ -6,3 +6,6 @@ WIFI_PASS = "zzakxw3v"
 
 # BLE Name (Max 9 chars recommended for advertising packet limit)
 BLE_NAME = "SmallStep"
+
+# Voice Tree Hole Configuration
+VOICE_RETENTION_HOURS = 72 # 24 * 3 hours

@@ -17,6 +17,12 @@ class VoiceHolePage(Page):
         self.COLOR_HOLE = 0x001F # Deep Blue
         self.COLOR_REC = 0xF800  # Red
         
+    def on_enter(self, **kwargs):
+        # Every time we enter the "Tree Hole", cleanup expired secrets
+        # This keeps the experience fresh and private
+        self.device.cleanup_secrets()
+        super().on_enter(**kwargs)
+        
     def draw(self):
         fb = self.app.fb
         fb.fill(0x0000) # Black
