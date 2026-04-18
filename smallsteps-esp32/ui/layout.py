@@ -74,6 +74,24 @@ class SlidingWindowLayout:
         self.current_window_start_line = start_line_idx
         gc.collect() # Aggressive GC after heavy string scanning
 
+    def get_total_lines(self):
+        """
+        Scans all text to count total lines after wrapping.
+        For task items, text is short so this is cheap.
+        """
+        # Save current window state
+        saved_start = self.current_window_start_line
+        saved_window = self.line_window[:]
+        
+        # Scan everything
+        self.update_window(0, window_size=999)
+        total = len(self.line_window)
+        
+        # Restore state
+        self.current_window_start_line = saved_start
+        self.line_window = saved_window
+        return total
+
     def get_line_info(self, absolute_line_idx):
         """Returns (char_start, length) for a line index"""
         rel_idx = absolute_line_idx - self.current_window_start_line

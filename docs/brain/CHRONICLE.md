@@ -7,6 +7,17 @@
 
 ---
 
+### [2026-04-14] 毕业论文文档化里程碑
+- **事件**: 建立 `python-docx` 自动化流水线，批量生成符合上海应用技术大学格式规范的 `.docx` 论文文件。
+- **产物**: v2 + v4 两版论文 Word 文档，覆盖 MySQL 技术栈（v2）与 Postgres 技术栈（v4）两种叙述版本。
+- **意义**: 论文从内容撰写进入终稿排版阶段。标志着系统设计类毕设的"设计—实现—文档"三闭环贯通。
+- **关联**: [[thesis_docx_pipeline]] / [[2026-04-14]]
+
+### [2026-04-13] 系统功能开发收官
+- **事件**: 完成任务管理最后一批功能：100%进度自动更新、强制最新进展字段、管理后台状态/团队标记同步、奖品兑换通知。
+- **意义**: smallsteps-api / smallsteps-ui / smallsteps-app 三端核心功能进入冻结状态，转入论文写作与查重阶段。
+- **关联**: 参见会话 `886188a7` (Enhancing Project Management System)
+
 ### [2026-04-13] SATS 与 AOT 排版协议确立
 - **[DECISION]**: **SATS (SmallSteps Automated Testing Suite)** 设计方案定稿。
     - 确立了 API, UI, App, System 四位一体的自动化测试路径。

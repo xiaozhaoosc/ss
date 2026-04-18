@@ -1,4 +1,6 @@
 from machine import Pin, SPI, I2S, UART
+import os
+import utime
 import neopixel
 import st7735
 from dfplayermini import DFPlayerMini
@@ -223,4 +225,48 @@ class DeviceManager:
             if 'audio_in' in locals():
                 audio_in.deinit()
             return False
+
+    def cleanup_secrets(self, directory="wavs"):
+        # Ensure retention hours configuration
+        retention_hours = config.VOICE_RETENTION_HOURS
+        now = utime.time()
+        
+        # Security Check: If RTC is not synchronized (reset to 1970/2000), 
+        # utime.time() will be a small number. We skip cleanup to avoid deleting fresh files.
+        # Assuming 2024-01-01 is roughly 1704067200
+        if now < 1704067200:
+            print("RTC not synchronized. Skipping cleanup.")
+            return
+
+        try:
+            # Check if directory exists
+            try:
+                files = os.listdir(directory)
+            except OSError:
+                print(f"Directory {directory} not found. Nothing to cleanup.")
+                return
+
+            print(f"Checking for expired secrets in {directory}...")
+            count = 0
+            for f in files:
+                filepath = directory + "/" + f
+                try:
+                    stats = os.stat(filepath)
+                    mtime = stats[8] # 8 is st_mtime in MicroPython
+                    age_hours = (now - mtime) / 3600
+                    
+                    if age_hours > retention_hours:
+                        print(f"Deleting expired secret: {f} (Age: {age_hours:.1f}h)")
+                        os.remove(filepath)
+                        count += 1
+                except Exception as e:
+                    print(f"Failed to process {f}: {e}")
+            
+            if count > 0:
+                print(f"Cleanup complete. Removed {count} files.")
+            else:
+                print("No expired files found.")
+                
+        except Exception as e:
+            print(f"Cleanup Failed: {e}")
 

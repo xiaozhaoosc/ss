@@ -16,7 +16,8 @@
 - [[ADR-002-Family-Dept-Mapping]] - Family 与系统部门的映射决策
 
 ## 每日记录 (Journal)
-- [[2026-04-12]] (今日记录 - 知识花园体系化 & 环境阻塞分析)
+- [[2026-04-14]] (论文多版本 Word 格式化生成 & 自动化流水线)
+- [[2026-04-12]] (知识花园体系化 & 环境阻塞分析)
 - [[2026-04-09]] (历史记录 - Docker 镜像构建状态同步)
 - [[2026-04-08]] (历史记录 - 角色分流修复 & 数据库模型增强)
 - [[20260408_Parent模块工程化重构纪要]] (关键会议记录)
@@ -27,3 +28,4 @@
 - [smallsteps-api 模块](file:///d:/office/jushuang1/github/ss/smallsteps-api/README.md)
 - [smallsteps-esp32 核心文档](file:///d:/office/jushuang1/github/ss/docs/esp32/README.md)
 - [论文 v6 文档](file:///d:/office/jushuang1/github/ss/论文/v6/README.md)
+- [[thesis_docx_pipeline]] (论文 Word 自动化生成流水线)
