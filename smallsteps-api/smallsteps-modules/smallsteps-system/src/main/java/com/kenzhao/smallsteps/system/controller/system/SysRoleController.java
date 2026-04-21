@@ -16,6 +16,7 @@ import com.kenzhao.smallsteps.system.domain.SysUserRole;
 import com.kenzhao.smallsteps.system.domain.bo.SysDeptBo;
 import com.kenzhao.smallsteps.system.domain.bo.SysRoleBo;
 import com.kenzhao.smallsteps.system.domain.bo.SysUserBo;
+import com.kenzhao.smallsteps.system.domain.vo.SysDeptTreeSelectVo;
 import com.kenzhao.smallsteps.system.domain.vo.SysRoleVo;
 import com.kenzhao.smallsteps.system.domain.vo.SysUserVo;
 import com.kenzhao.smallsteps.system.service.ISysDeptService;
@@ -228,8 +229,8 @@ public class SysRoleController extends BaseController {
      */
     @SaCheckPermission("system:role:list")
     @GetMapping(value = "/deptTree/{roleId}")
-    public R<DeptTreeSelectVo> roleDeptTreeselect(@PathVariable("roleId") Long roleId) {
-        DeptTreeSelectVo selectVo = new DeptTreeSelectVo(
+    public R<SysDeptTreeSelectVo> roleDeptTreeselect(@PathVariable("roleId") Long roleId) {
+        SysDeptTreeSelectVo selectVo = new SysDeptTreeSelectVo(
             deptService.selectDeptListByRoleId(roleId),
             deptService.selectDeptTreeList(new SysDeptBo()));
         return R.ok(selectVo);
@@ -241,6 +242,6 @@ public class SysRoleController extends BaseController {
      * @param checkedKeys 选中部门列表
      * @param depts       下拉树结构列表
      */
-    public record DeptTreeSelectVo(List<Long> checkedKeys, List<Tree<Long>> depts) {}
+
 
 }

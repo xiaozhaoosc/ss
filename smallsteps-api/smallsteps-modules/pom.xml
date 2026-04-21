@@ -10,13 +10,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <modules>
-        <module>smallsteps-demo</module>
-        <module>smallsteps-generator</module>
-        <module>smallsteps-job</module>
+        <!--        <module>smallsteps-demo</module>-->
+        <!--        <module>smallsteps-generator</module>-->
+        <!--        <module>smallsteps-job</module>-->
         <module>smallsteps-system</module>
-        <module>smallsteps-workflow</module>
+        <!--        <module>smallsteps-workflow</module>-->
         <module>smallsteps-child</module>
         <module>smallsteps-parent</module>
+        <module>smallsteps-task</module>
     </modules>
 
     <artifactId>smallsteps-modules</artifactId>

@@ -17,17 +17,22 @@ SHANGHAI INSTITUTE OF TECHNOLOGY
 
 ADHD中小学生（儿童）行为习惯辅助系统设计与实现
 
-摘要：注意缺陷多动障碍（Attention Deficit Hyperactivity Disorder, ADHD）是学龄期儿童较为普遍的神经发育性障碍，核心表现为注意力维持困难、活动过度及行为冲动。当前主流的药物调控与线下行为矫正在副作用风险、执行一致性等方面存在不足。借助数字化手段实施辅助干预已成新趋势，但现有软件在认知减负定制、亲子协同交互及动态激励等环节仍存短板。
-针对上述不足，设计并实现了一套面向ADHD中小学生的行为习惯养成综合辅助系统——“小步（Small Steps）”。系统采用前后端分离架构，通过儿童端、家长端和管理后台的协同，构建涵盖渐进式任务拆解、多模态激励与情绪追踪的数字化干预闭环。技术层面，后端基于Spring Boot 3与MyBatis-Plus搭建，选用Sa-Token实现多角色鉴权，采用Postgres与Redis管理数据；移动端利用UniApp与Vue 3实现双模式动态切换，通过TailwindCSS进行界面渲染。
-系统的核心创新在于集成大语言模型（LLM），通过分析儿童行为数据动态输出个性化寄语与激励建议，缓解执行疲劳，并引导家长从“检查者”转向“陪伴者”。测试表明，系统运行稳定且交互流畅，为ADHD日常数字辅助干预提供了可落地的工程实践方案。
+摘要：	注意缺陷多动障碍（Attention Deficit Hyperactivity Disorder, ADHD）是学龄期儿童中较为普遍的一类神经发育性障碍，其核心临床表现涵盖注意力维持困难、活动过度以及行为冲动三个维度。受上述症状影响，患儿在学业成绩、同伴社交以及日常行为规范的习得方面往往承受较大压力。现阶段，针对该障碍的主流干预路径仍以药物调控与线下行为矫正为主，但此类方法在药物副作用风险、专业康复师资稀缺以及家庭干预执行一致性等层面存在较为突出的不足。伴随移动互联网基础设施与人工智能算法的持续演进，借助数字化手段对ADHD实施辅助干预已逐步成为该领域的前沿研究方向之一。然而，就已有的软件产品而言，多数停留在日程提醒层面，在认知减负定制化设计、亲子协同交互以及动态激励反馈等关键环节仍存在明显短板。
+针对上述不足，本课题设计并实现了一套面向ADHD中小学生的行为习惯养成综合辅助系统——"小步（Small Steps）"。该系统依据前后端分离的架构思路进行整体规划，通过儿童移动端、家长移动端和管理后台三个终端的协同运作，构建了涵盖渐进式任务拆解、多模态激励、情绪追踪与家庭系统协同的数字化干预闭环。
+在技术实现层面，后端服务基于Spring Boot 3.5.9框架搭建，借助MyBatis-Plus完成数据持久化与业务查询的高效封装。权限管控方面，选用轻量级安全框架Sa-Token构建"儿童-家长-管理员"三重角色鉴权机制。数据存储采用Postgres 15承担关系型数据管理职责，同时引入Redis提供缓存加速与基于Token的会话管理支撑。移动端采用跨平台框架UniApp 3.0配合Vue 3的Composition API与Pinia状态管理实现儿童和家长双模式的动态切换，通过TailwindCSS进行响应式界面渲染。管理后台基于Vue 3与Element Plus搭建，提供数据看板、用户运营及策略配置的图形化操作界面。
+系统的核心创新在于将生成式大语言模型（LLM）能力以智能辅助模块的形式集成至后端，该模块通过解析儿童的任务完成轨迹与专注时长分布，动态输出个性化的每日寄语与奖励策略建议，旨在缓解重复打卡所带来的执行疲劳。同时，系统借助多维度数据可视化与家庭成员间的互动机制，谋求将家长的角色从传统的"检查者"引导至"陪伴者"方向。
+经过多轮功能测试与交互验证，系统各模块运行稳定，数据交互流畅，基本达到了预期的功能指标与业务目标。本课题不仅为ADHD儿童的日常辅助干预提供了一种可落地的数字化工具方案，也为基于现代前端框架与智能后端架构的数字疗法类产品积累了一定的工程实践经验。
 关键词：注意力缺陷多动障碍；行为干预；Spring Boot 3；UniApp；Vue 3；前后端分离
 
 
 Design and Implementation of ADHD Behavior Support System for Children
 
-Abstract: Attention Deficit Hyperactivity Disorder (ADHD) is a prevalent neurodevelopmental disorder among school-age children, primarily characterized by difficulties in sustaining attention, hyperactivity, and impulsivity. Current mainstream pharmacological and offline behavioral interventions have limitations in side effect risks and execution consistency. Software-assisted intervention has become a new trend, but existing tools still lack customized cognitive load reduction, parent-child synergy, and dynamic motivation.
-Addressing these shortcomings, "Small Steps", a comprehensive behavioral habit-building support system for ADHD students, is designed and implemented. Using a front-end and back-end separation architecture, the system operates across child, parent, and management terminals to create a closed-loop digital intervention encompassing progressive task breakdown, multimodal motivation, and emotion tracking. Technically, the backend is built with Spring Boot 3 and MyBatis-Plus, integrated with Sa-Token for multi-role authentication, and utilizes Postgres and Redis for data management. The mobile application uses UniApp and Vue 3 for dynamic dual-mode switching and TailwindCSS for interface rendering.
-The system's core innovation lies in integrating Large Language Models (LLM) to dynamically generate personalized messages and motivation strategies based on behavioral data. This aims to alleviate execution fatigue and shift the parents' role from "inspectors" to "companions". Tests show that the system is stable and user-friendly, providing a practical engineering paradigm for daily ADHD digital interventions.
+Abstract: 	Attention Deficit Hyperactivity Disorder (ADHD) is one of the most common neurodevelopmental disorders in school-aged children, characterized by core symptoms of inattention, hyperactivity, and impulsivity. These symptoms lead to significant challenges in academic performance, social interaction, and daily behavioral norms. Traditional intervention methods mainly rely on medication and manual behavioral therapy, which suffer from distinct limitations such as side effects, scarcity of professional rehabilitation resources, and poor sustainability of family-level interventions. With the continuous advancement of mobile internet and artificial intelligence technologies, digitally assisted interventions have gradually become a crucial research direction in the field of ADHD rehabilitation. However, most existing assistance systems focus on simple scheduling lacking customized designs tailored to the cognitive patterns of children with ADHD, and perform inadequately in parent-child collaboration, dynamic motivation, and data feedback.
+To address the aforementioned problems, this project designs and implements a comprehensive assistance system focusing on cultivating the behavioral habits of primary and middle school students with ADHD. Adopting a microservice-oriented architecture with separated front-end and back-end, the system builds a digital closed-loop supporting progressive task decomposition, multi-modal incentives, emotional state tracking, and family system collaboration through multi-terminal synergy (children's mobile app, parents' mobile app, and management backend).
+In terms of technical architecture, the core backend services are built upon the latest Spring Boot 3.5.9 framework, utilizing MyBatis-Plus to achieve efficient data persistence and encapsulation of complex business query layers. To ensure system-level security and fine-grained permission isolation, the lightweight security framework Sa-Token is introduced to construct a comprehensive multi-role (child, parent, administrator) authentication system. The data layer employs Postgres 15 for relational data governance and introduces Redis to provide high-performance caching and Token-based session management support, ensuring the system's response speed and stability under high-concurrency requests.
+At the front-end implementation level, the system covers user-oriented mobile applications (App) and an administrator-oriented Web interface. The mobile application adopts the cross-platform framework UniApp 3.0, combining Vue 3's Composition API and the Pinia state management mechanism to achieve seamless and smooth switching between child and parent modes as well as global state sharing. Responsive and highly customized UI rendering is realized through TailwindCSS. The child interface emphasizes gamified feedback and cognitive load reduction, offering core functions like Pomodoro focus and fragmented task guidance; the parent interface focuses on task publication, data visualization, and emotional accompaniment management. The management backend is developed based on Vue 3 and Element Plus, providing a graphical management interface for comprehensive data dashboards, user management, and assistance strategy configuration.
+The core innovation of the system lies in internally integrating advanced generative Large Language Model (LLM) capabilities into the system backend as an intelligent assistance module to deeply empower basic business processes. By analyzing the daily task completion status, focus duration distribution, and expressed emotions of children, this module dynamically generates personalized daily messages and reward suggestions, effectively alleviating the execution fatigue brought by monotonous check-ins. Furthermore, through multi-dimensional data visualization and interactive mechanisms between family members, the structural tension in ADHD families is reshaped, transforming the parents' role from "inspectors" to "companions."
+Through multiple rounds of system testing and usability evaluations, all functional modules of this system operate stably, front-end and back-end data interactions are efficient, and page rendering is smooth, meeting the performance indicators and business requirement criteria set out at the initial stage of design. The research and development of this project not only provide a lightweight and digital effective tool for the daily intervention of ADHD children but also offer a referential engineering implementation paradigm for digital therapeutic products based on modern front-end frameworks and intelligent back-end architectures.
 Keywords:（ADHD; Behavioral Intervention; Spring Boot 3; UniApp; Vue 3; Front-end and Back-end Separation）
 
 目  录
@@ -503,17 +508,7 @@ onBackPress((options) => {
 
 致谢
 
-时光荏苒，岁月如梭，转眼间本科阶段的学习与生活即将落下帷幕。本篇毕业论文的完成，既是对我所学知识的总结，也是我人生旅途中一段宝贵的经历。在此，我谨向所有在我的学业、生活以及论文写作过程中给予我无私帮助与支持的人，表达最诚挚的谢意。
-
-在此，对在学术钻研路上给予我无私引领的指导老师、在开发阶段奉献试用的家庭用户，以及不断推陈出新构建繁荣开源世界的极客同行们，致以最诚挚的敬意。
-
-首先，我要特别感谢我的指导老师薛庆水。从本课题的初步构思、系统架构的设计到最终论文的定稿，薛老师都倾注了大量心血。老师严谨的治学态度与渊博的专业知识，使我能够顺利克服难关，在工程实践上受益匪浅。
-
-其次，我由衷感谢在系统测试阶段，愿意抽出宝贵时间参与试用的多动症儿童家庭。正是有了您们的真实反馈，本系统才得以不断优化完善，切中用户痛点。您们的信任，赋予了这些代码真实的社会价值与温度。
-
-此外，感谢开源社区中无数默默奉献的极客同行。正是您们不断推陈出新，构建了繁荣的开源生态，使得本系统能够站在巨人的肩膀上快速落地。
-
-最后，感谢母校上海应用技术大学提供的优良学习环境，感谢家人的包容与陪伴。未来，我将带着这份感恩，继续怀揣对技术的热爱不断探索，砥砺前行。
+在此，对在学术研究过程中给予悉心指导的老师、在系统开发阶段提供使用反馈的试用家庭，以及为开源技术生态持续贡献力量的开发者社区，表达最诚挚的谢意。
 
 参考文献
 

@@ -19,7 +19,9 @@ import com.kenzhao.smallsteps.system.domain.bo.SysUserBo;
 import com.kenzhao.smallsteps.system.domain.bo.SysUserPasswordBo;
 import com.kenzhao.smallsteps.system.domain.bo.SysUserProfileBo;
 import com.kenzhao.smallsteps.system.domain.vo.ProfileUserVo;
+import com.kenzhao.smallsteps.system.domain.vo.SysAvatarVo;
 import com.kenzhao.smallsteps.system.domain.vo.SysOssVo;
+import com.kenzhao.smallsteps.system.domain.vo.SysProfileVo;
 import com.kenzhao.smallsteps.system.domain.vo.SysUserVo;
 import com.kenzhao.smallsteps.system.service.ISysOssService;
 import com.kenzhao.smallsteps.system.service.ISysUserService;
@@ -48,13 +50,13 @@ public class SysProfileController extends BaseController {
      * 个人信息
      */
     @GetMapping
-    public R<ProfileVo> profile() {
+    public R<SysProfileVo> profile() {
         SysUserVo user = userService.selectUserById(LoginHelper.getUserId());
         String roleGroup = userService.selectUserRoleGroup(user.getUserId());
         String postGroup = userService.selectUserPostGroup(user.getUserId());
         // 单独做一个vo专门给个人中心用 避免数据被脱敏
         ProfileUserVo profileUser = BeanUtil.toBean(user, ProfileUserVo.class);
-        ProfileVo profileVo = new ProfileVo(profileUser, roleGroup, postGroup);
+        SysProfileVo profileVo = new SysProfileVo(profileUser, roleGroup, postGroup);
         return R.ok(profileVo);
     }
 
@@ -114,7 +116,7 @@ public class SysProfileController extends BaseController {
     @RepeatSubmit
     @Log(title = "用户头像", businessType = BusinessType.UPDATE)
     @PostMapping(value = "/avatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public R<AvatarVo> avatar(@RequestPart("avatarfile") MultipartFile avatarfile) {
+    public R<SysAvatarVo> avatar(@RequestPart("avatarfile") MultipartFile avatarfile) {
         if (ObjectUtil.isNotNull(avatarfile) && !avatarfile.isEmpty()) {
             String extension = FileUtil.extName(avatarfile.getOriginalFilename());
             if (!StringUtils.equalsAnyIgnoreCase(extension, MimeTypeUtils.IMAGE_EXTENSION)) {
@@ -124,7 +126,7 @@ public class SysProfileController extends BaseController {
             String avatar = oss.getUrl();
             boolean updateSuccess = DataPermissionHelper.ignore(() -> userService.updateUserAvatar(LoginHelper.getUserId(), oss.getOssId()));
             if (updateSuccess) {
-                return R.ok(new AvatarVo(avatar));
+                return R.ok(new SysAvatarVo(avatar));
             }
         }
         return R.fail("上传图片异常，请联系管理员");
@@ -135,15 +137,6 @@ public class SysProfileController extends BaseController {
      *
      * @param imgUrl 头像地址
      */
-    public record AvatarVo(String imgUrl) {}
 
-    /**
-     * 用户个人信息
-     *
-     * @param user      用户信息
-     * @param roleGroup 用户所属角色组
-     * @param postGroup 用户所属岗位组
-     */
-    public record ProfileVo(ProfileUserVo user, String roleGroup, String postGroup) {}
 
 }

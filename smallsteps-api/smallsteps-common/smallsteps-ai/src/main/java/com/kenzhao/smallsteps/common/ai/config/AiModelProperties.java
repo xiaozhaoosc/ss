@@ -8,15 +8,18 @@ import java.util.List;
 
 @Data
 @Configuration
-@ConfigurationProperties(prefix = "ai.models")
+@ConfigurationProperties(prefix = "ai.vllm")
 public class AiModelProperties {
-    private List<ModelConfig> configs;
+    private String baseUrl;
+    private String apiKey;
+    private String api;
+    private List<ModelConfig> models;
 
     @Data
     public static class ModelConfig {
+        private String id;
         private String name;
-        private String apiKey;
-        private String apiUrl;
-        private String modelType;
+        private boolean reasoning;
+        private List<String> input;
     }
 }

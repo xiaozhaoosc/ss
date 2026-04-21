@@ -17,12 +17,10 @@ import java.util.Map;
 public class AiController {
 
     private final IAiRouterService aiRouterService;
+    private final com.kenzhao.smallsteps.common.ai.service.IAiService aiService;
 
     /**
      * 路由 AI 模型
-     * @param sceneKey 业务场景
-     * @param userId 用户ID
-     * @return 选中的模型配置
      */
     @GetMapping("/route")
     public R<AiModel> route(@RequestParam String sceneKey, @RequestParam(required = false) Long userId) {
@@ -31,43 +29,40 @@ public class AiController {
     }
 
     /**
-     * AI 聊天接口
-     * @param request 请求参数
-     * @return 聊天响应
+     * AI 任务拆解接口 (对齐前端)
+     * @param params 请求参数
+     * @return 拆解结果
      */
-    @PostMapping("/chat")
-    public R<String> chat(@RequestBody Map<String, Object> request) {
-        // TODO: 实现 AI 聊天功能
-        // 1. 获取用户输入
-        // 2. 路由到合适的 AI 模型
-        // 3. 调用 AI 模型生成响应
-        // 4. 返回响应结果
-        String message = (String) request.get("message");
-        String response = "AI 回复: " + message;
-        return R.ok(response);
+    @PostMapping("/taskBreakdown")
+    public R<java.util.List<java.util.Map<String, String>>> taskBreakdown(@RequestBody java.util.Map<String, Object> params) {
+        String taskName = (String) params.get("taskName");
+        String taskDesc = (String) params.get("taskDesc");
+        Object ageObj = params.get("childAge");
+        int childAge = 8; // 默认 8 岁
+        if (ageObj instanceof Number) {
+            childAge = ((Number) ageObj).intValue();
+        } else if (ageObj instanceof String) {
+            childAge = Integer.parseInt((String) ageObj);
+        }
+
+        java.util.List<java.util.Map<String, String>> steps = aiService.taskBreakdown(taskName, taskDesc, childAge);
+        return R.ok(steps);
     }
 
     /**
-     * AI 任务拆解接口
-     * @param request 请求参数
-     * @return 拆解结果
+     * AI 任务拆解接口 (保留兼容)
      */
     @PostMapping("/task/decompose")
-    public R<Map<String, Object>> decomposeTask(@RequestBody Map<String, Object> request) {
-        // TODO: 实现任务拆解功能
-        // 1. 获取任务描述
-        // 2. 调用 AI 模型拆解任务
-        // 3. 返回拆解结果
-        String taskDescription = (String) request.get("taskDescription");
-        Map<String, Object> result = Map.of(
-            "taskDescription", taskDescription,
-            "subTasks", java.util.List.of(
-                "子任务1: 准备材料",
-                "子任务2: 开始执行",
-                "子任务3: 完成检查"
-            ),
-            "estimatedTime", "30分钟"
-        );
+    public R<java.util.Map<String, Object>> decomposeTask(@RequestBody java.util.Map<String, Object> request) {
+        String taskName = (String) request.get("taskName");
+        if (taskName == null) taskName = (String) request.get("taskDescription");
+        
+        java.util.List<java.util.Map<String, String>> steps = aiService.taskBreakdown(taskName, "", 8);
+        
+        java.util.Map<String, Object> result = new java.util.HashMap<>();
+        result.put("taskDescription", taskName);
+        result.put("subTasks", steps);
+        result.put("estimatedTime", "30分钟");
         return R.ok(result);
     }
 
