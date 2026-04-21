@@ -53,6 +53,12 @@
             <artifactId>rest-assured</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.kenzhao.smallsteps</groupId>
+            <artifactId>smallsteps-common-ai</artifactId>
+            <version>0.0.1</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
 </project>

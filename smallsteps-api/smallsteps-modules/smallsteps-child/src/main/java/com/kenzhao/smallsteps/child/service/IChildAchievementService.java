@@ -55,4 +55,9 @@ public interface IChildAchievementService {
      * 总勇气碎片数
      */
     Integer selectTotalCourageFragmentsByChildId(Long childId);
+
+    /**
+     * 检查并解锁勋章
+     */
+    void checkAndUnlockBadges(Long childId);
 }

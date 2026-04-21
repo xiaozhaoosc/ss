@@ -60,18 +60,26 @@ public class ChildTaskController extends BaseController {
     /**
      * 查询儿童待执行任务
      */
-    @GetMapping("/pending/{childId}")
-    public R<List<ChildTaskVo>> pendingTasks(@PathVariable("childId") Long childId) {
-        List<ChildTaskVo> list = childTaskService.selectPendingTasksByChildId(childId);
+    @GetMapping({"/pending/{childId}", "/pending"})
+    public R<List<ChildTaskVo>> pendingTasks(@PathVariable(required = false) Long childId, @RequestParam(required = false) Long cid) {
+        Long finalChildId = childId != null ? childId : cid;
+        if (finalChildId == null) {
+            return R.fail("未选择儿童");
+        }
+        List<ChildTaskVo> list = childTaskService.selectPendingTasksByChildId(finalChildId);
         return R.ok(list);
     }
 
     /**
      * 查询儿童正在执行的任务
      */
-    @GetMapping("/current/{childId}")
-    public R<ChildTaskVo> currentTask(@PathVariable("childId") Long childId) {
-        ChildTaskVo childTask = childTaskService.selectCurrentTaskByChildId(childId);
+    @GetMapping({"/current/{childId}", "/current"})
+    public R<ChildTaskVo> currentTask(@PathVariable(required = false) Long childId, @RequestParam(required = false) Long cid) {
+        Long finalChildId = childId != null ? childId : cid;
+        if (finalChildId == null) {
+            return R.fail("未选择儿童");
+        }
+        ChildTaskVo childTask = childTaskService.selectCurrentTaskByChildId(finalChildId);
         return R.ok(childTask);
     }
 

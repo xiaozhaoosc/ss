@@ -28,10 +28,11 @@
 
     <scroll-view scroll-y class="main-content no-scrollbar">
       <!-- Robot Avatar Area -->
-      <view class="robot-area">
+      <view class="robot-area" @click="handleRobotClick">
         <!-- Speech Bubble -->
         <view class="speech-bubble">
           <text class="bubble-text">Ready for your next mission, {{ childName }}? 🤖</text>
+          <view class="tap-hint">Tap me to chat!</view>
         </view>
         
         <!-- Robot Image -->
@@ -163,6 +164,12 @@ const navigateToTask = (taskId: number) => {
 
 const handleQuickLink = (name: string) => {
   uni.showToast({ title: `Open ${name}`, icon: 'none' })
+}
+
+const handleRobotClick = () => {
+  uni.navigateTo({
+    url: '/pages/child/treehole-chat/index'
+  })
 }
 
 onShow(() => {
@@ -305,6 +312,16 @@ onShow(() => {
   text-align: center;
   color: #1c140d;
   line-height: 1.3;
+}
+
+.tap-hint {
+  font-size: 10px;
+  color: #0EA5E9;
+  text-align: center;
+  margin-top: 4px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .robot-circle {

@@ -84,6 +84,7 @@ import { ref } from 'vue'
 import TopBar from '@/components/common/top-bar/top-bar.vue'
 import TaskStep from '@/components/parent/task-step/task-step.vue'
 import BottomNav from '@/components/common/bottom-nav/bottom-nav.vue'
+import { taskBreakdown } from '@/api/ai'
 import { addTask } from '@/api/task'
 import { useUserStore } from '@/store/modules/user'
 
@@ -102,22 +103,35 @@ const steps = ref([
   { title: '拿上书包', description: '确认作业都在书包里' }
 ])
 
-const handleAiBreakdown = () => {
+const handleAiBreakdown = async () => {
   if (!taskInput.value) {
     uni.showToast({ title: '请先输入任务描述', icon: 'none' })
     return
   }
   
   isBreakingDown.value = true
-  setTimeout(() => {
+  try {
+    const res: any = await taskBreakdown({
+      taskName: taskInput.value,
+      taskDesc: '',
+      childAge: 8 // 默认年龄，后续可从 store 或设置中获取
+    })
+    
+    if (res.code === 200 && res.data) {
+      steps.value = res.data.map((item: any) => ({
+        title: item.stepName || '新步骤',
+        description: item.stepDesc || ''
+      }))
+      uni.showToast({ title: '拆解成功', icon: 'success' })
+    } else {
+      throw new Error(res.msg || '拆解失败')
+    }
+  } catch (error) {
+    console.error('AI breakdown error:', error)
+    uni.showToast({ title: 'AI 拆解服务暂不可用', icon: 'none' })
+  } finally {
     isBreakingDown.value = false
-    steps.value = [
-      { title: '整理文具', description: '检查铅笔盒，确保笔都削好了' },
-      { title: '核对课表', description: '按明天课程准备课本' },
-      { title: '准备水壶', description: '洗净并装满温水' }
-    ]
-    uni.showToast({ title: '拆解成功', icon: 'success' })
-  }, 1500)
+  }
 }
 
 const handleAddStep = () => {

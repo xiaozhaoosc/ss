@@ -16,6 +16,7 @@
 - [[ADR-002-Family-Dept-Mapping]] - Family 与系统部门的映射决策
 
 ## 每日记录 (Journal)
+- [[2026-04-21]] (情绪动力系统交付 & API 404 路径稳定性加固)
 - [[2026-04-14]] (论文多版本 Word 格式化生成 & 自动化流水线)
 - [[2026-04-12]] (知识花园体系化 & 环境阻塞分析)
 - [[2026-04-09]] (历史记录 - Docker 镜像构建状态同步)
@@ -23,6 +24,8 @@
 - [[20260408_Parent模块工程化重构纪要]] (关键会议记录)
 
 ## 研发文档
+- [[Emotion-Feedback-Loop-Architecture]] (AI 情绪解析闭环架构)
+- [[Automatized-Achievement-System]] (自动化勋章激励逻辑)
 - [[Device-Interaction-Flow]] (设备交互流)
 - [[ADHD-Education-Psychology]] (理论基础)
 - [smallsteps-api 模块](file:///d:/office/jushuang1/github/ss/smallsteps-api/README.md)

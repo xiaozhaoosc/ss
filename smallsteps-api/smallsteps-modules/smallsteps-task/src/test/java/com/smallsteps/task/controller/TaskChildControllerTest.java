@@ -1,16 +1,17 @@
 package com.smallsteps.task.controller;
 
+import com.kenzhao.smallsteps.task.controller.TaskChildController;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(ChildTaskController.class)
-public class ChildTaskControllerTest {
+@WebMvcTest(TaskChildController.class)
+public class TaskChildControllerTest {
 
     @Autowired
     private MockMvc mockMvc;

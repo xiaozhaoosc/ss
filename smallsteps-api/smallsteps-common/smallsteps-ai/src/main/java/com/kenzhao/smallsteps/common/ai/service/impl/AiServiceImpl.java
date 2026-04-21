@@ -107,13 +107,43 @@ public class AiServiceImpl implements IAiService {
      * 提取并解析情绪分析响应
      */
     private Map<String, Object> parseEmotionAnalysisResponse(String response) {
+        Map<String, Object> result = new HashMap<>();
         try {
             String jsonContent = extractJson(response);
-            return JsonUtils.parseMap(jsonContent);
+            Map<String, Object> map = JsonUtils.parseMap(jsonContent);
+            
+            String emotion = String.valueOf(map.getOrDefault("emotion", ""));
+            int type = mapEmotionToType(emotion);
+            
+            result.put("emotion", emotion);
+            result.put("emotionType", type); // 额外增加数字类型，方便数据库存储
+            result.put("level", map.getOrDefault("level", 3));
+            result.put("suggestion", map.getOrDefault("suggestion", "继续观察并给予孩子支持。"));
+            return result;
         } catch (Exception e) {
             log.error("Failed to parse AI emotion analysis response: {}", response, e);
-            throw new RuntimeException("AI响应格式解析失败");
+            // 回退逻辑：尝试模糊匹配
+            if (response.contains("开心") || response.contains("快乐")) result.put("emotionType", 1);
+            else if (response.contains("难过") || response.contains("伤心")) result.put("emotionType", 2);
+            else if (response.contains("愤怒") || response.contains("暴躁")) result.put("emotionType", 3);
+            else if (response.contains("焦虑") || response.contains("害怕")) result.put("emotionType", 4);
+            else result.put("emotionType", 5);
+            
+            result.put("emotion", "分析中");
+            result.put("level", 3);
+            result.put("suggestion", "AI 解析响应异常，请人工查看输入内容。");
+            return result;
         }
+    }
+
+    private int mapEmotionToType(String emotion) {
+        if (emotion == null) return 5;
+        if (emotion.contains("开心") || emotion.contains("快乐")) return 1;
+        if (emotion.contains("难过") || emotion.contains("伤心")) return 2;
+        if (emotion.contains("愤怒") || emotion.contains("生气") || emotion.contains("暴躁")) return 3;
+        if (emotion.contains("焦虑") || emotion.contains("焦虑") || emotion.contains("害怕")) return 4;
+        if (emotion.contains("平静") || emotion.contains("安稳")) return 5;
+        return 5;
     }
 
     /**

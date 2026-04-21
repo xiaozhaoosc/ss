@@ -12,3 +12,5 @@
 | 2026-04-14 | `docs` | 论文 v2/v4 技术栈描述不一致（MySQL vs Postgres），需统一叙述口径 | 高 | 待处理 | [[INBOX]] |
 | 2026-04-14 | `docs` | 参考文献格式未严格对齐 GB/T 7714-2015，v2/v4间存在微小差异 | 中 | 待处理 | [[INBOX]] |
 | 2026-04-14 | `docs` | 论文目录占位+页眉页脚需 Word 手动补全，非自动化 | 低 | 待处理 | [[thesis_docx_pipeline]] |
+| 2026-04-21 | `smallsteps-common` | Lombok 在跨模块继承时方法丢失 (需手动 install 或使用 BeanUtil) | 高 | 部分解决 | [[JOURNAL]] |
+| 2026-04-21 | `controller` | PathVariable 强制性导致 ID 缺失时接口 404，需全量扫描并重构为 Optional | 中 | 处理中 | [[JOURNAL]] |

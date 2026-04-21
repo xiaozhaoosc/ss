@@ -48,43 +48,14 @@ public class ParentTaskServiceImpl implements IParentTaskService {
     @Override
     public boolean insertByBo(ParentTaskBo bo) {
         ParentTask parentTask = new ParentTask();
-        // 复制属性
-        parentTask.setParentId(bo.getParentId());
-        parentTask.setUserId(bo.getUserId());
-        parentTask.setTitle(bo.getTitle());
-        parentTask.setDescription(bo.getDescription());
-        parentTask.setStatus(bo.getStatus());
-        parentTask.setDifficulty(bo.getDifficulty());
-        parentTask.setPromptLevel(bo.getPromptLevel());
-        parentTask.setCycleType(bo.getCycleType());
-        parentTask.setRewardPoints(bo.getRewardPoints());
-        parentTask.setLightEffect(bo.getLightEffect());
-        parentTask.setAudioEffect(bo.getAudioEffect());
-        parentTask.setCreateBy(bo.getCreateBy());
-        parentTask.setCreateTime(bo.getCreateTime());
-        parentTask.setUpdateBy(bo.getUpdateBy());
-        parentTask.setUpdateTime(bo.getUpdateTime());
+        cn.hutool.core.bean.BeanUtil.copyProperties(bo, parentTask);
         return parentTaskMapper.insert(parentTask) > 0;
     }
 
     @Override
     public boolean updateByBo(ParentTaskBo bo) {
         ParentTask parentTask = new ParentTask();
-        // 复制属性
-        parentTask.setTaskId(bo.getTaskId());
-        parentTask.setParentId(bo.getParentId());
-        parentTask.setUserId(bo.getUserId());
-        parentTask.setTitle(bo.getTitle());
-        parentTask.setDescription(bo.getDescription());
-        parentTask.setStatus(bo.getStatus());
-        parentTask.setDifficulty(bo.getDifficulty());
-        parentTask.setPromptLevel(bo.getPromptLevel());
-        parentTask.setCycleType(bo.getCycleType());
-        parentTask.setRewardPoints(bo.getRewardPoints());
-        parentTask.setLightEffect(bo.getLightEffect());
-        parentTask.setAudioEffect(bo.getAudioEffect());
-        parentTask.setUpdateBy(bo.getUpdateBy());
-        parentTask.setUpdateTime(bo.getUpdateTime());
+        cn.hutool.core.bean.BeanUtil.copyProperties(bo, parentTask);
         return parentTaskMapper.updateById(parentTask) > 0;
     }
 
@@ -183,18 +154,7 @@ public class ParentTaskServiceImpl implements IParentTaskService {
             return null;
         }
         ParentTaskVo vo = new ParentTaskVo();
-        // 复制属性
-        vo.setTaskId(parentTask.getTaskId());
-        vo.setUserId(parentTask.getUserId());
-        vo.setTitle(parentTask.getTitle());
-        vo.setDescription(parentTask.getDescription());
-        vo.setStatus(parentTask.getStatus());
-        vo.setRewardPoints(parentTask.getRewardPoints());
-        vo.setDeadline(parentTask.getDeadline());
-        vo.setCreateBy(parentTask.getCreateBy());
-        vo.setCreateTime(parentTask.getCreateTime());
-        vo.setUpdateBy(parentTask.getUpdateBy());
-        vo.setUpdateTime(parentTask.getUpdateTime());
+        cn.hutool.core.bean.BeanUtil.copyProperties(parentTask, vo);
 
         // 设置状态名称
         vo.setStatusName("1".equals(parentTask.getStatus()) ? "已完成" : "未完成");

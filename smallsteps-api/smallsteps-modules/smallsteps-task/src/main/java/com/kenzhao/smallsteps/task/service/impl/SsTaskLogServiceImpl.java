@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * 任务执行记录Service业务层处理
@@ -43,7 +43,7 @@ public class SsTaskLogServiceImpl extends ServiceImpl<SsTaskLogMapper, SsTaskLog
         }
         
         log.setStatus(STATUS_WAITING_LIGHT_UP);
-        log.setFinishTime(LocalDateTime.now());
+        log.setFinishTime(new Date());
         return baseMapper.updateById(log) > 0;
     }
 
@@ -64,7 +64,7 @@ public class SsTaskLogServiceImpl extends ServiceImpl<SsTaskLogMapper, SsTaskLog
         }
 
         log.setStatus(STATUS_LIGHT_UP);
-        log.setUpdateTime(LocalDateTime.now());
+        log.setUpdateTime(new Date());
         baseMapper.updateById(log);
 
         String reason = String.format("确认点亮任务星星: %s", task.getTitle());

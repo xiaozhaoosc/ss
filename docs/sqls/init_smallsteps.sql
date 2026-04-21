@@ -279,12 +279,21 @@ CREATE TABLE ss_child_achievement (
   tenant_id     VARCHAR(20)     DEFAULT '000000',
   child_id      INT8            NOT NULL,
   achievement_id INT8           NOT NULL,
-  current_val   INT             DEFAULT 0,
-  status        CHAR(1)         DEFAULT '0',
-  unlock_time   TIMESTAMP       DEFAULT NULL,
+  type          VARCHAR(20)     NOT NULL,
+  name          VARCHAR(64)     NOT NULL,
+  count         INT             DEFAULT 0,
+  icon          VARCHAR(255)    DEFAULT '',
+  remark        VARCHAR(500)    DEFAULT '',
+  del_flag      CHAR(1)         DEFAULT '0',
+  create_dept   INT8            DEFAULT NULL,
+  create_by     INT8            DEFAULT NULL,
+  create_time   TIMESTAMP       DEFAULT NULL,
+  update_by     INT8            DEFAULT NULL,
+  update_time   TIMESTAMP       DEFAULT NULL,
   PRIMARY KEY (id)
 );
-COMMENT ON TABLE ss_child_achievement IS '儿童成就进度表';
+COMMENT ON TABLE ss_child_achievement IS '儿童成就/资产表';
+COMMENT ON COLUMN ss_child_achievement.type IS '成就类型 (STAR-星星, FRAGMENT-勇气碎片, BADGE-勋章)';
 
 
 -- ----------------------------

@@ -38,18 +38,26 @@ public class ParentInsightController extends BaseController {
     /**
      * 获取孩子的情绪日报
      */
-    @GetMapping("/emotion/daily/{childId}")
-    public R<List<ChildAI>> getEmotionDaily(@PathVariable Long childId) {
-        List<ChildAI> emotions = childAIService.selectEmotionTrendByChildId(childId, 1);
+    @GetMapping({"/emotion/daily/{childId}", "/emotion/daily"})
+    public R<List<ChildAI>> getEmotionDaily(@PathVariable(required = false) Long childId, @RequestParam(required = false) Long cid) {
+        Long finalChildId = childId != null ? childId : cid;
+        if (finalChildId == null) {
+            return R.fail("未选择儿童");
+        }
+        List<ChildAI> emotions = childAIService.selectEmotionTrendByChildId(finalChildId, 1);
         return R.ok(emotions);
     }
 
     /**
      * 获取孩子的情绪趋势
      */
-    @GetMapping("/emotion/trend/{childId}")
-    public R<List<ChildAI>> getEmotionTrend(@PathVariable Long childId, @RequestParam(defaultValue = "7") Integer days) {
-        List<ChildAI> emotions = childAIService.selectEmotionTrendByChildId(childId, days);
+    @GetMapping({"/emotion/trend/{childId}", "/emotion/trend"})
+    public R<List<ChildAI>> getEmotionTrend(@PathVariable(required = false) Long childId, @RequestParam(required = false) Long cid, @RequestParam(defaultValue = "7") Integer days) {
+        Long finalChildId = childId != null ? childId : cid;
+        if (finalChildId == null) {
+            return R.fail("未选择儿童");
+        }
+        List<ChildAI> emotions = childAIService.selectEmotionTrendByChildId(finalChildId, days);
         return R.ok(emotions);
     }
 

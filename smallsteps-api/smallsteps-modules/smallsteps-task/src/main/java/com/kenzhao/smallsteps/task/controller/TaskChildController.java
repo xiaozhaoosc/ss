@@ -16,7 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/task/child")
-public class ChildTaskController extends BaseController {
+public class TaskChildController extends BaseController {
 
     private final ISsTaskService taskService;
     private final ISsTaskLogService taskLogService;

@@ -6,7 +6,7 @@ import lombok.Data;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * 家长任务视图对象
@@ -24,7 +24,7 @@ public class SsParentTaskVO implements Serializable {
     private String title;
     private String desc;
     private Integer starReward;
-    private LocalDateTime deadline;
+    private Date deadline;
     private String status;
     private String proofRequired;
 }

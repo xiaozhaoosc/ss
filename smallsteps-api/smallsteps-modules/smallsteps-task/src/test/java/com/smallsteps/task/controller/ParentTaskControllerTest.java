@@ -1,5 +1,6 @@
 package com.smallsteps.task.controller;
 
+import com.kenzhao.smallsteps.task.controller.ParentTaskController;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -18,7 +19,7 @@ public class ParentTaskControllerTest {
     @Test
     public void testCreateTask_ReturnsOk() throws Exception {
         String jsonPayload = "{\"title\":\"完成数学作业\",\"rewardPoints\":50,\"childId\":123}";
-        
+
         mockMvc.perform(post("/parent/task/create")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonPayload))

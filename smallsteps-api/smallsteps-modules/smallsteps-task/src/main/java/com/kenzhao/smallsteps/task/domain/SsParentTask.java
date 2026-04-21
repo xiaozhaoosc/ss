@@ -1,73 +1,48 @@
 package com.kenzhao.smallsteps.task.domain;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.kenzhao.smallsteps.common.tenant.core.TenantEntity;
+import com.kenzhao.smallsteps.common.mybatis.core.domain.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
- * 家长任务发布实体类 ss_parent_task
- *
- * @author 赵轩
+ * 家长任务对象 ss_parent_task
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("ss_parent_task")
-public class SsParentTask extends TenantEntity {
+public class SsParentTask extends BaseEntity {
 
-    /**
-     * 主键
-     */
-    @TableId(value = "id")
+    private static final long serialVersionUID = 1L;
+
+    /** 任务ID */
+    @TableId
     private Long id;
 
-    /**
-     * 发起家长ID
-     */
+    /** 家长ID */
     private Long parentId;
 
-    /**
-     * 接收该任务的小朋友ID列表 (int8[] in PG)
-     */
+    /** 儿童ID(s) */
     private String childIds;
 
-    /**
-     * 任务标题
-     */
+    /** 标题 */
     private String title;
 
-    /**
-     * 任务详情
-     */
-    @TableField("`desc`")
+    /** 描述 */
     private String desc;
 
-    /**
-     * 星星奖励
-     */
+    /** 奖励星星数 */
     private Integer starReward;
 
-    /**
-     * 截止时间
-     */
-    private LocalDateTime deadline;
+    /** 截止时间 */
+    private Date deadline;
 
-    /**
-     * 状态 (0: 待认领/进行中, 1: 已完成, 2: 已取消)
-     */
+    /** 状态 (0:发布中, 1:已完成, 2:已撤回) */
     private String status;
 
-    /**
-     * 是否需要上传凭证 (0: 不需要, 1: 需要)
-     */
+    /** 是否强制上传凭证 (1:是, 0:否) */
     private String proofRequired;
-
-    /**
-     * 删除标志
-     */
-    private String delFlag;
 }

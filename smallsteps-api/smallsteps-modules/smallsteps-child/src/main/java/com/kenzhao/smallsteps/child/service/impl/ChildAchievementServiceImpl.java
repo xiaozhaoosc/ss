@@ -122,4 +122,44 @@ public class ChildAchievementServiceImpl implements IChildAchievementService {
             .eq(ChildAchievement::getType, "FRAGMENT"));
         return fragments != null ? fragments.getCount() : 0;
     }
+
+    @Override
+    @org.springframework.transaction.annotation.Transactional
+    public void checkAndUnlockBadges(Long childId) {
+        // 1. 恒心大师 (7天连击)
+        Integer streak = selectStreakByChildId(childId);
+        if (streak >= 7) {
+            unlockBadge(childId, "恒心大师", "坚持打卡7天，你太棒了！", "consistency_medal");
+        }
+
+        // 2. 星光熠熠 (100颗星星)
+        Integer totalStars = selectTotalStarsByChildId(childId);
+        if (totalStars >= 100) {
+            unlockBadge(childId, "星光熠熠", "累积获得100颗星星，你闪闪发光！", "star_medal");
+        }
+
+        // 3. 早起鸟 (08:00前完成)
+        if (java.time.LocalTime.now().isBefore(java.time.LocalTime.of(8, 0))) {
+            unlockBadge(childId, "早起鸟", "太阳公公还没起床你就完成任务啦！", "early_bird");
+        }
+    }
+
+    private void unlockBadge(Long childId, String name, String remark, String icon) {
+        // 检查是否已经获得过该勋章
+        ChildAchievement existing = baseMapper.selectOne(new LambdaQueryWrapper<ChildAchievement>()
+            .eq(ChildAchievement::getChildId, childId)
+            .eq(ChildAchievement::getType, "BADGE")
+            .eq(ChildAchievement::getName, name));
+        
+        if (existing == null) {
+            ChildAchievement badge = new ChildAchievement();
+            badge.setChildId(childId);
+            badge.setType("BADGE");
+            badge.setName(name);
+            badge.setRemark(remark);
+            badge.setIcon(icon);
+            badge.setCount(1);
+            baseMapper.insert(badge);
+        }
+    }
 }

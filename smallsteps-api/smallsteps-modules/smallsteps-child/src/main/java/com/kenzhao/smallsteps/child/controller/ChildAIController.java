@@ -84,18 +84,26 @@ public class ChildAIController {
     /**
      * 查询儿童最近的AI交互记录
      */
-    @GetMapping("/recent/{childId}")
-    public R<List<ChildAI>> recentInteractions(@PathVariable("childId") Long childId, @RequestParam(value = "limit", defaultValue = "10") Integer limit) {
-        List<ChildAI> list = childAIService.selectRecentInteractionsByChildId(childId, limit);
+    @GetMapping({"/recent/{childId}", "/recent"})
+    public R<List<ChildAI>> recentInteractions(@PathVariable(required = false) Long childId, @RequestParam(required = false) Long cid, @RequestParam(value = "limit", defaultValue = "10") Integer limit) {
+        Long finalChildId = childId != null ? childId : cid;
+        if (finalChildId == null) {
+            return R.fail("未选择儿童");
+        }
+        List<ChildAI> list = childAIService.selectRecentInteractionsByChildId(finalChildId, limit);
         return R.ok(list);
     }
 
     /**
      * 查询儿童情绪趋势
      */
-    @GetMapping("/emotion/trend/{childId}")
-    public R<List<ChildAI>> emotionTrend(@PathVariable("childId") Long childId, @RequestParam(value = "days", defaultValue = "7") Integer days) {
-        List<ChildAI> list = childAIService.selectEmotionTrendByChildId(childId, days);
+    @GetMapping({"/emotion/trend/{childId}", "/emotion/trend"})
+    public R<List<ChildAI>> emotionTrend(@PathVariable(required = false) Long childId, @RequestParam(required = false) Long cid, @RequestParam(value = "days", defaultValue = "7") Integer days) {
+        Long finalChildId = childId != null ? childId : cid;
+        if (finalChildId == null) {
+            return R.fail("未选择儿童");
+        }
+        List<ChildAI> list = childAIService.selectEmotionTrendByChildId(finalChildId, days);
         return R.ok(list);
     }
 }

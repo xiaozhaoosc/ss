@@ -25,6 +25,7 @@ public class ScoreServiceImpl implements IScoreService {
 
     private final ChildScoreMapper childScoreMapper;
     private final ScoreHistoryMapper scoreHistoryMapper;
+    private final com.kenzhao.smallsteps.child.service.IChildAchievementService childAchievementService;
 
     @Override
     public ChildScore getChildScore(Long userId) {
@@ -59,6 +60,9 @@ public class ScoreServiceImpl implements IScoreService {
         scoreHistory.setSourceId(taskId);
         scoreHistory.setReason(reason);
         scoreHistoryMapper.insert(scoreHistory);
+
+        // 异步或直接触发勋章检查
+        childAchievementService.checkAndUnlockBadges(userId);
         
         return true;
     }
