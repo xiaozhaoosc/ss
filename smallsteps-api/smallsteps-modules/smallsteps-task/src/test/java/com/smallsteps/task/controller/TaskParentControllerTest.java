@@ -1,6 +1,6 @@
 package com.smallsteps.task.controller;
 
-import com.kenzhao.smallsteps.task.controller.ParentTaskController;
+import com.kenzhao.smallsteps.task.controller.TaskParentController;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -10,8 +10,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(ParentTaskController.class)
-public class ParentTaskControllerTest {
+@WebMvcTest(TaskParentController.class)
+public class TaskParentControllerTest {
 
     @Autowired
     private MockMvc mockMvc;

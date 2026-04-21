@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/task/parent")
-public class ParentTaskController extends BaseController {
+public class TaskParentController extends BaseController {
 
     private final ISsParentTaskService parentTaskService;
     private final ISsTaskLogService taskLogService;
