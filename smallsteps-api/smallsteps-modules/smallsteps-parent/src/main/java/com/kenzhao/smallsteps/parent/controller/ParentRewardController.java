@@ -105,6 +105,9 @@ public class ParentRewardController extends BaseController {
     @RepeatSubmit()
     @PostMapping()
     public R<Void> add(@Validated(AddGroup.class) @RequestBody ParentRewardBo bo) {
+        if (bo.getUserId() == null) {
+            bo.setUserId(com.kenzhao.smallsteps.common.satoken.utils.LoginHelper.getUserId());
+        }
         return toAjax(parentRewardService.insertByBo(bo));
     }
 

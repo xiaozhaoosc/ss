@@ -33,7 +33,6 @@ public class ParentTaskBo extends BaseEntity {
     /**
      * 用户ID
      */
-    @NotNull(message = "用户ID不能为空", groups = { AddGroup.class, EditGroup.class })
     private Long userId;
 
     /**

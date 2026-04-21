@@ -77,6 +77,9 @@ public class ParentTaskController extends BaseController {
     @RepeatSubmit()
     @PostMapping()
     public R<Void> add(@Validated(AddGroup.class) @RequestBody ParentTaskBo bo) {
+        if (bo.getUserId() == null) {
+            bo.setUserId(com.kenzhao.smallsteps.common.satoken.utils.LoginHelper.getUserId());
+        }
         return toAjax(parentTaskService.insertByBo(bo));
     }
 

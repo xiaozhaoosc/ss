@@ -26,7 +26,7 @@ public class ChildTask extends BaseEntity {
     /**
      * 日志ID
      */
-    @TableId(value = "log_id")
+    @TableId(value = "id")
     private Long logId;
 
     /**
