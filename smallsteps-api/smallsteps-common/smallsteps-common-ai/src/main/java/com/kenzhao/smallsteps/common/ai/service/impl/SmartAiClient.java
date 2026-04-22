@@ -1,44 +1,43 @@
 package com.kenzhao.smallsteps.common.ai.service.impl;
 
-import com.kenzhao.smallsteps.common.ai.config.AiModelProperties;
+import com.kenzhao.smallsteps.common.ai.domain.AiModel;
+import com.kenzhao.smallsteps.common.ai.domain.AiProvider;
+import com.kenzhao.smallsteps.common.ai.mapper.AiProviderMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.List;
-
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class SmartAiClient {
-    private final AiModelProperties aiModelProperties;
+    private final AiProviderMapper aiProviderMapper;
     private final RestTemplate restTemplate = new RestTemplate();
 
-    public String askAi(String prompt) {
-        String baseUrl = aiModelProperties.getBaseUrl();
-        String apiKey = aiModelProperties.getApiKey();
-        List<AiModelProperties.ModelConfig> models = aiModelProperties.getModels();
-        
-        if (models == null || models.isEmpty()) {
-            throw new RuntimeException("No AI models configured.");
+    public String askAi(String prompt, AiModel model) {
+        AiProvider provider = aiProviderMapper.selectById(model.getProviderId());
+        if (provider == null) {
+            throw new RuntimeException("Provider not found for model: " + model.getName());
         }
 
-        // 默认使用第一个模型
-        String modelId = models.get(0).getId();
+        String baseUrl = provider.getBaseUrl();
+        String apiKey = provider.getApiKey();
+        String modelCode = model.getModelCode();
+
         String url = baseUrl.endsWith("/") ? baseUrl + "chat/completions" : baseUrl + "/chat/completions";
 
         try {
-            log.info("Attempting AI call to {} with model: {}", url, modelId);
+            log.info("Attempting AI call to {} with model: {}", url, modelCode);
             
             org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
             headers.setContentType(org.springframework.http.MediaType.APPLICATION_JSON);
-            if (apiKey != null && !apiKey.isEmpty()) {
+            if (apiKey != null && !apiKey.isEmpty() && !"no-key".equals(apiKey)) {
                 headers.setBearerAuth(apiKey);
             }
 
             java.util.Map<String, Object> body = new java.util.HashMap<>();
-            body.put("model", modelId);
+            body.put("model", modelCode);
             body.put("messages", java.util.List.of(
                 java.util.Map.of("role", "user", "content", prompt)
             ));
@@ -61,7 +60,7 @@ public class SmartAiClient {
             
             throw new RuntimeException("AI响应格式不正确: " + responseStr);
         } catch (Exception e) {
-            log.error("Failed to call AI model: {}", modelId, e);
+            log.error("Failed to call AI model: {}", modelCode, e);
             throw new RuntimeException("AI调用失败: " + e.getMessage());
         }
     }

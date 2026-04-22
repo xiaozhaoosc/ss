@@ -1,6 +1,7 @@
 package com.kenzhao.smallsteps.common.ai.service.impl;
 
 import cn.hutool.core.util.ReUtil;
+import com.kenzhao.smallsteps.common.ai.domain.AiModel;
 import com.kenzhao.smallsteps.common.ai.service.IAiService;
 import com.kenzhao.smallsteps.common.ai.service.IAiRouterService;
 import com.kenzhao.smallsteps.common.json.utils.JsonUtils;
@@ -39,8 +40,11 @@ public class AiServiceImpl implements IAiService {
                 "]",
                 childAge, taskName, taskDesc);
 
+            // 获取路由模型
+            AiModel aiModel = aiRouterService.route("task_breakdown", null);
+
             // 调用大模型
-            String response = smartAiClient.askAi(prompt);
+            String response = smartAiClient.askAi(prompt, aiModel);
             if (response == null) {
                 log.warn("AI API call failed, using mock data");
                 return getMockTaskBreakdown(taskName, taskDesc, childAge);
@@ -67,8 +71,11 @@ public class AiServiceImpl implements IAiService {
                 "  \"suggestion\": \"给家长的针对性建议\"\n" +
                 "}", content);
 
+            // 获取路由模型
+            AiModel aiModel = aiRouterService.route("emotion_analysis", childId);
+
             // 调用大模型
-            String response = smartAiClient.askAi(prompt);
+            String response = smartAiClient.askAi(prompt, aiModel);
             if (response == null) {
                 log.warn("AI API call failed, using mock data");
                 return getMockEmotionAnalysis(childId, content);

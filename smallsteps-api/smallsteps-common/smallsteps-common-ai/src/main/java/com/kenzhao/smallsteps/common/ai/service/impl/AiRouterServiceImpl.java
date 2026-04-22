@@ -1,7 +1,9 @@
 package com.kenzhao.smallsteps.common.ai.service.impl;
 
 import com.kenzhao.smallsteps.common.ai.domain.AiModel;
+import com.kenzhao.smallsteps.common.ai.domain.AiRoute;
 import com.kenzhao.smallsteps.common.ai.mapper.AiModelMapper;
+import com.kenzhao.smallsteps.common.ai.mapper.AiRouteMapper;
 import com.kenzhao.smallsteps.common.ai.service.IAiRouterService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class AiRouterServiceImpl implements IAiRouterService {
 
+    private final AiRouteMapper aiRouteMapper;
     private final AiModelMapper aiModelMapper;
 
     /**
@@ -23,17 +26,16 @@ public class AiRouterServiceImpl implements IAiRouterService {
      */
     @Override
     public AiModel route(String sceneKey, Long userId) {
-        // TODO: 实现模型路由逻辑
-        // 1. 根据场景和用户ID查询合适的模型
-        // 2. 考虑模型的可用性、性能、成本等因素
-        // 3. 返回最佳模型配置
+        AiRoute route = aiRouteMapper.selectById(sceneKey);
+        if (route == null || route.getDefaultModelId() == null) {
+            throw new RuntimeException("No route found for scene: " + sceneKey);
+        }
         
-        // 这里返回一个默认模型作为示例
-        AiModel model = new AiModel();
-        model.setId(1L);
-        model.setName("default-model");
-        model.setModelCode("gpt-3.5-turbo");
-        model.setStatus("0");
+        AiModel model = aiModelMapper.selectById(route.getDefaultModelId());
+        if (model == null) {
+            throw new RuntimeException("No model found for ID: " + route.getDefaultModelId());
+        }
+        
         return model;
     }
 }
