@@ -20,7 +20,7 @@ public interface IChildTaskService {
     /**
      * 根据任务ID查询儿童任务
      */
-    ChildTaskVo selectChildTaskByTaskId(Long logId);
+    ChildTaskVo selectChildTaskById(Long id);
 
     /**
      * 新增儿童任务 (任务执行记录)
@@ -35,12 +35,12 @@ public interface IChildTaskService {
     /**
      * 删除儿童任务
      */
-    int deleteChildTaskByTaskId(Long logId);
+    int deleteChildTaskById(Long id);
 
     /**
      * 批量删除儿童任务
      */
-    int deleteChildTaskByTaskIds(Long[] logIds);
+    int deleteChildTaskByIds(Long[] ids);
 
     /**
      * 开始执行任务

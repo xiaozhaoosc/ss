@@ -22,9 +22,14 @@ public class ChildAchievement extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 成就ID
+     * ID
      */
-    @TableId(value = "achievement_id")
+    @TableId(value = "id")
+    private Long id;
+
+    /**
+     * 成就业务ID
+     */
     private Long achievementId;
 
     /**

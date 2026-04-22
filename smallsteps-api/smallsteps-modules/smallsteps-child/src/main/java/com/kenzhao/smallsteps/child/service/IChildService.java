@@ -13,7 +13,7 @@ public interface IChildService {
     /**
      * 查询儿童信息
      */
-    Child selectChildByChildId(Long childId);
+    Child selectChildById(Long id);
 
     /**
      * 查询儿童信息列表
@@ -33,10 +33,10 @@ public interface IChildService {
     /**
      * 批量删除儿童信息
      */
-    int deleteChildByChildIds(Long[] childIds);
+    int deleteChildByIds(Long[] ids);
 
     /**
      * 删除儿童信息信息
      */
-    int deleteChildByChildId(Long childId);
+    int deleteChildById(Long id);
 }

@@ -24,25 +24,20 @@ public class Child extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 儿童ID
+     * ID
      */
-    @TableId(value = "child_id", type = IdType.AUTO)
-    private Long childId;
+    @TableId(value = "id")
+    private Long id;
 
     /**
-     * 家庭ID (对应 sys_dept.dept_id)
+     * 关联家长用户ID (sys_user.user_id)
      */
-    private Long deptId;
-
-    /**
-     * 姓名
-     */
-    private String childName;
+    private Long parentId;
 
     /**
      * 昵称
      */
-    private String nickName;
+    private String nickname;
 
     /**
      * 出生日期
@@ -53,17 +48,27 @@ public class Child extends BaseEntity {
     /**
      * 性别 (0男 1女 2未知)
      */
-    private String sex;
+    private String gender;
 
     /**
      * 头像地址
      */
-    private String avatar;
+    private String avatarUrl;
 
     /**
-     * 帐号状态 (0正常 1停用)
+     * 当前星数余额
      */
-    private String status;
+    private Integer starBalance;
+
+    /**
+     * 累计获得星数
+     */
+    private Integer totalStars;
+
+    /**
+     * 等级
+     */
+    private Integer level;
 
     /**
      * 删除标志 (0代表存在 2代表删除)

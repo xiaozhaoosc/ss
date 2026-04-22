@@ -34,9 +34,9 @@ public class ChildController extends BaseController {
     /**
      * 获取儿童信息详细信息
      */
-    @GetMapping(value = "/{childId}")
-    public R<Child> getInfo(@PathVariable("childId") Long childId) {
-        return R.ok(childService.selectChildByChildId(childId));
+    @GetMapping(value = "/{id}")
+    public R<Child> getInfo(@PathVariable("id") Long id) {
+        return R.ok(childService.selectChildById(id));
     }
 
     /**
@@ -58,8 +58,8 @@ public class ChildController extends BaseController {
     /**
      * 删除儿童信息
      */
-    @DeleteMapping("/{childIds}")
-    public R<Void> remove(@PathVariable Long[] childIds) {
-        return toAjax(childService.deleteChildByChildIds(childIds));
+    @DeleteMapping("/{ids}")
+    public R<Void> remove(@PathVariable Long[] ids) {
+        return toAjax(childService.deleteChildByIds(ids));
     }
 }

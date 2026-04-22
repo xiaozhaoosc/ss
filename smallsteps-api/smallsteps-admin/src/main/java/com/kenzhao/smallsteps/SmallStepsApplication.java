@@ -9,7 +9,6 @@ import org.springframework.boot.context.metrics.buffering.BufferingApplicationSt
  *
  * @author 赵轩
  */
-
 //@ComponentScan(basePackages = {"com.kenzhao.smallsteps"})
 @SpringBootApplication
 public class SmallStepsApplication {

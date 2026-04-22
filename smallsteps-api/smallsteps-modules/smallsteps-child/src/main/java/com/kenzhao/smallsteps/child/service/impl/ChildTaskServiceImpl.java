@@ -27,8 +27,8 @@ public class ChildTaskServiceImpl implements IChildTaskService {
     }
 
     @Override
-    public ChildTaskVo selectChildTaskByTaskId(Long logId) {
-        ChildTask childTask = childTaskMapper.selectById(logId);
+    public ChildTaskVo selectChildTaskById(Long id) {
+        ChildTask childTask = childTaskMapper.selectById(id);
         return toVo(childTask);
     }
 
@@ -43,13 +43,13 @@ public class ChildTaskServiceImpl implements IChildTaskService {
     }
 
     @Override
-    public int deleteChildTaskByTaskId(Long logId) {
-        return childTaskMapper.deleteById(logId);
+    public int deleteChildTaskById(Long id) {
+        return childTaskMapper.deleteById(id);
     }
 
     @Override
-    public int deleteChildTaskByTaskIds(Long[] logIds) {
-        return childTaskMapper.deleteBatchIds(List.of(logIds));
+    public int deleteChildTaskByIds(Long[] ids) {
+        return childTaskMapper.deleteBatchIds(List.of(ids));
     }
 
     @Override

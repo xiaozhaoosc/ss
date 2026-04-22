@@ -10,15 +10,15 @@ public interface IChildAchievementService {
 
     List<ChildAchievement> selectChildAchievementList(ChildAchievement childAchievement);
 
-    ChildAchievement selectChildAchievementByAchievementId(Long achievementId);
+    ChildAchievement selectChildAchievementById(Long id);
 
     int insertChildAchievement(ChildAchievement childAchievement);
 
     int updateChildAchievement(ChildAchievement childAchievement);
 
-    int deleteChildAchievementByAchievementId(Long achievementId);
+    int deleteChildAchievementById(Long id);
 
-    int deleteChildAchievementByAchievementIds(Long[] achievementIds);
+    int deleteChildAchievementByIds(Long[] ids);
 
     /**
      * 奖励星星
