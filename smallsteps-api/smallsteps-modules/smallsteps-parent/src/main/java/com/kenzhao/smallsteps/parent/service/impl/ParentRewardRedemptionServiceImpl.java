@@ -69,6 +69,7 @@ public class ParentRewardRedemptionServiceImpl implements IParentRewardRedemptio
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Boolean reject(Long redemptionId) {
         ParentRewardRedemption redemption = baseMapper.selectById(redemptionId);
         if (redemption == null || !"0".equals(redemption.getStatus())) {
