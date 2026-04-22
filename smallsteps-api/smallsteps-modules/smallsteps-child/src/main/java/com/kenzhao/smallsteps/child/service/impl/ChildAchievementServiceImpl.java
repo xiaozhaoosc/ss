@@ -28,8 +28,8 @@ public class ChildAchievementServiceImpl implements IChildAchievementService {
     }
 
     @Override
-    public ChildAchievement selectChildAchievementByAchievementId(Long achievementId) {
-        return baseMapper.selectById(achievementId);
+    public ChildAchievement selectChildAchievementById(Long id) {
+        return baseMapper.selectById(id);
     }
 
     @Override
@@ -43,13 +43,13 @@ public class ChildAchievementServiceImpl implements IChildAchievementService {
     }
 
     @Override
-    public int deleteChildAchievementByAchievementId(Long achievementId) {
-        return baseMapper.deleteById(achievementId);
+    public int deleteChildAchievementById(Long id) {
+        return baseMapper.deleteById(id);
     }
 
     @Override
-    public int deleteChildAchievementByAchievementIds(Long[] achievementIds) {
-        return baseMapper.deleteByIds(Arrays.asList(achievementIds));
+    public int deleteChildAchievementByIds(Long[] ids) {
+        return baseMapper.deleteByIds(Arrays.asList(ids));
     }
 
     @Override

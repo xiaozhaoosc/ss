@@ -30,9 +30,9 @@ public class ChildAchievementController {
     /**
      * 根据成就ID查询儿童成就
      */
-    @GetMapping("/info/{achievementId}")
-    public R<ChildAchievement> info(@PathVariable("achievementId") Long achievementId) {
-        ChildAchievement childAchievement = childAchievementService.selectChildAchievementByAchievementId(achievementId);
+    @GetMapping("/info/{id}")
+    public R<ChildAchievement> info(@PathVariable("id") Long id) {
+        ChildAchievement childAchievement = childAchievementService.selectChildAchievementById(id);
         return R.ok(childAchievement);
     }
 
@@ -57,9 +57,9 @@ public class ChildAchievementController {
     /**
      * 删除儿童成就
      */
-    @DeleteMapping("/remove/{achievementId}")
-    public R<String> remove(@PathVariable("achievementId") Long achievementId) {
-        int result = childAchievementService.deleteChildAchievementByAchievementId(achievementId);
+    @DeleteMapping("/remove/{id}")
+    public R<String> remove(@PathVariable("id") Long id) {
+        int result = childAchievementService.deleteChildAchievementById(id);
         return result > 0 ? R.ok("删除成功") : R.fail("删除失败");
     }
 
@@ -67,8 +67,8 @@ public class ChildAchievementController {
      * 批量删除儿童成就
      */
     @DeleteMapping("/remove/batch")
-    public R<String> removeBatch(@RequestBody Long[] achievementIds) {
-        int result = childAchievementService.deleteChildAchievementByAchievementIds(achievementIds);
+    public R<String> removeBatch(@RequestBody Long[] ids) {
+        int result = childAchievementService.deleteChildAchievementByIds(ids);
         return result > 0 ? R.ok("删除成功") : R.fail("删除失败");
     }
 

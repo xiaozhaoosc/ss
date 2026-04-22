@@ -293,3 +293,16 @@ ai:
           cacheWrite: 0
         contextWindow: 24576
         maxTokens: 8192
+      - id: gemma-4-26b
+        name: gemma-4-26b
+        reasoning: false
+        input:
+          - text
+          - image
+        cost:
+          input: 0
+          output: 0
+          cacheRead: 0
+          cacheWrite: 0
+        contextWindow: 24576
+        maxTokens: 8192

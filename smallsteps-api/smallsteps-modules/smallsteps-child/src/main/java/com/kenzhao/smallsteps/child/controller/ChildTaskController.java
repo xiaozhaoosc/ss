@@ -35,9 +35,9 @@ public class ChildTaskController extends BaseController {
     /**
      * 根据执行记录ID查询任务详情
      */
-    @GetMapping("/info/{taskId}")
-    public R<ChildTaskVo> info(@PathVariable("taskId") Long taskId) {
-        ChildTaskVo childTask = childTaskService.selectChildTaskByTaskId(taskId);
+    @GetMapping("/info/{id}")
+    public R<ChildTaskVo> info(@PathVariable("id") Long id) {
+        ChildTaskVo childTask = childTaskService.selectChildTaskById(id);
         return R.ok(childTask);
     }
 
@@ -89,8 +89,8 @@ public class ChildTaskController extends BaseController {
         return toAjax(childTaskService.insertChildTask(childTask));
     }
 
-    @DeleteMapping("/remove/{taskId}")
-    public R<Void> remove(@PathVariable("taskId") Long taskId) {
-        return toAjax(childTaskService.deleteChildTaskByTaskId(taskId));
+    @DeleteMapping("/remove/{id}")
+    public R<Void> remove(@PathVariable("id") Long id) {
+        return toAjax(childTaskService.deleteChildTaskById(id));
     }
 }

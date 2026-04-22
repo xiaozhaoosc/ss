@@ -24,10 +24,10 @@ public class ChildTask extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 日志ID
+     * ID
      */
     @TableId(value = "id")
-    private Long logId;
+    private Long id;
 
     /**
      * 家庭ID (对应 sys_dept.dept_id)

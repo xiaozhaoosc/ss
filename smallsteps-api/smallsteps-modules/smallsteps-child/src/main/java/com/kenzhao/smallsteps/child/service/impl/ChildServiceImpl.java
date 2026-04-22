@@ -23,17 +23,16 @@ public class ChildServiceImpl implements IChildService {
     private final ChildMapper baseMapper;
 
     @Override
-    public Child selectChildByChildId(Long childId) {
-        return baseMapper.selectById(childId);
+    public Child selectChildById(Long id) {
+        return baseMapper.selectById(id);
     }
 
     @Override
     public List<Child> selectChildList(Child child) {
         return baseMapper.selectList(new LambdaQueryWrapper<Child>()
-            .eq(child.getDeptId() != null, Child::getDeptId, child.getDeptId())
-            .like(child.getChildName() != null, Child::getChildName, child.getChildName())
-            .eq(child.getSex() != null, Child::getSex, child.getSex())
-            .eq(child.getStatus() != null, Child::getStatus, child.getStatus()));
+            .eq(child.getParentId() != null, Child::getParentId, child.getParentId())
+            .like(child.getNickname() != null, Child::getNickname, child.getNickname())
+            .eq(child.getGender() != null, Child::getGender, child.getGender()));
     }
 
     @Override
@@ -47,12 +46,12 @@ public class ChildServiceImpl implements IChildService {
     }
 
     @Override
-    public int deleteChildByChildIds(Long[] childIds) {
-        return baseMapper.deleteByIds(Arrays.asList(childIds));
+    public int deleteChildByIds(Long[] ids) {
+        return baseMapper.deleteByIds(Arrays.asList(ids));
     }
 
     @Override
-    public int deleteChildByChildId(Long childId) {
-        return baseMapper.deleteById(childId);
+    public int deleteChildById(Long id) {
+        return baseMapper.deleteById(id);
     }
 }
