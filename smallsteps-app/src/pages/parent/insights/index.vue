@@ -47,7 +47,7 @@
               <view v-for="(item, index) in abilityData" :key="index" class="bar-item">
                 <view class="bar-wrapper">
                   <view class="bar" :style="{ height: item.value + '%' }">
-                    <view class="tooltip">{{ item.value }}%</view>
+                    <view class="value-capsule">{{ item.value }}%</view>
                   </view>
                 </view>
                 <text class="bar-label">{{ item.label }}</text>
@@ -76,7 +76,9 @@
                   class="day-cell" :class="{ 'selected': day.isToday }">
               <template v-if="!day.empty">
                 <text class="day-num">{{ day.day }}</text>
-                <view v-if="!day.isToday" class="dot" :style="{ background: getEmotionColor(day.date) }"></view>
+                <!-- 修改判断条件：非透明才渲染 dot -->
+                <view class="dot" v-show="getEmotionColor(day.date) !== 'transparent'" 
+                      :style="{ background: getEmotionColor(day.date) }"></view>
               </template>
             </view>
           </view>
@@ -93,27 +95,6 @@
             <view class="legend-item">
               <view class="dot gray"></view>
               <text>一般</text>
-            </view>
-          </view>
-        </view>
-      </view>
-
-      <!-- 成就亮点 -->
-      <view class="section last-section">
-        <view class="section-header">
-          <text class="section-title">成就亮点</text>
-          <text class="view-all">查看全部</text>
-        </view>
-        
-        <view class="achievement-list">
-          <view class="achievement-card" v-for="(item, index) in achievements" :key="index">
-            <view class="ach-icon" :style="{ background: item.bgColor }">
-              <text class="icon">{{ item.icon }}</text>
-            </view>
-            <view class="ach-info">
-              <text class="ach-title">{{ item.title }}</text>
-              <text class="ach-desc">{{ item.desc }}</text>
-              <text class="ach-date">{{ item.date }}</text>
             </view>
           </view>
         </view>
@@ -138,8 +119,6 @@ const userStore = useUserStore()
 
 const abilityData = ref([])
 
-const achievements = ref([])
-
 // 情绪热力图相关
 const emotionData = ref([])
 const calendarDays = ref([])
@@ -148,17 +127,19 @@ const currentMonthStr = ref('')
 onShow(() => {
   loadData()
 })
-
 const loadData = () => {
   const childId = userStore.currentChildId || 1 
 
   // 获取能力发展雷达图数据
   getAbilityRadar(childId).then(res => {
-    const list = res.data || []
-    if (list.length > 0) {
-      abilityData.value = list.map(item => ({
-        label: item.dimension,
-        value: item.score
+    const data = res.data || {}
+    const abilities = data.abilities || []
+    const scores = data.scores || []
+
+    if (abilities.length > 0 && scores.length === abilities.length) {
+      abilityData.value = abilities.map((label, index) => ({
+        label: label,
+        value: scores[index]
       }))
     } else {
       // 如果没有数据，使用默认占位数据
@@ -171,9 +152,16 @@ const loadData = () => {
     }
   }).catch(err => {
     console.error('Failed to load ability radar data:', err)
+    abilityData.value = [
+      { label: '数学', value: 65 },
+      { label: '社交', value: 42 },
+      { label: '专注', value: 85 },
+      { label: '创造', value: 30 }
+    ]
   })
 
-  listChildAchievement(childId).then(res => {
+  loadEmotionHeatmap(childId)
+}
     const list = res.data || res.rows || []
     achievements.value = list.map((item, index) => ({
       id: item.achievementId,
@@ -233,13 +221,16 @@ const getEmotionColor = (dateStr) => {
   if (!dateStr) return 'transparent'
   
   const entry = emotionData.value.find(item => {
-    const itemDate = item.createTime ? item.createTime.substring(0, 10) : ''
+    // 假设后端返回的时间包含 T 或者空格
+    const itemDate = item.createTime ? item.createTime.split('T')[0].split(' ')[0] : ''
     return itemDate === dateStr
   })
   
-  if (!entry) return '#f3f4f6'
+  if (!entry) return 'transparent' // 无数据透明
   
-  // 1: 开心, 2: 难过, 3: 愤怒, 4: 焦虑, 5: 平静
+  // 1: 开心, 5: 平静 -> 蓝
+  // 3: 愤怒 (此处根据方案映射为黄/兴奋态) -> 黄
+  // 2: 难过, 4: 焦虑, 默认 -> 灰
   switch (entry.emotionType) {
     case 1:
     case 5:
@@ -424,10 +415,10 @@ const getEmotionColor = (dateStr) => {
   width: 60rpx;
   height: 240rpx;
   background-color: #f3f4f6;
-  border-radius: 12rpx 12rpx 0 0;
+  border-radius: 12rpx;
   display: flex;
   align-items: flex-end;
-  overflow: visible;
+  overflow: hidden;
 }
 
 .bar {
@@ -436,19 +427,18 @@ const getEmotionColor = (dateStr) => {
   border-radius: 12rpx 12rpx 0 0;
   position: relative;
   transition: height 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 10rpx;
   
-  .tooltip {
-    position: absolute;
-    top: -40rpx;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #1f2937;
+  .value-capsule {
+    background-color: #4b5563;
     color: #ffffff;
-    font-size: 16rpx;
+    font-size: 18rpx;
     padding: 4rpx 12rpx;
-    border-radius: 8rpx;
-    white-space: nowrap;
-    opacity: 0.8;
+    border-radius: 20rpx;
+    font-weight: bold;
   }
 }
 
@@ -502,31 +492,32 @@ const getEmotionColor = (dateStr) => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  height: 80rpx;
+  justify-content: flex-start;
+  padding-top: 10rpx;
+  height: 90rpx;
   position: relative;
   
   .day-num {
-    font-size: 24rpx;
+    font-size: 26rpx;
     color: #5b718b;
+    width: 56rpx;
+    height: 56rpx;
+    line-height: 56rpx;
+    text-align: center;
+    border-radius: 50%;
   }
   
   .dot {
     width: 8rpx;
     height: 8rpx;
     border-radius: 50%;
-    margin-top: 8rpx;
+    margin-top: 6rpx;
   }
   
   &.selected {
     .day-num {
       background-color: #6b9bd1;
       color: #ffffff;
-      width: 60rpx;
-      height: 60rpx;
-      line-height: 60rpx;
-      text-align: center;
-      border-radius: 50%;
       font-weight: bold;
     }
   }
@@ -559,58 +550,6 @@ const getEmotionColor = (dateStr) => {
     &.primary { background-color: #6b9bd1; }
     &.yellow { background-color: #fbbf24; }
     &.gray { background-color: #d1d5db; }
-  }
-}
-
-// 成就列表
-.achievement-list {
-  display: flex;
-  flex-direction: column;
-  gap: 20rpx;
-}
-
-.achievement-card {
-  display: flex;
-  gap: 24rpx;
-  padding: 30rpx;
-  background-color: #ffffff;
-  border-radius: 24rpx;
-  border: 1rpx solid #f3f4f6;
-  
-  .ach-icon {
-    width: 96rpx;
-    height: 96rpx;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 40rpx;
-    flex-shrink: 0;
-  }
-  
-  .ach-info {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .ach-title {
-    font-size: 28rpx;
-    font-weight: bold;
-    color: #101419;
-    margin-bottom: 8rpx;
-  }
-  
-  .ach-desc {
-    font-size: 24rpx;
-    color: #5b718b;
-    line-height: 1.4;
-    margin-bottom: 12rpx;
-  }
-  
-  .ach-date {
-    font-size: 20rpx;
-    color: #9ca3af;
   }
 }
 
