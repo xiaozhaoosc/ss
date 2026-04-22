@@ -79,7 +79,7 @@
   </view>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 import TopBar from '@/components/common/top-bar/top-bar.vue'
 import TaskStep from '@/components/parent/task-step/task-step.vue'
