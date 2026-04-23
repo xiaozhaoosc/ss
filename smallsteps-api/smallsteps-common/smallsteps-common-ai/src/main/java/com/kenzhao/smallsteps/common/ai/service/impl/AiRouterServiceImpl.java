@@ -6,6 +6,7 @@ import com.kenzhao.smallsteps.common.ai.mapper.AiModelMapper;
 import com.kenzhao.smallsteps.common.ai.mapper.AiRouteMapper;
 import com.kenzhao.smallsteps.common.ai.service.IAiRouterService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 /**

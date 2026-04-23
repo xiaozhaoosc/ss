@@ -2,11 +2,12 @@ package com.kenzhao.smallsteps.common.ai.service.impl;
 
 import cn.hutool.core.util.ReUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.kenzhao.smallsteps.common.ai.domain.AiModel;
 import com.kenzhao.smallsteps.common.ai.domain.AiPrompt;
 import com.kenzhao.smallsteps.common.ai.mapper.AiPromptMapper;
-import com.kenzhao.smallsteps.common.ai.domain.AiModel;
-import com.kenzhao.smallsteps.common.ai.service.IAiService;
 import com.kenzhao.smallsteps.common.ai.service.IAiRouterService;
+import com.kenzhao.smallsteps.common.ai.service.IAiService;
+import com.kenzhao.smallsteps.common.core.exception.ServiceException;
 import com.kenzhao.smallsteps.common.json.utils.JsonUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +41,7 @@ public class AiServiceImpl implements IAiService {
             params.put("taskName", taskName);
             params.put("taskDesc", taskDesc);
             params.put("childAge", childAge);
-            
+
             String prompt = getPrompt("TASK_BREAKDOWN", params);
             if (prompt == null) {
                 log.warn("Prompt template TASK_BREAKDOWN not found, using fallback");
@@ -80,7 +81,7 @@ public class AiServiceImpl implements IAiService {
             // 2. 构建提示词 (从数据库加载)
             Map<String, Object> params = new HashMap<>();
             params.put("content", content);
-            
+
             String prompt = getPrompt("EMOTION_ANALYSIS", params);
             if (prompt == null) {
                 log.warn("Prompt template EMOTION_ANALYSIS not found, using fallback");
@@ -113,26 +114,40 @@ public class AiServiceImpl implements IAiService {
      * 从数据库加载并填充提示词模板
      */
     private String getPrompt(String promptKey, Map<String, Object> params) {
-        try {
-            AiPrompt aiPrompt = aiPromptMapper.selectOne(new LambdaQueryWrapper<AiPrompt>()
+        AiPrompt prompt = aiPromptMapper.selectOne(new LambdaQueryWrapper<AiPrompt>()
                 .eq(AiPrompt::getPromptKey, promptKey)
-                .eq(AiPrompt::getStatus, "0"));
+                .eq(AiPrompt::getStatus, "0")
+                .last("LIMIT 1"));
 
-            if (aiPrompt == null) {
-                return null;
-            }
+        String template = (prompt != null) ? prompt.getContent() : getFallbackPrompt(promptKey);
 
-            String content = aiPrompt.getContent();
-            if (content == null) return null;
-
-            for (Map.Entry<String, Object> entry : params.entrySet()) {
-                content = content.replace("{" + entry.getKey() + "}", String.valueOf(entry.getValue()));
-            }
-            return content;
-        } catch (Exception e) {
-            log.error("Failed to load prompt from DB: {}", promptKey, e);
-            return null;
+        if (template == null) {
+            log.error("AI Prompt template not found for key: {}", promptKey);
+            throw new ServiceException("AI 模板未配置: " + promptKey);
         }
+
+        // 简单的变量替换
+        String result = template;
+        for (Map.Entry<String, Object> entry : params.entrySet()) {
+            String placeholder = "{" + entry.getKey() + "}";
+            result = result.replace(placeholder, String.valueOf(entry.getValue()));
+        }
+        return result;
+    }
+
+    /**
+     * 兜底 Prompt 模板
+     */
+    private String getFallbackPrompt(String promptKey) {
+        log.warn("Using fallback hardcoded prompt for key: {}", promptKey);
+        if ("TASK_BREAKDOWN".equalsIgnoreCase(promptKey)) {
+            return "你是一位 ADHD 儿童辅助专家。请将任务 \"{taskName}\" ({taskDesc}) 拆解为适合 {childAge} 岁孩子执行的、颗粒度极小的步骤。";
+        } else if ("EMOTION_ANALYSIS".equalsIgnoreCase(promptKey)) {
+            return "你是一位资深的儿童心理学专家，专注于 ADHD （多动症）儿童的行为干预。请根据以下孩子的表现进行分析，并给家长提供 3 条具体的、充满人文关怀的建议。孩子表现：{content}。";
+        } else if ("DAILY_EMOTION_ANALYSIS".equalsIgnoreCase(promptKey)) {
+            return "你是一位资深的 ADHD 儿童教育顾问。今天孩子 {childName} 有如下表现：\n失败任务：{failedTasks}\n负面情绪：{negativeEmotions}\n请写一份给家长的温馨分析。";
+        }
+        return null;
     }
 
     /**
@@ -164,10 +179,10 @@ public class AiServiceImpl implements IAiService {
         try {
             String jsonContent = extractJson(response);
             Map<String, Object> map = JsonUtils.parseMap(jsonContent);
-            
+
             String emotion = String.valueOf(map.getOrDefault("emotion", ""));
             int type = mapEmotionToType(emotion);
-            
+
             result.put("emotion", emotion);
             result.put("emotionType", type); // 额外增加数字类型，方便数据库存储
             result.put("level", map.getOrDefault("level", 3));
@@ -181,7 +196,7 @@ public class AiServiceImpl implements IAiService {
             else if (response.contains("愤怒") || response.contains("暴躁")) result.put("emotionType", 3);
             else if (response.contains("焦虑") || response.contains("害怕")) result.put("emotionType", 4);
             else result.put("emotionType", 5);
-            
+
             result.put("emotion", "分析中");
             result.put("level", 3);
             result.put("suggestion", "AI 解析响应异常，请人工查看输入内容。");
@@ -233,22 +248,22 @@ public class AiServiceImpl implements IAiService {
      */
     private List<Map<String, String>> getMockTaskBreakdown(String taskName, String taskDesc, int childAge) {
         List<Map<String, String>> steps = new ArrayList<>();
-        
+
         Map<String, String> step1 = new HashMap<>();
         step1.put("stepName", "准备阶段");
         step1.put("stepDesc", "为" + taskName + "准备必要的材料");
         steps.add(step1);
-        
+
         Map<String, String> step2 = new HashMap<>();
         step2.put("stepName", "开始执行");
         step2.put("stepDesc", "按照简单的步骤开始" + taskName);
         steps.add(step2);
-        
+
         Map<String, String> step3 = new HashMap<>();
         step3.put("stepName", "完成任务");
         step3.put("stepDesc", "完成" + taskName + "并检查结果");
         steps.add(step3);
-        
+
         return steps;
     }
 

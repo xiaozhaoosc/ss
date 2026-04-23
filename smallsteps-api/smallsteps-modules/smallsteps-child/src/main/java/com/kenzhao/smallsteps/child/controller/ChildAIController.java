@@ -30,9 +30,9 @@ public class ChildAIController {
     /**
      * 根据交互ID查询儿童AI交互
      */
-    @GetMapping("/info/{aiId}")
-    public R<ChildAI> info(@PathVariable("aiId") Long aiId) {
-        ChildAI childAI = childAIService.selectChildAIByAiId(aiId);
+    @GetMapping("/info/{id}")
+    public R<ChildAI> info(@PathVariable("id") Long id) {
+        ChildAI childAI = childAIService.selectChildAIById(id);
         return R.ok(childAI);
     }
 
@@ -57,9 +57,9 @@ public class ChildAIController {
     /**
      * 删除儿童AI交互
      */
-    @DeleteMapping("/remove/{aiId}")
-    public R<String> remove(@PathVariable("aiId") Long aiId) {
-        int result = childAIService.deleteChildAIByAiId(aiId);
+    @DeleteMapping("/remove/{id}")
+    public R<String> remove(@PathVariable("id") Long id) {
+        int result = childAIService.deleteChildAIById(id);
         return result > 0 ? R.ok("删除成功") : R.fail("删除失败");
     }
 
@@ -67,8 +67,8 @@ public class ChildAIController {
      * 批量删除儿童AI交互
      */
     @DeleteMapping("/remove/batch")
-    public R<String> removeBatch(@RequestBody Long[] aiIds) {
-        int result = childAIService.deleteChildAIByAiIds(aiIds);
+    public R<String> removeBatch(@RequestBody Long[] ids) {
+        int result = childAIService.deleteChildAIByIds(ids);
         return result > 0 ? R.ok("删除成功") : R.fail("删除失败");
     }
 

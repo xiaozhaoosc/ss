@@ -8,11 +8,11 @@ import java.util.List;
  */
 public interface IChildAIService {
     List<ChildAI> selectChildAIList(ChildAI childAI);
-    ChildAI selectChildAIByAiId(Long aiId);
+    ChildAI selectChildAIById(Long id);
     int insertChildAI(ChildAI childAI);
     int updateChildAI(ChildAI childAI);
-    int deleteChildAIByAiId(Long aiId);
-    int deleteChildAIByAiIds(Long[] aiIds);
+    int deleteChildAIById(Long id);
+    int deleteChildAIByIds(Long[] ids);
     
     /** 与AI对话 */
     String chatWithAI(Long childId, String userInput, Integer emotionType);

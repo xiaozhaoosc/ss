@@ -26,8 +26,8 @@ public class ChildAIServiceImpl implements IChildAIService {
     }
 
     @Override
-    public ChildAI selectChildAIByAiId(Long aiId) {
-        return baseMapper.selectById(aiId);
+    public ChildAI selectChildAIById(Long id) {
+        return baseMapper.selectById(id);
     }
 
     @Override
@@ -41,13 +41,13 @@ public class ChildAIServiceImpl implements IChildAIService {
     }
 
     @Override
-    public int deleteChildAIByAiId(Long aiId) {
-        return baseMapper.deleteById(aiId);
+    public int deleteChildAIById(Long id) {
+        return baseMapper.deleteById(id);
     }
 
     @Override
-    public int deleteChildAIByAiIds(Long[] aiIds) {
-        return baseMapper.deleteByIds(java.util.Arrays.asList(aiIds));
+    public int deleteChildAIByIds(Long[] ids) {
+        return baseMapper.deleteByIds(java.util.Arrays.asList(ids));
     }
 
     @Override
@@ -95,7 +95,7 @@ public class ChildAIServiceImpl implements IChildAIService {
     public List<ChildAI> selectEmotionTrendByChildId(Long childId, Integer days) {
         return baseMapper.selectList(new LambdaQueryWrapper<ChildAI>()
             .eq(ChildAI::getChildId, childId)
-            .gt(ChildAI::getCreateTime, java.time.LocalDateTime.now().minusDays(days != null ? days : 7))
+            .gt(ChildAI::getCreateTime, new java.util.Date(System.currentTimeMillis() - (days != null ? days : 7) * 24L * 3600 * 1000))
             .orderByAsc(ChildAI::getCreateTime));
     }
 }

@@ -18,8 +18,8 @@ public class ChildAI extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
     /** 交互ID */
-    @TableId
-    private Long aiId;
+    @TableId(value = "id")
+    private Long id;
 
     /** 孩子ID */
     private Long childId;
