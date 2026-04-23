@@ -162,21 +162,6 @@ const loadData = () => {
 
   loadEmotionHeatmap(childId)
 }
-    const list = res.data || res.rows || []
-    achievements.value = list.map((item, index) => ({
-      id: item.achievementId,
-      title: item.achievementName || '新成就',
-      desc: item.description || '完成了一个阶段性目标',
-      date: item.obtainTime ? item.obtainTime.substring(5, 10) : '今日',
-      icon: index % 2 === 0 ? '🏆' : '🌟',
-      bgColor: index % 2 === 0 ? '#fef3c7' : '#e0f2fe'
-    }))
-  }).catch(err => {
-    console.error('Failed to load insights achievements:', err)
-  })
-
-  loadEmotionHeatmap(childId)
-}
 
 const loadEmotionHeatmap = (childId) => {
   const now = new Date()

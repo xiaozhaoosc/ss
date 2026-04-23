@@ -180,7 +180,9 @@ onShow(() => {
   }
   
   // 强制隐藏原生 TabBar，确保使用自定义导航
-  uni.hideTabBar()
+  uni.hideTabBar({
+    fail: () => {}
+  })
   
   loadData()
   userStore.fetchBalance()

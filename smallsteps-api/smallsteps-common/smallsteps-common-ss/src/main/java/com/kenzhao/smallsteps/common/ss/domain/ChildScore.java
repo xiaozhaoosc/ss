@@ -1,5 +1,6 @@
 package com.kenzhao.smallsteps.common.ss.domain;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.kenzhao.smallsteps.common.mybatis.core.domain.BaseEntity;
@@ -28,5 +29,9 @@ public class ChildScore extends BaseEntity
 
     /** 累计获得 */
     private Integer totalEarned;
+
+    /** 忽略继承的createDept字段，数据库表中无此列 */
+    @TableField(exist = false)
+    private Long createDept;
 
 }
