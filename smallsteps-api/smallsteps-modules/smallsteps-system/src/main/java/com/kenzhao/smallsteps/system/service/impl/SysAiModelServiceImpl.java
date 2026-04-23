@@ -1,0 +1,75 @@
+package com.kenzhao.smallsteps.system.service.impl;
+
+import cn.hutool.core.util.ObjectUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.kenzhao.smallsteps.common.ai.domain.AiModel;
+import com.kenzhao.smallsteps.common.ai.mapper.AiModelMapper;
+import com.kenzhao.smallsteps.common.core.utils.MapstructUtils;
+import com.kenzhao.smallsteps.system.domain.bo.SysAiModelBo;
+import com.kenzhao.smallsteps.system.domain.vo.SysAiModelVo;
+import com.kenzhao.smallsteps.system.service.ISysAiModelService;
+import com.kenzhao.smallsteps.common.mybatis.core.page.TableDataInfo;
+import com.kenzhao.smallsteps.common.mybatis.core.page.PageQuery;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.Collection;
+import java.util.List;
+
+/**
+ * AI模型配置Service业务层处理
+ *
+ * @author kenzhao
+ */
+@RequiredArgsConstructor
+@Service
+public class SysAiModelServiceImpl implements ISysAiModelService {
+
+    private final AiModelMapper baseMapper;
+
+    @Override
+    public SysAiModelVo queryById(Long id) {
+        return baseMapper.selectVoById(id, SysAiModelVo.class);
+    }
+
+    @Override
+    public TableDataInfo<SysAiModelVo> queryPageList(SysAiModelBo bo, PageQuery pageQuery) {
+        LambdaQueryWrapper<AiModel> lqw = buildQueryWrapper(bo);
+        Page<SysAiModelVo> result = baseMapper.selectVoPage(pageQuery.build(), lqw, SysAiModelVo.class);
+        return TableDataInfo.build(result);
+    }
+
+    @Override
+    public List<SysAiModelVo> queryList(SysAiModelBo bo) {
+        LambdaQueryWrapper<AiModel> lqw = buildQueryWrapper(bo);
+        return baseMapper.selectVoList(lqw, SysAiModelVo.class);
+    }
+
+    private LambdaQueryWrapper<AiModel> buildQueryWrapper(SysAiModelBo bo) {
+        LambdaQueryWrapper<AiModel> lqw = Wrappers.lambdaQuery();
+        lqw.eq(ObjectUtil.isNotEmpty(bo.getProviderId()), AiModel::getProviderId, bo.getProviderId());
+        lqw.like(ObjectUtil.isNotEmpty(bo.getName()), AiModel::getName, bo.getName());
+        lqw.eq(ObjectUtil.isNotEmpty(bo.getModelCode()), AiModel::getModelCode, bo.getModelCode());
+        lqw.eq(ObjectUtil.isNotEmpty(bo.getStatus()), AiModel::getStatus, bo.getStatus());
+        return lqw;
+    }
+
+    @Override
+    public Boolean insertByBo(SysAiModelBo bo) {
+        AiModel add = MapstructUtils.convert(bo, AiModel.class);
+        return baseMapper.insert(add) > 0;
+    }
+
+    @Override
+    public Boolean updateByBo(SysAiModelBo bo) {
+        AiModel update = MapstructUtils.convert(bo, AiModel.class);
+        return baseMapper.updateById(update) > 0;
+    }
+
+    @Override
+    public Boolean deleteWithValidByIds(Collection<Long> ids, Boolean isValid) {
+        return baseMapper.deleteBatchIds(ids) > 0;
+    }
+}

@@ -34,7 +34,7 @@ SmallSteps AI 服务旨在为 ADHD 儿童提供智能辅助，包括任务拆解
 | :--- | :--- | :--- |
 | id | Long | 主键 |
 | provider_id | Long | 供应商 ID |
-| model_code | String | API 调用代号 (如: gpt-3.5-turbo) |
+| model_code | String | API 调用代号 (如: gemma-4-26b) |
 | name | String | 显示名称 |
 | cost_input | Decimal | 输入价格 (元/1M Tokens) |
 | cost_output | Decimal | 输出价格 (元/1M Tokens) |
@@ -45,8 +45,9 @@ SmallSteps AI 服务旨在为 ADHD 儿童提供智能辅助，包括任务拆解
 | :--- | :--- | :--- |
 | scene_key | String | 场景 Key (PK) |
 | strategy | String | 策略 (DEFAULT/PRIORITY_LEVEL/COST_OPTIMIZED) |
-| default_model_id | Long | 默认模型 ID |
+| default_model_id | Long | 默认模型 ID (优先使用 ID=1 的 gemma-4-26b) |
 | config_json | String | 扩展配置 |
+
 
 ## 4. 接口协议 (API Protocol)
 

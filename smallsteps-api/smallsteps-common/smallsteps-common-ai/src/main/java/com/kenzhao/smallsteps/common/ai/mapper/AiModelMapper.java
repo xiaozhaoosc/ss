@@ -1,7 +1,8 @@
 package com.kenzhao.smallsteps.common.ai.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.kenzhao.smallsteps.common.ai.domain.AiModel;
+import com.kenzhao.smallsteps.common.ai.domain.vo.AiModelVo;
+import com.kenzhao.smallsteps.common.mybatis.core.mapper.BaseMapperPlus;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -11,5 +12,5 @@ import org.apache.ibatis.annotations.Mapper;
  * @date 2026-02-01
  */
 @Mapper
-public interface AiModelMapper extends BaseMapper<AiModel> {
+public interface AiModelMapper extends BaseMapperPlus<AiModel, AiModelVo> {
 }
