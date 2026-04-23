@@ -20,15 +20,6 @@ import java.util.Map;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class MapstructUtils {
 
-    private final static Converter CONVERTER = SpringUtils.getBean(Converter.class);
-
-    /**
-     * 将 T 类型对象，转换为 desc 类型的对象并返回
-     *
-     * @param source 数据来源实体
-     * @param desc   描述对象 转换后的对象
-     * @return desc
-     */
     public static <T, V> V convert(T source, Class<V> desc) {
         if (ObjectUtil.isNull(source)) {
             return null;
@@ -36,7 +27,7 @@ public class MapstructUtils {
         if (ObjectUtil.isNull(desc)) {
             return null;
         }
-        return CONVERTER.convert(source, desc);
+        return getConverter().convert(source, desc);
     }
 
     /**
@@ -53,7 +44,7 @@ public class MapstructUtils {
         if (ObjectUtil.isNull(desc)) {
             return null;
         }
-        return CONVERTER.convert(source, desc);
+        return getConverter().convert(source, desc);
     }
 
     /**
@@ -70,7 +61,7 @@ public class MapstructUtils {
         if (CollUtil.isEmpty(sourceList)) {
             return CollUtil.newArrayList();
         }
-        return CONVERTER.convert(sourceList, desc);
+        return getConverter().convert(sourceList, desc);
     }
 
     /**
@@ -87,7 +78,11 @@ public class MapstructUtils {
         if (ObjectUtil.isNull(beanClass)) {
             return null;
         }
-        return CONVERTER.convert(map, beanClass);
+        return getConverter().convert(map, beanClass);
+    }
+
+    private static Converter getConverter() {
+        return SpringUtils.getBean(Converter.class);
     }
 
 }
