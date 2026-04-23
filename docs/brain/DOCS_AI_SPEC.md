@@ -6,47 +6,54 @@ SmallSteps AI 服务旨在为 ADHD 儿童提供智能辅助，包括任务拆解
 ## 2. 核心架构 (Core Architecture)
 
 ### 2.1 实体模型 (Entity Models)
-- **AiProvider (供应商)**: 存储 API Key、Base URL 等凭证信息。
-- **AiModel (模型)**: 关联供应商，存储模型代码（如 `gpt-4`）、单价（Tokens）、上下文窗口等。
-- **AiRoute (路由规则)**: 根据业务场景（SceneKey）定义路由策略（如：优先免费模型、优先高性能模型）。
+- **AiProvider (供应商)**: 存储 API Key、Base URL 等凭证信息。 (表: `sys_ai_provider`)
+- **AiModel (模型)**: 关联供应商，存储模型代码、单价、上下文窗口等。 (表: `sys_ai_model`)
+- **AiRoute (路由规则)**: 定义不同业务场景的路由策略。 (表: `sys_ai_route`)
+- **AiPrompt (提示词模板)**: 存储业务场景对应的提示词模板，支持动态参数替换。 (表: `sys_ai_prompt`)
 
 ### 2.2 逻辑流 (Logic Flow)
-1. **业务请求**: 调用 `AiService` 的具体方法（如 `taskBreakdown`）。
-2. **动态路由**: `AiService` 调用 `AiRouterService.route(sceneKey, userId)`。
-3. **策略选择**: 路由服务根据 `sys_ai_route` 配置选择最佳 `AiModel`。
-4. **智能调用**: `SmartAiClient` 根据 `AiModel` 找到其 `AiProvider`，构造 HTTP 请求调用外部 LLM API。
-5. **响应解析**: `AiService` 解析 JSON 响应并返回结构化数据。
+1. **业务请求**: 调用 `AiService`（如 `taskBreakdown`）。
+2. **动态路由**: 调用 `AiRouterService.route(sceneKey)` 获取最佳 `AiModel`。
+3. **获取模板**: 从 `sys_ai_prompt` 获取对应的提示词模板（如 `TASK_BREAKDOWN`）。
+4. **参数填充**: 将业务参数（如 `taskName`）填充进模板占位符。
+5. **智能调用**: `SmartAiClient` 根据 `AiModel` 及其关联的 `AiProvider` 调用外部 API。
+6. **响应解析**: `AiService` 解析 JSON 响应并返回结构化数据。
 
 ## 3. 数据库设计 (Database Design)
 
-### 3.1 sys_ai_provider (AI供应商表)
+### 3.1 sys_ai_provider (AI供应商配置表)
 | 字段 | 类型 | 说明 |
 | :--- | :--- | :--- |
-| id | Long | 主键 |
-| name | String | 供应商名称 (如: OpenAI, 阿里云) |
-| type | String | 类型 (openai/azure/vllm) |
+| id | Long | 主键 (如: 1001) |
+| name | String | 供应商名称 |
+| type | String | 类型 (openai/vllm) |
 | base_url | String | API 地址 |
-| api_key | String | 密钥 (加密) |
-| status | String | 状态 (0正常 1停用) |
+| api_key | String | 密钥 |
 
-### 3.2 sys_ai_model (AI模型表)
+### 3.2 sys_ai_model (AI模型配置表)
+| 字段 | 类型 | 说明 |
+| :--- | :--- | :--- |
+| id | Long | 主键 (如: 2001, 2002) |
+| provider_id | Long | 供应商 ID |
+| model_code | String | API 调用代码 (如: gemma-4-26b) |
+| context_window | Integer | 窗口大小 |
+
+### 3.3 sys_ai_prompt (AI提示词模板表)
 | 字段 | 类型 | 说明 |
 | :--- | :--- | :--- |
 | id | Long | 主键 |
-| provider_id | Long | 供应商 ID |
-| model_code | String | API 调用代号 (如: gemma-4-26b) |
-| name | String | 显示名称 |
-| cost_input | Decimal | 输入价格 (元/1M Tokens) |
-| cost_output | Decimal | 输出价格 (元/1M Tokens) |
-| is_free_tier | String | 是否免费 (0否 1是) |
+| prompt_key | String | 业务标识 (如: `TASK_BREAKDOWN`) |
+| content | Text | 提示词内容 (支持 `{param}` 占位符) |
+| model_id | Long | 可选：绑定的特定模型 |
 
-### 3.3 sys_ai_route (AI路由策略表)
+### 3.4 sys_ai_route (AI路由策略表)
 | 字段 | 类型 | 说明 |
 | :--- | :--- | :--- |
-| scene_key | String | 场景 Key (PK) |
-| strategy | String | 策略 (DEFAULT/PRIORITY_LEVEL/COST_OPTIMIZED) |
-| default_model_id | Long | 默认模型 ID (优先使用 ID=1 的 gemma-4-26b) |
-| config_json | String | 扩展配置 |
+| scene_key | String | 场景 Key (如: `default_scene`, `emotion_analysis_scene`) |
+| strategy | String | 策略 (PRIORITY_LEVEL) |
+| default_model_id | Long | 默认模型 ID |
+| config_json | Json | 扩展配置 (如: `{"fallback_model_id": 2002}`) |
+
 
 
 ## 4. 接口协议 (API Protocol)

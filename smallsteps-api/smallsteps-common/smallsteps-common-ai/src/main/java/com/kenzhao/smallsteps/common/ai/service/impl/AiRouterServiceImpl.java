@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 /**
  * AI路由服务实现
  */
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class AiRouterServiceImpl implements IAiRouterService {
@@ -19,21 +20,43 @@ public class AiRouterServiceImpl implements IAiRouterService {
     private final AiModelMapper aiModelMapper;
 
     /**
-     * 根据场景和用户上下文选择最佳模型
-     * @param sceneKey 业务场景 (chat/image/etc)
-     * @param userId   用户ID (可选)
+     * 根据场景选择最佳模型
+     * @param sceneKey 业务场景 (default_scene, emotion_analysis_scene, etc)
+     * @param userId   用户ID (可选，当前版本暂未深度集成个人策略)
      * @return 选中的模型配置
      */
     @Override
     public AiModel route(String sceneKey, Long userId) {
-        AiRoute route = aiRouteMapper.selectById(sceneKey);
-        if (route == null || route.getDefaultModelId() == null) {
-            throw new RuntimeException("No route found for scene: " + sceneKey);
-        }
+        log.info("Routing for scene: {}", sceneKey);
         
-        AiModel model = aiModelMapper.selectById(route.getDefaultModelId());
+        // 1. 获取场景配置
+        AiRoute route = aiRouteMapper.selectById(sceneKey);
+        
+        // 1.1 如果没找到，尝试小写并加 _scene 后缀 (兼容旧版或不同命名习惯)
+        if (route == null) {
+            String altKey = sceneKey.toLowerCase() + "_scene";
+            log.debug("Scene {} not found, trying alt key: {}", sceneKey, altKey);
+            route = aiRouteMapper.selectById(altKey);
+        }
+
+        Long modelId;
+        if (route != null && route.getDefaultModelId() != null) {
+            modelId = route.getDefaultModelId();
+            log.debug("Found route for scene: {}, using modelId: {}", sceneKey, modelId);
+        } else {
+            // 回退到默认场景
+            AiRoute defaultRoute = aiRouteMapper.selectById("default_scene");
+            modelId = (defaultRoute != null) ? defaultRoute.getDefaultModelId() : 2001L; // 兜底使用 Gemma
+            log.warn("Scene {} not found in DB, fallback to modelId: {}", sceneKey, modelId);
+        }
+
+        // 2. 获取模型详情
+        AiModel model = aiModelMapper.selectById(modelId);
         if (model == null) {
-            throw new RuntimeException("No model found for ID: " + route.getDefaultModelId());
+            // 如果模型不存在，尝试寻找任意可用的模型
+            model = aiModelMapper.selectOne(new com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<AiModel>()
+                .eq(AiModel::getStatus, "0")
+                .last("LIMIT 1"));
         }
         
         return model;

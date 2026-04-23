@@ -69,6 +69,11 @@ public class SysAiPromptServiceImpl implements ISysAiPromptService {
     }
 
     @Override
+    public SysAiPromptVo queryByPromptKey(String promptKey) {
+        return baseMapper.selectVoOne(Wrappers.<AiPrompt>lambdaQuery().eq(AiPrompt::getPromptKey, promptKey), SysAiPromptVo.class);
+    }
+
+    @Override
     public Boolean deleteWithValidByIds(Collection<Long> ids, Boolean isValid) {
         return baseMapper.deleteBatchIds(ids) > 0;
     }

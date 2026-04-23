@@ -1,6 +1,9 @@
 package com.kenzhao.smallsteps.common.ai.service.impl;
 
 import cn.hutool.core.util.ReUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.kenzhao.smallsteps.common.ai.domain.AiPrompt;
+import com.kenzhao.smallsteps.common.ai.mapper.AiPromptMapper;
 import com.kenzhao.smallsteps.common.ai.domain.AiModel;
 import com.kenzhao.smallsteps.common.ai.service.IAiService;
 import com.kenzhao.smallsteps.common.ai.service.IAiRouterService;
@@ -24,33 +27,43 @@ public class AiServiceImpl implements IAiService {
 
     private final IAiRouterService aiRouterService;
     private final SmartAiClient smartAiClient;
+    private final AiPromptMapper aiPromptMapper;
 
     @Override
     public List<Map<String, String>> taskBreakdown(String taskName, String taskDesc, int childAge) {
         try {
-            // 构建提示词
-            String prompt = String.format(
-                "你是一个资深的ADHD儿童教育专家。请将以下任务拆解为适合%d岁ADHD儿童的微步骤。\n" +
-                "要求：步骤要简单、极具具体性、可操作，且每一步都带有鼓励性质。\n" +
-                "任务名称：%s\n" +
-                "任务描述：%s\n\n" +
-                "请严格按照以下JSON格式返回，不要有任何其他解释文字：\n" +
-                "[\n" +
-                "  {\"stepName\": \"步骤标题\", \"stepDesc\": \"详细的操作描述\"}\n" +
-                "]",
-                childAge, taskName, taskDesc);
+            // 1. 获取路由模型
+            AiModel aiModel = aiRouterService.route("TASK_BREAKDOWN", null);
 
-            // 获取路由模型
-            AiModel aiModel = aiRouterService.route("task_breakdown", null);
+            // 2. 构建提示词 (从数据库加载)
+            Map<String, Object> params = new HashMap<>();
+            params.put("taskName", taskName);
+            params.put("taskDesc", taskDesc);
+            params.put("childAge", childAge);
+            
+            String prompt = getPrompt("TASK_BREAKDOWN", params);
+            if (prompt == null) {
+                log.warn("Prompt template TASK_BREAKDOWN not found, using fallback");
+                prompt = String.format(
+                    "你是一个资深的ADHD儿童教育专家。请将以下任务拆解为适合%d岁ADHD儿童的微步骤。\n" +
+                    "要求：步骤要简单、极具具体性、可操作，且每一步都带有鼓励性质。\n" +
+                    "任务名称：%s\n" +
+                    "任务描述：%s\n\n" +
+                    "请严格按照以下JSON格式返回，不要有任何其他解释文字：\n" +
+                    "[\n" +
+                    "  {\"stepName\": \"步骤标题\", \"stepDesc\": \"详细的操作描述\"}\n" +
+                    "]",
+                    childAge, taskName, taskDesc);
+            }
 
-            // 调用大模型
+            // 3. 调用大模型
             String response = smartAiClient.askAi(prompt, aiModel);
             if (response == null) {
                 log.warn("AI API call failed, using mock data");
                 return getMockTaskBreakdown(taskName, taskDesc, childAge);
             }
 
-            // 解析响应
+            // 4. 解析响应
             return parseTaskBreakdownResponse(response);
         } catch (Exception e) {
             log.error("Error in task breakdown", e);
@@ -61,31 +74,64 @@ public class AiServiceImpl implements IAiService {
     @Override
     public Map<String, Object> emotionAnalysis(Long childId, String content) {
         try {
-            // 构建提示词
-            String prompt = String.format(
-                "你是一个儿童心理专家。请分析以下内容中儿童的情绪状态：\n%s\n\n" +
-                "请严格按照以下JSON格式返回结果，不要有任何其他解释文字：\n" +
-                "{\n" +
-                "  \"emotion\": \"情绪类型(如：开心、难过、愤怒、焦虑、平静)\",\n" +
-                "  \"level\": 情绪强度(1-5的整数),\n" +
-                "  \"suggestion\": \"给家长的针对性建议\"\n" +
-                "}", content);
+            // 1. 获取路由模型
+            AiModel aiModel = aiRouterService.route("EMOTION_ANALYSIS", childId);
 
-            // 获取路由模型
-            AiModel aiModel = aiRouterService.route("emotion_analysis", childId);
+            // 2. 构建提示词 (从数据库加载)
+            Map<String, Object> params = new HashMap<>();
+            params.put("content", content);
+            
+            String prompt = getPrompt("EMOTION_ANALYSIS", params);
+            if (prompt == null) {
+                log.warn("Prompt template EMOTION_ANALYSIS not found, using fallback");
+                prompt = String.format(
+                    "你是一个儿童心理专家。请分析以下内容中儿童的情绪状态：\n%s\n\n" +
+                    "请严格按照以下JSON格式返回结果，不要有任何其他解释文字：\n" +
+                    "{\n" +
+                    "  \"emotion\": \"情绪类型(如：开心、难过、愤怒、焦虑、平静)\",\n" +
+                    "  \"level\": 情绪强度(1-5的整数),\n" +
+                    "  \"suggestion\": \"给家长的针对性建议\"\n" +
+                    "}", content);
+            }
 
-            // 调用大模型
+            // 3. 调用大模型
             String response = smartAiClient.askAi(prompt, aiModel);
             if (response == null) {
                 log.warn("AI API call failed, using mock data");
                 return getMockEmotionAnalysis(childId, content);
             }
 
-            // 解析响应
+            // 4. 解析响应
             return parseEmotionAnalysisResponse(response);
         } catch (Exception e) {
             log.error("Error in emotion analysis", e);
             return getMockEmotionAnalysis(childId, content);
+        }
+    }
+
+    /**
+     * 从数据库加载并填充提示词模板
+     */
+    private String getPrompt(String promptKey, Map<String, Object> params) {
+        try {
+            AiPrompt aiPrompt = aiPromptMapper.selectOne(new LambdaQueryWrapper<AiPrompt>()
+                .eq(AiPrompt::getPromptKey, promptKey)
+                .eq(AiPrompt::getStatus, "0"));
+
+            if (aiPrompt == null) {
+                return null;
+            }
+
+            String content = aiPrompt.getContent();
+            if (content == null) return null;
+
+            for (Map.Entry<String, Object> entry : params.entrySet()) {
+                content = content.replace("{" + entry.getKey() + "}", String.valueOf(entry.getValue()));
+            }
+            return content;
+        } catch (Exception e) {
+            log.error("Failed to load prompt from DB: {}", promptKey, e);
+            return null;
         }
     }
 

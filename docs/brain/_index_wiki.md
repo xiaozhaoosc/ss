@@ -26,6 +26,11 @@
 
 ## 研发文档
 - [[SmallSteps-AI-Architecture]] (AI 模块架构配置中心)
+- **核心模块数据定义**
+    - [[ss_child]] (儿童档案与星星余额)
+    - [[ss_parent_task]] (任务体系与激励配置)
+    - [[ss_parent_reward]] (奖励库与兑换逻辑)
+    - [[ss_emotion_record]] (情绪记录 Schema)
 - [[Emotion-Feedback-Loop-Architecture]] (AI 情绪解析闭环架构)
 - [[Automatized-Achievement-System]] (自动化勋章激励逻辑)
 - [[Device-Interaction-Flow]] (设备交互流)

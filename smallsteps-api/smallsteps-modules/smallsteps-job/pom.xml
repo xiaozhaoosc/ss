@@ -27,6 +27,16 @@
             <groupId>com.kenzhao.smallsteps</groupId>
             <artifactId>smallsteps-common-job</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.kenzhao.smallsteps</groupId>
+            <artifactId>smallsteps-common-ai</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.kenzhao.smallsteps</groupId>
+            <artifactId>smallsteps-child</artifactId>
+        </dependency>
         
     </dependencies>
 

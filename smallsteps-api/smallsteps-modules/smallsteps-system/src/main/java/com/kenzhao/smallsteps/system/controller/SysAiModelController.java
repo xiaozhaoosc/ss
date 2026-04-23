@@ -1,10 +1,11 @@
 package com.kenzhao.smallsteps.system.controller;
 
-import com.kenzhao.smallsteps.common.ai.domain.AiModel;
-import com.kenzhao.smallsteps.system.service.ISysAiModelService;
 import com.kenzhao.smallsteps.common.core.domain.R;
 import com.kenzhao.smallsteps.common.mybatis.core.page.TableDataInfo;
 import com.kenzhao.smallsteps.common.mybatis.core.page.PageQuery;
+import com.kenzhao.smallsteps.system.domain.bo.SysAiModelBo;
+import com.kenzhao.smallsteps.system.domain.vo.SysAiModelVo;
+import com.kenzhao.smallsteps.system.service.ISysAiModelService;
 import com.kenzhao.smallsteps.common.web.core.BaseController;
 import com.kenzhao.smallsteps.common.log.annotation.Log;
 import com.kenzhao.smallsteps.common.log.enums.BusinessType;
@@ -34,8 +35,8 @@ public class SysAiModelController extends BaseController {
      */
     @SaCheckPermission("system:ai:list")
     @GetMapping("/list")
-    public TableDataInfo<AiModel> list(AiModel aiModel, PageQuery pageQuery) {
-        return aiModelService.queryPageList(aiModel, pageQuery);
+    public TableDataInfo<SysAiModelVo> list(SysAiModelBo bo, PageQuery pageQuery) {
+        return aiModelService.queryPageList(bo, pageQuery);
     }
 
     /**
@@ -43,7 +44,7 @@ public class SysAiModelController extends BaseController {
      */
     @SaCheckPermission("system:ai:query")
     @GetMapping("/{id}")
-    public R<AiModel> getInfo(@PathVariable("id") Long id) {
+    public R<SysAiModelVo> getInfo(@PathVariable("id") Long id) {
         return R.ok(aiModelService.queryById(id));
     }
 
@@ -53,8 +54,8 @@ public class SysAiModelController extends BaseController {
     @SaCheckPermission("system:ai:add")
     @Log(title = "AI模型配置", businessType = BusinessType.INSERT)
     @PostMapping
-    public R<Void> add(@RequestBody AiModel aiModel) {
-        return toAjax(aiModelService.insert(aiModel));
+    public R<Void> add(@RequestBody SysAiModelBo bo) {
+        return toAjax(aiModelService.insertByBo(bo));
     }
 
     /**
@@ -63,8 +64,8 @@ public class SysAiModelController extends BaseController {
     @SaCheckPermission("system:ai:edit")
     @Log(title = "AI模型配置", businessType = BusinessType.UPDATE)
     @PutMapping
-    public R<Void> edit(@RequestBody AiModel aiModel) {
-        return toAjax(aiModelService.update(aiModel));
+    public R<Void> edit(@RequestBody SysAiModelBo bo) {
+        return toAjax(aiModelService.updateByBo(bo));
     }
 
     /**

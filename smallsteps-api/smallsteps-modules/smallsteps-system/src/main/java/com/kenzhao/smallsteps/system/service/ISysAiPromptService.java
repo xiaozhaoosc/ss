@@ -41,6 +41,11 @@ public interface ISysAiPromptService {
     Boolean updateByBo(SysAiPromptBo bo);
 
     /**
+     * 根据业务标识查询提示词模板
+     */
+    SysAiPromptVo queryByPromptKey(String promptKey);
+
+    /**
      * 校验并批量删除AI提示词模板信息
      */
     Boolean deleteWithValidByIds(Collection<Long> ids, Boolean isValid);

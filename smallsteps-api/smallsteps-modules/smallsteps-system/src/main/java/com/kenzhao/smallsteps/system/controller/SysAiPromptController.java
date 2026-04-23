@@ -1,10 +1,11 @@
 package com.kenzhao.smallsteps.system.controller;
 
-import com.kenzhao.smallsteps.common.ai.domain.AiPrompt;
-import com.kenzhao.smallsteps.system.service.ISysAiPromptService;
 import com.kenzhao.smallsteps.common.core.domain.R;
 import com.kenzhao.smallsteps.common.mybatis.core.page.TableDataInfo;
 import com.kenzhao.smallsteps.common.mybatis.core.page.PageQuery;
+import com.kenzhao.smallsteps.system.domain.bo.SysAiPromptBo;
+import com.kenzhao.smallsteps.system.domain.vo.SysAiPromptVo;
+import com.kenzhao.smallsteps.system.service.ISysAiPromptService;
 import com.kenzhao.smallsteps.common.web.core.BaseController;
 import com.kenzhao.smallsteps.common.log.annotation.Log;
 import com.kenzhao.smallsteps.common.log.enums.BusinessType;
@@ -34,8 +35,8 @@ public class SysAiPromptController extends BaseController {
      */
     @SaCheckPermission("system:ai:list")
     @GetMapping("/list")
-    public TableDataInfo<AiPrompt> list(AiPrompt aiPrompt, PageQuery pageQuery) {
-        return aiPromptService.queryPageList(aiPrompt, pageQuery);
+    public TableDataInfo<SysAiPromptVo> list(SysAiPromptBo bo, PageQuery pageQuery) {
+        return aiPromptService.queryPageList(bo, pageQuery);
     }
 
     /**
@@ -43,7 +44,7 @@ public class SysAiPromptController extends BaseController {
      */
     @SaCheckPermission("system:ai:query")
     @GetMapping("/{id}")
-    public R<AiPrompt> getInfo(@PathVariable("id") Long id) {
+    public R<SysAiPromptVo> getInfo(@PathVariable("id") Long id) {
         return R.ok(aiPromptService.queryById(id));
     }
 
@@ -53,8 +54,8 @@ public class SysAiPromptController extends BaseController {
     @SaCheckPermission("system:ai:add")
     @Log(title = "AI提示词模板", businessType = BusinessType.INSERT)
     @PostMapping
-    public R<Void> add(@RequestBody AiPrompt aiPrompt) {
-        return toAjax(aiPromptService.insert(aiPrompt));
+    public R<Void> add(@RequestBody SysAiPromptBo bo) {
+        return toAjax(aiPromptService.insertByBo(bo));
     }
 
     /**
@@ -63,8 +64,8 @@ public class SysAiPromptController extends BaseController {
     @SaCheckPermission("system:ai:edit")
     @Log(title = "AI提示词模板", businessType = BusinessType.UPDATE)
     @PutMapping
-    public R<Void> edit(@RequestBody AiPrompt aiPrompt) {
-        return toAjax(aiPromptService.update(aiPrompt));
+    public R<Void> edit(@RequestBody SysAiPromptBo bo) {
+        return toAjax(aiPromptService.updateByBo(bo));
     }
 
     /**

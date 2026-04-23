@@ -73,17 +73,17 @@ public class AiController {
      */
     @PostMapping("/emotion/analyze")
     public R<Map<String, Object>> analyzeEmotion(@RequestBody Map<String, Object> request) {
-        // TODO: 实现情绪分析功能
-        // 1. 获取用户输入或行为数据
-        // 2. 调用 AI 模型分析情绪
-        // 3. 返回分析结果
-        String userInput = (String) request.get("userInput");
-        Map<String, Object> result = Map.of(
-            "userInput", userInput,
-            "emotion", "积极",
-            "confidence", 0.85,
-            "suggestion", "继续保持积极的心态！"
-        );
+        String content = (String) request.get("content");
+        if (content == null) {
+            content = (String) request.get("userInput");
+        }
+        Long childId = null;
+        Object childIdObj = request.get("childId");
+        if (childIdObj != null) {
+            childId = Long.valueOf(childIdObj.toString());
+        }
+
+        Map<String, Object> result = aiService.emotionAnalysis(childId, content);
         return R.ok(result);
     }
 }
