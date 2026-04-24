@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import { useUserStore } from '@/store/modules/user'
 import { ElMessage } from 'element-plus'
 import NProgress from 'nprogress'
@@ -54,33 +54,18 @@ export const constantRoutes = [
         }
       ]
     },
-    { path: '/:pathMatch(.*)*', redirect: '/404', hidden: true }
+    {
+      path: '/:pathMatch(.*)*',
+      component: () => import('@/views/error/404.vue'),
+      hidden: true
+    }
   ]
 
 export const dynamicRoutes = []
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.VITE_APP_CONTEXT_PATH),
+  history: createWebHashHistory(import.meta.env.VITE_APP_CONTEXT_PATH),
   routes: constantRoutes
-})
-
-router.beforeEach((to, from, next) => {
-  NProgress.start()
-  if (to.path === '/login') {
-    next()
-  } else {
-    const userStore = useUserStore()
-    if (userStore.token) {
-      next()
-    } else {
-      ElMessage.error('请先登录')
-      next('/login')
-    }
-  }
-})
-
-router.afterEach(() => {
-  NProgress.done()
 })
 
 export default router

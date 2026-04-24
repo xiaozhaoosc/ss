@@ -58,16 +58,18 @@ public class AiServiceImpl implements IAiService {
             }
 
             // 3. 调用大模型
+            log.info("Calling AI for task breakdown: {}, model: {}", taskName, aiModel.getModelCode());
             String response = smartAiClient.askAi(prompt, aiModel);
-            if (response == null) {
-                log.warn("AI API call failed, using mock data");
+            if (response == null || response.trim().isEmpty()) {
+                log.warn("AI returned empty response for task breakdown, using mock data");
                 return getMockTaskBreakdown(taskName, taskDesc, childAge);
             }
+            log.debug("AI Response for task breakdown: {}", response);
 
             // 4. 解析响应
             return parseTaskBreakdownResponse(response);
         } catch (Exception e) {
-            log.error("Error in task breakdown", e);
+            log.error("Error in task breakdown for task: {}", taskName, e);
             return getMockTaskBreakdown(taskName, taskDesc, childAge);
         }
     }
@@ -141,7 +143,7 @@ public class AiServiceImpl implements IAiService {
     private String getFallbackPrompt(String promptKey) {
         log.warn("Using fallback hardcoded prompt for key: {}", promptKey);
         if ("TASK_BREAKDOWN".equalsIgnoreCase(promptKey)) {
-            return "你是一位 ADHD 儿童辅助专家。请将任务 \"{taskName}\" ({taskDesc}) 拆解为适合 {childAge} 岁孩子执行的、颗粒度极小的步骤。";
+            return "你是一位 ADHD 儿童辅助专家。请将任务 \"{taskName}\" ({taskDesc}) 拆解为适合 {childAge} 岁孩子执行的、颗粒度极小的步骤。请以 JSON 格式返回：[{\"stepName\": \"步骤标题\", \"stepDesc\": \"详细的操作描述\"}]";
         } else if ("EMOTION_ANALYSIS".equalsIgnoreCase(promptKey)) {
             return "你是一位资深的儿童心理学专家，专注于 ADHD （多动症）儿童的行为干预。请根据以下孩子的表现进行分析，并给家长提供 3 条具体的、充满人文关怀的建议。孩子表现：{content}。";
         } else if ("DAILY_EMOTION_ANALYSIS".equalsIgnoreCase(promptKey)) {
@@ -160,8 +162,16 @@ public class AiServiceImpl implements IAiService {
             List<Map<String, String>> result = new ArrayList<>();
             for (Map map : list) {
                 Map<String, String> step = new HashMap<>();
-                step.put("stepName", String.valueOf(map.getOrDefault("stepName", "")));
-                step.put("stepDesc", String.valueOf(map.getOrDefault("stepDesc", "")));
+                // 兼容性处理：尝试多种可能的字段名
+                String name = String.valueOf(map.getOrDefault("stepName", 
+                              map.getOrDefault("step", 
+                              map.getOrDefault("title", ""))));
+                String desc = String.valueOf(map.getOrDefault("stepDesc", 
+                              map.getOrDefault("desc", 
+                              map.getOrDefault("description", ""))));
+                
+                step.put("stepName", name);
+                step.put("stepDesc", desc);
                 result.add(step);
             }
             return result;

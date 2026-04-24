@@ -243,9 +243,6 @@ const handleAttachment = () => {
   }
 }
 
-  }
-}
-
 .proof-container {
   margin-top: 12px;
   position: relative;
