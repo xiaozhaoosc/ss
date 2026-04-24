@@ -182,7 +182,8 @@ public class ParentTaskServiceImpl implements IParentTaskService {
         if (parentTask == null) return null;
         ParentTaskVo vo = new ParentTaskVo();
         cn.hutool.core.bean.BeanUtil.copyProperties(parentTask, vo);
-        vo.setStatusName("1".equals(parentTask.getStatus()) ? "已完成" : "未完成");
+        vo.setStatusName(ParentTask.STATUS_COMPLETED.equals(parentTask.getStatus()) ? "已完成" : 
+                       (ParentTask.STATUS_ONGOING.equals(parentTask.getStatus()) ? "进行中" : "已过期"));
 
         if (parentTask.getParentId() == null || parentTask.getParentId() == 0) {
             List<ParentTask> subTasks = parentTaskMapper.selectList(new LambdaQueryWrapper<ParentTask>()

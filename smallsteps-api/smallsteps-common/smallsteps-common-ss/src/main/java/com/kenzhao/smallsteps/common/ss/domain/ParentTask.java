@@ -23,6 +23,13 @@ public class ParentTask extends BaseEntity {
     @Serial
     private static final long serialVersionUID = 1L;
 
+    /** 状态: 进行中 */
+    public static final String STATUS_ONGOING = "0";
+    /** 状态: 已完成 */
+    public static final String STATUS_COMPLETED = "1";
+    /** 状态: 已过期 */
+    public static final String STATUS_EXPIRED = "2";
+
     /**
      * 任务ID
      */

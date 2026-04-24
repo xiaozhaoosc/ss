@@ -13,7 +13,10 @@ import com.kenzhao.smallsteps.common.mybatis.core.page.TableDataInfo;
 import com.kenzhao.smallsteps.common.web.core.BaseController;
 import com.kenzhao.smallsteps.common.ss.domain.bo.ParentTaskBo;
 import com.kenzhao.smallsteps.common.ss.domain.vo.ParentTaskVo;
+import com.kenzhao.smallsteps.common.ss.domain.ParentTask;
 import com.kenzhao.smallsteps.task.service.IParentTaskService;
+import com.kenzhao.smallsteps.task.service.ISsTaskLogService;
+import com.kenzhao.smallsteps.child.service.IScoreService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -25,9 +28,6 @@ import java.util.List;
 
 /**
  * 家长任务发布
- *
- * @author 赵轩
- * @date 2026-02-01
  */
 @Validated
 @RequiredArgsConstructor
@@ -36,7 +36,8 @@ import java.util.List;
 public class ParentTaskController extends BaseController {
 
     private final IParentTaskService parentTaskService;
-    private final com.kenzhao.smallsteps.child.service.IScoreService scoreService;
+    private final IScoreService scoreService;
+    private final ISsTaskLogService taskLogService;
 
     /**
      * 查询家长任务发布列表
@@ -60,8 +61,6 @@ public class ParentTaskController extends BaseController {
 
     /**
      * 获取家长任务发布详细信息
-     *
-     * @param taskId 主键
      */
     @SaCheckPermission("parent:task:query")
     @GetMapping("/{taskId}")
@@ -93,7 +92,8 @@ public class ParentTaskController extends BaseController {
     public R<Void> edit(@Validated(EditGroup.class) @RequestBody ParentTaskBo bo) {
         ParentTaskVo oldTask = parentTaskService.queryById(bo.getTaskId());
         boolean success = parentTaskService.updateByBo(bo);
-        if (success && oldTask != null && !"1".equals(oldTask.getStatus()) && "1".equals(bo.getStatus())) {
+        if (success && oldTask != null && !ParentTask.STATUS_COMPLETED.equals(oldTask.getStatus()) 
+            && ParentTask.STATUS_COMPLETED.equals(bo.getStatus())) {
             // Task Completed
             int points = bo.getRewardPoints() != null ? bo.getRewardPoints()
                     : (oldTask.getRewardPoints() != null ? oldTask.getRewardPoints() : 0);
@@ -105,9 +105,18 @@ public class ParentTaskController extends BaseController {
     }
 
     /**
+     * 家长点亮星星 (合作确认)
+     * @param logId 任务记录ID
+     */
+    @SaCheckPermission("parent:task:edit")
+    @Log(title = "家长任务点亮", businessType = BusinessType.UPDATE)
+    @PutMapping("/lightUp/{logId}")
+    public R<Void> lightUp(@PathVariable Long logId) {
+        return toAjax(taskLogService.lightUp(logId));
+    }
+
+    /**
      * 删除家长任务发布
-     *
-     * @param taskIds 主键串
      */
     @SaCheckPermission("parent:task:remove")
     @Log(title = "家长任务发布", businessType = BusinessType.DELETE)

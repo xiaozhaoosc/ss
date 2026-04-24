@@ -1,7 +1,7 @@
 package com.kenzhao.smallsteps.child.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.kenzhao.smallsteps.child.mapper.ChildTaskMapper;
+import com.kenzhao.smallsteps.task.mapper.ChildTaskMapper;
 import com.kenzhao.smallsteps.child.service.IChildTaskService;
 import com.kenzhao.smallsteps.common.ss.domain.ChildTask;
 import com.kenzhao.smallsteps.common.ss.domain.vo.ChildTaskVo;
@@ -55,6 +55,9 @@ public class ChildTaskServiceImpl implements IChildTaskService {
 
     @Override
     public int insertChildTask(ChildTask childTask) {
+        if (childTask.getStatus() == null) {
+            childTask.setStatus(ChildTask.STATUS_ONGOING);
+        }
         return childTaskMapper.insert(childTask);
     }
 
@@ -75,7 +78,12 @@ public class ChildTaskServiceImpl implements IChildTaskService {
 
     @Override
     public int startTask(Long taskId, Long childId) {
-        return 1;
+        ChildTask task = new ChildTask();
+        task.setTaskId(taskId);
+        task.setChildId(childId);
+        task.setStatus(ChildTask.STATUS_ONGOING);
+        task.setStartTime(new java.util.Date());
+        return childTaskMapper.insert(task);
     }
 
     @Override
@@ -83,11 +91,11 @@ public class ChildTaskServiceImpl implements IChildTaskService {
         LambdaQueryWrapper<ChildTask> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(ChildTask::getTaskId, taskId)
                 .eq(ChildTask::getChildId, childId)
-                .eq(ChildTask::getStatus, 1); // 正在执行中
+                .eq(ChildTask::getStatus, ChildTask.STATUS_ONGOING);
         
         ChildTask taskLog = childTaskMapper.selectOne(queryWrapper);
         if (taskLog != null) {
-            taskLog.setStatus(2); // 已完成
+            taskLog.setStatus(ChildTask.STATUS_FINISHED);
             taskLog.setEndTime(new java.util.Date());
             taskLog.setProof(proof);
             return childTaskMapper.updateById(taskLog);
@@ -97,21 +105,41 @@ public class ChildTaskServiceImpl implements IChildTaskService {
 
     @Override
     public int failTask(Long taskId, Long childId) {
-        return 1;
+        LambdaQueryWrapper<ChildTask> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(ChildTask::getTaskId, taskId)
+                .eq(ChildTask::getChildId, childId)
+                .eq(ChildTask::getStatus, ChildTask.STATUS_ONGOING);
+        
+        ChildTask taskLog = childTaskMapper.selectOne(queryWrapper);
+        if (taskLog != null) {
+            taskLog.setStatus(ChildTask.STATUS_FAILED);
+            taskLog.setEndTime(new java.util.Date());
+            return childTaskMapper.updateById(taskLog);
+        }
+        return 0;
     }
 
     @Override
     public List<ChildTaskVo> selectPendingTasksByChildId(Long childId) {
-        return List.of();
+        ChildTask query = new ChildTask();
+        query.setChildId(childId);
+        query.setStatus(ChildTask.STATUS_ONGOING);
+        return selectChildTaskList(query);
     }
 
     @Override
     public ChildTaskVo selectCurrentTaskByChildId(Long childId) {
-        return null;
+        LambdaQueryWrapper<ChildTask> lqw = new LambdaQueryWrapper<>();
+        lqw.eq(ChildTask::getChildId, childId)
+           .eq(ChildTask::getStatus, ChildTask.STATUS_ONGOING)
+           .orderByDesc(ChildTask::getStartTime)
+           .last("limit 1");
+        return toVo(childTaskMapper.selectOne(lqw));
     }
 
     @Override
     public int nfcCheckIn(String nfcId, Long childId) {
+        // Logic for NFC mapping to task can be added here
         return 1;
     }
 }

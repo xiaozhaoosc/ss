@@ -3,6 +3,7 @@ package com.kenzhao.smallsteps.child.controller;
 import com.kenzhao.smallsteps.common.ss.domain.ChildTask;
 import com.kenzhao.smallsteps.common.ss.domain.vo.ChildTaskVo;
 import com.kenzhao.smallsteps.child.service.IChildTaskService;
+import com.kenzhao.smallsteps.task.service.ISsTaskLogService;
 import com.kenzhao.smallsteps.common.core.domain.R;
 import com.kenzhao.smallsteps.common.web.core.BaseController;
 import lombok.RequiredArgsConstructor;
@@ -11,10 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * 儿童任务执行控制层 (现代化重构 + 支持 VO)
- *
- * @author 赵轩
- * @date 2026-04-08
+ * 儿童任务执行控制层
  */
 @RestController
 @RequiredArgsConstructor
@@ -22,9 +20,10 @@ import java.util.List;
 public class ChildTaskController extends BaseController {
 
     private final IChildTaskService childTaskService;
+    private final ISsTaskLogService taskLogService;
 
     /**
-     * 查询儿童任务执行列表 (带硬件反馈信息)
+     * 查询儿童任务执行列表
      */
     @GetMapping("/list")
     public R<List<ChildTaskVo>> list(ChildTask childTask) {
@@ -42,7 +41,7 @@ public class ChildTaskController extends BaseController {
     }
 
     /**
-     * [ADHD] 开始执行任务 - 触发硬件灯光/音效预警
+     * [ADHD] 开始执行任务
      */
     @PostMapping("/start")
     public R<Void> startTask(@RequestParam("taskId") Long taskId, @RequestParam("childId") Long childId) {
@@ -50,13 +49,21 @@ public class ChildTaskController extends BaseController {
     }
 
     /**
-     * [ADHD] 完成任务 - 触发奖励
+     * [ADHD] 完成任务 (直接完成)
      */
     @PostMapping("/complete")
     public R<Void> completeTask(@RequestParam("taskId") Long taskId, 
                                 @RequestParam("childId") Long childId,
                                 @RequestParam(value = "proof", required = false) String proof) {
         return toAjax(childTaskService.completeTask(taskId, childId, proof));
+    }
+
+    /**
+     * [ADHD] 提交任务 (进入待审核状态)
+     */
+    @PostMapping("/submit/{logId}")
+    public R<Void> submitTask(@PathVariable("logId") Long logId) {
+        return toAjax(taskLogService.submitTask(logId));
     }
 
     /**
@@ -85,12 +92,17 @@ public class ChildTaskController extends BaseController {
         return R.ok(childTask);
     }
 
-    // CRUD 基础操作保留 (省略或根据需要完善)
+    /**
+     * 新增任务指派
+     */
     @PostMapping("/add")
     public R<Void> add(@RequestBody ChildTask childTask) {
         return toAjax(childTaskService.insertChildTask(childTask));
     }
 
+    /**
+     * 删除任务记录
+     */
     @DeleteMapping("/remove/{id}")
     public R<Void> remove(@PathVariable("id") Long id) {
         return toAjax(childTaskService.deleteChildTaskById(id));

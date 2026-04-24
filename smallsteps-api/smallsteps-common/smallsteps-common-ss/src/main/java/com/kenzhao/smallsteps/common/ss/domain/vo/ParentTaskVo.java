@@ -33,7 +33,7 @@ public class ParentTaskVo implements Serializable {
     /** 奖励积分 */
     private Integer rewardPoints;
 
-    /** 任务状态 (1: 进行中, 2: 已完成, 0: 待发布) */
+    /** 任务状态 (0: 进行中, 1: 已完成, 2: 已过期) */
     private String status;
 
     /** 状态名称 */

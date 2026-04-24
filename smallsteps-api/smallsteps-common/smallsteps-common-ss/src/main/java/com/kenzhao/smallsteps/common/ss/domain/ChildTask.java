@@ -23,6 +23,15 @@ public class ChildTask extends BaseEntity {
     @Serial
     private static final long serialVersionUID = 1L;
 
+    /** 状态: 进行中 */
+    public static final String STATUS_ONGOING = "1";
+    /** 状态: 已完成/待点亮 */
+    public static final String STATUS_FINISHED = "2";
+    /** 状态: 已点亮 */
+    public static final String STATUS_LIGHT_UP = "3";
+    /** 状态: 放弃/失效 */
+    public static final String STATUS_FAILED = "4";
+
     /**
      * ID
      */
@@ -56,9 +65,9 @@ public class ChildTask extends BaseEntity {
     private Integer actualDuration;
 
     /**
-     * 任务状态 (0:待办, 1:进行中, 2:已完成, 3:放弃)
+     * 任务状态 (1:进行中, 2:已完成, 3:已点亮, 4:已失效)
      */
-    private Integer status;
+    private String status;
 
     /**
      * 开始时间
@@ -76,6 +85,11 @@ public class ChildTask extends BaseEntity {
      * 任务证明图片/资料
      */
     private String proof;
+
+    /**
+     * 自主性评分 (1-5)
+     */
+    private Integer autonomyScore;
 
     /**
      * 删除标志 (0代表存在 2代表删除)
