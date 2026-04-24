@@ -40,16 +40,15 @@ router.beforeEach(async (to, from, next) => {
           isRelogin.show = false;
           const accessRoutes = await usePermissionStore().generateRoutes();
           // 根据roles权限生成可访问的路由表
+          // generateRoutes 内部已通过 router.addRoute 注册了 asyncRoutes（权限路由）
+          // rewriteRoutes 需要在此处注册，与标准 RuoYi-Vue3 保持一致
           accessRoutes.forEach((route) => {
             if (!isHttp(route.path)) {
-              if (!route.path.startsWith('/')) {
-                route.path = '/' + route.path;
-              }
-              router.addRoute(route); // 动态添加可访问路由表
+              router.addRoute(route); // 动态添加可访问路由表（路径前缀由 filterAsyncRouter 统一处理）
             }
           });
-          
-          // hack方法 确保addRoutes已完成
+
+          // hack方法 确保addRoutes已完成，触发重新匹配当前路由
           next({ ...to, replace: true });
         }
       } else {

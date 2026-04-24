@@ -9,6 +9,7 @@ import ParentView from '@/components/ParentView/index.vue';
 import InnerLink from '@/layout/components/InnerLink/index.vue';
 import { ref } from 'vue';
 import { createCustomNameComponent } from '@/utils/createCustomNameComponent';
+import { isHttp } from '@/utils/validate';
 
 // 匹配views里面所有的.vue文件
 const modules = import.meta.glob('./../../views/**/*.vue');
@@ -51,12 +52,22 @@ export const usePermissionStore = defineStore('permission', () => {
     const sdata = JSON.parse(JSON.stringify(data));
     const rdata = JSON.parse(JSON.stringify(data));
     const defaultData = JSON.parse(JSON.stringify(data));
+    // sidebarRoutes: 保留嵌套层级，用于侧边栏显示和路由注册（路径如 /system/user）
     const sidebarRoutes = filterAsyncRouter(sdata);
+    // rewriteRoutes: 扁平化路由，用于 keep-alive 缓存匹配（仅 setRoutes，不 addRoute）
     const rewriteRoutes = filterAsyncRouter(rdata, undefined, true);
     const defaultRoutes = filterAsyncRouter(defaultData);
     const asyncRoutes = filterDynamicRoutes(dynamicRoutes);
+    // 注册本地权限路由（dynamicRoutes）
     asyncRoutes.forEach((route) => {
       router.addRoute(route);
+    });
+    // 注册后端动态路由：必须使用嵌套结构的 sidebarRoutes
+    // 不能用 rewriteRoutes（filterChildren 扁平化后路径是 /user，不是 /system/user）
+    sidebarRoutes.forEach((route) => {
+      if (!isHttp(route.path)) {
+        router.addRoute(route);
+      }
     });
     setRoutes(rewriteRoutes);
     setSidebarRouters(constantRoutes.concat(sidebarRoutes));
@@ -64,7 +75,8 @@ export const usePermissionStore = defineStore('permission', () => {
     setTopbarRoutes(defaultRoutes);
     // 路由name重复检查
     duplicateRouteChecker(asyncRoutes, sidebarRoutes);
-    return new Promise<RouteRecordRaw[]>((resolve) => resolve(rewriteRoutes));
+    // 返回空数组，告知 permission.ts 路由已在内部注册完毕，无需外部再 addRoute
+    return new Promise<RouteRecordRaw[]>((resolve) => resolve([]));
   };
 
   /**
