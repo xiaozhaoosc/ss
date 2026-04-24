@@ -19,11 +19,33 @@ import java.util.stream.Collectors;
 public class ChildTaskServiceImpl implements IChildTaskService {
 
     private final ChildTaskMapper childTaskMapper;
+    private final com.kenzhao.smallsteps.parent.service.IParentTaskService parentTaskService;
 
     @Override
     public List<ChildTaskVo> selectChildTaskList(ChildTask childTask) {
-        List<ChildTask> list = childTaskMapper.selectList(new LambdaQueryWrapper<>(childTask));
+        List<ChildTask> list = childTaskMapper.selectList(new LambdaQueryWrapper<>(childTask)
+                .orderByDesc(ChildTask::getCreateTime));
         return list.stream().map(this::toVo).collect(Collectors.toList());
+    }
+    
+    // ... other methods ...
+
+    private ChildTaskVo toVo(ChildTask childTask) {
+        if (childTask == null) return null;
+        ChildTaskVo vo = new ChildTaskVo();
+        vo.setChildTaskId(childTask.getId());
+        vo.setTaskId(childTask.getTaskId());
+        vo.setChildId(childTask.getChildId());
+        vo.setStatus(String.valueOf(childTask.getStatus()));
+        vo.setProof(childTask.getProof());
+        vo.setCreateTime(childTask.getCreateTime());
+        vo.setEndTime(childTask.getEndTime());
+        
+        // Populate task definition
+        if (childTask.getTaskId() != null) {
+            vo.setTaskDefinition(parentTaskService.queryById(childTask.getTaskId()));
+        }
+        return vo;
     }
 
     @Override
@@ -58,8 +80,20 @@ public class ChildTaskServiceImpl implements IChildTaskService {
     }
 
     @Override
-    public int completeTask(Long taskId, Long childId) {
-        return 1;
+    public int completeTask(Long taskId, Long childId, String proof) {
+        LambdaQueryWrapper<ChildTask> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(ChildTask::getTaskId, taskId)
+                .eq(ChildTask::getChildId, childId)
+                .eq(ChildTask::getStatus, 1); // 正在执行中
+        
+        ChildTask taskLog = childTaskMapper.selectOne(queryWrapper);
+        if (taskLog != null) {
+            taskLog.setStatus(2); // 已完成
+            taskLog.setEndTime(new java.util.Date());
+            taskLog.setProof(proof);
+            return childTaskMapper.updateById(taskLog);
+        }
+        return 0;
     }
 
     @Override
@@ -80,14 +114,5 @@ public class ChildTaskServiceImpl implements IChildTaskService {
     @Override
     public int nfcCheckIn(String nfcId, Long childId) {
         return 1;
-    }
-
-    private ChildTaskVo toVo(ChildTask childTask) {
-        if (childTask == null) return null;
-        ChildTaskVo vo = new ChildTaskVo();
-        vo.setTaskId(childTask.getTaskId());
-        vo.setChildId(childTask.getChildId());
-        // vo.setChildTaskId(childTask.getChildTaskId()); // Depends on domain
-        return vo;
     }
 }

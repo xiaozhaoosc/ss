@@ -30,8 +30,17 @@ public class ChildScore extends BaseEntity
     /** 累计获得 */
     private Integer totalEarned;
 
-    /** 忽略继承的createDept字段，数据库表中无此列 */
+    /** 忽略继承的审计字段，数据库表中无此列 */
     @TableField(exist = false)
     private Long createDept;
+
+    @TableField(exist = false)
+    private Long createBy;
+
+    @TableField(exist = false)
+    private java.util.Date createTime;
+
+    @TableField(exist = false)
+    private Long updateBy;
 
 }

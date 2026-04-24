@@ -53,8 +53,10 @@ public class ChildTaskController extends BaseController {
      * [ADHD] 完成任务 - 触发奖励
      */
     @PostMapping("/complete")
-    public R<Void> completeTask(@RequestParam("taskId") Long taskId, @RequestParam("childId") Long childId) {
-        return toAjax(childTaskService.completeTask(taskId, childId));
+    public R<Void> completeTask(@RequestParam("taskId") Long taskId, 
+                                @RequestParam("childId") Long childId,
+                                @RequestParam(value = "proof", required = false) String proof) {
+        return toAjax(childTaskService.completeTask(taskId, childId, proof));
     }
 
     /**

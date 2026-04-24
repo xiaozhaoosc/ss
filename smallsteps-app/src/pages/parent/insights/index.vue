@@ -123,6 +123,7 @@ const abilityData = ref([])
 const emotionData = ref([])
 const calendarDays = ref([])
 const currentMonthStr = ref('')
+const achievements = ref([])
 
 onShow(() => {
   loadData()
@@ -161,6 +162,19 @@ const loadData = () => {
   })
 
   loadEmotionHeatmap(childId)
+  loadAchievements(childId)
+}
+
+const loadAchievements = (childId) => {
+  listChildAchievement(childId).then(res => {
+    const list = res.data || res.rows || []
+    achievements.value = list.slice(0, 3).map((item, index) => ({
+      ...item,
+      bgColor: index % 2 === 0 ? '#fef3c7' : '#e0f2fe'
+    }))
+  }).catch(err => {
+    console.error('Failed to load insights achievements:', err)
+  })
 }
 
 const loadEmotionHeatmap = (childId) => {

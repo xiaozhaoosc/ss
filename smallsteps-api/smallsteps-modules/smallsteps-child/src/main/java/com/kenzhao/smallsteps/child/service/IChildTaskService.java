@@ -50,7 +50,7 @@ public interface IChildTaskService {
     /**
      * 完成任务
      */
-    int completeTask(Long taskId, Long childId);
+    int completeTask(Long taskId, Long childId, String proof);
 
     /**
      * 标记任务失败/放弃

@@ -17,6 +17,15 @@
       <text class="title">{{ title }}</text>
       <text class="description">{{ description }}</text>
       
+      <!-- Optional Proof Image (Evidence) -->
+      <view v-if="proof" class="proof-container" @click="previewImage(proof)">
+        <image class="proof-image" :src="proof" mode="aspectFill" />
+        <view class="proof-label">
+          <text class="material-symbols-outlined">image</text>
+          <text>点击查看大图</text>
+        </view>
+      </view>
+      
       <!-- Optional Attachment -->
       <view v-if="attachment" class="attachment" @click="handleAttachment">
         <image v-if="attachment.image" class="thumb" :src="attachment.image" mode="aspectFill" />
@@ -38,9 +47,16 @@ const props = defineProps({
     default: 'upcoming' // completed, in-progress, upcoming
   },
   icon: String,
+  proof: String,
   attachment: Object,
   isLast: Boolean
 })
+
+const previewImage = (url) => {
+  uni.previewImage({
+    urls: [url]
+  })
+}
 
 const statusText = computed(() => {
   const map = {
@@ -224,6 +240,42 @@ const handleAttachment = () => {
   
   :deep(.dark) & {
     color: #9ca3af;
+  }
+}
+
+  }
+}
+
+.proof-container {
+  margin-top: 12px;
+  position: relative;
+  width: 100%;
+  height: 160px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  
+  .proof-image {
+    width: 100%;
+    height: 100%;
+  }
+  
+  .proof-label {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 8px 12px;
+    background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: white;
+    font-size: 10px;
+    
+    .material-symbols-outlined {
+      font-size: 14px;
+    }
   }
 }
 

@@ -12,6 +12,9 @@ public class ChildTaskVo {
     private Long taskId;
     private Long childId;
     private String status;
+    private String proof;
+    private java.util.Date createTime;
+    private java.util.Date endTime;
 
     /**
      * 绑定的母版任务信息

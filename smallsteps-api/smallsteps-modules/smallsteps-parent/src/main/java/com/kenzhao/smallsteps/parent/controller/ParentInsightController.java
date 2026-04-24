@@ -7,7 +7,10 @@ import com.kenzhao.smallsteps.common.web.core.BaseController;
 import com.kenzhao.smallsteps.parent.service.IParentTaskService;
 import com.kenzhao.smallsteps.child.service.IScoreService;
 import com.kenzhao.smallsteps.child.service.IChildAIService;
+import com.kenzhao.smallsteps.child.service.IChildTaskService;
 import com.kenzhao.smallsteps.common.ss.domain.ChildAI;
+import com.kenzhao.smallsteps.common.ss.domain.ChildTask;
+import com.kenzhao.smallsteps.common.ss.domain.vo.ChildTaskVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +28,7 @@ public class ParentInsightController extends BaseController {
     private final IParentTaskService parentTaskService;
     private final IScoreService scoreService;
     private final IChildAIService childAIService;
+    private final IChildTaskService childTaskService;
 
     /**
      * 获取孩子的任务完成情况
@@ -79,6 +83,29 @@ public class ParentInsightController extends BaseController {
     }
 
     /**
+     * 获取AI总结建议 (观察者视角)
+     */
+    @GetMapping({"/summary/{childId}", "/summary"})
+    public R<String> getSummary(@PathVariable(required = false) Long childId, @RequestParam(required = false) Long cid) {
+        Long finalChildId = childId != null ? childId : cid;
+        if (finalChildId == null) return R.fail("未选择儿童");
+        return R.ok(parentTaskService.getSummaryInsight(finalChildId));
+    }
+
+    /**
+     * 获取任务执行时间轴 (带凭证图)
+     */
+    @GetMapping({"/timeline/{childId}", "/timeline"})
+    public R<List<ChildTaskVo>> getTimeline(@PathVariable(required = false) Long childId, @RequestParam(required = false) Long cid) {
+        Long finalChildId = childId != null ? childId : cid;
+        if (finalChildId == null) return R.fail("未选择儿童");
+        
+        ChildTask query = new ChildTask();
+        query.setChildId(finalChildId);
+        return R.ok(childTaskService.selectChildTaskList(query));
+    }
+
+    /**
      * 获取孩子的周报告
      */
     @GetMapping("/report/weekly/{childId}")
@@ -94,5 +121,25 @@ public class ParentInsightController extends BaseController {
     public R<Map<String, Object>> getMonthlyReport(@PathVariable Long childId) {
         Map<String, Object> report = parentTaskService.getMonthlyReport(childId);
         return R.ok(report);
+    }
+
+    /**
+     * 获取周情绪/表现热力图
+     */
+    @GetMapping({"/weekly/heatmap/{childId}", "/weekly/heatmap"})
+    public R<List<Map<String, Object>>> getWeeklyHeatmap(@PathVariable(required = false) Long childId, @RequestParam(required = false) Long cid) {
+        Long finalChildId = childId != null ? childId : cid;
+        if (finalChildId == null) return R.fail("未选择儿童");
+        return R.ok(parentTaskService.getWeeklyHeatmap(finalChildId));
+    }
+
+    /**
+     * 获取周深度AI分析报告
+     */
+    @GetMapping({"/weekly/analysis/{childId}", "/weekly/analysis"})
+    public R<String> getWeeklyAiAnalysis(@PathVariable(required = false) Long childId, @RequestParam(required = false) Long cid) {
+        Long finalChildId = childId != null ? childId : cid;
+        if (finalChildId == null) return R.fail("未选择儿童");
+        return R.ok(parentTaskService.getWeeklyAiAnalysis(finalChildId));
     }
 }

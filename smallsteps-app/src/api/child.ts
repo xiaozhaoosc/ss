@@ -87,11 +87,11 @@ export function startTask(taskId: number, childId: number) {
     })
 }
 
-export function completeTask(taskId: number, childId: number) {
+export function completeTask(taskId: number, childId: number, proof?: string) {
     return request({
         url: '/child/task/complete',
         method: 'POST',
-        params: { taskId, childId }
+        params: { taskId, childId, proof }
     })
 }
 

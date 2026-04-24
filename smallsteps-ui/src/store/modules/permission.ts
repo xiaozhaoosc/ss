@@ -75,6 +75,9 @@ export const usePermissionStore = defineStore('permission', () => {
    */
   const filterAsyncRouter = (asyncRouterMap: RouteRecordRaw[], lastRouter?: RouteRecordRaw, type = false): RouteRecordRaw[] => {
     return asyncRouterMap.filter((route) => {
+      if (!lastRouter && route.path && !route.path.startsWith('/')) {
+        route.path = '/' + route.path;
+      }
       if (type && route.children) {
         route.children = filterChildren(route.children, undefined);
       }
@@ -100,7 +103,11 @@ export const usePermissionStore = defineStore('permission', () => {
   const filterChildren = (childrenMap: RouteRecordRaw[], lastRouter?: RouteRecordRaw): RouteRecordRaw[] => {
     let children: RouteRecordRaw[] = [];
     childrenMap.forEach((el) => {
-      el.path = lastRouter ? lastRouter.path + '/' + el.path : el.path;
+      if (lastRouter) {
+        el.path = lastRouter.path + '/' + el.path;
+      } else if (el.path && !el.path.startsWith('/')) {
+        el.path = '/' + el.path;
+      }
       if (el.children && el.children.length && el.component?.toString() === 'ParentView') {
         children = children.concat(filterChildren(el.children, el));
       } else {

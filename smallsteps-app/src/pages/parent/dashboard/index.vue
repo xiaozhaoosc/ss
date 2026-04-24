@@ -44,10 +44,18 @@
     </view>
 
     <scroll-view scroll-y class="main-content">
+      <!-- AI 观察者建议 -->
+      <ai-insight-card 
+        v-if="aiInsight" 
+        :content="aiInsight" 
+        @click="navigateToAiDetails"
+        @viewWeekly="navigateToWeeklyReport"
+      />
+
       <!-- 今日焦点 -->
       <view class="section-header">
         <text class="section-title">今日焦点</text>
-        <text class="see-all">查看全部</text>
+        <text class="see-all">详情</text>
       </view>
       
       <scroll-view scroll-x class="stats-scroll no-scrollbar">
@@ -60,19 +68,17 @@
         </view>
       </scroll-view>
 
-      <!-- 情绪警报 -->
-      <emotion-alert 
-        v-if="activeAlert"
-        :message="activeAlert.message"
-        @view-details="navigateToDetails"
-      />
-
-      <!-- 日程时间轴 -->
+      <!-- 任务执行记录 (时间轴) -->
       <view class="section-header mt-6">
-        <text class="section-title">日程时间轴</text>
+        <text class="section-title">执行记录</text>
+        <text class="see-all">查看全部</text>
       </view>
       
       <view class="timeline-container">
+        <view v-if="timeline.length === 0" class="empty-state">
+          <text class="material-symbols-outlined empty-icon">history</text>
+          <text class="empty-text">暂无执行记录</text>
+        </view>
         <timeline-item 
           v-for="(item, index) in timeline" 
           :key="index"
@@ -90,12 +96,22 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { onLoad, onShow } from '@dcloudio/uni-app'
+import AiInsightCard from '@/components/parent/ai-insight-card/ai-insight-card.vue'
 import StatCard from '@/components/parent/stat-card/stat-card.vue'
 import EmotionAlert from '@/components/parent/emotion-alert/emotion-alert.vue'
 import TimelineItem from '@/components/parent/timeline-item/timeline-item.vue'
 import BottomNav from '@/components/common/bottom-nav/bottom-nav.vue'
 import { useUserStore } from '@/store/modules/user'
-import { listTask } from '@/api/task'
+import { 
+  getTaskStatus, 
+  getSummaryInsight, 
+  getTimeline,
+  getWeeklyHeatmap,
+  getWeeklyAiAnalysis,
+  getRedemptionList,
+  approveRedemption,
+  rejectRedemption
+} from '@/api/parent'
 import { listReward } from '@/api/reward'
 
 // User info
@@ -113,34 +129,42 @@ const stats = ref([
 ])
 
 const activeAlert = ref(null)
+const aiInsight = ref('')
 const timeline = ref<any[]>([])
 const notifications = ref<any[]>([])
+const childId = ref(1) // In real app, get from userStore or selected child
 
 // Data Loading
 async function loadData() {
   uni.showLoading({ title: '加载中...' })
   try {
-    // 1. Get Tasks
-    const taskRes: any = await listTask({ pageNum: 1, pageSize: 10 })
-    const tasks = taskRes.rows || []
+    // 1. Get AI Insight
+    const aiRes: any = await getSummaryInsight(childId.value)
+    aiInsight.value = aiRes.data
+
+    // 2. Get Task Status (Stats)
+    const statusRes: any = await getTaskStatus(childId.value)
+    if (statusRes.data) {
+      stats.value[0].value = String(statusRes.data.totalTasks || 0)
+    }
     
-    // Update Stats
-    stats.value[0].value = String(taskRes.total || 0)
+    // 3. Get Execution Timeline
+    const timelineRes: any = await getTimeline(childId.value)
+    const logs = timelineRes.data || []
     
-    // Build Timeline from tasks
-    timeline.value = tasks.map((t: any) => ({
-      time: t.createTime?.substring(11, 16) || '12:00', // Simple time extract
-      title: t.title,
-      description: t.description,
-      status: t.status === '0' ? 'upcoming' : 'completed', // Simple mapping
-      icon: t.icon || 'task'
+    timeline.value = logs.map((l: any) => ({
+      time: l.endTime ? l.endTime.substring(11, 16) : (l.createTime ? l.createTime.substring(11, 16) : '--:--'),
+      title: l.taskDefinition?.title || '未知任务',
+      description: l.taskDefinition?.description || '已开始执行',
+      status: l.status === '2' ? 'completed' : (l.status === '1' ? 'in-progress' : 'upcoming'),
+      icon: l.taskDefinition?.icon || 'task',
+      proof: l.proof
     }))
 
-    // 2. Get Rewards (Mocking Notifications from Rewards for now)
+    // 4. Get Rewards (Mocking Notifications)
     const rewardRes: any = await listReward({ pageNum: 1, pageSize: 5 })
     stats.value[1].value = String(rewardRes.total || 0)
 
-    // Mock Notifications based on recent rewards
     notifications.value = (rewardRes.rows || []).map((r: any) => ({
       id: r.rewardId,
       type: 'warning',
@@ -169,6 +193,14 @@ const markAllRead = () => {
 
 const navigateToDetails = () => {
   uni.navigateTo({ url: '/pages/parent/emotion-detail/index' })
+}
+
+const navigateToAiDetails = () => {
+  uni.navigateTo({ url: '/pages/parent/ai-insight-detail/index' })
+}
+
+const navigateToWeeklyReport = () => {
+  uni.navigateTo({ url: `/pages/parent/weekly-report/index?cid=${childId.value}` })
 }
 
 const handleAction = (note: any, action: string) => {
@@ -397,6 +429,24 @@ onShow(() => {
 
 .timeline-container {
   padding: 16px;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 0;
+  color: #9ca3af;
+  
+  .empty-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+    opacity: 0.5;
+  }
+  
+  .empty-text {
+    font-size: 14px;
+  }
 }
 
 .no-scrollbar::-webkit-scrollbar {

@@ -108,5 +108,18 @@ public interface IParentTaskService {
      * @param childId 孩子ID
      * @return 月报告
      */
-    public Map<String, Object> getMonthlyReport(Long childId);
+    /**
+     * 获取AI总结建议
+     */
+    public String getSummaryInsight(Long childId);
+
+    /**
+     * 获取周情绪/表现热力图
+     */
+    public List<Map<String, Object>> getWeeklyHeatmap(Long childId);
+
+    /**
+     * 获取周深度AI分析报告
+     */
+    public String getWeeklyAiAnalysis(Long childId);
 }

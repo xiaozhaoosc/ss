@@ -73,6 +73,11 @@ public class ChildTask extends BaseEntity {
     private Date endTime;
 
     /**
+     * 任务证明图片/资料
+     */
+    private String proof;
+
+    /**
      * 删除标志 (0代表存在 2代表删除)
      */
     @TableLogic

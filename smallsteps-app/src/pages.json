@@ -83,6 +83,20 @@
       }
     },
     {
+      "path": "pages/child/treehole-chat/index",
+      "style": {
+        "navigationStyle": "custom",
+        "backgroundColor": "#F0F9FF"
+      }
+    },
+    {
+      "path": "pages/child/time-machine/index",
+      "style": {
+        "navigationStyle": "custom",
+        "backgroundColor": "#FFF9F5"
+      }
+    },
+    {
       "path": "pages/parent/profile/index",
       "style": {
         "navigationBarTitleText": "家长中心",
@@ -107,6 +121,13 @@
       "path": "pages/parent/device-config/index",
       "style": {
         "navigationBarTitleText": "设备配置",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/parent/weekly-report/index",
+      "style": {
+        "navigationBarTitleText": "周报",
         "navigationStyle": "custom"
       }
     },

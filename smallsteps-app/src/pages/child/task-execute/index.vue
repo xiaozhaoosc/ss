@@ -13,99 +13,204 @@
       <!-- Progress Indicator -->
       <view class="progress-pill">
         <text class="material-symbols-outlined flag-icon">flag</text>
-        <text class="step-text">第 1/3 步</text>
+        <text class="step-text" v-if="!hasSteps">正在进行中</text>
+        <text class="step-text" v-else>第 {{ currentStepIndex + 1 }} / {{ steps.length }} 步</text>
       </view>
 
       <!-- Headline -->
-      <text class="headline">正在阅读...</text>
+      <text class="headline" v-if="!hasSteps">{{ taskTitle }}</text>
+      <text class="headline" v-else>{{ steps[currentStepIndex].content }}</text>
+      <text class="sub-headline" v-if="hasSteps">{{ taskTitle }}</text>
 
       <!-- Timer -->
       <mission-timer 
-        :duration="900" 
-        :is-playing="true"
+        :key="currentStepIndex"
+        :duration="currentDuration" 
+        :is-playing="!isRewardVisible"
         @finish="handleTimerFinish"
       />
 
-      <!-- Decor -->
-      <view class="loading-dots">
-        <view class="dot"></view>
-        <view class="dot delay-1"></view>
-        <view class="dot delay-2"></view>
+      <!-- Step Navigation -->
+      <view class="step-nav" v-if="hasSteps">
+        <view class="step-dots">
+          <view v-for="(s, index) in steps" :key="index" class="dot" :class="{ 'active': index === currentStepIndex, 'done': index < currentStepIndex }"></view>
+        </view>
+      </view>
+
+      <!-- Photo Proof Area -->
+      <view class="proof-section" v-if="!hasSteps || isLastStep">
+        <view v-if="!proofImage" class="upload-placeholder" @click="handleSelectImage">
+          <text class="material-symbols-outlined camera-icon">add_a_photo</text>
+          <text class="upload-text">拍张照片留个纪念吧</text>
+        </view>
+        <view v-else class="preview-container">
+          <image :src="proofImage" mode="aspectFill" class="proof-img" @click="handleSelectImage" />
+          <view class="remove-badge" @click.stop="proofImage = ''">
+            <text class="material-symbols-outlined">close</text>
+          </view>
+        </view>
       </view>
     </view>
 
     <!-- Footer Action -->
     <view class="footer">
-      <button class="complete-btn" :loading="isLoading" @click="handleComplete">
-        <!-- Shine effect -->
+      <button class="complete-btn" :loading="isLoading" @click="handleAction">
         <view class="shine"></view>
         <view class="btn-content">
-          <text class="btn-text">我完成了！</text>
-          <text class="material-symbols-outlined check-icon">check_circle</text>
+          <text class="btn-text">{{ actionText }}</text>
+          <text class="material-symbols-outlined check-icon">{{ actionIcon }}</text>
         </view>
       </button>
-      <text class="hint-text">点击上方按钮完成当前任务</text>
+      <text class="hint-text">{{ actionHint }}</text>
     </view>
+
+    <!-- Reward Overlay -->
+    <reward-overlay 
+      :visible="isRewardVisible" 
+      :points="rewardPoints"
+      :child-name="childNickName"
+      @collect="handleRewardCollect" 
+    />
 
     <!-- Background Decorations -->
     <view class="blob blob-1"></view>
     <view class="blob blob-2"></view>
-    
-    <!-- Child Nav -->
-    <child-bottom-nav active="task" />
   </view>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import MissionTimer from '@/components/child/mission-timer/mission-timer.vue'
-import ChildBottomNav from '@/components/child/child-bottom-nav/child-bottom-nav.vue'
-import { completeTask } from '@/api/child'
+import RewardOverlay from '@/components/child/reward-overlay/reward-overlay.vue'
+import { completeTask, getChildTask } from '@/api/child'
 import { useUserStore } from '@/store/modules/user'
+import upload from '@/utils/upload'
 
 const userStore = useUserStore()
 const isDarkMode = ref(false)
 const taskId = ref(null)
 const isLoading = ref(false)
+const isRewardVisible = ref(false)
+const proofImage = ref('')
+const taskTitle = ref('正在进行任务...')
+const rewardPoints = ref(10)
+
+// Step Tracking
+const steps = ref([])
+const currentStepIndex = ref(0)
+const hasSteps = computed(() => steps.value && steps.value.length > 0)
+const isLastStep = computed(() => !hasSteps.value || currentStepIndex.value === steps.value.length - 1)
+const currentDuration = computed(() => {
+  if (hasSteps.value) return steps.value[currentStepIndex.value].expectedDuration || 300
+  return 900
+})
+
+const actionText = computed(() => {
+  if (!hasSteps.value || isLastStep.value) return '我完成了！'
+  return '下一步'
+})
+
+const actionIcon = computed(() => {
+  if (!hasSteps.value || isLastStep.value) return 'check_circle'
+  return 'arrow_forward'
+})
+
+const actionHint = computed(() => {
+  if (!hasSteps.value || isLastStep.value) return '点击按钮结算奖励'
+  return '准备好了就进入下一阶段吧'
+})
 
 onLoad((options) => {
   if (options.taskId) {
     taskId.value = parseInt(options.taskId)
+    loadTaskInfo()
   }
 })
 
+const loadTaskInfo = () => {
+  getChildTask(taskId.value).then(res => {
+    if (res.data) {
+      const task = res.data.taskDefinition || res.data
+      taskTitle.value = task.title || task.taskName
+      rewardPoints.value = task.rewardPoints || 10
+      steps.value = task.steps || []
+    }
+  })
+}
+
 const handleBack = () => {
-  uni.navigateBack()
+  if (isRewardVisible.value) return
+  uni.showModal({
+    title: '确定要离开吗？',
+    content: '专注还没有结束，离开将不会获得奖励哦',
+    success: (res) => {
+      if (res.confirm) {
+        uni.navigateBack()
+      }
+    }
+  })
+}
+
+const handleSelectImage = () => {
+  uni.chooseImage({
+    count: 1,
+    success: (res) => {
+      proofImage.value = res.tempFilePaths[0]
+    }
+  })
 }
 
 const handleTimerFinish = () => {
-  uni.showToast({ title: '时间到！', icon: 'none' })
+  uni.showToast({ title: '时间到！真棒！', icon: 'none' })
 }
 
-const handleComplete = () => {
-  if (!taskId.value) {
-    uni.showToast({ title: '任务ID丢失', icon: 'error' })
-    return
+const handleAction = () => {
+  if (!hasSteps.value || isLastStep.value) {
+    handleComplete()
+  } else {
+    currentStepIndex.value++
+    uni.vibrateShort()
   }
+}
+
+const handleComplete = async () => {
+  if (!taskId.value) return
   
-  // 动态获取当前登录的儿童 ID
   const childId = userStore.id || 1 
-  
   isLoading.value = true
-  uni.showLoading({ title: '提交中...' })
   
-  completeTask(taskId.value, childId).then(() => {
+  try {
+    let proofUrl = ''
+    if (proofImage.value) {
+      uni.showLoading({ title: '正在上传照片...' })
+      const uploadRes = await upload({
+        url: '/common/upload',
+        filePath: proofImage.value,
+        name: 'file'
+      })
+      proofUrl = uploadRes.url || ''
+      uni.hideLoading()
+    }
+
+    uni.showLoading({ title: '同步状态中...' })
+    await completeTask(taskId.value, childId, proofUrl)
     uni.hideLoading()
-    uni.showToast({ title: '太棒了！任务完成！', icon: 'success' })
-    setTimeout(() => {
-      uni.navigateBack()
-    }, 1500)
-  }).catch(() => {
+    
+    // Show the "WOW" Reward Overlay
+    isRewardVisible.value = true
+  } catch (e) {
+    console.error(e)
     uni.hideLoading()
+    uni.showToast({ title: '同步失败，请检查网络', icon: 'none' })
+  } finally {
     isLoading.value = false
-    uni.showToast({ title: '网络开小差了，再试一次吧', icon: 'error' })
-  })
+  }
+}
+
+const handleRewardCollect = () => {
+  isRewardVisible.value = false
+  uni.navigateBack()
 }
 </script>
 
@@ -143,9 +248,6 @@ const handleComplete = () => {
   border: none;
   
   &::after { border: none; }
-  
-  :deep(.dark) & { background-color: rgba(255, 255, 255, 0.1); color: #fff; }
-  
   .icon { font-size: 28px; }
 }
 
@@ -153,7 +255,37 @@ const handleComplete = () => {
   font-size: 18px;
   font-weight: 700;
   color: #1e293b;
-  :deep(.dark) & { color: #fff; }
+}
+
+.sub-headline {
+  font-size: 14px;
+  color: #94a3b8;
+  text-align: center;
+  margin-top: -8px;
+  margin-bottom: 8px;
+}
+
+.step-nav {
+  margin-top: 24px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.step-dots {
+  display: flex;
+  gap: 12px;
+  
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background-color: #CBD5E1;
+    transition: all 0.3s;
+    
+    &.active { width: 24px; background-color: #0ea5e9; }
+    &.done { background-color: #8cd0a1; }
+  }
 }
 
 .spacer { width: 48px; }
@@ -169,59 +301,82 @@ const handleComplete = () => {
 }
 
 .progress-pill {
-  margin-top: 16px;
-  margin-bottom: 8px;
+  margin-top: 8px;
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 8px 16px;
   border-radius: 999px;
   background-color: rgba(140, 208, 161, 0.2);
-  border: 1px solid rgba(140, 208, 161, 0.3);
   
   .flag-icon { font-size: 20px; color: #059669; }
-  .step-text { font-size: 14px; font-weight: 700; color: #065f46; letter-spacing: 0.5px; }
-  
-  :deep(.dark) & { .flag-icon { color: #34d399; } .step-text { color: #d1fae5; } }
+  .step-text { font-size: 14px; font-weight: 700; color: #065f46; }
 }
 
 .headline {
-  font-size: 36px;
+  font-size: 32px;
   font-weight: 900;
   color: #1e293b;
   text-align: center;
-  padding: 16px 0;
+  padding: 12px 0;
   letter-spacing: -1px;
-  :deep(.dark) & { color: #fff; }
 }
 
-.loading-dots {
+.proof-section {
+  width: 100%;
+  max-width: 280px;
+  margin-top: 16px;
+}
+
+.upload-placeholder {
+  height: 120px;
+  border: 3px dashed #CBD5E1;
+  border-radius: 24px;
   display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
-  gap: 4px;
-  padding-bottom: 24px;
-  opacity: 0.6;
-}
-
-.dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
-  background-color: #8CD0A1;
-  animation: pulse 1.5s infinite;
+  gap: 8px;
+  background-color: rgba(255, 255, 255, 0.5);
   
-  &.delay-1 { animation-delay: 0.1s; }
-  &.delay-2 { animation-delay: 0.2s; }
+  .camera-icon { font-size: 32px; color: #94A3B8; }
+  .upload-text { font-size: 12px; font-weight: 700; color: #94A3B8; }
+  
+  &:active { background-color: #fff; }
 }
 
-@keyframes pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(0.8); }
+.preview-container {
+  position: relative;
+  height: 120px;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  border: 3px solid #fff;
+}
+
+.proof-img {
+  width: 100%;
+  height: 100%;
+}
+
+.remove-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 24px;
+  height: 24px;
+  background-color: rgba(0,0,0,0.5);
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  .material-symbols-outlined { font-size: 16px; }
 }
 
 .footer {
   padding: 0 24px 40px 24px;
-  padding-bottom: calc(100px + env(safe-area-inset-bottom)); /* Extra padding for bottom nav */
+  padding-bottom: calc(40px + env(safe-area-inset-bottom));
   position: relative;
   z-index: 20;
 }
@@ -234,10 +389,7 @@ const handleComplete = () => {
   position: relative;
   overflow: hidden;
   box-shadow: 0 10px 25px -5px rgba(19, 236, 84, 0.4), 0 8px 0 rgba(15, 184, 64, 1);
-  transition: transform 0.1s cubic-bezier(0.34, 1.56, 0.64, 1);
   border: none;
-  
-  &::after { border: none; }
   
   &:active {
     transform: scale(0.98) translateY(4px);
@@ -252,7 +404,6 @@ const handleComplete = () => {
   width: 100%;
   height: 50%;
   background: linear-gradient(to bottom, rgba(255,255,255,0.3), transparent);
-  pointer-events: none;
 }
 
 .btn-content {
@@ -261,52 +412,19 @@ const handleComplete = () => {
   justify-content: center;
   gap: 12px;
   height: 100%;
-  position: relative;
-  z-index: 10;
 }
 
-.btn-text {
-  font-size: 24px;
-  font-weight: 900;
-  color: #0d1b12;
-  letter-spacing: 0.5px;
-}
-
-.check-icon {
-  font-size: 32px;
-  color: #0d1b12;
-}
-
-.hint-text {
-  text-align: center;
-  font-size: 12px;
-  font-weight: 500;
-  color: #94a3b8;
-  margin-top: 16px;
-  display: block;
-}
+.btn-text { font-size: 24px; font-weight: 900; color: #0d1b12; }
+.check-icon { font-size: 32px; color: #0d1b12; }
+.hint-text { text-align: center; font-size: 12px; color: #94a3b8; margin-top: 16px; display: block; }
 
 .blob {
   position: absolute;
   border-radius: 999px;
   filter: blur(40px);
   z-index: 0;
-  pointer-events: none;
 }
 
-.blob-1 {
-  width: 96px;
-  height: 96px;
-  background-color: rgba(140, 208, 161, 0.1);
-  top: 80px;
-  left: -20px;
-}
-
-.blob-2 {
-  width: 128px;
-  height: 128px;
-  background-color: rgba(19, 236, 84, 0.1);
-  bottom: 160px;
-  right: -10px;
-}
+.blob-1 { width: 96px; height: 96px; background-color: rgba(140, 208, 161, 0.1); top: 80px; left: -20px; }
+.blob-2 { width: 128px; height: 128px; background-color: rgba(19, 236, 84, 0.1); bottom: 160px; right: -10px; }
 </style>
