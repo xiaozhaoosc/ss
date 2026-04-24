@@ -59,4 +59,7 @@ public class ParentTaskVo implements Serializable {
 
     /** 更新时间 */
     private Date updateTime;
+
+    /** 子任务步骤 */
+    private java.util.List<TaskStepTemplateVo> steps;
 }

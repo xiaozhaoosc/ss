@@ -161,7 +161,7 @@
 
 <script setup name="Child">
 import { listChild, getChild, delChild, addChild, updateChild } from "@/api/ss/child";
-import { treeselect } from "@/api/system/dept";
+import { listDept } from "@/api/system/dept";
 
 const { proxy } = getCurrentInstance();
 const { sys_normal_disable } = proxy.useDict("sys_normal_disable");
@@ -214,8 +214,8 @@ function getList() {
 
 /** 查询部门下拉树结构 */
 function getTreeSelect() {
-  treeselect().then(response => {
-    deptOptions.value = response.data;
+  listDept().then(response => {
+    deptOptions.value = proxy.handleTree(response.data, "deptId");
   });
 };
 

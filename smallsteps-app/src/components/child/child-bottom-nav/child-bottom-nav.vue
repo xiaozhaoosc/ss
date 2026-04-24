@@ -9,31 +9,28 @@
       
       <!-- Nav Items -->
       <view class="nav-items">
-        <!-- Shop (Locked) -->
-        <view class="nav-item locked" @click="handleNav('shop')">
+        <!-- Shop -->
+        <view class="nav-item" :class="{ 'active': active === 'shop' }" @click="handleNav('shop')">
           <view class="icon-circle">
             <text class="material-symbols-outlined icon">storefront</text>
-            <view class="lock-badge">
-              <text class="material-symbols-outlined lock-icon">lock</text>
-            </view>
           </view>
           <text class="label">Shop</text>
         </view>
         
-        <!-- Home (Active) -->
-        <view class="nav-item active" @click="handleNav('home')">
+        <!-- Home -->
+        <view class="nav-item" :class="{ 'active': active === 'home' }" @click="handleNav('home')">
           <view class="icon-circle home-circle">
             <text class="material-symbols-outlined home-icon">emoji_events</text>
           </view>
-          <text class="label active-label">Home</text>
+          <text class="label" :class="{ 'active-label': active === 'home' }">Home</text>
         </view>
         
-        <!-- Map -->
-        <view class="nav-item" @click="handleNav('map')">
+        <!-- Time Machine -->
+        <view class="nav-item" :class="{ 'active': active === 'map' }" @click="handleNav('map')">
           <view class="icon-circle map-circle">
-            <text class="material-symbols-outlined map-icon">map</text>
+            <text class="material-symbols-outlined map-icon">history</text>
           </view>
-          <text class="label">Map</text>
+          <text class="label">Time</text>
         </view>
       </view>
     </view>
@@ -50,14 +47,17 @@ const props = defineProps({
 
 const handleNav = (tab) => {
   if (tab === 'shop') {
-    uni.showToast({ title: 'Shop is locked!', icon: 'none' })
+    uni.navigateTo({ url: '/pages/child/reward-shop/index' })
+    return
+  }
+  if (tab === 'home') {
+    uni.reLaunch({ url: '/pages/child/home/index' })
     return
   }
   if (tab === 'map') {
-    uni.showToast({ title: 'Map coming soon!', icon: 'none' })
+    uni.navigateTo({ url: '/pages/child/time-machine/index' })
     return
   }
-  // Logic for navigation
 }
 </script>
 

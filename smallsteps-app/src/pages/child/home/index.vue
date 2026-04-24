@@ -31,7 +31,7 @@
       <view class="robot-area" @click="handleRobotClick">
         <!-- Speech Bubble -->
         <view class="speech-bubble">
-          <text class="bubble-text">Ready for your next mission, {{ childName }}? 🤖</text>
+          <text class="bubble-text">{{ greetingText }}</text>
           <view class="tap-hint">Tap me to chat!</view>
         </view>
         
@@ -39,7 +39,7 @@
         <view class="robot-circle">
           <image 
             class="robot-img" 
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAA0RmcSQACImzUoE9woyc6-iyIeWXkvAw4lxZnIr9f-HJd8UDiHGwhHva02eLf1l--Q5SMauQxBc1YriECXhMtDDCPrO4m9Ab_7FvJ0xhktITS2cOnh7snQbeQSqNH7003z1j2AZfQatNbPTCZn4SczwbadodstvQLdfrwsStdm6WYruauaA2fXZWL-lKaGVKEEFmLni1Pz7ZUP0OkMVZom1KOsZ4vhRSI6-Ph-P2B25ItChVNt_BamCyGzq0fOcy_u6ce0eEdOPQ" 
+            :src="avatarUrl" 
             mode="aspectCover"
           />
         </view>
@@ -97,7 +97,21 @@ import { getPendingTasks, getStreak } from '@/api/child'
 const userStore = useUserStore()
 const streak = ref(0)
 // Balance is now in userStore
-const childName = ref(userStore.userInfo?.user?.nickName || 'Star Hero')
+const childName = computed(() => userStore.userInfo?.user?.nickName || 'Star Hero')
+const avatarUrl = computed(() => {
+  const avatar = userStore.userInfo?.user?.avatar
+  if (avatar) return avatar.startsWith('http') ? avatar : import.meta.env.VITE_APP_BASE_API + avatar
+  return 'https://lh3.googleusercontent.com/aida-public/AB6AXuAA0RmcSQACImzUoE9woyc6-iyIeWXkvAw4lxZnIr9f-HJd8UDiHGwhHva02eLf1l--Q5SMauQxBc1YriECXhMtDDCPrO4m9Ab_7FvJ0xhktITS2cOnh7snQbeQSqNH7003z1j2AZfQatNbPTCZn4SczwbadodstvQLdfrwsStdm6WYruauaA2fXZWL-lKaGVKEEFmLni1Pz7ZUP0OkMVZom1KOsZ4vhRSI6-Ph-P2B25ItChVNt_BamCyGzq0fOcy_u6ce0eEdOPQ'
+})
+
+const greetingText = computed(() => {
+  const hour = new Date().getHours()
+  if (hour < 9) return `早上好，${childName.value}！开启元气满满的一天吧 ☀️`
+  if (hour < 14) return `中午好，${childName.value}！休息一下，准备下午的挑战吧 🍱`
+  if (hour < 19) return `下午好，${childName.value}！完成任务，赢得更多星星吧 ⭐`
+  return `晚上好，${childName.value}！今天的你非常努力，准备进入梦乡吧 🌙`
+})
+
 const currentMission = ref<any>(null)
 const pendingTasks = ref<any[]>([])
 
@@ -107,7 +121,6 @@ async function loadData() {
     if (!userStore.userInfo) {
        const infoRes: any = await getInfo()
        userStore.setUserInfo(infoRes)
-       childName.value = infoRes.user?.nickName || 'Star Hero'
     }
 
     const childId = userStore.id || 1
