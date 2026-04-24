@@ -41,6 +41,11 @@
             <groupId>com.kenzhao.smallsteps</groupId>
             <artifactId>smallsteps-common-ss</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.kenzhao.smallsteps</groupId>
+            <artifactId>smallsteps-task</artifactId>
+            <version>${revision}</version>
+        </dependency>
 
         <!-- Test dependencies -->
         <dependency>

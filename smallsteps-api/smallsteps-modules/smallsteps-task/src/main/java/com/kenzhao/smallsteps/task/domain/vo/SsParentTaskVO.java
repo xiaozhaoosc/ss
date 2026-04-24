@@ -1,6 +1,6 @@
 package com.kenzhao.smallsteps.task.domain.vo;
 
-import com.kenzhao.smallsteps.task.domain.SsParentTask;
+import com.kenzhao.smallsteps.common.ss.domain.ParentTask;
 import io.github.linpeilie.annotations.AutoMapper;
 import lombok.Data;
 
@@ -12,7 +12,7 @@ import java.util.Date;
  * 家长任务视图对象
  */
 @Data
-@AutoMapper(target = SsParentTask.class)
+@AutoMapper(target = ParentTask.class)
 public class SsParentTaskVO implements Serializable {
 
     @Serial

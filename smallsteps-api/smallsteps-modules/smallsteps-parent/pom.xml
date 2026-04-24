@@ -23,6 +23,11 @@
         </dependency>
         <dependency>
             <groupId>com.kenzhao.smallsteps</groupId>
+            <artifactId>smallsteps-task</artifactId>
+            <version>${revision}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.kenzhao.smallsteps</groupId>
             <artifactId>smallsteps-system</artifactId>
         </dependency>
         <dependency>

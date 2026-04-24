@@ -1,10 +1,11 @@
 package com.kenzhao.smallsteps.child.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.kenzhao.smallsteps.common.ss.domain.ChildTask;
-import com.kenzhao.smallsteps.common.ss.domain.vo.ChildTaskVo;
 import com.kenzhao.smallsteps.child.mapper.ChildTaskMapper;
 import com.kenzhao.smallsteps.child.service.IChildTaskService;
+import com.kenzhao.smallsteps.common.ss.domain.ChildTask;
+import com.kenzhao.smallsteps.common.ss.domain.vo.ChildTaskVo;
+import com.kenzhao.smallsteps.task.service.IParentTaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
 public class ChildTaskServiceImpl implements IChildTaskService {
 
     private final ChildTaskMapper childTaskMapper;
-    private final com.kenzhao.smallsteps.parent.service.IParentTaskService parentTaskService;
+    private final IParentTaskService parentTaskService;
 
     @Override
     public List<ChildTaskVo> selectChildTaskList(ChildTask childTask) {
@@ -27,8 +28,6 @@ public class ChildTaskServiceImpl implements IChildTaskService {
                 .orderByDesc(ChildTask::getCreateTime));
         return list.stream().map(this::toVo).collect(Collectors.toList());
     }
-    
-    // ... other methods ...
 
     private ChildTaskVo toVo(ChildTask childTask) {
         if (childTask == null) return null;

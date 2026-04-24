@@ -37,10 +37,7 @@
             <artifactId>smallsteps-common-web</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.kenzhao.smallsteps</groupId>
-            <artifactId>smallsteps-child</artifactId>
-        </dependency>
+
 
         <dependency>
             <groupId>com.kenzhao.smallsteps</groupId>
@@ -57,6 +54,16 @@
             <groupId>io.rest-assured</groupId>
             <artifactId>rest-assured</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.kenzhao.smallsteps</groupId>
+            <artifactId>smallsteps-common-ss</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.kenzhao.smallsteps</groupId>
+            <artifactId>smallsteps-common-ai</artifactId>
+            <version>0.0.1</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

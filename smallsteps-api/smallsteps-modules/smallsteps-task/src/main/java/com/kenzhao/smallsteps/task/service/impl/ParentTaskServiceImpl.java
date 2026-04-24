@@ -1,13 +1,15 @@
-package com.kenzhao.smallsteps.parent.service.impl;
+package com.kenzhao.smallsteps.task.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.kenzhao.smallsteps.common.ai.service.IAiService;
 import com.kenzhao.smallsteps.common.mybatis.core.page.PageQuery;
 import com.kenzhao.smallsteps.common.mybatis.core.page.TableDataInfo;
 import com.kenzhao.smallsteps.common.ss.domain.ParentTask;
 import com.kenzhao.smallsteps.common.ss.domain.bo.ParentTaskBo;
 import com.kenzhao.smallsteps.common.ss.domain.vo.ParentTaskVo;
-import com.kenzhao.smallsteps.parent.mapper.ParentTaskMapper;
-import com.kenzhao.smallsteps.parent.service.IParentTaskService;
+import com.kenzhao.smallsteps.common.ss.domain.vo.TaskStepTemplateVo;
+import com.kenzhao.smallsteps.task.mapper.ParentTaskMapper;
+import com.kenzhao.smallsteps.task.service.IParentTaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +26,7 @@ import java.util.Map;
 public class ParentTaskServiceImpl implements IParentTaskService {
 
     private final ParentTaskMapper parentTaskMapper;
-    private final com.kenzhao.smallsteps.common.ai.service.IAiService aiService;
+    private final IAiService aiService;
 
     @Override
     public List<ParentTaskVo> queryList(ParentTaskBo bo) {
@@ -45,7 +47,7 @@ public class ParentTaskServiceImpl implements IParentTaskService {
         lqw.eq(bo.getTaskId() != null, ParentTask::getTaskId, bo.getTaskId());
         lqw.eq(bo.getParentId() != null, ParentTask::getParentId, bo.getParentId());
         lqw.eq(bo.getUserId() != null, ParentTask::getUserId, bo.getUserId());
-        lqw.eq(bo.getDeptId() != null, ParentTask::getDeptId, bo.getDeptId());
+//        lqw.eq(bo.getDeptId() != null, ParentTask::getDeptId, bo.getDeptId());
         lqw.like(cn.hutool.core.util.StrUtil.isNotBlank(bo.getTitle()), ParentTask::getTitle, bo.getTitle());
         lqw.eq(cn.hutool.core.util.StrUtil.isNotBlank(bo.getStatus()), ParentTask::getStatus, bo.getStatus());
         return lqw;
@@ -136,7 +138,6 @@ public class ParentTaskServiceImpl implements IParentTaskService {
 
     @Override
     public String getSummaryInsight(Long childId) {
-        // Leo 今天已经完成了 3 个任务，虽然在‘整理书包’时稍微有点分心，但他最后还是靠自己做到了。他现在可能需要一点点休息和您的一个肯定。🌟
         return "Leo 今天已经完成了 3 个任务，虽然在‘整理书包’时稍微有点分心，但他最后还是靠自己做到了。他现在可能需要一点点休息和您的一个肯定。🌟";
     }
 
@@ -144,7 +145,7 @@ public class ParentTaskServiceImpl implements IParentTaskService {
     public List<Map<String, Object>> getWeeklyHeatmap(Long childId) {
         List<Map<String, Object>> heatmap = new ArrayList<>();
         String[] days = {"周一", "周二", "周三", "周四", "周五", "周六", "周日"};
-        int[] levels = {3, 4, 2, 4, 1, 4, 3}; // 0-4 intensity
+        int[] levels = {3, 4, 2, 4, 1, 4, 3};
         String[] statuses = {"稳定", "极佳", "分心", "极佳", "挫折", "极佳", "稳定"};
 
         for (int i = 0; i < 7; i++) {
@@ -159,8 +160,6 @@ public class ParentTaskServiceImpl implements IParentTaskService {
 
     @Override
     public String getWeeklyAiAnalysis(Long childId) {
-        // In a real app, this would aggregate task logs and AI logs for the week
-        // and send to aiService.chatWithAI or a specialized method.
         return "### 📈 本周成长深度分析\n\n" +
                "**1. 专注力趋势**：\n" +
                "本周 Leo 在上午时段的专注力表现明显优于下午。周二和周四完成了高难度的‘自主阅读’任务，显示出较强的启动动力。\n\n" +
@@ -184,18 +183,17 @@ public class ParentTaskServiceImpl implements IParentTaskService {
         ParentTaskVo vo = new ParentTaskVo();
         cn.hutool.core.bean.BeanUtil.copyProperties(parentTask, vo);
         vo.setStatusName("1".equals(parentTask.getStatus()) ? "已完成" : "未完成");
-        
-        // Load Sub-tasks if this is a root task
+
         if (parentTask.getParentId() == null || parentTask.getParentId() == 0) {
             List<ParentTask> subTasks = parentTaskMapper.selectList(new LambdaQueryWrapper<ParentTask>()
                 .eq(ParentTask::getParentId, parentTask.getTaskId())
-                .orderByAsc(ParentTask::getTaskId)); // Order by ID as a proxy for step order
+                .orderByAsc(ParentTask::getTaskId));
             if (!subTasks.isEmpty()) {
                 List<TaskStepTemplateVo> steps = new ArrayList<>();
                 for (ParentTask sub : subTasks) {
                     TaskStepTemplateVo step = new TaskStepTemplateVo();
                     step.setContent(sub.getTitle());
-                    step.setExpectedDuration(sub.getRewardPoints()); // Mocking duration with points for now or use difficulty
+                    step.setExpectedDuration(sub.getRewardPoints());
                     step.setAudioHint(sub.getAudioEffect());
                     steps.add(step);
                 }

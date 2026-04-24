@@ -1,14 +1,15 @@
 package com.kenzhao.smallsteps.task.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.kenzhao.smallsteps.child.service.IScoreService;
 import com.kenzhao.smallsteps.common.core.exception.ServiceException;
 import com.kenzhao.smallsteps.task.domain.SsTask;
 import com.kenzhao.smallsteps.task.domain.SsTaskLog;
 import com.kenzhao.smallsteps.task.mapper.SsTaskLogMapper;
 import com.kenzhao.smallsteps.task.mapper.SsTaskMapper;
 import com.kenzhao.smallsteps.task.service.ISsTaskLogService;
+import com.kenzhao.smallsteps.task.event.TaskLitUpEvent;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +22,7 @@ import java.util.Date;
 @Service
 public class SsTaskLogServiceImpl extends ServiceImpl<SsTaskLogMapper, SsTaskLog> implements ISsTaskLogService {
 
-    private final IScoreService scoreService;
+    private final ApplicationEventPublisher eventPublisher;
     private final SsTaskMapper taskMapper;
 
     /** 状态: 进行中 */
@@ -67,11 +68,8 @@ public class SsTaskLogServiceImpl extends ServiceImpl<SsTaskLogMapper, SsTaskLog
         log.setUpdateTime(new Date());
         baseMapper.updateById(log);
 
-        String reason = String.format("确认点亮任务星星: %s", task.getTitle());
-        boolean success = scoreService.addPoints(log.getChildId(), task.getStarReward(), task.getId(), reason);
-        if (!success) {
-            throw new ServiceException("星星发放异常，请稍后重试");
-        }
+        // 发布事件，由儿童端监听并处理积分
+        eventPublisher.publishEvent(new TaskLitUpEvent(this, logId, log.getChildId(), task.getStarReward(), task.getId(), task.getTitle()));
 
         return true;
     }

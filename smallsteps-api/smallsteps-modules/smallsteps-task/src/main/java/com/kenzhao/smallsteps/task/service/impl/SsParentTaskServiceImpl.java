@@ -2,7 +2,7 @@ package com.kenzhao.smallsteps.task.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.kenzhao.smallsteps.common.core.utils.MapstructUtils;
-import com.kenzhao.smallsteps.task.domain.SsParentTask;
+import com.kenzhao.smallsteps.common.ss.domain.ParentTask;
 import com.kenzhao.smallsteps.task.domain.vo.SsParentTaskVO;
 import com.kenzhao.smallsteps.task.mapper.SsParentTaskMapper;
 import com.kenzhao.smallsteps.task.service.ISsParentTaskService;
@@ -15,12 +15,12 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @RequiredArgsConstructor
 @Service
-public class SsParentTaskServiceImpl extends ServiceImpl<SsParentTaskMapper, SsParentTask> implements ISsParentTaskService {
+public class SsParentTaskServiceImpl extends ServiceImpl<SsParentTaskMapper, ParentTask> implements ISsParentTaskService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean publishTask(SsParentTaskVO taskVO) {
-        SsParentTask entity = MapstructUtils.convert(taskVO, SsParentTask.class);
+        ParentTask entity = MapstructUtils.convert(taskVO, ParentTask.class);
         if (entity == null) {
             return false;
         }
