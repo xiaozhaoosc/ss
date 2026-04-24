@@ -212,9 +212,9 @@ export function getRecentInteractions(childId: number, limit: number = 10) {
 
 export function getEmotionTrend(childId: number, days: number = 7) {
     return request({
-        url: '/child/ai/emotion/trend',
+        url: '/child/ai/emotion/trend/' + childId,
         method: 'GET',
-        params: { childId, days }
+        params: { days }
     })
 }
 

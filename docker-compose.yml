@@ -48,7 +48,7 @@ services:
       - POSTGRES_PASSWORD=ui123456789~
       - POSTGRES_DB=smallsteps_db
     ports:
-      - "15432:5432"
+      - "18432:5432"
     volumes:
       - pg_data:/var/lib/postgresql/data
 

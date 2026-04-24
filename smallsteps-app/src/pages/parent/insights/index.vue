@@ -18,7 +18,7 @@
       <view class="section">
         <view class="section-header">
           <text class="section-title">每周重点</text>
-          <view class="more-btn">
+          <view class="more-btn" @click="navigateToDetails">
             <text>详情</text>
             <text class="icon">></text>
           </view>
@@ -113,9 +113,11 @@ import { ref } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
 import BottomNav from '@/components/common/bottom-nav/bottom-nav.vue'
 import { listChildAchievement, getAbilityRadar, getEmotionTrend } from '@/api/child'
+import { getFamilyMembers } from '@/api/family'
 import { useUserStore } from '@/store/modules/user'
 
 const userStore = useUserStore()
+const childId = ref(null)
 
 const abilityData = ref([])
 
@@ -126,13 +128,52 @@ const currentMonthStr = ref('')
 const achievements = ref([])
 
 onShow(() => {
-  loadData()
+  initChildIdAndLoad()
 })
-const loadData = () => {
-  const childId = userStore.currentChildId || 1 
 
+const navigateToDetails = () => {
+  if (!childId.value) {
+    uni.showToast({ title: '未选择儿童', icon: 'none' })
+    return
+  }
+  uni.navigateTo({ url: `/pages/parent/weekly-report/index?cid=${childId.value}` })
+}
+
+const initChildIdAndLoad = async () => {
+  if (userStore.currentChildId) {
+    childId.value = userStore.currentChildId
+    loadData(childId.value)
+  } else {
+    try {
+      const res = await getFamilyMembers()
+      const members = res.data || []
+      // Find the first member that acts as a child (assumed roles logic or just filter out parents)
+      // Usually, kids might have userType = '3' or 3 or simply be the other ones in the family.
+      // If we don't know, we can just pick the first child in the list.
+      const children = members.filter(m => String(m.userType) === '3' || m.roles?.includes('child'))
+      if (children.length > 0) {
+        childId.value = children[0].userId
+        loadData(childId.value)
+      } else {
+        // Fallback to first member if no explicit child found, or just show error
+        if (members.length > 0) {
+          childId.value = members[0].userId
+          loadData(childId.value)
+        } else {
+          uni.showToast({ title: '当前家庭未绑定儿童', icon: 'none' })
+        }
+      }
+    } catch (err) {
+      console.error('Failed to get family members', err)
+      childId.value = 1 // fallback
+      loadData(childId.value)
+    }
+  }
+}
+
+const loadData = (cId) => {
   // 获取能力发展雷达图数据
-  getAbilityRadar(childId).then(res => {
+  getAbilityRadar(cId).then(res => {
     const data = res.data || {}
     const abilities = data.abilities || []
     const scores = data.scores || []
@@ -161,12 +202,12 @@ const loadData = () => {
     ]
   })
 
-  loadEmotionHeatmap(childId)
-  loadAchievements(childId)
+  loadEmotionHeatmap(cId)
+  loadAchievements(cId)
 }
 
-const loadAchievements = (childId) => {
-  listChildAchievement(childId).then(res => {
+const loadAchievements = (cId) => {
+  listChildAchievement(cId).then(res => {
     const list = res.data || res.rows || []
     achievements.value = list.slice(0, 3).map((item, index) => ({
       ...item,
@@ -177,7 +218,7 @@ const loadAchievements = (childId) => {
   })
 }
 
-const loadEmotionHeatmap = (childId) => {
+const loadEmotionHeatmap = (cId) => {
   const now = new Date()
   const year = now.getFullYear()
   const month = now.getMonth()
@@ -209,7 +250,7 @@ const loadEmotionHeatmap = (childId) => {
   calendarDays.value = days
 
   // 获取情绪趋势数据 (最近30天)
-  getEmotionTrend(childId, 30).then(res => {
+  getEmotionTrend(cId, 30).then(res => {
     emotionData.value = res.data || []
   }).catch(err => {
     console.error('Failed to load emotion trend:', err)

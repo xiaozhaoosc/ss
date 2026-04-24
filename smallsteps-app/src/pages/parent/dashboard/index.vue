@@ -55,7 +55,7 @@
       <!-- 今日焦点 -->
       <view class="section-header">
         <text class="section-title">今日焦点</text>
-        <text class="see-all">详情</text>
+        <text class="see-all" @click="navigateToInsights">详情</text>
       </view>
       
       <scroll-view scroll-x class="stats-scroll no-scrollbar">
@@ -71,7 +71,7 @@
       <!-- 任务执行记录 (时间轴) -->
       <view class="section-header mt-6">
         <text class="section-title">执行记录</text>
-        <text class="see-all">查看全部</text>
+        <text class="see-all" @click="navigateToTasks">查看全部</text>
       </view>
       
       <view class="timeline-container">
@@ -102,6 +102,7 @@ import EmotionAlert from '@/components/parent/emotion-alert/emotion-alert.vue'
 import TimelineItem from '@/components/parent/timeline-item/timeline-item.vue'
 import BottomNav from '@/components/common/bottom-nav/bottom-nav.vue'
 import { useUserStore } from '@/store/modules/user'
+import { getFamilyMembers } from '@/api/family'
 import { 
   getTaskStatus, 
   getSummaryInsight, 
@@ -132,10 +133,39 @@ const activeAlert = ref(null)
 const aiInsight = ref('')
 const timeline = ref<any[]>([])
 const notifications = ref<any[]>([])
-const childId = ref(1) // In real app, get from userStore or selected child
+const childId = ref<number | null>(null)
+
+async function initChildIdAndLoad() {
+  if (userStore.currentChildId) {
+    childId.value = userStore.currentChildId
+    await loadData()
+  } else {
+    try {
+      const res: any = await getFamilyMembers()
+      const members = res.data || []
+      const children = members.filter((m: any) => String(m.userType) === '3' || m.roles?.includes('child'))
+      if (children.length > 0) {
+        childId.value = children[0].userId
+        await loadData()
+      } else {
+        if (members.length > 0) {
+          childId.value = members[0].userId
+          await loadData()
+        } else {
+          uni.showToast({ title: '未绑定儿童', icon: 'none' })
+        }
+      }
+    } catch (err) {
+      console.error('Failed to get family members', err)
+      childId.value = 1
+      await loadData()
+    }
+  }
+}
 
 // Data Loading
 async function loadData() {
+  if (!childId.value) return
   uni.showLoading({ title: '加载中...' })
   try {
     // 1. Get AI Insight
@@ -191,6 +221,14 @@ const markAllRead = () => {
   unreadCount.value = 0
 }
 
+const navigateToInsights = () => {
+  uni.switchTab({ url: '/pages/parent/insights/index' })
+}
+
+const navigateToTasks = () => {
+  uni.switchTab({ url: '/pages/parent/task-creator/index' })
+}
+
 const navigateToDetails = () => {
   uni.navigateTo({ url: '/pages/parent/emotion-detail/index' })
 }
@@ -200,7 +238,9 @@ const navigateToAiDetails = () => {
 }
 
 const navigateToWeeklyReport = () => {
-  uni.navigateTo({ url: `/pages/parent/weekly-report/index?cid=${childId.value}` })
+  if (childId.value) {
+    uni.navigateTo({ url: `/pages/parent/weekly-report/index?cid=${childId.value}` })
+  }
 }
 
 const handleAction = (note: any, action: string) => {
@@ -209,7 +249,7 @@ const handleAction = (note: any, action: string) => {
 }
 
 onShow(() => {
-  loadData()
+  initChildIdAndLoad()
 })
 </script>
 

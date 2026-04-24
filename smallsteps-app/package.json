@@ -38,6 +38,7 @@
         "@dcloudio/uni-quickapp-webview": "3.0.0-alpha-5000320260310001",
         "crypto-js": "^4.2.0",
         "jsencrypt": "^3.5.4",
+        "mp-html": "^2.5.2",
         "pinia": "^2.1.7",
         "vue": "3.5.30",
         "vue-i18n": "9.14.4"

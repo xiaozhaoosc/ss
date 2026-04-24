@@ -95,14 +95,86 @@
     </div>
 
     <!-- 添加或修改对话框 -->
-    <el-dialog v-model="open" :title="title" width="600px" append-to-body>
+    <el-dialog v-model="open" :title="title" width="680px" append-to-body>
       <el-form ref="taskFormRef" :model="form" :rules="rules" label-width="100px">
         <el-form-item label="任务标题" prop="title">
           <el-input v-model="form.title" placeholder="请输入任务标题" />
         </el-form-item>
         <el-form-item label="任务描述" prop="description">
-          <el-input v-model="form.description" type="textarea" placeholder="请输入任务描述" />
+          <el-input v-model="form.description" type="textarea" :rows="3" placeholder="请输入任务描述（越详细，AI拆解越精准）" />
         </el-form-item>
+
+        <!-- AI 智能拆解区块 -->
+        <el-divider content-position="left">
+          <span class="ai-divider-label">🤖 AI 智能拆解</span>
+        </el-divider>
+        <div class="ai-breakdown-section">
+          <div class="ai-breakdown-hint">
+            <el-icon class="hint-icon"><InfoFilled /></el-icon>
+            AI 会将任务拆解为适合 ADHD 儿童执行的极细颗粒步骤
+          </div>
+          <el-button
+            type="primary"
+            plain
+            :loading="aiBreakdownLoading"
+            :disabled="!form.title"
+            icon="MagicStick"
+            class="ai-btn"
+            @click="handleAiBreakdown"
+          >
+            {{ aiBreakdownLoading ? '正在生成中...' : '✨ 点击让 AI 拆解此任务' }}
+          </el-button>
+
+          <!-- AI 拆解结果 -->
+          <transition name="fade">
+            <div v-if="aiSteps.length > 0" class="ai-steps-container">
+              <div class="ai-steps-header">
+                <span class="steps-count">共 {{ aiSteps.length }} 个步骤</span>
+                <el-button link type="primary" size="small" @click="aiSteps = []">清除</el-button>
+              </div>
+              <div
+                v-for="(step, index) in aiSteps"
+                :key="index"
+                class="ai-step-item"
+              >
+                <div class="step-number">{{ index + 1 }}</div>
+                <div class="step-content">
+                  <el-input
+                    v-model="step.stepName"
+                    placeholder="步骤标题"
+                    class="step-name-input mb-1"
+                    size="small"
+                  />
+                  <el-input
+                    v-model="step.stepDesc"
+                    type="textarea"
+                    placeholder="步骤描述"
+                    :rows="2"
+                    size="small"
+                  />
+                </div>
+                <el-button
+                  link
+                  type="danger"
+                  size="small"
+                  icon="Delete"
+                  class="step-del-btn"
+                  @click="aiSteps.splice(index, 1)"
+                />
+              </div>
+              <el-button
+                text
+                type="primary"
+                icon="Plus"
+                size="small"
+                class="mt-2"
+                @click="aiSteps.push({ stepName: '', stepDesc: '' })"
+              >添加步骤</el-button>
+            </div>
+          </transition>
+        </div>
+
+        <el-divider content-position="center">基础配置</el-divider>
         <el-row>
           <el-col :span="12">
             <el-form-item label="难度等级" prop="difficulty">
@@ -161,6 +233,7 @@
 
 <script setup name="ParentTask" lang="ts">
 import { listTask, getTask, deleteTask, addTask, updateTask } from "@/api/smallsteps/task";
+import { taskBreakdown } from "@/api/ai";
 
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
 
@@ -176,6 +249,10 @@ const single = ref(true);
 const multiple = ref(true);
 const total = ref(0);
 const title = ref("");
+
+// AI 拆解
+const aiBreakdownLoading = ref(false);
+const aiSteps = ref<Array<{ stepName: string; stepDesc: string }>>([]);
 
 const data = reactive<any>({
   form: {},
@@ -206,6 +283,7 @@ function getList() {
 /** 取消按钮 */
 function cancel() {
   open.value = false;
+  aiSteps.value = [];
   reset();
 }
 
@@ -245,9 +323,42 @@ function handleSelectionChange(selection: any[]) {
   multiple.value = !selection.length;
 }
 
+/** AI 智能拆解 */
+async function handleAiBreakdown() {
+  if (!form.value.title) {
+    proxy?.$modal.msgWarning('请先填写任务标题');
+    return;
+  }
+  aiBreakdownLoading.value = true;
+  aiSteps.value = [];
+  try {
+    const res: any = await taskBreakdown({
+      taskName: form.value.title,
+      taskDesc: form.value.description || '',
+      childAge: 9
+    });
+    // 后端 R<List<Map>> 结构
+    const data = res.data || res;
+    if (Array.isArray(data) && data.length > 0) {
+      aiSteps.value = data.map((s: any) => ({
+        stepName: s.stepName || s.step || '',
+        stepDesc: s.stepDesc || s.desc || s.description || ''
+      }));
+      proxy?.$modal.msgSuccess(`AI 已生成 ${aiSteps.value.length} 个步骤，可直接编辑后保存`);
+    } else {
+      proxy?.$modal.msgWarning('AI 未返回有效步骤，请检查网络或稍后重试');
+    }
+  } catch (e: any) {
+    proxy?.$modal.msgError('AI 拆解失败：' + (e?.message || '请检查后端服务'));
+  } finally {
+    aiBreakdownLoading.value = false;
+  }
+}
+
 /** 新增按钮操作 */
 function handleAdd() {
   reset();
+  aiSteps.value = [];
   open.value = true;
   title.value = "添加家长任务";
 }
@@ -267,16 +378,23 @@ function handleUpdate(row?: any) {
 function submitForm() {
   taskFormRef.value?.validate((valid: boolean) => {
     if (valid) {
-      if (form.value.taskId != undefined) {
-        updateTask(form.value).then(response => {
+      // 将AI拆解的步骤附加到 form 中提交
+      const submitData = {
+        ...form.value,
+        aiSubSteps: aiSteps.value.length > 0 ? aiSteps.value : undefined
+      };
+      if (submitData.taskId != undefined) {
+        updateTask(submitData).then(() => {
           proxy?.$modal.msgSuccess("修改成功");
           open.value = false;
+          aiSteps.value = [];
           getList();
         });
       } else {
-        addTask(form.value).then(response => {
+        addTask(submitData).then(() => {
           proxy?.$modal.msgSuccess("新增成功");
           open.value = false;
+          aiSteps.value = [];
           getList();
         });
       }
@@ -370,4 +488,130 @@ getList();
 :deep(.el-rate__icon) {
   margin-right: 2px;
 }
+
+/* AI 拆解区块样式 */
+.ai-divider-label {
+  font-weight: bold;
+  color: #4facfe;
+  font-size: 14px;
+}
+
+.ai-breakdown-section {
+  padding: 0 0 12px 0;
+}
+
+.ai-breakdown-hint {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #909399;
+  margin-bottom: 10px;
+  padding: 8px 12px;
+  background: #f0f9ff;
+  border-radius: 8px;
+  border-left: 3px solid #4facfe;
+
+  .hint-icon {
+    color: #4facfe;
+    flex-shrink: 0;
+  }
+}
+
+.ai-btn {
+  border-radius: 10px;
+  font-weight: bold;
+  background: linear-gradient(90deg, rgba(79,172,254,0.1) 0%, rgba(0,242,254,0.1) 100%);
+  border-color: #4facfe;
+  color: #4facfe;
+  width: 100%;
+  height: 40px;
+
+  &:hover {
+    background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+    color: white;
+  }
+}
+
+.ai-steps-container {
+  margin-top: 14px;
+  background: #fafcff;
+  border-radius: 12px;
+  border: 1px solid #e8f4ff;
+  padding: 12px;
+}
+
+.ai-steps-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+
+  .steps-count {
+    font-size: 12px;
+    color: #4facfe;
+    font-weight: 600;
+    background: #e8f4ff;
+    padding: 2px 10px;
+    border-radius: 20px;
+  }
+}
+
+.ai-step-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px;
+  margin-bottom: 8px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  transition: box-shadow 0.2s;
+
+  &:hover {
+    box-shadow: 0 4px 12px rgba(79,172,254,0.15);
+  }
+
+  .step-number {
+    min-width: 26px;
+    height: 26px;
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    border-radius: 50%;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+
+  .step-content {
+    flex: 1;
+
+    .step-name-input {
+      margin-bottom: 6px;
+    }
+  }
+
+  .step-del-btn {
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+}
+
+/* fade 过渡动画 */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s, transform 0.3s;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: translateY(-8px);
+}
+
+.mb-1 { margin-bottom: 4px; }
+.mt-2 { margin-top: 8px; }
 </style>

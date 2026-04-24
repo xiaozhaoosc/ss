@@ -7,7 +7,7 @@ import java.sql.Statement;
 
 public class EmotionAnalysisMigrationTest {
 
-    private static final String URL = "jdbc:postgresql://localhost:15432/smallsteps_db?useUnicode=true&characterEncoding=utf8&useSSL=false";
+    private static final String URL = "jdbc:postgresql://192.168.1.12:15432/smallsteps_db?useUnicode=true&characterEncoding=utf8&useSSL=false";
     private static final String USER = "smallsteps";
     private static final String PASS = "ui123456789~";
 
