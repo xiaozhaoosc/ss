@@ -1,6 +1,6 @@
 package com.kenzhao.smallsteps.task.service;
 
-import com.kenzhao.smallsteps.task.domain.vo.SsTaskLogVO;
+
 
 /**
  * 任务执行记录Service接口
