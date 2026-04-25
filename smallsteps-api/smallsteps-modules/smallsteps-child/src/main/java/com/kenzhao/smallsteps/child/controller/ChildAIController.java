@@ -74,6 +74,15 @@ public class ChildAIController {
     }
 
     /**
+     * 与AI流式对话
+     */
+    @cn.dev33.satoken.annotation.SaIgnore
+    @GetMapping(value = "/chat/stream", produces = org.springframework.http.MediaType.TEXT_EVENT_STREAM_VALUE)
+    public org.springframework.web.servlet.mvc.method.annotation.SseEmitter chatWithAIStream(@RequestParam("childId") Long childId, @RequestParam("userInput") String userInput, @RequestParam(value = "emotionType", defaultValue = "5") Integer emotionType) {
+        return childAIService.chatWithAIStream(childId, userInput, emotionType);
+    }
+
+    /**
      * 与AI对话
      */
     @cn.dev33.satoken.annotation.SaIgnore

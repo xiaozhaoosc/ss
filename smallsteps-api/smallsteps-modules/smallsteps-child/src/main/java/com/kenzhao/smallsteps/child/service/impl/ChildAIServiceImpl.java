@@ -51,6 +51,49 @@ public class ChildAIServiceImpl implements IChildAIService {
     }
 
     @Override
+    public org.springframework.web.servlet.mvc.method.annotation.SseEmitter chatWithAIStream(Long childId, String userInput, Integer emotionType) {
+        org.springframework.web.servlet.mvc.method.annotation.SseEmitter emitter = new org.springframework.web.servlet.mvc.method.annotation.SseEmitter(300000L); // 5分钟超时
+        
+        java.util.concurrent.CompletableFuture.runAsync(() -> {
+            try {
+                // 1. 分析情感
+                java.util.Map<String, Object> analysis = aiService.emotionAnalysis(childId, userInput);
+                Integer detectedType = (Integer) analysis.getOrDefault("emotionType", 5);
+                
+                // 由于现有 aiService.chat 返回 String，若不支持流式，则暂做模拟分块发送
+                // TODO: 若 aiService 有 chatStream 请替换为真实调用
+                String aiReply = aiService.chat(childId, userInput, analysis);
+                
+                // 模拟流式输出
+                int chunkSize = 2;
+                for (int i = 0; i < aiReply.length(); i += chunkSize) {
+                    int end = Math.min(i + chunkSize, aiReply.length());
+                    String chunk = aiReply.substring(i, end);
+                    emitter.send(org.springframework.web.servlet.mvc.method.annotation.SseEmitter.event().data(chunk));
+                    Thread.sleep(50); // 模拟延迟
+                }
+                
+                // 发送结束标志
+                emitter.send(org.springframework.web.servlet.mvc.method.annotation.SseEmitter.event().data("[DONE]"));
+                emitter.complete();
+                
+                // 保存记录
+                ChildAI record = new ChildAI();
+                record.setChildId(childId);
+                record.setUserInput(userInput);
+                record.setAiResponse(aiReply);
+                record.setEmotionType(detectedType);
+                baseMapper.insert(record);
+                
+            } catch (Exception e) {
+                emitter.completeWithError(e);
+            }
+        });
+        
+        return emitter;
+    }
+
+    @Override
     public String chatWithAI(Long childId, String userInput, Integer emotionType) {
         // 1. 分析情感 (如果传入的 emotionType 为空，则调用 AI 服务分析)
         java.util.Map<String, Object> analysis = aiService.emotionAnalysis(childId, userInput);

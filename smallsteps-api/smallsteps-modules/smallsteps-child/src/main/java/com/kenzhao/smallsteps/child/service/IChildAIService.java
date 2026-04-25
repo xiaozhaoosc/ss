@@ -17,6 +17,9 @@ public interface IChildAIService {
     /** 与AI对话 */
     String chatWithAI(Long childId, String userInput, Integer emotionType);
     
+    /** 与AI流式对话 */
+    org.springframework.web.servlet.mvc.method.annotation.SseEmitter chatWithAIStream(Long childId, String userInput, Integer emotionType);
+    
     /** 查询最近交互记录 */
     List<ChildAI> selectRecentInteractionsByChildId(Long childId, Integer limit);
     
