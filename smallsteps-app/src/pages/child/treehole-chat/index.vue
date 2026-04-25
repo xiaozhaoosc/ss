@@ -5,6 +5,23 @@ import { useUserStore } from '@/store/modules/user'
 import { chatWithAI, getBaseUrl } from '@/api/child'
 import { getToken } from '@/utils/auth'
 
+// 这里的集成视具体 Pretext API 决定，若简单场景我们可以先用轻量的方法。
+// 若 Pretext 在 uni-app 环境因无 DOM 限制无法运行，我们可以利用 v-html 结合简单的 markdown 替换。
+// 为保证稳定性，这里提供一个简单的正则转 HTML 的方案结合 rich-text
+const formatMarkdown = (text: string) => {
+    if (!text) return ''
+    let html = text
+    // 粗体
+    html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    // 代码块
+    html = html.replace(/```([\s\S]*?)```/g, '<pre style="background:#f1f5f9;padding:8px;border-radius:4px;overflow-x:auto;"><code>$1</code></pre>')
+    // 行内代码
+    html = html.replace(/`(.*?)`/g, '<code style="background:#f1f5f9;padding:2px 4px;border-radius:4px;color:#ef4444;">$1</code>')
+    // 换行
+    html = html.replace(/\n/g, '<br/>')
+    return html
+}
+
 const parseStreamingText = (text: string) => {
   let thinkContent = ''
   let displayContent = text
@@ -186,7 +203,8 @@ onMounted(() => {
                  <text class="think-text">{{ msg.thinkContent }}</text>
                </details>
             </view>
-            <text class="text">{{ msg.displayContent }}</text>
+            <!-- 原本的: <text class="text">{{ msg.displayContent }}</text> -->
+            <rich-text class="text" :nodes="formatMarkdown(msg.displayContent)"></rich-text>
           </view>
           <view v-if="msg.role === 'user'" class="avatar user-avatar">
             <text class="material-symbols-outlined">person</text>
