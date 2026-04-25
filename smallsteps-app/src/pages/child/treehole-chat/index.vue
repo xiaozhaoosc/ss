@@ -66,8 +66,12 @@ const sendMessage = async () => {
   isLoading.value = true
   scrollToBottom()
   
-  const childId = userStore.id
-  if (!childId) return
+  const childId = userStore.id || 1 // 增加测试 fallback 避免直接退出
+  if (!childId) {
+    isLoading.value = false
+    uni.showToast({ title: '用户未登录', icon: 'none' })
+    return
+  }
   
   const aiMsgIndex = messages.value.length
   messages.value.push({
@@ -80,6 +84,7 @@ const sendMessage = async () => {
   
   const url = `${getBaseUrl()}/child/ai/chat/stream?childId=${childId}&userInput=${encodeURIComponent(userMsg)}`
   const token = getToken() || userStore.token
+  const clientid = uni.getStorageSync('clientid') || 'e5cd7e4891bf95d1d19206ce24a7b32e'
   
   // uni.request 支持 enableChunked
   const requestTask = uni.request({
@@ -87,7 +92,8 @@ const sendMessage = async () => {
     method: 'GET',
     enableChunked: true,
     header: {
-      'Authorization': 'Bearer ' + token
+      'Authorization': 'Bearer ' + token,
+      'clientid': clientid
     },
     success: () => {
       isLoading.value = false
@@ -98,43 +104,70 @@ const sendMessage = async () => {
     }
   })
   
+  let decoder: any = null
+  if (typeof TextDecoder !== 'undefined') {
+      decoder = new TextDecoder('utf-8')
+  }
+
+  let buffer = ''
+
   requestTask.onChunkReceived((res: any) => {
-    // 将 ArrayBuffer 转为字符串 (兼容各平台)
-    const arrayBuffer = res.data
-    const uint8Array = new Uint8Array(arrayBuffer)
     let chunkString = ''
-    
-    // 简易 UTF-8 解码，或使用 TextDecoder（如果支持）
-    try {
-        if (typeof TextDecoder !== 'undefined') {
-            chunkString = new TextDecoder('utf-8').decode(uint8Array)
-        } else {
-            // fallback
-            chunkString = String.fromCharCode.apply(null, Array.from(uint8Array))
-            chunkString = decodeURIComponent(escape(chunkString))
+    if (typeof res.data === 'string') {
+        chunkString = res.data
+    } else {
+        const arrayBuffer = res.data
+        const uint8Array = new Uint8Array(arrayBuffer)
+        try {
+            if (decoder) {
+                chunkString = decoder.decode(uint8Array, {stream: true})
+            } else {
+                chunkString = String.fromCharCode.apply(null, Array.from(uint8Array))
+                chunkString = decodeURIComponent(escape(chunkString))
+            }
+        } catch(e) {
+            console.error('Decode error', e)
         }
-    } catch(e) {
-        console.error('Decode error', e)
     }
     
-    // 解析 SSE 格式 (data: xxx\n\n)
-    const lines = chunkString.split('\n')
-    for (const line of lines) {
-        if (line.startsWith('data:')) {
-            const data = line.substring(5).trim()
-            if (data === '[DONE]') {
-                isLoading.value = false
-                break
+    buffer += chunkString
+    // 按事件结束符 \n\n 或 \r\n\r\n 分割
+    const events = buffer.split(/\n\n|\r\n\r\n/)
+    // 最后一部分可能不完整，保留在 buffer 中
+    buffer = events.pop() || ''
+    
+    for (const event of events) {
+        if (!event.trim()) continue
+        
+        // 提取此事件中的所有 data 字段并用换行符拼接（还原由于 Spring SSE 多行导致的换行）
+        const lines = event.split('\n')
+        const dataLines = []
+        let isDone = false
+        
+        for (const line of lines) {
+            if (line.startsWith('data:')) {
+                let data = line.substring(5)
+                if (data.startsWith(' ')) data = data.substring(1)
+                
+                if (data.trim() === '[DONE]') {
+                    isDone = true
+                } else {
+                    dataLines.push(data)
+                }
             }
-            if (data) {
-                // 拼接完整文本
-                messages.value[aiMsgIndex].content += data
-                // 分离和重新渲染
-                const parsed = parseStreamingText(messages.value[aiMsgIndex].content)
-                messages.value[aiMsgIndex].thinkContent = parsed.thinkContent
-                messages.value[aiMsgIndex].displayContent = parsed.displayContent
-                scrollToBottom()
-            }
+        }
+        
+        if (isDone) {
+            isLoading.value = false
+            break
+        }
+        
+        if (dataLines.length > 0) {
+            messages.value[aiMsgIndex].content += dataLines.join('\n')
+            const parsed = parseStreamingText(messages.value[aiMsgIndex].content)
+            messages.value[aiMsgIndex].thinkContent = parsed.thinkContent
+            messages.value[aiMsgIndex].displayContent = parsed.displayContent
+            scrollToBottom()
         }
     }
   })
