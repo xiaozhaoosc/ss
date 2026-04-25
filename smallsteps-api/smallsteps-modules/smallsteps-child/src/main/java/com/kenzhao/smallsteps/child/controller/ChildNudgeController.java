@@ -17,10 +17,13 @@ import java.util.concurrent.ConcurrentHashMap;
  * @date 2026-04-08
  */
 @Slf4j
+@cn.dev33.satoken.annotation.SaCheckLogin
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/child/nudge")
 public class ChildNudgeController extends BaseController {
+
+    private final com.kenzhao.smallsteps.child.service.IChildService childService;
 
     // 内存中保存最新的提醒指令 (实际项目建议使用 Redis)
     private static final Map<Long, Map<String, Object>> NUDGE_CACHE = new ConcurrentHashMap<>();
@@ -32,6 +35,7 @@ public class ChildNudgeController extends BaseController {
     public R<Void> sendNudge(@RequestParam("childId") Long childId, 
                             @RequestParam(value = "type", defaultValue = "vibrate") String type,
                             @RequestParam(value = "message", required = false) String message) {
+        validateChildAccess(childId);
         log.info("Parent nudge sent to child {}: type={}, message={}", childId, type, message);
         
         Map<String, Object> nudgeData = new ConcurrentHashMap<>();
@@ -47,8 +51,10 @@ public class ChildNudgeController extends BaseController {
     /**
      * [Child Terminal 调用] 轮询或长连接获取最新的提醒请求
      */
+    @cn.dev33.satoken.annotation.SaIgnore
     @GetMapping("/poll/{childId}")
     public R<Map<String, Object>> pollNudge(@PathVariable("childId") Long childId) {
+        // Hardware terminal might not have a login session, so we SaIgnore but keep childId specific.
         Map<String, Object> nudge = NUDGE_CACHE.get(childId);
         if (nudge != null && !(Boolean) nudge.get("consumed")) {
             // 标记已消费 (避免硬件重复触发)
@@ -63,7 +69,20 @@ public class ChildNudgeController extends BaseController {
      */
     @DeleteMapping("/clear/{childId}")
     public R<Void> clearNudge(@PathVariable("childId") Long childId) {
+        validateChildAccess(childId);
         NUDGE_CACHE.remove(childId);
         return R.ok();
+    }
+
+    /**
+     * 校验当前登录家长是否有权访问该儿童数据
+     */
+    private void validateChildAccess(Long childId) {
+        if (childId == null) return;
+        com.kenzhao.smallsteps.common.ss.domain.Child child = childService.selectChildById(childId);
+        Long currentUserId = com.kenzhao.smallsteps.common.satoken.utils.LoginHelper.getUserId();
+        if (child == null || !child.getParentId().equals(currentUserId)) {
+            throw new com.kenzhao.smallsteps.common.core.exception.ServiceException("无权访问该儿童数据");
+        }
     }
 }
