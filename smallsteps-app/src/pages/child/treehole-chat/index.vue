@@ -2,7 +2,24 @@
 import { ref, onMounted, nextTick } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
 import { useUserStore } from '@/store/modules/user'
-import { chatWithAI } from '@/api/child'
+import { chatWithAI, getBaseUrl } from '@/api/child'
+import { getToken } from '@/utils/auth'
+
+const parseStreamingText = (text: string) => {
+  let thinkContent = ''
+  let displayContent = text
+  
+  const thinkMatch = text.match(/<think>([\s\S]*?)(?:<\/think>|$)/)
+  if (thinkMatch) {
+    thinkContent = thinkMatch[1]
+    displayContent = text.replace(/<think>[\s\S]*?(?:<\/think>|$)/, '').trim()
+  }
+  
+  // 也移除 analysis
+  displayContent = displayContent.replace(/<analysis>[\s\S]*?(?:<\/analysis>|$)/, '').trim()
+  
+  return { thinkContent, displayContent }
+}
 
 const userStore = useUserStore()
 const messages = ref([
@@ -25,45 +42,85 @@ const handleBack = () => {
 
 const sendMessage = async () => {
   if (!inputText.value.trim() || isLoading.value) return
-
+  
   const userMsg = inputText.value
-  messages.value.push({
-    role: 'user',
-    content: userMsg,
-    type: 'text',
-    thinkContent: '',
-    displayContent: userMsg
-  })
+  messages.value.push({ role: 'user', content: userMsg, displayContent: userMsg, type: 'text' })
   inputText.value = ''
   isLoading.value = true
-
   scrollToBottom()
-
-  try {
-    const childId = userStore.id
-    if (!childId) return
-    const res: any = await chatWithAI(childId, userMsg)
-    const content = res.data || '我听到了哦，你真的很棒！🌟'
-    messages.value.push({
-      role: 'ai',
-      content,
-      type: 'text',
-      thinkContent: '',
-      displayContent: content
-    })
-  } catch (e) {
-    const content = '哎呀，我的信号好像飘走了... 但我一直在你身边！❤️'
-    messages.value.push({
-      role: 'ai',
-      content,
-      type: 'text',
-      thinkContent: '',
-      displayContent: content
-    })
-  } finally {
-    isLoading.value = false
-    scrollToBottom()
-  }
+  
+  const childId = userStore.id
+  if (!childId) return
+  
+  const aiMsgIndex = messages.value.length
+  messages.value.push({
+    role: 'ai',
+    content: '',
+    displayContent: '',
+    thinkContent: '',
+    type: 'text'
+  })
+  
+  const url = `${getBaseUrl()}/child/ai/chat/stream?childId=${childId}&userInput=${encodeURIComponent(userMsg)}`
+  const token = getToken() || userStore.token
+  
+  // uni.request 支持 enableChunked
+  const requestTask = uni.request({
+    url,
+    method: 'GET',
+    enableChunked: true,
+    header: {
+      'Authorization': 'Bearer ' + token
+    },
+    success: () => {
+      isLoading.value = false
+    },
+    fail: () => {
+      messages.value[aiMsgIndex].displayContent = '哎呀，我的信号好像飘走了... 但我一直在你身边！❤️'
+      isLoading.value = false
+    }
+  })
+  
+  requestTask.onChunkReceived((res: any) => {
+    // 将 ArrayBuffer 转为字符串 (兼容各平台)
+    const arrayBuffer = res.data
+    const uint8Array = new Uint8Array(arrayBuffer)
+    let chunkString = ''
+    
+    // 简易 UTF-8 解码，或使用 TextDecoder（如果支持）
+    try {
+        if (typeof TextDecoder !== 'undefined') {
+            chunkString = new TextDecoder('utf-8').decode(uint8Array)
+        } else {
+            // fallback
+            chunkString = String.fromCharCode.apply(null, Array.from(uint8Array))
+            chunkString = decodeURIComponent(escape(chunkString))
+        }
+    } catch(e) {
+        console.error('Decode error', e)
+    }
+    
+    // 解析 SSE 格式 (data: xxx\n\n)
+    const lines = chunkString.split('\n')
+    for (const line of lines) {
+        if (line.startsWith('data:')) {
+            const data = line.substring(5).trim()
+            if (data === '[DONE]') {
+                isLoading.value = false
+                break
+            }
+            if (data) {
+                // 拼接完整文本
+                messages.value[aiMsgIndex].content += data
+                // 分离和重新渲染
+                const parsed = parseStreamingText(messages.value[aiMsgIndex].content)
+                messages.value[aiMsgIndex].thinkContent = parsed.thinkContent
+                messages.value[aiMsgIndex].displayContent = parsed.displayContent
+                scrollToBottom()
+            }
+        }
+    }
+  })
 }
 const toggleRecording = () => {
   isRecording.value = !isRecording.value
@@ -123,7 +180,13 @@ onMounted(() => {
             <text class="material-symbols-outlined">smart_toy</text>
           </view>
           <view class="bubble" :class="{ 'loading': isLoading && index === messages.length - 1 && msg.role === 'user' }">
-            <text class="text">{{ msg.content }}</text>
+            <view v-if="msg.thinkContent" class="think-box">
+               <details>
+                 <summary>小步思考中...</summary>
+                 <text class="think-text">{{ msg.thinkContent }}</text>
+               </details>
+            </view>
+            <text class="text">{{ msg.displayContent }}</text>
           </view>
           <view v-if="msg.role === 'user'" class="avatar user-avatar">
             <text class="material-symbols-outlined">person</text>
@@ -375,5 +438,25 @@ onMounted(() => {
 @keyframes typing {
   0%, 80%, 100% { transform: scale(0); }
   40% { transform: scale(1); }
+}
+.think-box {
+  background: rgba(0,0,0,0.03);
+  border-radius: 8px;
+  padding: 8px;
+  margin-bottom: 8px;
+  font-size: 12px;
+  color: #64748B;
+  
+  summary {
+    cursor: pointer;
+    font-weight: bold;
+    outline: none;
+  }
+  
+  .think-text {
+    display: block;
+    margin-top: 4px;
+    white-space: pre-wrap;
+  }
 }
 </style>

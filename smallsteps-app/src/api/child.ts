@@ -1,4 +1,7 @@
 import request from '@/utils/request'
+import config from '@/config'
+
+export const getBaseUrl = () => config.baseUrl
 
 export interface ChildTask {
     taskId?: number
