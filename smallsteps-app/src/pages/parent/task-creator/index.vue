@@ -52,30 +52,29 @@
         </view>
       </view>
       
-      <view class="spacer"></view>
+      <!-- Moved Footer inside scroll-view to avoid fixed overlap issues -->
+      <view class="footer-in-scroll">
+        <view class="advanced-options">
+          <label class="option-item">
+            <checkbox :checked="isRepeat" color="#6C9BD2" @tap="isRepeat = !isRepeat" />
+            <text class="option-label">每天重复</text>
+          </label>
+          <label class="option-item">
+            <checkbox :checked="isTemplate" color="#6C9BD2" @tap="isTemplate = !isTemplate" />
+            <text class="option-label">存为模板</text>
+          </label>
+        </view>
+        
+        <button class="submit-btn" :loading="isSubmitting" @click="handleSubmit">
+          <text>发布</text>
+        </button>
+        
+        <view class="safe-area-spacer"></view>
+      </view>
     </scroll-view>
 
-    <!-- 底部导航 -->
+    <!-- 底部导航 (固定在底部，不随内容滚动) -->
     <bottom-nav mode="parent" />
-
-    <!-- Footer -->
-    <footer class="footer">
-      <view class="advanced-options">
-        <label class="option-item">
-          <checkbox :checked="isRepeat" color="#6C9BD2" @tap="isRepeat = !isRepeat" />
-          <text class="option-label">每天重复</text>
-        </label>
-        <label class="option-item">
-          <checkbox :checked="isTemplate" color="#6C9BD2" @tap="isTemplate = !isTemplate" />
-          <text class="option-label">存为模板</text>
-        </label>
-      </view>
-      
-      <button class="submit-btn" :loading="isSubmitting" @click="handleSubmit">
-        <text>发送给 StarBuddy</text>
-        <text class="material-symbols-outlined icon">send</text>
-      </button>
-    </footer>
   </view>
 </template>
 
@@ -184,106 +183,116 @@ const handleSubmit = () => {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: #f8f9fa;
+  background: linear-gradient(180deg, #f0f7ff 0%, #f8faff 100%);
   
   :deep(.dark) & {
-    background-color: #14191e;
+    background: radial-gradient(circle at top, #1e293b 0%, #0f172a 100%);
   }
 }
 
 .lang-switch {
   display: flex;
   align-items: center;
-  background-color: #f3f4f6;
-  border-radius: 999px;
-  padding: 2px;
-  
-  :deep(.dark) & {
-    background-color: #1e242b;
-  }
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(8px);
+  border-radius: 12px;
+  padding: 4px;
+  border: 1px solid rgba(108, 155, 210, 0.1);
 }
 
 .lang-tag {
-  font-size: 10px;
-  font-weight: 500;
-  padding: 2px 8px;
-  border-radius: 999px;
-  color: #6b7280;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 8px;
+  color: #94a3b8;
   
   &.active {
-    background-color: #6C9BD2;
+    background: #6C9BD2;
     color: #ffffff;
-    font-weight: 700;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(108, 155, 210, 0.2);
   }
 }
 
 .main-content {
   flex: 1;
-  padding: 16px;
-  padding-top: 60px; // Space for top bar
+  padding: 20px;
+  padding-top: 80px;
 }
 
 .input-section {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-bottom: 24px;
+  gap: 20px;
+  margin-bottom: 32px;
 }
 
 .textarea-wrapper {
   position: relative;
-  background-color: #ffffff;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
-  padding: 16px;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  border-radius: 24px;
+  border: 1px solid rgba(108, 155, 210, 0.15);
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(108, 155, 210, 0.05);
   
   :deep(.dark) & {
-    background-color: #1e242b;
-    border-color: #374151;
+    background: rgba(30, 41, 59, 0.6);
+    border-color: rgba(255, 255, 255, 0.1);
   }
 }
 
 .task-textarea {
   width: 100%;
-  height: 120px;
-  font-size: 16px;
-  color: #111827;
+  height: 100px;
+  font-size: 17px;
+  color: #1e293b;
+  line-height: 1.6;
   
   :deep(.dark) & {
-    color: #ffffff;
+    color: #f1f5f9;
   }
 }
 
 .char-count {
   position: absolute;
-  bottom: 8px;
-  right: 12px;
-  font-size: 10px;
-  color: #9ca3af;
+  bottom: 12px;
+  right: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #cbd5e1;
 }
 
 .ai-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  height: 48px;
-  background-color: rgba(108, 155, 210, 0.1);
-  color: #6C9BD2;
+  gap: 10px;
+  height: 56px;
+  background: linear-gradient(135deg, #6C9BD2 0%, #5d8bc2 100%);
+  color: #ffffff;
   font-weight: 700;
-  border-radius: 8px;
-  transition: all 0.3s ease;
+  font-size: 16px;
+  border-radius: 18px;
+  box-shadow: 0 8px 25px rgba(108, 155, 210, 0.4);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   
   &::after { border: none; }
   
   &:active {
-    background-color: rgba(108, 155, 210, 0.2);
+    transform: translateY(2px) scale(0.98);
+    box-shadow: 0 4px 10px rgba(108, 155, 210, 0.3);
   }
   
   .icon {
-    font-size: 18px;
+    font-size: 24px;
+    animation: sparkle 2s infinite ease-in-out;
   }
+}
+
+@keyframes sparkle {
+  0%, 100% { opacity: 0.8; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.2) rotate(15deg); }
 }
 
 .steps-section {
@@ -295,126 +304,121 @@ const handleSubmit = () => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
+  padding: 0 4px;
 }
 
 .section-title {
-  font-size: 16px;
-  font-weight: 700;
-  color: #111827;
+  font-size: 18px;
+  font-weight: 800;
+  color: #1e293b;
+  letter-spacing: -0.5px;
   
   :deep(.dark) & {
-    color: #ffffff;
+    color: #f1f5f9;
   }
 }
 
 .step-count-badge {
-  font-size: 10px;
-  font-weight: 500;
-  padding: 2px 8px;
-  background-color: #f3f4f6;
-  color: #6b7280;
-  border-radius: 4px;
-  
-  :deep(.dark) & {
-    background-color: #1e242b;
-  }
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 12px;
+  background: rgba(108, 155, 210, 0.1);
+  color: #6C9BD2;
+  border-radius: 10px;
 }
 
 .steps-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
 }
 
 .add-step-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 12px;
-  background: transparent;
-  border: 1px dashed #d1d5db;
-  border-radius: 8px;
-  color: #6b7280;
-  font-size: 14px;
-  font-weight: 500;
+  gap: 10px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.5);
+  border: 2px dashed rgba(108, 155, 210, 0.3);
+  border-radius: 20px;
+  color: #64748b;
+  font-size: 15px;
+  font-weight: 600;
+  transition: all 0.3s ease;
   
   &::after { border: none; }
   
   &:active {
+    background: rgba(108, 155, 210, 0.08);
     border-color: #6C9BD2;
     color: #6C9BD2;
-    background-color: rgba(108, 155, 210, 0.05);
-  }
-  
-  .icon {
-    font-size: 18px;
+    transform: scale(0.99);
   }
 }
 
 .spacer {
-  height: 40px;
+  height: 100px;
 }
 
-.footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 16px;
-  padding-bottom: calc(16px + env(safe-area-inset-bottom));
-  background-color: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(10px);
-  border-top: 1px solid #f3f4f6;
-  z-index: 100;
-  
-  :deep(.dark) & {
-    background-color: rgba(30, 36, 43, 0.9);
-    border-color: #374151;
-  }
+.footer-in-scroll {
+  margin-top: 40px;
+  padding: 20px 4px;
 }
 
 .advanced-options {
   display: flex;
-  gap: 24px;
-  margin-bottom: 12px;
-  padding: 0 4px;
+  gap: 32px;
+  margin-bottom: 24px;
+  justify-content: center;
 }
 
 .option-item {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 10px;
 }
 
 .option-label {
-  font-size: 12px;
-  color: #6b7280;
+  font-size: 14px;
+  font-weight: 600;
+  color: #64748b;
+  
+  :deep(.dark) & {
+    color: #94a3b8;
+  }
 }
 
 .submit-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  height: 50px;
-  background-color: #6C9BD2;
+  gap: 12px;
+  height: 58px;
+  background: #1e293b;
   color: #ffffff;
-  font-weight: 700;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(108, 155, 210, 0.3);
+  font-weight: 800;
+  font-size: 17px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(30, 41, 59, 0.3);
+  margin: 0 10px;
   
   &::after { border: none; }
   
   &:active {
-    transform: scale(0.98);
-    opacity: 0.9;
+    transform: scale(0.96);
+    opacity: 0.95;
   }
   
-  .icon {
-    font-size: 20px;
+  :deep(.dark) & {
+    background: #6C9BD2;
+    box-shadow: 0 10px 30px rgba(108, 155, 210, 0.3);
   }
+}
+
+.safe-area-spacer {
+  height: calc(80px + env(safe-area-inset-bottom)); // Account for tab bar height + safe area
 }
 
 .no-scrollbar::-webkit-scrollbar {

@@ -22,4 +22,7 @@ public interface IChildAIService {
     
     /** 查询情绪趋势 */
     List<ChildAI> selectEmotionTrendByChildId(Long childId, Integer days);
+
+    /** 获取周情绪/表现热力图 */
+    java.util.List<java.util.Map<String, Object>> getWeeklyHeatmap(Long childId);
 }

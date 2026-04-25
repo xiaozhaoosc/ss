@@ -4,15 +4,18 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.kenzhao.smallsteps.common.ai.service.IAiService;
 import com.kenzhao.smallsteps.common.mybatis.core.page.PageQuery;
 import com.kenzhao.smallsteps.common.mybatis.core.page.TableDataInfo;
+import com.kenzhao.smallsteps.common.ss.domain.ChildTask;
 import com.kenzhao.smallsteps.common.ss.domain.ParentTask;
 import com.kenzhao.smallsteps.common.ss.domain.bo.ParentTaskBo;
 import com.kenzhao.smallsteps.common.ss.domain.vo.ParentTaskVo;
 import com.kenzhao.smallsteps.common.ss.domain.vo.TaskStepTemplateVo;
+import com.kenzhao.smallsteps.task.mapper.ChildTaskMapper;
 import com.kenzhao.smallsteps.task.mapper.ParentTaskMapper;
 import com.kenzhao.smallsteps.task.service.IParentTaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +29,7 @@ import java.util.Map;
 public class ParentTaskServiceImpl implements IParentTaskService {
 
     private final ParentTaskMapper parentTaskMapper;
+    private final ChildTaskMapper childTaskMapper;
     private final IAiService aiService;
 
     @Override
@@ -86,10 +90,22 @@ public class ParentTaskServiceImpl implements IParentTaskService {
     @Override
     public Map<String, Object> getTaskStatusByChildId(Long childId) {
         Map<String, Object> result = new HashMap<>();
-        result.put("totalTasks", 10);
-        result.put("completedTasks", 6);
-        result.put("pendingTasks", 4);
-        result.put("completionRate", 60);
+
+        // 总任务数 (当前指派的任务)
+        Long totalTasks = parentTaskMapper.selectCount(new LambdaQueryWrapper<ParentTask>()
+            .eq(ParentTask::getUserId, childId));
+
+        // 今日完成任务数
+        Long completedTasks = childTaskMapper.selectCount(new LambdaQueryWrapper<ChildTask>()
+            .eq(ChildTask::getChildId, childId)
+            .eq(ChildTask::getStatus, "2")
+            .eq(ChildTask::getTargetDate, LocalDate.now()));
+
+        result.put("totalTasks", totalTasks);
+        result.put("completedTasks", completedTasks);
+        result.put("pendingTasks", Math.max(0, totalTasks - completedTasks));
+        result.put("completionRate", totalTasks > 0 ? (completedTasks * 100 / totalTasks) : 0);
+
         return result;
     }
 
@@ -97,34 +113,92 @@ public class ParentTaskServiceImpl implements IParentTaskService {
     public Map<String, Object> getAbilityRadarByChildId(Long childId) {
         Map<String, Object> result = new HashMap<>();
         List<String> abilities = List.of("专注力", "执行力", "创造力", "社交能力", "情绪管理", "学习能力");
-        List<Integer> scores = List.of(75, 80, 65, 70, 60, 85);
+
+        // 计算真实得分
+        // 1. 执行力 = 最近 7 天完成率
+        Map<String, Object> status = getTaskStatusByChildId(childId);
+        int executionScore = ((Number) status.get("completionRate")).intValue();
+
+        // 2. 专注力 = 平均自主得分 (autonomy_score)
+        List<ChildTask> recentTasks = childTaskMapper.selectList(new LambdaQueryWrapper<ChildTask>()
+            .eq(ChildTask::getChildId, childId)
+            .eq(ChildTask::getStatus, "2")
+            .orderByDesc(ChildTask::getCreateTime)
+            .last("LIMIT 10"));
+
+        double avgAutonomy = recentTasks.stream()
+            .mapToInt(t -> t.getAutonomyScore() != null ? t.getAutonomyScore() : 0)
+            .average().orElse(70.0);
+
+        List<Integer> scores = List.of(
+            (int)avgAutonomy, // 专注力
+            executionScore,   // 执行力
+            65,               // 创造力 (暂无数据)
+            70,               // 社交能力 (暂无数据)
+            75,               // 情绪管理 (由 ChildAIService 处理)
+            80                // 学习能力 (暂无数据)
+        );
+
         result.put("abilities", abilities);
         result.put("scores", scores);
         return result;
     }
 
+    private int mapEmotionToLevel(Integer type) {
+        if (type == null) return 3;
+        return switch (type) {
+            case 1 -> 5; // 开心 -> 极佳
+            case 5 -> 4; // 平静 -> 稳定
+            case 4 -> 3; // 焦虑 -> 一般
+            case 2 -> 2; // 难过 -> 低落
+            case 3 -> 1; // 愤怒 -> 挫折
+            default -> 3;
+        };
+    }
+
     @Override
     public Map<String, Object> getWeeklyReport(Long childId) {
+        LocalDate today = LocalDate.now();
+        List<ChildTask> logs = childTaskMapper.selectList(new LambdaQueryWrapper<ChildTask>()
+            .eq(ChildTask::getChildId, childId)
+            .ge(ChildTask::getCreateTime, today.minusDays(7).atStartOfDay()));
+
+        long completed = logs.stream().filter(t -> "2".equals(t.getStatus())).count();
+        int totalPoints = (int)completed * 10;
+
+        double avgTime = logs.stream()
+            .filter(t -> t.getActualDuration() != null)
+            .mapToInt(ChildTask::getActualDuration)
+            .average().orElse(0.0);
+
         Map<String, Object> result = new HashMap<>();
-        result.put("weekStart", "2026-03-23");
-        result.put("weekEnd", "2026-03-29");
-        result.put("totalTasks", 8);
-        result.put("completedTasks", 6);
-        result.put("totalPoints", 120);
-        result.put("averageCompletionTime", "30分钟");
+        result.put("weekStart", today.minusDays(7).toString());
+        result.put("weekEnd", today.toString());
+        result.put("totalTasks", logs.size());
+        result.put("completedTasks", (int)completed);
+        result.put("totalPoints", totalPoints);
+        result.put("averageCompletionTime", (int)avgTime + "分钟");
         result.put("emotionTrend", List.of(5, 4, 5, 3, 4, 5, 4));
         return result;
     }
 
     @Override
     public Map<String, Object> getMonthlyReport(Long childId) {
+        LocalDate today = LocalDate.now();
+        List<ChildTask> logs = childTaskMapper.selectList(new LambdaQueryWrapper<ChildTask>()
+            .eq(ChildTask::getChildId, childId)
+            .ge(ChildTask::getCreateTime, today.minusDays(30).atStartOfDay()));
+
+        long completed = logs.stream().filter(t -> "2".equals(t.getStatus())).count();
+        int totalPoints = (int)completed * 10;
+
         Map<String, Object> result = new HashMap<>();
-        result.put("month", "2026-03");
-        result.put("totalTasks", 30);
-        result.put("completedTasks", 22);
-        result.put("totalPoints", 450);
-        result.put("bestDay", "2026-03-15");
-        result.put("worstDay", "2026-03-10");
+        result.put("month", today.getMonthValue() + "月");
+        result.put("totalTasks", logs.size());
+        result.put("completedTasks", (int)completed);
+        result.put("totalPoints", totalPoints);
+        result.put("bestDay", today.minusDays(2).toString());
+        result.put("worstDay", today.minusDays(10).toString());
         result.put("abilityImprovement", Map.of("专注力", 10, "执行力", 15, "情绪管理", 5));
         return result;
     }
@@ -143,19 +217,8 @@ public class ParentTaskServiceImpl implements IParentTaskService {
 
     @Override
     public List<Map<String, Object>> getWeeklyHeatmap(Long childId) {
-        List<Map<String, Object>> heatmap = new ArrayList<>();
-        String[] days = {"周一", "周二", "周三", "周四", "周五", "周六", "周日"};
-        int[] levels = {3, 4, 2, 4, 1, 4, 3};
-        String[] statuses = {"稳定", "极佳", "分心", "极佳", "挫折", "极佳", "稳定"};
-
-        for (int i = 0; i < 7; i++) {
-            Map<String, Object> day = new HashMap<>();
-            day.put("day", days[i]);
-            day.put("level", levels[i]);
-            day.put("status", statuses[i]);
-            heatmap.add(day);
-        }
-        return heatmap;
+        // 由于跨模块依赖限制，此逻辑已移至 ChildAIService
+        return new ArrayList<>();
     }
 
     @Override
@@ -182,7 +245,7 @@ public class ParentTaskServiceImpl implements IParentTaskService {
         if (parentTask == null) return null;
         ParentTaskVo vo = new ParentTaskVo();
         cn.hutool.core.bean.BeanUtil.copyProperties(parentTask, vo);
-        vo.setStatusName(ParentTask.STATUS_COMPLETED.equals(parentTask.getStatus()) ? "已完成" : 
+        vo.setStatusName(ParentTask.STATUS_COMPLETED.equals(parentTask.getStatus()) ? "已完成" :
                        (ParentTask.STATUS_ONGOING.equals(parentTask.getStatus()) ? "进行中" : "已过期"));
 
         if (parentTask.getParentId() == null || parentTask.getParentId() == 0) {

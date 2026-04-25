@@ -98,4 +98,60 @@ public class ChildAIServiceImpl implements IChildAIService {
             .gt(ChildAI::getCreateTime, new java.util.Date(System.currentTimeMillis() - (days != null ? days : 7) * 24L * 3600 * 1000))
             .orderByAsc(ChildAI::getCreateTime));
     }
+
+    @Override
+    public java.util.List<java.util.Map<String, Object>> getWeeklyHeatmap(Long childId) {
+        java.util.List<java.util.Map<String, Object>> heatmap = new java.util.ArrayList<>();
+        java.time.LocalDate today = java.time.LocalDate.now();
+        
+        // 查询最近 7 天的情绪记录
+        java.util.List<ChildAI> emotions = baseMapper.selectList(new LambdaQueryWrapper<ChildAI>()
+            .eq(ChildAI::getChildId, childId)
+            .ge(ChildAI::getCreateTime, new java.util.Date(System.currentTimeMillis() - 7 * 24L * 3600 * 1000))
+            .orderByAsc(ChildAI::getCreateTime));
+            
+        // 按日期分组
+        java.util.Map<java.time.LocalDate, java.util.List<ChildAI>> grouped = emotions.stream()
+            .collect(java.util.stream.Collectors.groupingBy(e -> 
+                e.getCreateTime().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate()));
+            
+        for (int i = 6; i >= 0; i--) {
+            java.time.LocalDate date = today.minusDays(i);
+            java.util.List<ChildAI> dayEmotions = grouped.getOrDefault(date, new java.util.ArrayList<>());
+            
+            double avgLevel = dayEmotions.stream()
+                .mapToInt(e -> mapEmotionToLevel(e.getEmotionType()))
+                .average().orElse(0.0);
+                
+            java.util.Map<String, Object> dayMap = new java.util.HashMap<>();
+            dayMap.put("day", date.getDayOfWeek().getDisplayName(java.time.format.TextStyle.SHORT, java.util.Locale.CHINESE));
+            dayMap.put("level", (int) Math.round(avgLevel));
+            dayMap.put("status", getStatusText((int) Math.round(avgLevel)));
+            heatmap.add(dayMap);
+        }
+        return heatmap;
+    }
+
+    private int mapEmotionToLevel(Integer type) {
+        if (type == null) return 3;
+        return switch (type) {
+            case 1 -> 5; // 开心 -> 极佳
+            case 5 -> 4; // 平静 -> 稳定
+            case 4 -> 3; // 焦虑 -> 一般
+            case 2 -> 2; // 难过 -> 低落
+            case 3 -> 1; // 愤怒 -> 挫折
+            default -> 3;
+        };
+    }
+
+    private String getStatusText(int level) {
+        return switch (level) {
+            case 5 -> "极佳";
+            case 4 -> "稳定";
+            case 3 -> "一般";
+            case 2 -> "低落";
+            case 1 -> "挫折";
+            default -> "无数据";
+        };
+    }
 }

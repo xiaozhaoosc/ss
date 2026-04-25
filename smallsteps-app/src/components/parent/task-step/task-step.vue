@@ -34,24 +34,28 @@ defineEmits(['edit', 'delete'])
 .task-step {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px;
-  background-color: #ffffff;
-  border-radius: 8px;
-  border: 1px solid transparent;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease;
+  gap: 16px;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #ffffff 0%, #f9fbff 100%);
+  border-radius: 20px;
+  border: 1px solid rgba(108, 155, 210, 0.1);
+  box-shadow: 0 8px 24px rgba(149, 157, 165, 0.08);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  margin-bottom: 4px;
   
   :deep(.dark) & {
-    background-color: #1e242b;
+    background: linear-gradient(135deg, #1e242b 0%, #242b35 100%);
+    border-color: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
   }
   
   &:active {
-    background-color: #f9fafb;
-    border-color: rgba(108, 155, 210, 0.2);
+    transform: scale(0.97);
+    background: #ffffff;
+    box-shadow: 0 4px 12px rgba(108, 155, 210, 0.15);
     
     :deep(.dark) & {
-      background-color: #242b35;
+      background: #2a323d;
     }
   }
 }
@@ -60,14 +64,12 @@ defineEmits(['edit', 'delete'])
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #9ca3af;
+  color: #bdc3c7;
+  width: 24px;
   
   .icon {
     font-size: 24px;
-  }
-  
-  &:active {
-    color: #6C9BD2;
+    font-weight: 300;
   }
 }
 
@@ -79,61 +81,65 @@ defineEmits(['edit', 'delete'])
 }
 
 .step-title {
-  font-size: 14px;
-  font-weight: 600;
-  color: #111827;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  font-size: 16px;
+  font-weight: 700;
+  color: #2c3e50;
+  line-height: 1.4;
   
   :deep(.dark) & {
-    color: #ffffff;
+    color: #e0e6ed;
   }
 }
 
 .step-desc {
-  font-size: 12px;
-  color: #6b7280;
+  font-size: 13px;
+  color: #7f8c8d;
+  margin-top: 4px;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  margin-top: 2px;
+  
+  :deep(.dark) & {
+    color: #94a3b8;
+  }
 }
 
 .actions {
   display: flex;
-  gap: 4px;
+  gap: 8px;
 }
 
 .action-btn {
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   padding: 0;
   margin: 0;
-  background: transparent;
-  border-radius: 999px;
+  background: rgba(108, 155, 210, 0.05);
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #6b7280;
+  color: #64748b;
+  transition: all 0.2s ease;
   
   &::after {
     border: none;
   }
   
   &:active {
-    background-color: #f3f4f6;
-    
-    :deep(.dark) & {
-      background-color: #374151;
-    }
+    background-color: rgba(108, 155, 210, 0.15);
+    color: #6C9BD2;
+    transform: translateY(-2px);
   }
   
   .icon {
-    font-size: 18px;
+    font-size: 20px;
   }
   
   &.delete:active {
+    background-color: rgba(239, 68, 68, 0.1);
     color: #ef4444;
   }
 }

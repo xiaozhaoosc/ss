@@ -130,7 +130,7 @@ public class ParentInsightController extends BaseController {
     public R<List<Map<String, Object>>> getWeeklyHeatmap(@PathVariable(required = false) Long childId, @RequestParam(required = false) Long cid) {
         Long finalChildId = childId != null ? childId : cid;
         if (finalChildId == null) return R.fail("未选择儿童");
-        return R.ok(parentTaskService.getWeeklyHeatmap(finalChildId));
+        return R.ok(childAIService.getWeeklyHeatmap(finalChildId));
     }
 
     /**
