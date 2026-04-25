@@ -55,7 +55,7 @@
       <!-- 今日焦点 -->
       <view class="section-header">
         <text class="section-title">今日焦点</text>
-        <text class="see-all" @click="navigateToInsights">详情</text>
+        <text class="see-all" @click="navigateToDailyFocus">详情</text>
       </view>
       
       <scroll-view scroll-x class="stats-scroll no-scrollbar">
@@ -71,7 +71,7 @@
       <!-- 任务执行记录 (时间轴) -->
       <view class="section-header mt-6">
         <text class="section-title">执行记录</text>
-        <text class="see-all" @click="navigateToTasks">查看全部</text>
+        <text class="see-all" @click="navigateToExecRecord">查看全部</text>
       </view>
       
       <view class="timeline-container">
@@ -186,7 +186,7 @@ async function loadData() {
       time: l.endTime ? l.endTime.substring(11, 16) : (l.createTime ? l.createTime.substring(11, 16) : '--:--'),
       title: l.taskDefinition?.title || '未知任务',
       description: l.taskDefinition?.description || '已开始执行',
-      status: l.status === '2' ? 'completed' : (l.status === '1' ? 'in-progress' : 'upcoming'),
+      status: l.status === '2' || l.status === '3' ? 'completed' : (l.status === '1' ? 'in-progress' : 'upcoming'),
       icon: l.taskDefinition?.icon || 'task',
       proof: l.proof
     }))
@@ -221,12 +221,12 @@ const markAllRead = () => {
   unreadCount.value = 0
 }
 
-const navigateToInsights = () => {
-  uni.switchTab({ url: '/pages/parent/insights/index' })
+const navigateToDailyFocus = () => {
+  uni.navigateTo({ url: `/pages/parent/daily-focus/index?childId=${childId.value}` })
 }
 
-const navigateToTasks = () => {
-  uni.switchTab({ url: '/pages/parent/task-creator/index' })
+const navigateToExecRecord = () => {
+  uni.navigateTo({ url: `/pages/parent/exec-record/index?childId=${childId.value}` })
 }
 
 const navigateToDetails = () => {

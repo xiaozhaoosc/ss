@@ -7,6 +7,7 @@ import com.kenzhao.smallsteps.common.ss.domain.Child;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import com.kenzhao.smallsteps.common.satoken.utils.LoginHelper;
 import java.util.Arrays;
 import java.util.List;
 
@@ -29,14 +30,18 @@ public class ChildServiceImpl implements IChildService {
 
     @Override
     public List<Child> selectChildList(Child child) {
+        Long parentId = child.getParentId() != null ? child.getParentId() : LoginHelper.getUserId();
         return baseMapper.selectList(new LambdaQueryWrapper<Child>()
-            .eq(child.getParentId() != null, Child::getParentId, child.getParentId())
+            .eq(Child::getParentId, parentId)
             .like(child.getNickname() != null, Child::getNickname, child.getNickname())
             .eq(child.getGender() != null, Child::getGender, child.getGender()));
     }
 
     @Override
     public int insertChild(Child child) {
+        if (child.getParentId() == null) {
+            child.setParentId(LoginHelper.getUserId());
+        }
         return baseMapper.insert(child);
     }
 

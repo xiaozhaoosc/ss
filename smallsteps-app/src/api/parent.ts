@@ -96,3 +96,10 @@ export function rejectRedemption(redemptionId: number) {
     method: 'post'
   })
 }
+// 删除任务执行记录
+export function deleteExecutionRecord(id: number | string) {
+  return request({
+    url: `/child/task/remove/${id}`,
+    method: 'delete'
+  })
+}

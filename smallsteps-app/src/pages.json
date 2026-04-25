@@ -132,6 +132,20 @@
       }
     },
     {
+      "path": "pages/parent/exec-record/index",
+      "style": {
+        "navigationBarTitleText": "执行记录",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/parent/daily-focus/index",
+      "style": {
+        "navigationBarTitleText": "今日焦点",
+        "navigationStyle": "custom"
+      }
+    },
+    {
       "path": "pages/work/index",
       "style": {
         "navigationBarTitleText": "工作台"

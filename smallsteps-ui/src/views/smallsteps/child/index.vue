@@ -1,26 +1,26 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="姓名" prop="childName">
+      <el-form-item label="姓名" prop="nickname">
         <el-input
-          v-model="queryParams.childName"
+          v-model="queryParams.nickname"
           placeholder="请输入儿童姓名"
           clearable
           @keyup.enter="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="家庭" prop="deptId">
+      <el-form-item label="家庭" prop="parentId">
         <el-tree-select
-          v-model="queryParams.deptId"
+          v-model="queryParams.parentId"
           :data="deptOptions"
-          :props="{ value: 'id', label: 'label', children: 'children' }"
-          value-key="id"
+          :props="{ value: 'deptId', label: 'deptName', children: 'children' }"
+          value-key="deptId"
           placeholder="请选择家庭"
           check-strictly
         />
       </el-form-item>
-      <el-form-item label="性别" prop="sex">
-        <el-select v-model="queryParams.sex" placeholder="儿童性别" clearable>
+      <el-form-item label="性别" prop="gender">
+        <el-select v-model="queryParams.gender" placeholder="儿童性别" clearable>
           <el-option label="男" value="0" />
           <el-option label="女" value="1" />
           <el-option label="未知" value="2" />
@@ -67,17 +67,16 @@
 
     <el-table v-loading="loading" :data="childList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="儿童ID" align="center" prop="childId" />
-      <el-table-column label="姓名" align="center" prop="childName" />
-      <el-table-column label="昵称" align="center" prop="nickName" />
+      <el-table-column label="儿童ID" align="center" prop="id" />
+      <el-table-column label="姓名" align="center" prop="nickname" />
       <el-table-column label="出生日期" align="center" prop="birthday" width="180">
         <template #default="scope">
           <span>{{ parseTime(scope.row.birthday, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="性别" align="center" prop="sex">
+      <el-table-column label="性别" align="center" prop="gender">
         <template #default="scope">
-          <dict-tag :options="ss_child_sex" :value="scope.row.sex" />
+          <dict-tag :options="ss_child_sex" :value="scope.row.gender" />
         </template>
       </el-table-column>
       <el-table-column label="状态" align="center" prop="status">
@@ -105,21 +104,18 @@
     <!-- 添加或修改儿童信息对话框 -->
     <el-dialog :title="title" v-model="open" width="500px" append-to-body>
       <el-form ref="childRef" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="家庭" prop="deptId">
+        <el-form-item label="家庭" prop="parentId">
           <el-tree-select
-            v-model="form.deptId"
+            v-model="form.parentId"
             :data="deptOptions"
-            :props="{ value: 'id', label: 'label', children: 'children' }"
-            value-key="id"
+            :props="{ value: 'deptId', label: 'deptName', children: 'children' }"
+            value-key="deptId"
             placeholder="请选择家庭"
             check-strictly
           />
         </el-form-item>
-        <el-form-item label="姓名" prop="childName">
-          <el-input v-model="form.childName" placeholder="请输入儿童姓名" />
-        </el-form-item>
-        <el-form-item label="昵称" prop="nickName">
-          <el-input v-model="form.nickName" placeholder="请输入昵称" />
+        <el-form-item label="姓名" prop="nickname">
+          <el-input v-model="form.nickname" placeholder="请输入儿童姓名" />
         </el-form-item>
         <el-form-item label="出生日期" prop="birthday">
           <el-date-picker clearable
@@ -129,8 +125,8 @@
             placeholder="请选择出生日期">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="性别" prop="sex">
-          <el-radio-group v-model="form.sex">
+        <el-form-item label="性别" prop="gender">
+          <el-radio-group v-model="form.gender">
             <el-radio label="0">男</el-radio>
             <el-radio label="1">女</el-radio>
             <el-radio label="2">未知</el-radio>
@@ -160,11 +156,15 @@
 </template>
 
 <script setup name="Child">
-import { listChild, getChild, delChild, addChild, updateChild } from "@/api/ss/child";
+import { listChild, getChild, delChild, addChild, updateChild } from "@/api/smallsteps/child";
 import { listDept } from "@/api/system/dept";
 
 const { proxy } = getCurrentInstance();
 const { sys_normal_disable } = proxy.useDict("sys_normal_disable");
+
+// 表单 ref（替代 proxy.resetForm，避免全局属性未注册问题）
+const childRef = ref(null);
+const queryRef = ref(null);
 
 // 自定义性别字典，如果系统没有，可以在此处mock或在后台配置
 const ss_child_sex = ref([
@@ -189,14 +189,14 @@ const data = reactive({
   queryParams: {
     pageNum: 1,
     pageSize: 10,
-    childName: null,
-    deptId: null,
-    sex: null,
+    nickname: null,
+    parentId: null,
+    gender: null,
     status: null,
   },
   rules: {
-    deptId: [{ required: true, message: "家庭不能为空", trigger: "blur" }],
-    childName: [{ required: true, message: "姓名不能为空", trigger: "blur" }],
+    parentId: [{ required: true, message: "家庭不能为空", trigger: "blur" }],
+    nickname: [{ required: true, message: "姓名不能为空", trigger: "blur" }],
   }
 });
 
@@ -228,12 +228,11 @@ function cancel() {
 // 表单重置
 function reset() {
   form.value = {
-    childId: null,
-    deptId: null,
-    childName: null,
-    nickName: null,
+    id: null,
+    parentId: null,
+    nickname: null,
     birthday: null,
-    sex: "0",
+    gender: "0",
     avatar: null,
     status: "0",
     delFlag: null,
@@ -243,7 +242,7 @@ function reset() {
     updateTime: null,
     remark: null
   };
-  proxy.resetForm("childRef");
+  childRef.value?.resetFields();
 }
 
 /** 搜索按钮操作 */
@@ -254,13 +253,13 @@ function handleQuery() {
 
 /** 重置按钮操作 */
 function resetQuery() {
-  proxy.resetForm("queryRef");
+  queryRef.value?.resetFields();
   handleQuery();
 }
 
 // 多选框选中数据
 function handleSelectionChange(selection) {
-  ids.value = selection.map(item => item.childId);
+  ids.value = selection.map(item => item.id);
   single.value = selection.length != 1;
   multiple.value = !selection.length;
 }
@@ -277,7 +276,7 @@ function handleAdd() {
 function handleUpdate(row) {
   reset();
   getTreeSelect();
-  const childId = row.childId || ids.value;
+  const childId = row.id || ids.value;
   getChild(childId).then(response => {
     form.value = response.data;
     open.value = true;
@@ -287,9 +286,9 @@ function handleUpdate(row) {
 
 /** 提交按钮 */
 function submitForm() {
-  proxy.$refs["childRef"].validate(valid => {
+  childRef.value.validate(valid => {
     if (valid) {
-      if (form.value.childId != null) {
+      if (form.value.id != null) {
         updateChild(form.value).then(response => {
           proxy.$modal.msgSuccess("修改成功");
           open.value = false;
@@ -308,7 +307,7 @@ function submitForm() {
 
 /** 删除按钮操作 */
 function handleDelete(row) {
-  const childIds = row.childId || ids.value;
+  const childIds = row.id || ids.value;
   proxy.$modal.confirm('是否确认删除儿童信息编号为"' + childIds + '"的数据项？').then(function() {
     return delChild(childIds);
   }).then(() => {
