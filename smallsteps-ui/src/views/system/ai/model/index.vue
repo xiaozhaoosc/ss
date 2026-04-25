@@ -69,12 +69,9 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="模型ID" align="center" prop="id" />
       <el-table-column label="模型名称" align="center" prop="name" />
-      <el-table-column label="供应商" align="center" prop="providerId">
-        <template #default="scope">
-          <span>{{ getProviderName(scope.row.providerId) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="供应商代码" align="center" prop="modelCode" />
+      <el-table-column label="供应商代码" align="center" prop="providerCode" />
+      <el-table-column label="供应商名称" align="center" prop="providerName" />
+      <el-table-column label="模型代码" align="center" prop="modelCode" />
       <el-table-column label="上下文" align="center" prop="contextWindow" />
       <el-table-column label="状态" align="center" prop="status">
         <template #default="scope">

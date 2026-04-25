@@ -28,23 +28,39 @@ import java.util.List;
 public class SysAiModelServiceImpl implements ISysAiModelService {
 
     private final AiModelMapper baseMapper;
+    private final com.kenzhao.smallsteps.common.ai.mapper.AiProviderMapper providerMapper;
 
     @Override
     public SysAiModelVo queryById(Long id) {
-        return baseMapper.selectVoById(id, SysAiModelVo.class);
+        SysAiModelVo vo = baseMapper.selectVoById(id, SysAiModelVo.class);
+        populateProviderInfo(vo);
+        return vo;
     }
 
     @Override
     public TableDataInfo<SysAiModelVo> queryPageList(SysAiModelBo bo, PageQuery pageQuery) {
         LambdaQueryWrapper<AiModel> lqw = buildQueryWrapper(bo);
         Page<SysAiModelVo> result = baseMapper.selectVoPage(pageQuery.build(), lqw, SysAiModelVo.class);
+        result.getRecords().forEach(this::populateProviderInfo);
         return TableDataInfo.build(result);
     }
 
     @Override
     public List<SysAiModelVo> queryList(SysAiModelBo bo) {
         LambdaQueryWrapper<AiModel> lqw = buildQueryWrapper(bo);
-        return baseMapper.selectVoList(lqw, SysAiModelVo.class);
+        List<SysAiModelVo> list = baseMapper.selectVoList(lqw, SysAiModelVo.class);
+        list.forEach(this::populateProviderInfo);
+        return list;
+    }
+
+    private void populateProviderInfo(SysAiModelVo vo) {
+        if (vo != null && vo.getProviderId() != null) {
+            com.kenzhao.smallsteps.common.ai.domain.AiProvider provider = providerMapper.selectById(vo.getProviderId());
+            if (provider != null) {
+                vo.setProviderName(provider.getName());
+                vo.setProviderCode(provider.getProviderCode());
+            }
+        }
     }
 
     private LambdaQueryWrapper<AiModel> buildQueryWrapper(SysAiModelBo bo) {

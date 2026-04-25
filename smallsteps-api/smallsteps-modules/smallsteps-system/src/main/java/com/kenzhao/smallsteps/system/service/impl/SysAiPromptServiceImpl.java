@@ -59,13 +59,25 @@ public class SysAiPromptServiceImpl implements ISysAiPromptService {
     @Override
     public Boolean insertByBo(SysAiPromptBo bo) {
         AiPrompt add = MapstructUtils.convert(bo, AiPrompt.class);
-        return baseMapper.insert(add) > 0;
+        boolean success = baseMapper.insert(add) > 0;
+        if (success) {
+            clearCache(add.getPromptKey());
+        }
+        return success;
     }
 
     @Override
     public Boolean updateByBo(SysAiPromptBo bo) {
         AiPrompt update = MapstructUtils.convert(bo, AiPrompt.class);
-        return baseMapper.updateById(update) > 0;
+        AiPrompt oldPrompt = baseMapper.selectById(update.getId());
+        boolean success = baseMapper.updateById(update) > 0;
+        if (success) {
+            if (oldPrompt != null) {
+                clearCache(oldPrompt.getPromptKey());
+            }
+            clearCache(update.getPromptKey());
+        }
+        return success;
     }
 
     @Override
@@ -75,6 +87,19 @@ public class SysAiPromptServiceImpl implements ISysAiPromptService {
 
     @Override
     public Boolean deleteWithValidByIds(Collection<Long> ids, Boolean isValid) {
-        return baseMapper.deleteBatchIds(ids) > 0;
+        List<AiPrompt> list = baseMapper.selectBatchIds(ids);
+        boolean success = baseMapper.deleteBatchIds(ids) > 0;
+        if (success) {
+            for (AiPrompt prompt : list) {
+                clearCache(prompt.getPromptKey());
+            }
+        }
+        return success;
+    }
+
+    private void clearCache(String promptKey) {
+        if (cn.hutool.core.util.ObjectUtil.isNotEmpty(promptKey)) {
+            com.kenzhao.smallsteps.common.redis.utils.RedisUtils.deleteObject("ai:prompt:" + promptKey);
+        }
     }
 }

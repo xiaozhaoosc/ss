@@ -31,6 +31,10 @@ public class SysAiProviderVo implements Serializable {
     @ExcelProperty(value = "供应商名称")
     private String name;
 
+    /** 供应商代码 */
+    @ExcelProperty(value = "供应商代码")
+    private String providerCode;
+
     /** 类型(openai/azure/sdk) */
     @ExcelProperty(value = "供应商类型")
     private String type;

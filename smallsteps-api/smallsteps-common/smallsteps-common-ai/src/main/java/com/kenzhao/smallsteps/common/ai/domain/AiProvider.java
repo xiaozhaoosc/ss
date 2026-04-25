@@ -25,6 +25,9 @@ public class AiProvider extends BaseEntity {
     /** 供应商名称 */
     private String name;
 
+    /** 供应商代码 (如 ALIYUN, OPENAI) */
+    private String providerCode;
+
     /** 类型(openai/azure/sdk) */
     private String type;
 

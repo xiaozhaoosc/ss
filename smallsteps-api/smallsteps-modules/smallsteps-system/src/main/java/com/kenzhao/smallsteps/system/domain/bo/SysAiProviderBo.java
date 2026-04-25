@@ -26,6 +26,10 @@ public class SysAiProviderBo extends BaseEntity {
     @NotBlank(message = "供应商名称不能为空")
     private String name;
 
+    /** 供应商代码 (如 ALIYUN, OPENAI) */
+    @NotBlank(message = "供应商代码不能为空")
+    private String providerCode;
+
     /** 类型(openai/azure/sdk) */
     @NotBlank(message = "供应商类型不能为空")
     private String type;

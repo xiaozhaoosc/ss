@@ -65,6 +65,7 @@
     <el-table v-loading="loading" :data="providerList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="ID" align="center" prop="id" />
+      <el-table-column label="供应商代码" align="center" prop="providerCode" />
       <el-table-column label="供应商名称" align="center" prop="name" />
       <el-table-column label="类型" align="center" prop="type">
         <template #default="scope">
@@ -104,6 +105,9 @@
     <!-- 添加或修改供应商对话框 -->
     <el-dialog :title="title" v-model="open" width="600px" append-to-body>
       <el-form ref="providerRef" :model="form" :rules="rules" label-width="100px">
+        <el-form-item label="供应商代码" prop="providerCode">
+          <el-input v-model="form.providerCode" placeholder="请输入供应商代码 (如 ALIYUN, OPENAI)" />
+        </el-form-item>
         <el-form-item label="供应商名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入供应商名称" />
         </el-form-item>
@@ -168,6 +172,7 @@ const data = reactive({
     status: undefined
   },
   rules: {
+    providerCode: [{ required: true, message: "供应商代码不能为空", trigger: "blur" }],
     name: [{ required: true, message: "供应商名称不能为空", trigger: "blur" }],
     type: [{ required: true, message: "供应商类型不能为空", trigger: "change" }],
     baseUrl: [{ required: true, message: "API地址不能为空", trigger: "blur" }]
@@ -193,6 +198,7 @@ function cancel() {
 function reset() {
   form.value = {
     id: undefined,
+    providerCode: undefined,
     name: undefined,
     type: "openai",
     baseUrl: undefined,

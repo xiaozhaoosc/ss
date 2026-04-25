@@ -131,14 +131,12 @@ public class AiServiceImpl implements IAiService {
             Map<String, Object> params = new HashMap<>();
             params.put("userInput", userInput);
             if (context != null) {
-                params.put("emotion", context.getOrDefault("emotion", "平静"));
-                params.put("suggestion", context.getOrDefault("suggestion", ""));
+                params.put("emotionState", context.getOrDefault("emotion", "平静"));
             } else {
-                params.put("emotion", "平静");
-                params.put("suggestion", "");
+                params.put("emotionState", "平静");
             }
 
-            String prompt = getPrompt("AI_CHAT", params);
+            String prompt = getPrompt("CHILD_TREEHOLE_CHAT", params);
             
             // 3. 调用大模型
             String response = smartAiClient.askAi(prompt, aiModel);
@@ -150,15 +148,23 @@ public class AiServiceImpl implements IAiService {
     }
 
     /**
-     * 从数据库加载并填充提示词模板
+     * 从数据库加载并填充提示词模板 (增加 Redis 缓存)
      */
     private String getPrompt(String promptKey, Map<String, Object> params) {
-        AiPrompt prompt = aiPromptMapper.selectOne(new LambdaQueryWrapper<AiPrompt>()
-                .eq(AiPrompt::getPromptKey, promptKey)
-                .eq(AiPrompt::getStatus, "0")
-                .last("LIMIT 1"));
+        String cacheKey = "ai:prompt:" + promptKey;
+        String template = com.kenzhao.smallsteps.common.redis.utils.RedisUtils.getCacheObject(cacheKey);
 
-        String template = (prompt != null) ? prompt.getContent() : getFallbackPrompt(promptKey);
+        if (template == null) {
+            AiPrompt prompt = aiPromptMapper.selectOne(new LambdaQueryWrapper<AiPrompt>()
+                    .eq(AiPrompt::getPromptKey, promptKey)
+                    .eq(AiPrompt::getStatus, "0")
+                    .last("LIMIT 1"));
+            template = (prompt != null) ? prompt.getContent() : getFallbackPrompt(promptKey);
+            
+            if (template != null) {
+                com.kenzhao.smallsteps.common.redis.utils.RedisUtils.setCacheObject(cacheKey, template);
+            }
+        }
 
         if (template == null) {
             log.error("AI Prompt template not found for key: {}", promptKey);

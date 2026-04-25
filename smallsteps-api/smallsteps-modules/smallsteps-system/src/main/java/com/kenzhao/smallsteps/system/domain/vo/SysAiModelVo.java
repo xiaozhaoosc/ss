@@ -32,6 +32,14 @@ public class SysAiModelVo implements Serializable {
     @ExcelProperty(value = "供应商ID")
     private Long providerId;
 
+    /** 供应商名称 */
+    @ExcelProperty(value = "供应商名称")
+    private String providerName;
+
+    /** 供应商代码 */
+    @ExcelProperty(value = "供应商代码")
+    private String providerCode;
+
     /** API调用代码 */
     @ExcelProperty(value = "模型代码")
     private String modelCode;

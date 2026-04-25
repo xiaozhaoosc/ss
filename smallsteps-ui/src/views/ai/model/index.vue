@@ -59,7 +59,9 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="模型ID" align="center" prop="id" />
       <el-table-column label="模型名称" align="center" prop="name" />
-      <el-table-column label="供应商代码" align="center" prop="modelCode" />
+      <el-table-column label="供应商代码" align="center" prop="providerCode" />
+      <el-table-column label="供应商名称" align="center" prop="providerName" />
+      <el-table-column label="模型代码" align="center" prop="modelCode" />
       <el-table-column label="上下文" align="center" prop="contextWindow" />
       <el-table-column label="状态" align="center" prop="status">
         <template #default="scope">
@@ -96,9 +98,13 @@
           <el-input v-model="form.name" placeholder="请输入模型名称" />
         </el-form-item>
         <el-form-item label="供应商" prop="providerId">
-          <el-select v-model="form.providerId" placeholder="请选择供应商">
-            <el-option label="DeepSeek" :value="1" />
-            <el-option label="OpenAI" :value="2" />
+          <el-select v-model="form.providerId" placeholder="请选择供应商" style="width: 100%">
+            <el-option
+              v-for="item in providerOptions"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="模型代码" prop="modelCode">
@@ -123,6 +129,7 @@
 
 <script setup name="AiModel">
 import { listModel, getModel, delModel, addModel, updateModel } from "@/api/system/ai/model";
+import { listAllProvider } from "@/api/system/ai/provider";
 
 const { proxy } = getCurrentInstance();
 
@@ -130,6 +137,7 @@ const queryRef = ref();
 const modelRef = ref();
 
 const modelList = ref([]);
+const providerOptions = ref([]);
 const open = ref(false);
 const loading = ref(true);
 const showSearch = ref(true);
@@ -149,6 +157,7 @@ const data = reactive({
   },
   rules: {
     name: [{ required: true, message: "模型名称不能为空", trigger: "blur" }],
+    providerId: [{ required: true, message: "请选择供应商", trigger: "change" }],
     modelCode: [{ required: true, message: "模型代码不能为空", trigger: "blur" }],
   }
 });
@@ -161,6 +170,13 @@ function getList() {
     modelList.value = response.rows;
     total.value = response.total;
     loading.value = false;
+  });
+}
+
+/** 查询所有供应商用于下拉框 */
+function getProviderOptions() {
+  listAllProvider().then(response => {
+    providerOptions.value = response.rows;
   });
 }
 
@@ -243,4 +259,5 @@ function handleDelete(row) {
 }
 
 getList();
+getProviderOptions();
 </script>

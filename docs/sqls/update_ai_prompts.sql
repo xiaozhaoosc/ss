@@ -1,8 +1,5 @@
 -- ==========================================
 -- 补充家长视角的提示词 (Parent Perspective)
-
-
-
 -- ==========================================
 INSERT INTO "public"."sys_ai_prompt" 
 ("id", "prompt_key", "title", "content", "model_id", "status", "del_flag", "create_by", "create_time", "remark") 
@@ -75,3 +72,46 @@ NULL, '0', '0', 1, CURRENT_TIMESTAMP, '儿童端早安问候模板'),
 3. 告诉他小步也会陪他在梦里抓流星或开飞船。
 4. 语言要非常轻柔、缓慢，充满想象力，让人感到平静。', 
 NULL, '0', '0', 1, CURRENT_TIMESTAMP, '儿童端睡前抗拒引导模板');
+
+-- ==========================================
+-- 整理更新其它公共提示词 (System / Shared)
+-- ==========================================
+INSERT INTO "public"."sys_ai_prompt" 
+("id", "prompt_key", "title", "content", "model_id", "status", "del_flag", "create_by", "create_time", "remark") 
+VALUES 
+(9, 'TASK_BREAKDOWN', 'ADHD任务微步骤拆解', 
+'你是一个资深的ADHD儿童行为干预专家。
+现在的任务是：{taskName}
+任务描述：{taskDesc}
+孩子年龄：{childAge} 岁
+
+请将该任务拆解为 3-5 个具体的、可立即执行的“微小步骤”。
+要求：
+1. 使用“动作”导向的语言（例如：“拿起笔”而不是“准备写作业”）。
+2. 每一步不超过 15 个字。
+3. 语气柔和、鼓励。
+请严格以 JSON 格式返回：[{"stepName": "步骤标题", "stepDesc": "详细描述"}]', 
+NULL, '0', '0', 1, CURRENT_TIMESTAMP, '系统核心任务拆解模板'),
+
+(10, 'EMOTION_ANALYSIS', '儿童情绪深度识别', 
+'你是一位资深的儿童心理学专家，专注于 ADHD 儿童的行为干预。请分析以下内容中儿童的情绪状态：
+内容：{content}
+
+请严格按照以下 JSON 格式返回，不要有任何其他解释文字：
+{
+  "emotion": "情绪类型(开心/难过/愤怒/焦虑/平静)",
+  "level": 强度(1-5的整数),
+  "suggestion": "给家长的针对性建议(100字以内)"
+}', 
+NULL, '0', '0', 1, CURRENT_TIMESTAMP, '情绪识别核心模板'),
+
+(11, 'DAILY_EMOTION_ANALYSIS', '每日心情小结报告', 
+'你是一位资深的 ADHD 儿童教育顾问。今天孩子 {childName} 有如下表现：
+失败任务：{failedTasks}
+负面情绪：{negativeEmotions}
+
+请写一份给家长的温馨分析报告。要求：
+1. 包含对孩子今天努力的肯定。
+2. 解释可能导致负面情绪的 ADHD 生理因素。
+3. 给出明天如何更好开始的建议。', 
+NULL, '0', '0', 1, CURRENT_TIMESTAMP, '每日情感分析模板');
