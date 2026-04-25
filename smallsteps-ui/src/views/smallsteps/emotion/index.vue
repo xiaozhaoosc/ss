@@ -66,6 +66,7 @@
 
 <script setup name="SmallstepsEmotion">
 const { proxy } = getCurrentInstance();
+const queryRef = ref();
 
 const emotionList = ref([]);
 const loading = ref(false);
@@ -102,7 +103,7 @@ function getList() {
 }
 
 function handleQuery() { queryParams.value.pageNum = 1; getList(); }
-function resetQuery() { proxy.resetForm('queryRef'); handleQuery(); }
+function resetQuery() { queryRef.value?.resetFields(); handleQuery(); }
 
 getList();
 </script>

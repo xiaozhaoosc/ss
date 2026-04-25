@@ -126,6 +126,9 @@ import { listModel, getModel, delModel, addModel, updateModel } from "@/api/syst
 
 const { proxy } = getCurrentInstance();
 
+const queryRef = ref();
+const modelRef = ref();
+
 const modelList = ref([]);
 const open = ref(false);
 const loading = ref(true);
@@ -174,7 +177,7 @@ function reset() {
     modelCode: undefined,
     status: "0"
   };
-  proxy.resetForm("modelRef");
+  modelRef.value?.resetFields();
 }
 
 function handleQuery() {
@@ -183,7 +186,7 @@ function handleQuery() {
 }
 
 function resetQuery() {
-  proxy.resetForm("queryRef");
+  queryRef.value?.resetFields();
   handleQuery();
 }
 
@@ -210,7 +213,7 @@ function handleUpdate(row) {
 }
 
 function submitForm() {
-  proxy.$refs["modelRef"].validate(valid => {
+  modelRef.value.validate(valid => {
     if (valid) {
       if (form.value.id != undefined) {
         updateModel(form.value).then(response => {

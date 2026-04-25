@@ -83,7 +83,8 @@ const loadData = async () => {
   if (loading.value) return
   loading.value = true
   try {
-    const childId = userStore.id || 1
+    const childId = userStore.id
+    if (!childId) return
     const res: any = await getRecentInteractions(childId, 20)
     if (res.data) {
       interactions.value = res.data

@@ -16,3 +16,7 @@
 | 2026-04-21 | `controller` | PathVariable 强制性导致 ID 缺失时接口 404，需全量扫描并重构为 Optional | 中 | 处理中 | [[JOURNAL]] |
 | 2026-04-23 | `database` | 物理表 ID 命名 (如 `child_id`) 与 Java 实体规范 (`id`) 不一致 | 高 | 待处理 | [[JOURNAL]] |
 | 2026-04-23 | `ss_child` | `dept_id` 字段存在 NOT NULL 约束但业务逻辑中来源不明确 | 中 | 待处理 | - |
+| 2026-04-25 | `app-profile` | 档案描述 (`getChildDesc`) 依赖于非结构化的 `remark` 字符串解析，具有脆弱性 | 中 | 待处理 | [[Parent-Profile-And-Family-Binding]] |
+| 2026-04-25 | `app-ui` | 个人中心页面的“编辑”按钮目前仅为 Toast 提示，未实现完整详情页 | 低 | 待处理 | - |
+| 2026-04-25 | `database` | 字段类型不一致：核心表 (如 `ss_child_ai`) 使用 VARCHAR 存 ID，与 Java Long 转换冲突 | 高 | 已修复核心，需全局审计 | [[ADR_006_DB_Schema_BigInt_Migration]] |
+| 2026-04-25 | `app-network` | 请求层 JSON 嵌套污染：App 返回 `Status 500 {json}` 导致解析崩溃 | 中 | 已通过正则规避 | [[2026-04-25]] |

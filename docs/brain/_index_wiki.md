@@ -15,9 +15,12 @@
 - [[adr_child_module_reconstruction]] - 针对代码丢失的儿童端执行模块 (ss-child) 自主重建 ADR
 - [[ADR-002-Family-Dept-Mapping]] - Family 与系统部门的映射决策
 - [[ADR_005_AI_Dynamic_System]] - AI 动态路由与提示词系统重构 ADR
+- [[ADR_006_DB_Schema_BigInt_Migration]] - 数据库字段类型从 VARCHAR 向 BIGINT 迁移 ADR
 
 ## 每日记录 (Journal)
-- [[2026-04-25-AI-Breakdown-Fix-and-UI-Optimization.md|2026-04-25]] (AI 链路修复 & Pretext 布局深度优化)
+- [[2026-04-25]] (V7 最终版脚本：彻底修复 Long 转换异常 & 30 天数据看板闭环)
+- [[Parent-Profile-And-Family-Binding|2026-04-25]] (家长端全功能闭环：档案管理与智能绑定)
+- [[2026-04-25-AI-Breakdown-Fix-and-UI-Optimization.md|2026-04-25 (Session A)]] (AI 链路修复 & Pretext 布局深度优化)
 - [[2026-04-23.md|2026-04-23]] (AI 路由重构 & 动态 Prompt 闭环验证)
 - [[2026-04-21.md|2026-04-21]] (情绪动力系统交付 & API 404 路径稳定性加固)
 - [[2026-04-14]] (论文多版本 Word 格式化生成 & 自动化流水线)

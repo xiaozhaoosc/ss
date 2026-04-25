@@ -177,7 +177,8 @@ const handleAction = () => {
 const handleComplete = async () => {
   if (!taskId.value) return
   
-  const childId = userStore.id || 1 
+  const childId = userStore.id
+  if (!childId) return 
   isLoading.value = true
   
   try {

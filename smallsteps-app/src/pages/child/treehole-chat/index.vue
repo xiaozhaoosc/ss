@@ -28,7 +28,8 @@ const sendMessage = async () => {
   scrollToBottom()
   
   try {
-    const childId = userStore.id || 1
+    const childId = userStore.id
+    if (!childId) return
     const res: any = await chatWithAI(childId, userMsg)
     messages.value.push({
       role: 'ai',

@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { login, getInfo } from '@/api/login'
 import { getScore } from '@/api/reward'
+import { getTotalStars } from '@/api/child'
 import { getToken, setToken, removeToken, getClientId, setClientId, removeClientId } from '@/utils/auth'
 
 interface UserState {
@@ -23,7 +24,9 @@ export const useUserStore = defineStore('user', {
   getters: {
     isLoggedIn: (state): boolean => !!state.token,
     isParent: (state): boolean => state.role === 'parent',
-    isChild: (state): boolean => state.role === 'child'
+    isChild: (state): boolean => state.role === 'child',
+    userId: (state): number | string | null => state.userInfo?.user?.userId || null,
+    id: (state): number | string | null => state.userInfo?.user?.userId || null
   },
 
   actions: {
@@ -109,9 +112,17 @@ export const useUserStore = defineStore('user', {
     async fetchBalance() {
       if (this.userInfo && this.userInfo.user) {
         try {
-          const res: any = await getScore(this.userInfo.user.userId)
+          const userId = this.userInfo.user.userId
+          let res: any
+          if (this.role === 'child') {
+            res = await getTotalStars(userId)
+          } else {
+            res = await getScore(userId)
+          }
+          
           if (res.data) {
-            this.balance = res.data.balance || 0
+            // Check for different response structures
+            this.balance = res.data.balance !== undefined ? res.data.balance : (res.data.totalStars !== undefined ? res.data.totalStars : (typeof res.data === 'number' ? res.data : 0))
           }
         } catch (e) {
           console.error('Fetch balance failed', e)

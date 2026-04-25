@@ -110,6 +110,9 @@ import { listPrompt, getPrompt, delPrompt, addPrompt, updatePrompt } from "@/api
 
 const { proxy } = getCurrentInstance();
 
+const queryRef = ref();
+const promptRef = ref();
+
 const promptList = ref([]);
 const open = ref(false);
 const loading = ref(true);
@@ -159,7 +162,7 @@ function reset() {
     content: undefined,
     status: "0"
   };
-  proxy.resetForm("promptRef");
+  promptRef.value?.resetFields();
 }
 
 function handleQuery() {
@@ -168,7 +171,7 @@ function handleQuery() {
 }
 
 function resetQuery() {
-  proxy.resetForm("queryRef");
+  queryRef.value?.resetFields();
   handleQuery();
 }
 
@@ -195,7 +198,7 @@ function handleUpdate(row) {
 }
 
 function submitForm() {
-  proxy.$refs["promptRef"].validate(valid => {
+  promptRef.value.validate(valid => {
     if (valid) {
       if (form.value.id != undefined) {
         updatePrompt(form.value).then(response => {

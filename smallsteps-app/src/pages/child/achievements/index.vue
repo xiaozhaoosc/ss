@@ -31,7 +31,8 @@ onShow(() => {
 })
 
 const loadData = async () => {
-  const childId = userStore.id || 1
+  const childId = userStore.id
+  if (!childId) return
   try {
     const res = await listChildAchievement(childId)
     const list = res.data || res.rows || []

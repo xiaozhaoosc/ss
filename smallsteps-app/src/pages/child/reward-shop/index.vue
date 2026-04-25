@@ -68,6 +68,8 @@ const userStore = useUserStore()
 const products = ref([])
 
 async function loadData() {
+  const childId = userStore.id
+  if (!childId) return
   try {
     const res = await listReward({ pageNum: 1, pageSize: 20, status: '0' })
     if (res.rows) {
@@ -85,8 +87,10 @@ async function loadData() {
 }
 
 onShow(() => {
-  loadData()
-  userStore.fetchBalance()
+  if (userStore.id) {
+    loadData()
+    userStore.fetchBalance()
+  }
 })
 
 const handleBack = () => {

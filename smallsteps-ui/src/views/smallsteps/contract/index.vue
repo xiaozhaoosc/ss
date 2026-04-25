@@ -49,6 +49,7 @@
 
 <script setup name="SmallstepsContract">
 const { proxy } = getCurrentInstance();
+const queryRef = ref();
 const contractList = ref([]);
 const loading = ref(false);
 const showSearch = ref(true);
@@ -63,7 +64,7 @@ function getStatusType(s) { return s === '1' ? 'success' : s === '2' ? 'info' : 
 function getStatusLabel(s) { return s === '1' ? '已达成' : s === '2' ? '已过期' : '进行中'; }
 function getList() { loading.value = true; /* TODO: listContract */ loading.value = false; }
 function handleQuery() { queryParams.value.pageNum = 1; getList(); }
-function resetQuery() { proxy.resetForm('queryRef'); handleQuery(); }
+function resetQuery() { queryRef.value?.resetFields(); handleQuery(); }
 function handleAdd() { proxy.$modal.msgWarning('亲子契约功能即将上线'); }
 function handleUpdate(row) { proxy.$modal.msgWarning('亲子契约功能即将上线'); }
 function handleDelete(row) { proxy.$modal.msgWarning('亲子契约功能即将上线'); }

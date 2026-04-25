@@ -34,25 +34,29 @@
       <view class="section">
         <view class="section-header">
           <text class="section-title">孩子档案</text>
-          <button class="add-btn">
+          <button class="add-btn" @click="handleAddChild">
             <text class="material-symbols-outlined icon">add</text>
             <text>添加</text>
           </button>
         </view>
         
-        <view class="child-card">
+        <view v-if="children.length === 0 && !loading" class="empty-box">
+          <text class="empty-text">暂无孩子档案，请点击右上角添加</text>
+        </view>
+
+        <view v-for="child in children" :key="child.id" class="child-card">
           <view class="avatar-box">
-            <image class="avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJ1cciJ4i8VZa4i84tUg3c73WgpXsHDPWFJTFC1HCyoJaWAw63sCD6sYtGoggTmCxZPkFLdgXZ0jMVUEjuhNaybs-1a06VWI-j7Tv_k-GcxylNpE1U9cjTL6ICQBnyg02gLWhSCCy1SnHe6psYMG-13HPVdTV9vR6odzmSIWG_6kD9m5MrzeKyalS3Ewhx_px4_a3iAVFvHE4SYxL6Z13ZA7UVC9fVC7U29WKKz0G9msv4O4zW9MUm2t6NZ6FOtcNY4-8SHhP3MgM" mode="aspectFill" />
+            <image class="avatar" :src="child.avatarUrl || 'https://lh3.googleusercontent.com/aida-public/AB6AXuAJ1cciJ4i8VZa4i84tUg3c73WgpXsHDPWFJTFC1HCyoJaWAw63sCD6sYtGoggTmCxZPkFLdgXZ0jMVUEjuhNaybs-1a06VWI-j7Tv_k-GcxylNpE1U9cjTL6ICQBnyg02gLWhSCCy1SnHe6psYMG-13HPVdTV9vR6odzmSIWG_6kD9m5MrzeKyalS3Ewhx_px4_a3iAVFvHE4SYxL6Z13ZA7UVC9fVC7U29WKKz0G9msv4O4zW9MUm2t6NZ6FOtcNY4-8SHhP3MgM'" mode="aspectFill" />
           </view>
           <view class="info">
-            <text class="name">小明</text>
-            <text class="desc">4岁 · 幼儿园中班</text>
+            <text class="name">{{ child.nickname }}</text>
+            <text class="desc">{{ getChildDesc(child) }}</text>
           </view>
           <view class="actions">
-            <view class="icon-btn" @click="handleShowQr">
+            <view class="icon-btn" @click="handleShowQr(child)">
               <text class="material-symbols-outlined">qr_code_2</text>
             </view>
-            <view class="icon-btn primary">
+            <view class="icon-btn primary" @click="handleEditChild(child)">
               <text class="material-symbols-outlined">edit</text>
             </view>
           </view>
@@ -111,14 +115,17 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import TopBar from '@/components/common/top-bar/top-bar.vue'
 import BottomNav from '@/components/common/bottom-nav/bottom-nav.vue'
 import { useUserStore } from '@/store/modules/user'
+import { listChildren } from '@/api/child'
 
 const userStore = useUserStore()
 
 const isDarkMode = ref(false)
+const children = ref([])
+const loading = ref(false)
 
 const settings = ref([
   { title: '通知设置', icon: 'notifications', colorClass: 'blue' },
@@ -126,9 +133,60 @@ const settings = ref([
   { title: '账号安全', icon: 'lock', colorClass: 'emerald' }
 ])
 
-const handleShowQr = () => {
+// 获取儿童列表
+const fetchChildren = async () => {
+  if (!userStore.userInfo?.user?.userId) return
+  
+  loading.value = true
+  try {
+    const res = await listChildren({ 
+      parentId: userStore.userInfo.user.userId 
+    })
+    if (res.code === 200) {
+      children.value = res.data || []
+    }
+  } catch (e) {
+    console.error('Failed to fetch children:', e)
+  } finally {
+    loading.value = false
+  }
+}
+
+// 计算年龄
+const calculateAge = (birthday) => {
+  if (!birthday) return ''
+  const birthDate = new Date(birthday)
+  const today = new Date()
+  let age = today.getFullYear() - birthDate.getFullYear()
+  const m = today.getMonth() - birthDate.getMonth()
+  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+    age--
+  }
+  return age > 0 ? `${age}岁` : '1岁以下'
+}
+
+// 格式化描述 (年龄 + 备注)
+const getChildDesc = (child) => {
+  const ageStr = calculateAge(child.birthday)
+  const remark = child.remark || ''
+  // 提取备注中的班级信息 (如果有的话)
+  const grade = remark.split('·')[1]?.trim() || remark.split(',')[1]?.trim() || remark
+  return `${ageStr}${grade ? ' · ' + grade : ''}`
+}
+
+const handleAddChild = () => {
+  uni.navigateTo({ url: '/pages/parent/family/bind' })
+}
+
+const handleEditChild = (child) => {
+  uni.navigateTo({
+    url: `/pages/parent/family/edit?id=${child.id}`
+  })
+}
+
+const handleShowQr = (child) => {
   uni.showModal({
-    title: '儿童端登录码',
+    title: `${child.nickname} 的登录码`,
     content: '请在 StarBuddy 设备的屏幕上扫描此二维码（模拟）',
     showCancel: false
   })
@@ -150,6 +208,10 @@ const handleLogout = () => {
     }
   })
 }
+
+onMounted(() => {
+  fetchChildren()
+})
 </script>
 
 <style lang="scss" scoped>
@@ -303,6 +365,22 @@ const handleLogout = () => {
   font-weight: 700;
   color: #111827;
   :deep(.dark) & { color: #fff; }
+}
+
+.empty-box {
+  padding: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 12px;
+  border: 1px dashed #e5e7eb;
+  :deep(.dark) & { background-color: #1f2937; border-color: #374151; }
+}
+
+.empty-text {
+  font-size: 14px;
+  color: #9ca3af;
 }
 
 .add-btn {

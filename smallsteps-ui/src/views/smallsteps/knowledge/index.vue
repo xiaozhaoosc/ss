@@ -53,6 +53,7 @@
 
 <script setup name="SmallstepsKnowledge">
 const { proxy } = getCurrentInstance();
+const queryRef = ref();
 const knowledgeList = ref([]);
 const loading = ref(false);
 const showSearch = ref(true);
@@ -68,7 +69,7 @@ const { queryParams } = toRefs(data);
 function getCategoryLabel(cat) { return CATEGORY_MAP[cat] ?? cat; }
 function getList() { loading.value = true; /* TODO: listKnowledge */ loading.value = false; }
 function handleQuery() { queryParams.value.pageNum = 1; getList(); }
-function resetQuery() { proxy.resetForm('queryRef'); handleQuery(); }
+function resetQuery() { queryRef.value?.resetFields(); handleQuery(); }
 function handleAdd() { proxy.$modal.msgWarning('知识学堂功能即将上线'); }
 function handleUpdate(row) { proxy.$modal.msgWarning('知识学堂功能即将上线'); }
 function handleDelete(row) { proxy.$modal.msgWarning('知识学堂功能即将上线'); }

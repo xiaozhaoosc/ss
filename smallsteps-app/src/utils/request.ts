@@ -1,59 +1,113 @@
+import config from '@/config'
 import { useUserStore } from '@/store/modules/user'
+import errorCode from '@/utils/errorCode'
+import { toast, showConfirm, tansParams } from '@/utils/common'
+import { encryptRequest } from '@/utils/crypto'
+import { getToken, getClientId } from '@/utils/auth' // 引入 Auth 工具
 
-// Base URL configuration
-// In H5 dev, we often use proxy. In App, we need full URL.
-// Since we are migrating to H5 first, we can use '/dev-api' which matches proxy.
-// For production or App, this should be configurable.
-const BASE_URL = import.meta.env.VITE_APP_BASE_API || '/dev-api'
+// 从 config.js 获取基础路径
+const baseUrl = config.baseUrl
 
-const request = (options: any) => {
+/**
+ * Small Steps 统一请求工具 (TypeScript 版)
+ * 修复：对齐 App-Token 存储 Key
+ */
+const request = (options: any): Promise<any> => {
     return new Promise((resolve, reject) => {
         const userStore = useUserStore()
 
-        // Headers processing
-        const header = {
+        // 1. 设置默认 Header
+        const header: any = {
             'Content-Type': 'application/json;charset=utf-8',
             ...options.header
         }
 
-        // Token injection
-        if (userStore.token) {
-            header['Authorization'] = 'Bearer ' + userStore.token
-            header['clientid'] = import.meta.env.VITE_APP_CLIENT_ID || 'e5cd7e4891bf95d1d19206ce24a7b32e' // Default RuoYi Client ID
+        // 2. Token 与 ClientId 注入 (修复点：使用 getToken 保证 Key 对齐)
+        const token = getToken() || userStore.token
+        if (token && !(options.header && options.header.isToken === false)) {
+            header['Authorization'] = 'Bearer ' + token
+        }
+        
+        // 自动注入 clientid (优先使用存储中的)
+        const storageClientId = getClientId() || userStore.clientId
+        header['clientid'] = storageClientId || import.meta.env.VITE_APP_CLIENT_ID || 'e5cd7e4891bf95d1d19206ce24a7b32e'
+
+        // 3. 处理加密请求 (API 级别加密)
+        if (options.encrypt && options.data) {
+            const { encryptedData, encryptedKey } = encryptRequest(options.data)
+            header['encrypt-key'] = encryptedKey
+            options.data = encryptedData
         }
 
+        // 4. 处理 GET 参数序列化
+        let url = (options.baseUrl || baseUrl) + options.url
+        if (options.params) {
+            url += (url.indexOf('?') === -1 ? '?' : '&') + tansParams(options.params)
+            url = url.slice(0, -1)
+        }
+
+        // 5. [诊断] 打印请求日志
+        console.log(`%c[SS_API_TRACE] 🚀 Request: ${options.method || 'GET'} ${url}`, 'color: #3b82f6; font-weight: bold; background: #eff6ff; padding: 2px 4px;')
+
         uni.request({
-            url: BASE_URL + options.url,
+            url: url,
             method: options.method || 'GET',
             data: options.data,
             header: header,
+            timeout: options.timeout || 60000,
             success: (res: any) => {
-                const code = res.data.code || 200
-                const msg = res.data.msg || '系统未知错误，请反馈给管理员'
+                const { statusCode, data: rawData } = res
+                
+                let data = rawData
+                // 核心诊断：处理后端返回的“混杂字符串”（如 "500 {JSON}"）
+                if (typeof data === 'string') {
+                    const jsonMatch = data.match(/\{[\s\S]*\}/)
+                    if (jsonMatch) {
+                        try { data = JSON.parse(jsonMatch[0]) } catch (e) {
+                            console.warn('[SS_API_TRACE] JSON Parse failed', e)
+                        }
+                    }
+                }
 
-                // Success
-                if (code === 200) {
-                    resolve(res.data)
+                data = data || {}
+                const code = data.code || statusCode
+                const msg = data.msg || data.message || (errorCode as any)[code] || (statusCode === 200 ? '' : `服务器异常(${statusCode})`)
+
+                // 200: 业务成功
+                if (code === 200 || code === '200') {
+                    resolve(data)
+                    return
                 }
-                // Token expired / Invalid
-                else if (code === 401) {
-                    uni.showToast({ title: '登录状态已过期，请重新登录', icon: 'none' })
-                    userStore.logout()
-                    setTimeout(() => {
-                        uni.reLaunch({ url: '/pages/login/index' })
-                    }, 1500)
-                    reject('Invalid Token')
+
+                // 401: 登录失效
+                if (code === 401) {
+                    userStore.logOut()
+                    showConfirm('登录状态已过期，请重新登录').then((confirmRes: any) => {
+                        if (confirmRes.confirm) uni.reLaunch({ url: '/pages/login/index' })
+                    })
+                    reject({ code, msg, _isBusinessError: true })
+                    return
                 }
-                // Other errors
-                else {
-                    uni.showToast({ title: msg, icon: 'none' })
-                    reject(res.data)
+
+                // 错误处理：对于 500 或长消息，使用 Modal 强提醒（防截断）
+                console.error(`%c[SS_API_TRACE] ❌ Business Error [${code}]: ${msg}`, 'color: #ef4444; font-weight: bold;')
+                if (statusCode === 500 || (msg && msg.length > 15)) {
+                    uni.showModal({
+                        title: '系统提示',
+                        content: msg || '系统操作失败',
+                        showCancel: false,
+                        confirmText: '知道了'
+                    })
+                } else {
+                    uni.showToast({ title: msg || '操作失败', icon: 'none', duration: 2000 })
                 }
+                
+                reject({ code, msg, _isBusinessError: true })
             },
             fail: (err) => {
-                console.error('Network Error:', err)
-                uni.showToast({ title: '网络请求失败', icon: 'none' })
-                reject(err)
+                console.error(`%c[SS_API_TRACE] 📡 Network Fail:`, 'color: #f59e0b;', err)
+                uni.showToast({ title: '网络连接失败', icon: 'none' })
+                reject({ code: -1, msg: '网络异常', detail: err })
             }
         })
     })

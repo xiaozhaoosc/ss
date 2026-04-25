@@ -58,6 +58,7 @@
 
 <script setup name="AiLog">
 const { proxy } = getCurrentInstance();
+const queryRef = ref();
 const logList = ref([]);
 const loading = ref(false);
 const showSearch = ref(true);
@@ -81,7 +82,7 @@ function getList() {
   loading.value = false;
 }
 function handleQuery() { queryParams.value.pageNum = 1; getList(); }
-function resetQuery() { proxy.resetForm('queryRef'); handleQuery(); }
+function resetQuery() { queryRef.value?.resetFields(); handleQuery(); }
 
 getList();
 </script>

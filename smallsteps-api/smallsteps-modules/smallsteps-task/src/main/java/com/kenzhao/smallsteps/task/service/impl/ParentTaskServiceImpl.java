@@ -91,20 +91,26 @@ public class ParentTaskServiceImpl implements IParentTaskService {
     public Map<String, Object> getTaskStatusByChildId(Long childId) {
         Map<String, Object> result = new HashMap<>();
 
-        // 总任务数 (当前指派的任务)
-        Long totalTasks = parentTaskMapper.selectCount(new LambdaQueryWrapper<ParentTask>()
-            .eq(ParentTask::getUserId, childId));
+        // 总任务数 (当前指派的任务 - 这里的逻辑可能需要根据业务调整，目前暂用 ParentTask 数量)
+        // 修正：应根据 ss_task_log 中今日的任务总数来计算
+        java.util.Date today = cn.hutool.core.date.DateUtil.beginOfDay(new java.util.Date());
+        
+        Long totalTasks = childTaskMapper.selectCount(new LambdaQueryWrapper<ChildTask>()
+            .eq(ChildTask::getChildId, childId)
+            .ge(ChildTask::getTargetDate, today)
+            .lt(ChildTask::getTargetDate, cn.hutool.core.date.DateUtil.endOfDay(today)));
 
-        // 今日完成任务数
+        // 今日完成任务数 (状态为已完成 2 或已点亮 3)
         Long completedTasks = childTaskMapper.selectCount(new LambdaQueryWrapper<ChildTask>()
             .eq(ChildTask::getChildId, childId)
-            .eq(ChildTask::getStatus, "2")
-            .eq(ChildTask::getTargetDate, LocalDate.now()));
+            .in(ChildTask::getStatus, "2", "3")
+            .ge(ChildTask::getTargetDate, today)
+            .lt(ChildTask::getTargetDate, cn.hutool.core.date.DateUtil.endOfDay(today)));
 
         result.put("totalTasks", totalTasks);
         result.put("completedTasks", completedTasks);
         result.put("pendingTasks", Math.max(0, totalTasks - completedTasks));
-        result.put("completionRate", totalTasks > 0 ? (completedTasks * 100 / totalTasks) : 0);
+        result.put("completionRate", totalTasks > 0 ? (int)(completedTasks * 100 / totalTasks) : 0);
 
         return result;
     }
@@ -122,7 +128,7 @@ public class ParentTaskServiceImpl implements IParentTaskService {
         // 2. 专注力 = 平均自主得分 (autonomy_score)
         List<ChildTask> recentTasks = childTaskMapper.selectList(new LambdaQueryWrapper<ChildTask>()
             .eq(ChildTask::getChildId, childId)
-            .eq(ChildTask::getStatus, "2")
+            .in(ChildTask::getStatus, "2", "3")
             .orderByDesc(ChildTask::getCreateTime)
             .last("LIMIT 10"));
 
@@ -163,7 +169,7 @@ public class ParentTaskServiceImpl implements IParentTaskService {
             .eq(ChildTask::getChildId, childId)
             .ge(ChildTask::getCreateTime, today.minusDays(7).atStartOfDay()));
 
-        long completed = logs.stream().filter(t -> "2".equals(t.getStatus())).count();
+        long completed = logs.stream().filter(t -> "2".equals(t.getStatus()) || "3".equals(t.getStatus())).count();
         int totalPoints = (int)completed * 10;
 
         double avgTime = logs.stream()
@@ -189,7 +195,7 @@ public class ParentTaskServiceImpl implements IParentTaskService {
             .eq(ChildTask::getChildId, childId)
             .ge(ChildTask::getCreateTime, today.minusDays(30).atStartOfDay()));
 
-        long completed = logs.stream().filter(t -> "2".equals(t.getStatus())).count();
+        long completed = logs.stream().filter(t -> "2".equals(t.getStatus()) || "3".equals(t.getStatus())).count();
         int totalPoints = (int)completed * 10;
 
         Map<String, Object> result = new HashMap<>();

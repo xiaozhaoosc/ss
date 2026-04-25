@@ -218,9 +218,35 @@ export function getEmotionTrend(childId: number, days: number = 7) {
     })
 }
 
-export function getAbilityRadar(childId: number) {
+export function getAbilityRadar(childId: number | string) {
     return request({
-        url: '/parent/insight/ability/radar/' + childId,
+        url: `/parent/insight/ability/radar/${childId}`,
         method: 'GET'
     })
+}
+
+// 查询儿童列表
+export function listChildren(query: any) {
+  return request({
+    url: '/ss/child/list',
+    method: 'get',
+    params: query
+  })
+}
+
+// 获取儿童详细信息
+export function getChild(id: string | number) {
+  return request({
+    url: '/ss/child/' + id,
+    method: 'get'
+  })
+}
+
+// 修改儿童信息
+export function updateChild(data: any) {
+  return request({
+    url: '/ss/child',
+    method: 'put',
+    data: data
+  })
 }

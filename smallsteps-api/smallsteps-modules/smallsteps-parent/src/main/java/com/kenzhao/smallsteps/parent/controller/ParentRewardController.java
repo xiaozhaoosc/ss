@@ -69,7 +69,7 @@ public class ParentRewardController extends BaseController {
     /**
      * 查询家长奖励配置列表
      */
-    @SaCheckPermission("parent:reward:list")
+    @cn.dev33.satoken.annotation.SaCheckLogin
     @GetMapping("/list")
     public TableDataInfo<ParentRewardVo> list(ParentRewardBo bo, PageQuery pageQuery) {
         return parentRewardService.queryPageList(bo, pageQuery);

@@ -104,6 +104,20 @@
       }
     },
     {
+      "path": "pages/parent/family/bind",
+      "style": {
+        "navigationBarTitleText": "绑定孩子档案",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/parent/family/edit",
+      "style": {
+        "navigationBarTitleText": "编辑档案",
+        "navigationStyle": "custom"
+      }
+    },
+    {
       "path": "pages/parent/contract/index",
       "style": {
         "navigationBarTitleText": "亲子契约",

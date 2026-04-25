@@ -183,9 +183,10 @@ async function loadData() {
     const logs = timelineRes.data || []
     
     timeline.value = logs.map((l: any) => ({
+      id: l.childTaskId || l.id,
       time: l.endTime ? l.endTime.substring(11, 16) : (l.createTime ? l.createTime.substring(11, 16) : '--:--'),
       title: l.taskDefinition?.title || '未知任务',
-      description: l.taskDefinition?.description || '已开始执行',
+      description: l.taskDefinition?.description || '任务记录',
       status: l.status === '2' || l.status === '3' ? 'completed' : (l.status === '1' ? 'in-progress' : 'upcoming'),
       icon: l.taskDefinition?.icon || 'task',
       proof: l.proof

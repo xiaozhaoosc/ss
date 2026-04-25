@@ -24,4 +24,13 @@ public interface IAiService {
      * @return 情绪分析结果
      */
     Map<String, Object> emotionAnalysis(Long childId, String content);
+
+    /**
+     * AI 聊天
+     * @param childId 儿童ID
+     * @param userInput 用户输入
+     * @param context 额外上下文 (如情绪分析结果)
+     * @return AI 回复
+     */
+    String chat(Long childId, String userInput, Map<String, Object> context);
 }

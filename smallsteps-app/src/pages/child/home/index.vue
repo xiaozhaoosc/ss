@@ -12,8 +12,8 @@
           <text class="material-symbols-outlined fire-icon">local_fire_department</text>
         </view>
         <view class="streak-info">
-          <text class="streak-label">STREAK</text>
-          <text class="streak-val">{{ streak }} Days</text>
+          <text class="streak-label">坚持打卡</text>
+          <text class="streak-val">{{ streak }} 天</text>
         </view>
       </view>
       
@@ -32,7 +32,7 @@
         <!-- Speech Bubble -->
         <view class="speech-bubble">
           <text class="bubble-text">{{ greetingText }}</text>
-          <view class="tap-hint">Tap me to chat!</view>
+          <view class="tap-hint">点我聊天吧！</view>
         </view>
         
         <!-- Robot Image -->
@@ -62,17 +62,17 @@
 
       <!-- Secondary Actions -->
       <view class="quick-links">
-        <view class="link-card" @click="handleQuickLink('Art Class')">
+        <view class="link-card" @click="handleQuickLink('艺术课')">
           <view class="link-icon bg-purple">
             <text class="material-symbols-outlined">palette</text>
           </view>
-          <text class="link-text">Art Class</text>
+          <text class="link-text">艺术课</text>
         </view>
-        <view class="link-card" @click="handleQuickLink('Play Time')">
+        <view class="link-card" @click="handleQuickLink('游戏时间')">
           <view class="link-icon bg-green">
             <text class="material-symbols-outlined">sports_soccer</text>
           </view>
-          <text class="link-text">Play Time</text>
+          <text class="link-text">游戏时间</text>
         </view>
       </view>
       
@@ -85,7 +85,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { onLoad, onShow } from '@dcloudio/uni-app'
 import TrophyJar from '@/components/child/trophy-jar/trophy-jar.vue'
 import MissionCard from '@/components/child/mission-card/mission-card.vue'
@@ -120,13 +120,14 @@ async function loadData() {
     // 1. Get User Info
     if (!userStore.userInfo) {
        const infoRes: any = await getInfo()
-       userStore.setUserInfo(infoRes)
+       userStore.setUserInfo(infoRes.data || infoRes)
     }
 
-    const childId = userStore.id || 1
-    
+    const childId = userStore.id
+    if (!childId) return
+
     // 2. Get Streak
-    getStreak(childId).then((res: any) => {
+    getStreak(Number(childId)).then((res: any) => {
       streak.value = res.data || 0
     })
 
@@ -138,8 +139,9 @@ async function loadData() {
 }
 
 const loadPendingTasks = () => {
-  const childId = userStore.id || 1
-  getPendingTasks(childId).then((res: any) => {
+  const childId = userStore.id
+  if (!childId) return
+  getPendingTasks(Number(childId)).then((res: any) => {
     pendingTasks.value = res.data || []
     if (pendingTasks.value.length > 0) {
       const task = pendingTasks.value[0]

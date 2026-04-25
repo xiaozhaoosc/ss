@@ -11,6 +11,7 @@ import java.util.List;
 /**
  * 儿童AI交互Controller
  */
+@cn.dev33.satoken.annotation.SaIgnore
 @RestController
 @RequestMapping("/child/ai")
 public class ChildAIController {
@@ -75,6 +76,7 @@ public class ChildAIController {
     /**
      * 与AI对话
      */
+    @cn.dev33.satoken.annotation.SaIgnore
     @PostMapping("/chat")
     public R<String> chatWithAI(@RequestParam("childId") Long childId, @RequestParam("userInput") String userInput, @RequestParam(value = "emotionType", defaultValue = "5") Integer emotionType) {
         String response = childAIService.chatWithAI(childId, userInput, emotionType);

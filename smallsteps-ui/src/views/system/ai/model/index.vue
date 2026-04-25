@@ -10,6 +10,16 @@
           @keyup.enter="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="供应商" prop="providerId">
+        <el-select v-model="queryParams.providerId" placeholder="选择供应商" clearable style="width: 200px">
+          <el-option
+            v-for="item in providerOptions"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="状态" prop="status">
         <el-select v-model="queryParams.status" placeholder="模型状态" clearable style="width: 200px">
           <el-option label="正常" value="0" />
@@ -59,6 +69,11 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="模型ID" align="center" prop="id" />
       <el-table-column label="模型名称" align="center" prop="name" />
+      <el-table-column label="供应商" align="center" prop="providerId">
+        <template #default="scope">
+          <span>{{ getProviderName(scope.row.providerId) }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="供应商代码" align="center" prop="modelCode" />
       <el-table-column label="上下文" align="center" prop="contextWindow" />
       <el-table-column label="状态" align="center" prop="status">
@@ -96,13 +111,20 @@
           <el-input v-model="form.name" placeholder="请输入模型名称" />
         </el-form-item>
         <el-form-item label="供应商" prop="providerId">
-          <el-select v-model="form.providerId" placeholder="请选择供应商">
-            <el-option label="DeepSeek" :value="1" />
-            <el-option label="OpenAI" :value="2" />
+          <el-select v-model="form.providerId" placeholder="请选择供应商" style="width: 100%">
+            <el-option
+              v-for="item in providerOptions"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="模型代码" prop="modelCode">
           <el-input v-model="form.modelCode" placeholder="如 deepseek-chat" />
+        </el-form-item>
+        <el-form-item label="上下文" prop="contextWindow">
+          <el-input-number v-model="form.contextWindow" :min="1" :step="1024" style="width: 100%" />
         </el-form-item>
         <el-form-item label="状态">
           <el-radio-group v-model="form.status">
@@ -123,10 +145,15 @@
 
 <script setup name="AiModel">
 import { listModel, getModel, delModel, addModel, updateModel } from "@/api/system/ai/model";
+import { listAllProvider } from "@/api/system/ai/provider";
 
 const { proxy } = getCurrentInstance();
 
+const queryRef = ref();
+const modelRef = ref();
+
 const modelList = ref([]);
+const providerOptions = ref([]);
 const open = ref(false);
 const loading = ref(true);
 const showSearch = ref(true);
@@ -142,10 +169,12 @@ const data = reactive({
     pageNum: 1,
     pageSize: 10,
     name: undefined,
+    providerId: undefined,
     status: undefined
   },
   rules: {
     name: [{ required: true, message: "模型名称不能为空", trigger: "blur" }],
+    providerId: [{ required: true, message: "请选择供应商", trigger: "change" }],
     modelCode: [{ required: true, message: "模型代码不能为空", trigger: "blur" }],
   }
 });
@@ -161,6 +190,18 @@ function getList() {
   });
 }
 
+/** 查询所有供应商用于下拉框 */
+function getProviderOptions() {
+  listAllProvider().then(response => {
+    providerOptions.value = response.rows;
+  });
+}
+
+function getProviderName(providerId) {
+  const provider = providerOptions.value.find(item => item.id === providerId);
+  return provider ? provider.name : '未知供应商';
+}
+
 function cancel() {
   open.value = false;
   reset();
@@ -172,9 +213,10 @@ function reset() {
     name: undefined,
     providerId: undefined,
     modelCode: undefined,
+    contextWindow: 4096,
     status: "0"
   };
-  proxy.resetForm("modelRef");
+  modelRef.value?.resetFields();
 }
 
 function handleQuery() {
@@ -183,7 +225,7 @@ function handleQuery() {
 }
 
 function resetQuery() {
-  proxy.resetForm("queryRef");
+  queryRef.value?.resetFields();
   handleQuery();
 }
 
@@ -210,7 +252,7 @@ function handleUpdate(row) {
 }
 
 function submitForm() {
-  proxy.$refs["modelRef"].validate(valid => {
+  modelRef.value.validate(valid => {
     if (valid) {
       if (form.value.id != undefined) {
         updateModel(form.value).then(response => {
@@ -240,4 +282,6 @@ function handleDelete(row) {
 }
 
 getList();
+getProviderOptions();
 </script>
+

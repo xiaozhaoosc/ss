@@ -121,6 +121,34 @@ public class AiServiceImpl implements IAiService {
         }
     }
 
+    @Override
+    public String chat(Long childId, String userInput, Map<String, Object> context) {
+        try {
+            // 1. 获取路由模型
+            AiModel aiModel = aiRouterService.route("AI_CHAT", childId);
+
+            // 2. 构建提示词
+            Map<String, Object> params = new HashMap<>();
+            params.put("userInput", userInput);
+            if (context != null) {
+                params.put("emotion", context.getOrDefault("emotion", "平静"));
+                params.put("suggestion", context.getOrDefault("suggestion", ""));
+            } else {
+                params.put("emotion", "平静");
+                params.put("suggestion", "");
+            }
+
+            String prompt = getPrompt("AI_CHAT", params);
+            
+            // 3. 调用大模型
+            String response = smartAiClient.askAi(prompt, aiModel);
+            return response != null ? response : "我现在有点累了，稍后再陪你聊天好吗？✨";
+        } catch (Exception e) {
+            log.error("Error in AI chat", e);
+            return "我现在有点小情绪，等下再来找我玩吧！🌈";
+        }
+    }
+
     /**
      * 从数据库加载并填充提示词模板
      */
@@ -155,6 +183,12 @@ public class AiServiceImpl implements IAiService {
             return "你是一位 ADHD 儿童辅助专家。请将任务 \"{taskName}\" ({taskDesc}) 拆解为适合 {childAge} 岁孩子执行的、颗粒度极小的步骤。请以 JSON 格式返回：[{\"stepName\": \"步骤标题\", \"stepDesc\": \"详细的操作描述\"}]";
         } else if ("EMOTION_ANALYSIS".equalsIgnoreCase(promptKey)) {
             return "你是一位资深的儿童心理学专家，专注于 ADHD （多动症）儿童的行为干预。请根据以下孩子的表现进行分析，并给家长提供 3 条具体的、充满人文关怀的建议。孩子表现：{content}。";
+        } else if ("AI_CHAT".equalsIgnoreCase(promptKey)) {
+            return "你是一个名为“小步”的AI伙伴，专门陪伴ADHD儿童。你说话语气活泼、温柔、富有鼓励性，多使用表情符号。\n" +
+                   "当前孩子的情绪：{emotion}\n" +
+                   "给家长的建议(仅供参考其状态)：{suggestion}\n" +
+                   "孩子说：{userInput}\n" +
+                   "请作为“小步”给孩子一个简短、积极的回应：";
         } else if ("DAILY_EMOTION_ANALYSIS".equalsIgnoreCase(promptKey)) {
             return "你是一位资深的 ADHD 儿童教育顾问。今天孩子 {childName} 有如下表现：\n失败任务：{failedTasks}\n负面情绪：{negativeEmotions}\n请写一份给家长的温馨分析。";
         }
