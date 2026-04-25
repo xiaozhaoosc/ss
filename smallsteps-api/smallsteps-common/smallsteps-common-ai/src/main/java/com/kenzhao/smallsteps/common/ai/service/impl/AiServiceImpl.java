@@ -182,7 +182,14 @@ public class AiServiceImpl implements IAiService {
         if ("TASK_BREAKDOWN".equalsIgnoreCase(promptKey)) {
             return "你是一位 ADHD 儿童辅助专家。请将任务 \"{taskName}\" ({taskDesc}) 拆解为适合 {childAge} 岁孩子执行的、颗粒度极小的步骤。请以 JSON 格式返回：[{\"stepName\": \"步骤标题\", \"stepDesc\": \"详细的操作描述\"}]";
         } else if ("EMOTION_ANALYSIS".equalsIgnoreCase(promptKey)) {
-            return "你是一位资深的儿童心理学专家，专注于 ADHD （多动症）儿童的行为干预。请根据以下孩子的表现进行分析，并给家长提供 3 条具体的、充满人文关怀的建议。孩子表现：{content}。";
+            return "你是一位资深的儿童心理学专家，专注于 ADHD （多动症）儿童的行为干预。请分析以下孩子的表现，并给家长提供建议。\n" +
+                   "孩子表现：{content}\n" +
+                   "请严格按照以下 JSON 格式返回，不要有任何其他解释文字：\n" +
+                   "{\n" +
+                   "  \"emotion\": \"情绪类型(开心/难过/愤怒/焦虑/平静)\",\n" +
+                   "  \"level\": 强度(1-5),\n" +
+                   "  \"suggestion\": \"给家长的 3 条具体建议(100字以内)\"\n" +
+                   "}";
         } else if ("AI_CHAT".equalsIgnoreCase(promptKey)) {
             return "你是一个名为“小步”的AI伙伴，专门陪伴ADHD儿童。你说话语气活泼、温柔、富有鼓励性，多使用表情符号。\n" +
                    "当前孩子的情绪：{emotion}\n" +
@@ -272,26 +279,31 @@ public class AiServiceImpl implements IAiService {
      */
     private String extractJson(String text) {
         if (text == null || text.trim().isEmpty()) return "";
-        // 尝试匹配 ```json ... ``` 或 [ ... ] 或 { ... }
-        String json = ReUtil.getGroup1("(?s)```json\\s*(.*?)\\s*```", text);
+        
+        // 1. 过滤 <think> 标签及其内容 (适配 Qwen 等思考模型)
+        String cleanText = text.replaceAll("(?s)<think>.*?</think>", "").trim();
+        
+        // 2. 尝试匹配 ```json ... ``` 或 ``` ... ```
+        String json = ReUtil.getGroup1("(?s)```json\\s*(.*?)\\s*```", cleanText);
         if (json == null) {
-            json = ReUtil.getGroup1("(?s)```\\s*(.*?)\\s*```", text);
+            json = ReUtil.getGroup1("(?s)```\\s*(.*?)\\s*```", cleanText);
         }
+        
         if (json == null) {
-            // 如果没有代码块，尝试直接寻找第一个 [ 或 { 到最后一个 ] 或 }
-            int startArray = text.indexOf("[");
-            int startObject = text.indexOf("{");
+            // 3. 如果没有代码块，尝试直接寻找第一个 [ 或 { 到最后一个 ] 或 }
+            int startArray = cleanText.indexOf("[");
+            int startObject = cleanText.indexOf("{");
             int start = -1;
             if (startArray != -1 && (startObject == -1 || startArray < startObject)) {
                 start = startArray;
-                int end = text.lastIndexOf("]");
-                if (end > start) return text.substring(start, end + 1);
+                int end = cleanText.lastIndexOf("]");
+                if (end > start) return cleanText.substring(start, end + 1);
             } else if (startObject != -1) {
                 start = startObject;
-                int end = text.lastIndexOf("}");
-                if (end > start) return text.substring(start, end + 1);
+                int end = cleanText.lastIndexOf("}");
+                if (end > start) return cleanText.substring(start, end + 1);
             }
-            return text.trim();
+            return cleanText;
         }
         return json.trim();
     }
