@@ -6,7 +6,13 @@ import { chatWithAI } from '@/api/child'
 
 const userStore = useUserStore()
 const messages = ref([
-  { role: 'ai', content: '嘿！我是你的小步伙伴。今天有什么想跟我说的吗？不管是开心还是难过，我都在这听着哦。👂', type: 'text' }
+  { 
+    role: 'ai', 
+    content: '嘿！我是你的小步伙伴。今天有什么想跟我说的吗？不管是开心还是难过，我都在这听着哦。👂', 
+    type: 'text',
+    thinkContent: '',
+    displayContent: '嘿！我是你的小步伙伴。今天有什么想跟我说的吗？不管是开心还是难过，我都在这听着哦。👂'
+  }
 ])
 const inputText = ref('')
 const isRecording = ref(false)
@@ -19,35 +25,46 @@ const handleBack = () => {
 
 const sendMessage = async () => {
   if (!inputText.value.trim() || isLoading.value) return
-  
+
   const userMsg = inputText.value
-  messages.value.push({ role: 'user', content: userMsg, type: 'text' })
+  messages.value.push({
+    role: 'user',
+    content: userMsg,
+    type: 'text',
+    thinkContent: '',
+    displayContent: userMsg
+  })
   inputText.value = ''
   isLoading.value = true
-  
+
   scrollToBottom()
-  
+
   try {
     const childId = userStore.id
     if (!childId) return
     const res: any = await chatWithAI(childId, userMsg)
+    const content = res.data || '我听到了哦，你真的很棒！🌟'
     messages.value.push({
       role: 'ai',
-      content: res.data || '我听到了哦，你真的很棒！🌟',
-      type: 'text'
+      content,
+      type: 'text',
+      thinkContent: '',
+      displayContent: content
     })
   } catch (e) {
+    const content = '哎呀，我的信号好像飘走了... 但我一直在你身边！❤️'
     messages.value.push({
       role: 'ai',
-      content: '哎呀，我的信号好像飘走了... 但我一直在你身边！❤️',
-      type: 'text'
+      content,
+      type: 'text',
+      thinkContent: '',
+      displayContent: content
     })
   } finally {
     isLoading.value = false
     scrollToBottom()
   }
 }
-
 const toggleRecording = () => {
   isRecording.value = !isRecording.value
   if (!isRecording.value) {
@@ -59,7 +76,9 @@ const toggleRecording = () => {
 
 const scrollToBottom = () => {
   nextTick(() => {
-    scrollIntoView.value = 'msg-' + (messages.value.length - 1)
+    setTimeout(() => {
+      scrollIntoView.value = 'msg-' + (messages.value.length - 1)
+    }, 100) // 添加短暂延时确保 DOM 完全渲染
   })
 }
 
@@ -203,6 +222,7 @@ onMounted(() => {
 
 .chat-content {
   flex: 1;
+  height: 0; /* 关键：约束高度，使 scroll-view 内部可以滚动 */
   padding: 16px;
   z-index: 10;
 }
