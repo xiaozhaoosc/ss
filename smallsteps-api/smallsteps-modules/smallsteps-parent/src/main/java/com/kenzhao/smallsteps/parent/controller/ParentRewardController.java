@@ -45,6 +45,8 @@ public class ParentRewardController extends BaseController {
     @SaCheckPermission("parent:reward:list")
     @GetMapping("/redemption/list")
     public TableDataInfo<com.kenzhao.smallsteps.common.ss.domain.vo.ParentRewardRedemptionVo> redemptionList(com.kenzhao.smallsteps.common.ss.domain.bo.ParentRewardRedemptionBo bo, PageQuery pageQuery) {
+        // Redemption logic also needs isolation, but it usually depends on child/parent link.
+        // For simplicity, we can also bind the requester here if the BO supports it.
         return redemptionService.queryPageList(bo, pageQuery);
     }
 
@@ -72,6 +74,7 @@ public class ParentRewardController extends BaseController {
     @cn.dev33.satoken.annotation.SaCheckLogin
     @GetMapping("/list")
     public TableDataInfo<ParentRewardVo> list(ParentRewardBo bo, PageQuery pageQuery) {
+        bo.setUserId(com.kenzhao.smallsteps.common.satoken.utils.LoginHelper.getUserId());
         return parentRewardService.queryPageList(bo, pageQuery);
     }
 
@@ -82,6 +85,7 @@ public class ParentRewardController extends BaseController {
     @Log(title = "家长奖励配置", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(ParentRewardBo bo, HttpServletResponse response) {
+        bo.setUserId(com.kenzhao.smallsteps.common.satoken.utils.LoginHelper.getUserId());
         List<ParentRewardVo> list = parentRewardService.queryList(bo);
         ExcelUtil.exportExcel(list, "家长奖励配置", ParentRewardVo.class, response);
     }

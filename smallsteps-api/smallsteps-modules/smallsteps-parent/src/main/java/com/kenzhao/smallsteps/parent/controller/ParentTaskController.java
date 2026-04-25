@@ -45,6 +45,7 @@ public class ParentTaskController extends BaseController {
     @SaCheckPermission("parent:task:list")
     @GetMapping("/list")
     public TableDataInfo<ParentTaskVo> list(ParentTaskBo bo, PageQuery pageQuery) {
+        bo.setUserId(com.kenzhao.smallsteps.common.satoken.utils.LoginHelper.getUserId());
         return parentTaskService.queryPageList(bo, pageQuery);
     }
 
@@ -55,6 +56,7 @@ public class ParentTaskController extends BaseController {
     @Log(title = "家长任务发布", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(ParentTaskBo bo, HttpServletResponse response) {
+        bo.setUserId(com.kenzhao.smallsteps.common.satoken.utils.LoginHelper.getUserId());
         List<ParentTaskVo> list = parentTaskService.queryList(bo);
         ExcelUtil.exportExcel(list, "家长任务发布", ParentTaskVo.class, response);
     }
