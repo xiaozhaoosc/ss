@@ -1,6 +1,8 @@
 package com.kenzhao.smallsteps.common.ss.domain.vo;
 
 import cn.idev.excel.annotation.ExcelProperty;
+import io.github.linpeilie.annotations.AutoMapper;
+import com.kenzhao.smallsteps.common.ss.domain.ParentReward;
 import lombok.Data;
 
 import java.io.Serial;
@@ -13,6 +15,7 @@ import java.io.Serializable;
  * @date 2026-02-01
  */
 @Data
+@AutoMapper(target = ParentReward.class)
 public class ParentRewardVo implements Serializable {
 
     @Serial

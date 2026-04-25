@@ -146,6 +146,13 @@
       }
     },
     {
+      "path": "pages/parent/reward-creator/index",
+      "style": {
+        "navigationBarTitleText": "添加奖励",
+        "navigationStyle": "custom"
+      }
+    },
+    {
       "path": "pages/work/index",
       "style": {
         "navigationBarTitleText": "工作台"

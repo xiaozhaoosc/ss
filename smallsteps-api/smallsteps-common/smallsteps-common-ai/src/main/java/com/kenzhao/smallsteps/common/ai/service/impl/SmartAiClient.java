@@ -9,11 +9,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Slf4j
-@RequiredArgsConstructor
 @Service
 public class SmartAiClient {
     private final AiProviderMapper aiProviderMapper;
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate;
+
+    public SmartAiClient(AiProviderMapper aiProviderMapper) {
+        this.aiProviderMapper = aiProviderMapper;
+        org.springframework.http.client.SimpleClientHttpRequestFactory factory = new org.springframework.http.client.SimpleClientHttpRequestFactory();
+        factory.setConnectTimeout(60000); // 60s
+        factory.setReadTimeout(300000);   // 300s (5 min)
+        this.restTemplate = new RestTemplate(factory);
+    }
 
     public String askAi(String prompt, AiModel model) {
         AiProvider provider = aiProviderMapper.selectById(model.getProviderId());

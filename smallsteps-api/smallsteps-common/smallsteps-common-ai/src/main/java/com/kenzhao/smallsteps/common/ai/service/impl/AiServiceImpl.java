@@ -32,9 +32,14 @@ public class AiServiceImpl implements IAiService {
 
     @Override
     public List<Map<String, String>> taskBreakdown(String taskName, String taskDesc, int childAge) {
+        System.out.println(">>> [DEBUG] AiServiceImpl.taskBreakdown called: " + taskName);
         try {
             // 1. 获取路由模型
             AiModel aiModel = aiRouterService.route("TASK_BREAKDOWN", null);
+            if (aiModel == null) {
+                System.out.println(">>> [WARN] No AI model found for TASK_BREAKDOWN, using mock data");
+                return getMockTaskBreakdown(taskName, taskDesc, childAge);
+            }
 
             // 2. 构建提示词 (从数据库加载)
             Map<String, Object> params = new HashMap<>();
@@ -58,9 +63,11 @@ public class AiServiceImpl implements IAiService {
             }
 
             // 3. 调用大模型
+            System.out.println(">>> [INFO] Calling AI for task breakdown: " + taskName + " using model: " + aiModel.getModelCode());
             log.info("Calling AI for task breakdown: {}, model: {}", taskName, aiModel.getModelCode());
             String response = smartAiClient.askAi(prompt, aiModel);
             if (response == null || response.trim().isEmpty()) {
+                System.out.println(">>> [WARN] AI returned empty response, using mock data");
                 log.warn("AI returned empty response for task breakdown, using mock data");
                 return getMockTaskBreakdown(taskName, taskDesc, childAge);
             }
@@ -69,6 +76,8 @@ public class AiServiceImpl implements IAiService {
             // 4. 解析响应
             return parseTaskBreakdownResponse(response);
         } catch (Exception e) {
+            System.err.println(">>> [ERROR] Exception in AiServiceImpl.taskBreakdown: " + e.getMessage());
+            e.printStackTrace();
             log.error("Error in task breakdown for task: {}", taskName, e);
             return getMockTaskBreakdown(taskName, taskDesc, childAge);
         }

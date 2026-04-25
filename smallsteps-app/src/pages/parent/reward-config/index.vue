@@ -191,7 +191,7 @@ const handleDeny = (req) => {
 }
 
 const handleAddReward = () => {
-  uni.showToast({ title: '跳转到新增奖励页 (TODO)', icon: 'none' })
+  uni.navigateTo({ url: '/pages/parent/reward-creator/index' })
 }
 
 const handleRewardToggle = (item) => {

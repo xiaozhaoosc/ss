@@ -5,7 +5,7 @@ import { useUserStore } from '@/store/modules/user'
 import { toast, showConfirm, tansParams } from '@/utils/common'
 import { encryptRequest } from '@/utils/crypto'
 
-let timeout = 10000
+let timeout = 60000
 const baseUrl = config.baseUrl
 
 const request = config => {

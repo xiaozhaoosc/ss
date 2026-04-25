@@ -1,5 +1,11 @@
 {
     "name": "SmallSteps移动端",
+    "networkTimeout": {
+        "request": 120000,
+        "connectSocket": 60000,
+        "uploadFile": 60000,
+        "downloadFile": 60000
+    },
     "appid": "__UNI__2901FAA",
     "description": "",
     "versionName": "1.2.0",

@@ -27,6 +27,8 @@ export default defineConfig(({ mode, command }) => {
           target: 'http://localhost:8081/ssapi',
           changeOrigin: true,
           ws: true,
+          timeout: 180000,
+          proxyTimeout: 180000,
           rewrite: (path) => path.replace(new RegExp('^' + env.VITE_APP_BASE_API), '')
         }
       }

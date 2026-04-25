@@ -35,18 +35,25 @@ public class AiController {
      */
     @PostMapping("/taskBreakdown")
     public R<java.util.List<java.util.Map<String, String>>> taskBreakdown(@RequestBody java.util.Map<String, Object> params) {
-        String taskName = (String) params.get("taskName");
-        String taskDesc = (String) params.get("taskDesc");
-        Object ageObj = params.get("childAge");
-        int childAge = 8; // 默认 8 岁
-        if (ageObj instanceof Number) {
-            childAge = ((Number) ageObj).intValue();
-        } else if (ageObj instanceof String) {
-            childAge = Integer.parseInt((String) ageObj);
-        }
+        System.out.println(">>> [DEBUG] AiController.taskBreakdown called with params: " + params);
+        try {
+            String taskName = (String) params.get("taskName");
+            String taskDesc = (String) params.get("taskDesc");
+            Object ageObj = params.get("childAge");
+            int childAge = 8; // 默认 8 岁
+            if (ageObj instanceof Number) {
+                childAge = ((Number) ageObj).intValue();
+            } else if (ageObj instanceof String) {
+                childAge = Integer.parseInt((String) ageObj);
+            }
 
-        java.util.List<java.util.Map<String, String>> steps = aiService.taskBreakdown(taskName, taskDesc, childAge);
-        return R.ok(steps);
+            java.util.List<java.util.Map<String, String>> steps = aiService.taskBreakdown(taskName, taskDesc, childAge);
+            return R.ok(steps);
+        } catch (Exception e) {
+            System.err.println(">>> [ERROR] AiController.taskBreakdown failed: " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     /**
