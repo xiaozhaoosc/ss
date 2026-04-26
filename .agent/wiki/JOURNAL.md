@@ -1,5 +1,17 @@
 # Small Steps 项目日志 (JOURNAL)
 
+## [2026-04-26] 移动端自动化测试与流程优化
+### [Project_Reflection]
+| 任务 | 状态 | 成果 |
+| :--- | :--- | :--- |
+| 移动端自动化测试 | [x] 已完成 | 覆盖家长/儿童双角色核心路径，通过 2 个主要 E2E 测试用例。 |
+| 弹窗阻塞处理 | [x] 已解决 | 使用 Playwright `setInterval` 机制强行关闭 `uni-modal`。 |
+| Bug 发现 | [!] 挂起 | 发现 `ParentReward` 转换器后端错误，已记录至 `DEBT_LEADGER.md`。 |
+
+**下一步建议**:
+1. 修复后端 `ParentReward` 转换错误（致命 UI 阻塞）。
+2. 细化任务拆解流程的测试逻辑。
+
 ## [2026-04-25] 家长端体验升级、AI 链路修复与性能优化
 ### [Daily_Summary]
 - **AI 链路**: 修复了 `EMOTION_ANALYSIS` 响应解析失败导致的 `JsonParseException`；通过优化 Prompt 强制 JSON 输出，解决了 AI 响应过慢（75s）导致的超时问题。
