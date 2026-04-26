@@ -125,7 +125,7 @@ public class AiServiceImpl implements IAiService {
     public String chat(Long childId, String userInput, Map<String, Object> context) {
         try {
             // 1. 获取路由模型
-            AiModel aiModel = aiRouterService.route("AI_CHAT", childId);
+            AiModel aiModel = aiRouterService.route("BUDDY_CHAT", childId);
 
             // 2. 构建提示词
             Map<String, Object> params = new HashMap<>();
@@ -196,14 +196,16 @@ public class AiServiceImpl implements IAiService {
                    "  \"level\": 强度(1-5),\n" +
                    "  \"suggestion\": \"给家长的 3 条具体建议(100字以内)\"\n" +
                    "}";
-        } else if ("AI_CHAT".equalsIgnoreCase(promptKey)) {
+        } else if ("AI_CHAT".equalsIgnoreCase(promptKey) || "BUDDY_CHAT".equalsIgnoreCase(promptKey)) {
             return "你是一个名为“小步”的AI伙伴，专门陪伴ADHD儿童。你说话语气活泼、温柔、富有鼓励性，多使用表情符号。\n" +
-                   "当前孩子的情绪：{emotion}\n" +
-                   "给家长的建议(仅供参考其状态)：{suggestion}\n" +
                    "孩子说：{userInput}\n" +
                    "请作为“小步”给孩子一个简短、积极的回应：";
-        } else if ("DAILY_EMOTION_ANALYSIS".equalsIgnoreCase(promptKey)) {
-            return "你是一位资深的 ADHD 儿童教育顾问。今天孩子 {childName} 有如下表现：\n失败任务：{failedTasks}\n负面情绪：{negativeEmotions}\n请写一份给家长的温馨分析。";
+        } else if ("HABIT_CHECKIN".equalsIgnoreCase(promptKey)) {
+            return "孩子刚刚完成了习惯打卡：{habitName}。请作为一个温柔的AI伙伴，给他一个非常具体的、充满鼓励的反馈。要求：强调他的进步，使用活泼可爱的语气。";
+        } else if ("PARENT_REPORT".equalsIgnoreCase(promptKey)) {
+            return "你是一位资深的 ADHD 儿童教育专家。以下是孩子本周的行为概览数据：\n{weeklyData}\n请为家长写一份深度分析报告，包含：1. 核心表现总结；2. 潜在的情绪趋势；3. 下周的 3 条具体干预建议。";
+        } else if ("VISION_ENCOURAGE".equalsIgnoreCase(promptKey)) {
+            return "孩子分享了一张图片：{description}。请根据描述，给他一个充满惊喜和鼓励的回馈。";
         }
         return null;
     }
@@ -347,5 +349,48 @@ public class AiServiceImpl implements IAiService {
         result.put("level", 2);
         result.put("suggestion", "孩子情绪稳定，继续保持良好的沟通");
         return result;
+    }
+    @Override
+    public String generateHabitFeedback(Long childId, String habitName) {
+        try {
+            AiModel aiModel = aiRouterService.route("HABIT_CHECKIN", childId);
+            Map<String, Object> params = new HashMap<>();
+            params.put("habitName", habitName);
+            String prompt = getPrompt("HABIT_CHECKIN", params);
+            return smartAiClient.askAi(prompt, aiModel);
+        } catch (Exception e) {
+            log.error("Error in habit feedback", e);
+            return "太棒了！你又进步了一点点！🌟";
+        }
+    }
+
+    @Override
+    public String generateParentReport(Long childId, String weeklyData) {
+        try {
+            AiModel aiModel = aiRouterService.route("PARENT_REPORT", childId);
+            Map<String, Object> params = new HashMap<>();
+            params.put("weeklyData", weeklyData);
+            String prompt = getPrompt("PARENT_REPORT", params);
+            return smartAiClient.askAi(prompt, aiModel);
+        } catch (Exception e) {
+            log.error("Error in parent report", e);
+            return "报告生成暂不可用，请联系管理员。";
+        }
+    }
+
+    @Override
+    public String visionEncourage(Long childId, String imageUrl, String description) {
+        try {
+            AiModel aiModel = aiRouterService.route("VISION_ENCOURAGE", childId);
+            Map<String, Object> params = new HashMap<>();
+            params.put("imageUrl", imageUrl);
+            params.put("description", description);
+            String prompt = getPrompt("VISION_ENCOURAGE", params);
+            // 注意：Vision 模型通常需要特殊的 Payload，这里暂用文本描述模拟
+            return smartAiClient.askAi(prompt, aiModel);
+        } catch (Exception e) {
+            log.error("Error in vision encourage", e);
+            return "看到你的作品真是太开心了！继续加油哦！🎨";
+        }
     }
 }

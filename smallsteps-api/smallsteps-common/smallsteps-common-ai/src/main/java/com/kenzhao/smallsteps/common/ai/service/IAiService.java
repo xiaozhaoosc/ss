@@ -33,4 +33,29 @@ public interface IAiService {
      * @return AI 回复
      */
     String chat(Long childId, String userInput, Map<String, Object> context);
+
+    /**
+     * 生成习惯打卡后的鼓励反馈
+     * @param childId 儿童ID
+     * @param habitName 习惯名称
+     * @return 鼓励语
+     */
+    String generateHabitFeedback(Long childId, String habitName);
+
+    /**
+     * 生成家长洞察报告
+     * @param childId 儿童ID
+     * @param weeklyData 一周的行为数据概报
+     * @return 深度分析报告
+     */
+    String generateParentReport(Long childId, String weeklyData);
+
+    /**
+     * 视觉内容鼓励（如孩子上传了画作）
+     * @param childId 儿童ID
+     * @param imageUrl 图片URL
+     * @param description 图片描述（由预处理器生成）
+     * @return 赞美与鼓励语
+     */
+    String visionEncourage(Long childId, String imageUrl, String description);
 }
