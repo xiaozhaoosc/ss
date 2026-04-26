@@ -50,3 +50,18 @@
 - **观察**: `论文_v3.md` 是 v2 到 v4 的过渡版本，当前同时存在 v1/v2/v3/v4 四个 Markdown 源文件。
 - **建议**: 归档 v1 和 v3 为历史版本（移至 `archive/` 子目录），仅保留 v2（备选）和 v4（主力提交）在工作目录。
 
+## [2026-04-26] 观察发现
+
+### 1. 家长端仪表盘数据聚合瓶颈 (Data Isolation & Mock Data)
+- **观察**: `ParentInsightController` 中的多个关键数据（如雷达图能力值、最近7天情绪趋势）当前依赖硬编码的 Mock 数据，未与 `ss_child_ai` 真实业务表打通。
+- **风险**: 若未经清理直接上线，家长端将展示完全错误和固定的分析数据。同时缺乏统一的数据隔离审计。
+- **记录**: 已沉淀为 [[ADR-008-Data-Isolation-Audit]]。
+
+### 2. AI 配置模块前端路由割裂 (Routing Fragmentation)
+- **观察**: 系统中存在两套 AI 管理视图目录（`views/ai` 和 `views/system/ai`），导致侧边栏跳转 404，且对话框缺失 `context_window` 配置项。
+- **风险**: 前端路由注册失败会导致配置页面完全不可达。
+- **行动点**: 下一次前端开发阶段统一目录并清理冗余。
+
+### 3. AI 思考过程引发的 JSON 解析异常 (AI Chat Timeout & JsonParseException)
+- **观察**: 会话中出现了处理 AI 思维标签（如 `<think>`）时导致的 `JsonParseException`，同时前台响应时间限制在 75s 可能导致部分深度思考模型 Timeout。
+- **记录**: 已沉淀为 [[ADR-009-AI-Chat-Timeout-JSON-Exception]]。

@@ -17,8 +17,11 @@
 - [[ADR_005_AI_Dynamic_System]] - AI 动态路由与提示词系统重构 ADR
 - [[ADR_006_DB_Schema_BigInt_Migration]] - 数据库字段类型从 VARCHAR 向 BIGINT 迁移 ADR
 - [[ADR_007_Child_Role_Reward_Shop_Permission]] - 儿童角色访问奖励商店列表权限开放 ADR
+- [[ADR-008-Data-Isolation-Audit]] - 家长端多租户数据隔离审计与架构约束
+- [[ADR-009-AI-Chat-Timeout-JSON-Exception]] - AI 深度思考 JSON 解析异常与长链接超时解决机制
 
 ## 每日记录 (Journal)
+- [[2026-04-26]] (Web 自动化测试与家长端洞察探索)
 - [[2026-04-25]] (V7 脚本交付 & 儿童端 403/500 报错彻底修复)
 - [[Parent-Profile-And-Family-Binding|2026-04-25]] (家长端全功能闭环：档案管理与智能绑定)
 - [[2026-04-25-AI-Breakdown-Fix-and-UI-Optimization.md|2026-04-25 (Session A)]] (AI 链路修复 & Pretext 布局深度优化)
@@ -38,10 +41,12 @@
     - [[ss_parent_task]] (任务体系与激励配置)
     - [[ss_parent_reward]] (奖励库与兑换逻辑)
     - [[ss_emotion_record]] (情绪记录 Schema)
+- [[Parent-Insight-Module-Architecture]] (家长端数据看板后端抽象与流向分析)
 - [[Emotion-Feedback-Loop-Architecture]] (AI 情绪解析闭环架构)
 - [[Automatized-Achievement-System]] (自动化勋章激励逻辑)
 - [[Device-Interaction-Flow]] (设备交互流)
 - [[ADHD-Education-Psychology]] (理论基础)
+- [[volcengine_integration]] (火山引擎/豆包大模型接入指南)
 - [smallsteps-api 模块](file:///d:/office/jushuang1/github/ss/smallsteps-api/README.md)
 - [smallsteps-esp32 核心文档](file:///d:/office/jushuang1/github/ss/docs/esp32/README.md)
 - [论文 v6 文档](file:///d:/office/jushuang1/github/ss/论文/v6/README.md)

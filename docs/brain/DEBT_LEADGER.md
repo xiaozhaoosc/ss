@@ -20,3 +20,5 @@
 | 2026-04-25 | `app-ui` | 个人中心页面的“编辑”按钮目前仅为 Toast 提示，未实现完整详情页 | 低 | 待处理 | - |
 | 2026-04-25 | `database` | 字段类型不一致：核心表 (如 `ss_child_ai`) 使用 VARCHAR 存 ID，与 Java Long 转换冲突 | 高 | 已修复核心，需全局审计 | [[ADR_006_DB_Schema_BigInt_Migration]] |
 | 2026-04-25 | `app-network` | 请求层 JSON 嵌套污染：App 返回 `Status 500 {json}` 导致解析崩溃 | 中 | 已通过正则规避 | [[2026-04-25]] |
+| 2026-04-26 | `smallsteps-ui` | AI 管理模块视图目录重复 (`views/ai` vs `views/system/ai`) 且路由映射不一致 | 高 | 待处理 | [[bug_web_20260426]] |
+| 2026-04-26 | `smallsteps-ui` | AI 模型管理对话框缺失 `context_window` 字段输入项 | 中 | 待处理 | [[bug_web_20260426]] |
