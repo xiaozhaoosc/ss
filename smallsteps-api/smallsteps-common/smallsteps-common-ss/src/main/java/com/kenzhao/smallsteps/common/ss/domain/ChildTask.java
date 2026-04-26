@@ -1,5 +1,7 @@
 package com.kenzhao.smallsteps.common.ss.domain;
 
+// Refreshed to resolve compilation issues
+
 import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.kenzhao.smallsteps.common.mybatis.core.domain.BaseEntity;

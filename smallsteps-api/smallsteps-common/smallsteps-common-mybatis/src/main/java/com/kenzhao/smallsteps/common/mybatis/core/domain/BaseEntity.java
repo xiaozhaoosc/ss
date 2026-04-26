@@ -1,5 +1,7 @@
 package com.kenzhao.smallsteps.common.mybatis.core.domain;
 
+// Refreshed to resolve compilation issues
+
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonIgnore;

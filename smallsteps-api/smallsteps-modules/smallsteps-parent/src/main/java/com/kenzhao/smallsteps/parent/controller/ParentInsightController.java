@@ -11,6 +11,9 @@ import com.kenzhao.smallsteps.child.service.IChildTaskService;
 import com.kenzhao.smallsteps.common.ss.domain.ChildAI;
 import com.kenzhao.smallsteps.common.ss.domain.ChildTask;
 import com.kenzhao.smallsteps.common.ss.domain.vo.ChildTaskVo;
+import com.kenzhao.smallsteps.common.satoken.utils.LoginHelper;
+import com.kenzhao.smallsteps.system.service.ISysUserService;
+import com.kenzhao.smallsteps.system.domain.vo.SysUserVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,12 +32,28 @@ public class ParentInsightController extends BaseController {
     private final IScoreService scoreService;
     private final IChildAIService childAIService;
     private final IChildTaskService childTaskService;
+    private final ISysUserService userService;
+
+    /**
+     * 校验是否有权访问该儿童数据 (确保在同一家庭/部门)
+     */
+    private boolean checkChildAccess(Long childId) {
+        if (childId == null) return false;
+        if (LoginHelper.isSuperAdmin()) return true;
+        
+        SysUserVo child = userService.selectUserById(childId);
+        if (child == null) return false;
+        
+        Long parentDeptId = LoginHelper.getDeptId();
+        return parentDeptId != null && parentDeptId.equals(child.getDeptId());
+    }
 
     /**
      * 获取孩子的任务完成情况
      */
     @GetMapping("/task/status/{childId}")
     public R<Map<String, Object>> getTaskStatus(@PathVariable Long childId) {
+        if (!checkChildAccess(childId)) return R.fail("无权访问该儿童数据");
         Map<String, Object> result = parentTaskService.getTaskStatusByChildId(childId);
         return R.ok(result);
     }
@@ -48,6 +67,7 @@ public class ParentInsightController extends BaseController {
         if (finalChildId == null) {
             return R.fail("未选择儿童");
         }
+        if (!checkChildAccess(finalChildId)) return R.fail("无权访问该儿童数据");
         List<ChildAI> emotions = childAIService.selectEmotionTrendByChildId(finalChildId, 1);
         return R.ok(emotions);
     }
@@ -61,6 +81,7 @@ public class ParentInsightController extends BaseController {
         if (finalChildId == null) {
             return R.fail("未选择儿童");
         }
+        if (!checkChildAccess(finalChildId)) return R.fail("无权访问该儿童数据");
         List<ChildAI> emotions = childAIService.selectEmotionTrendByChildId(finalChildId, days);
         return R.ok(emotions);
     }
@@ -70,6 +91,7 @@ public class ParentInsightController extends BaseController {
      */
     @GetMapping("/ability/radar/{childId}")
     public R<Map<String, Object>> getAbilityRadar(@PathVariable Long childId) {
+        if (!checkChildAccess(childId)) return R.fail("无权访问该儿童数据");
         Map<String, Object> radarData = parentTaskService.getAbilityRadarByChildId(childId);
         return R.ok(radarData);
     }
@@ -79,6 +101,7 @@ public class ParentInsightController extends BaseController {
      */
     @GetMapping("/score/history/{childId}")
     public TableDataInfo<Map<String, Object>> getScoreHistory(@PathVariable Long childId, PageQuery pageQuery) {
+        if (!checkChildAccess(childId)) return new TableDataInfo<>();
         return scoreService.getScoreHistory(childId, pageQuery);
     }
 
@@ -89,6 +112,7 @@ public class ParentInsightController extends BaseController {
     public R<String> getSummary(@PathVariable(required = false) Long childId, @RequestParam(required = false) Long cid) {
         Long finalChildId = childId != null ? childId : cid;
         if (finalChildId == null) return R.fail("未选择儿童");
+        if (!checkChildAccess(finalChildId)) return R.fail("无权访问该儿童数据");
         return R.ok(parentTaskService.getSummaryInsight(finalChildId));
     }
 
@@ -99,6 +123,7 @@ public class ParentInsightController extends BaseController {
     public R<List<ChildTaskVo>> getTimeline(@PathVariable(required = false) Long childId, @RequestParam(required = false) Long cid) {
         Long finalChildId = childId != null ? childId : cid;
         if (finalChildId == null) return R.fail("未选择儿童");
+        if (!checkChildAccess(finalChildId)) return R.fail("无权访问该儿童数据");
         
         ChildTask query = new ChildTask();
         query.setChildId(finalChildId);
@@ -110,6 +135,7 @@ public class ParentInsightController extends BaseController {
      */
     @GetMapping("/report/weekly/{childId}")
     public R<Map<String, Object>> getWeeklyReport(@PathVariable Long childId) {
+        if (!checkChildAccess(childId)) return R.fail("无权访问该儿童数据");
         Map<String, Object> report = parentTaskService.getWeeklyReport(childId);
         return R.ok(report);
     }
@@ -119,6 +145,7 @@ public class ParentInsightController extends BaseController {
      */
     @GetMapping("/report/monthly/{childId}")
     public R<Map<String, Object>> getMonthlyReport(@PathVariable Long childId) {
+        if (!checkChildAccess(childId)) return R.fail("无权访问该儿童数据");
         Map<String, Object> report = parentTaskService.getMonthlyReport(childId);
         return R.ok(report);
     }
@@ -130,6 +157,7 @@ public class ParentInsightController extends BaseController {
     public R<List<Map<String, Object>>> getWeeklyHeatmap(@PathVariable(required = false) Long childId, @RequestParam(required = false) Long cid) {
         Long finalChildId = childId != null ? childId : cid;
         if (finalChildId == null) return R.fail("未选择儿童");
+        if (!checkChildAccess(finalChildId)) return R.fail("无权访问该儿童数据");
         return R.ok(childAIService.getWeeklyHeatmap(finalChildId));
     }
 
@@ -140,6 +168,7 @@ public class ParentInsightController extends BaseController {
     public R<String> getWeeklyAiAnalysis(@PathVariable(required = false) Long childId, @RequestParam(required = false) Long cid) {
         Long finalChildId = childId != null ? childId : cid;
         if (finalChildId == null) return R.fail("未选择儿童");
+        if (!checkChildAccess(finalChildId)) return R.fail("无权访问该儿童数据");
         return R.ok(parentTaskService.getWeeklyAiAnalysis(finalChildId));
     }
 }

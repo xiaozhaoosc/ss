@@ -65,3 +65,9 @@
 ### 3. AI 思考过程引发的 JSON 解析异常 (AI Chat Timeout & JsonParseException)
 - **观察**: 会话中出现了处理 AI 思维标签（如 `<think>`）时导致的 `JsonParseException`，同时前台响应时间限制在 75s 可能导致部分深度思考模型 Timeout。
 - **记录**: 已沉淀为 [[ADR-009-AI-Chat-Timeout-JSON-Exception]]。
+ 
+### 4. 开发环境下的流式响应截断 (SSE Streaming via Proxy)
+- **观察**: 在 Uni-app H5 开发模式下，Vite Proxy 会缓冲或完全阻断 `text/event-stream` 类型的响应，且后端长等待（无首字节下发）会导致连接超时。
+- **临时方案**: 前端代码中加入了针对 `localhost` 的绝对路径跳转（绕过代理），后端加入了初始空格块（SSE Pre-warming）。
+- **建议**: 生产环境部署时，需在 Nginx 层配置 `proxy_set_header Connection ""; proxy_http_version 1.1; proxy_buffering off; proxy_cache off;`。
+- **记录**: 已沉淀为 [[ADR-010-AI-Streaming-SSE-Optimization]]。

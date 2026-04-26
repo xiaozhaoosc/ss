@@ -19,6 +19,7 @@
 - [[ADR_007_Child_Role_Reward_Shop_Permission]] - 儿童角色访问奖励商店列表权限开放 ADR
 - [[ADR-008-Data-Isolation-Audit]] - 家长端多租户数据隔离审计与架构约束
 - [[ADR-009-AI-Chat-Timeout-JSON-Exception]] - AI 深度思考 JSON 解析异常与长链接超时解决机制
+- [[ADR-010-AI-Streaming-SSE-Optimization]] - AI 聊天流式 SSE 响应优化与 Vite 代理绕过机制
 
 ## 每日记录 (Journal)
 - [[2026-04-26]] (Web 自动化测试与家长端洞察探索)

@@ -61,13 +61,13 @@ public class SysUserVo implements Serializable {
     /**
      * 用户邮箱
      */
-    @Sensitive(strategy = SensitiveStrategy.EMAIL, perms = "system:user:edit")
+    @Sensitive(strategy = SensitiveStrategy.EMAIL, perms = {"system:user:edit", "parent:child:query"})
     private String email;
 
     /**
      * 手机号码
      */
-    @Sensitive(strategy = SensitiveStrategy.PHONE, perms = "system:user:edit")
+    @Sensitive(strategy = SensitiveStrategy.PHONE, perms = {"system:user:edit", "parent:child:query"})
     private String phonenumber;
 
     /**
