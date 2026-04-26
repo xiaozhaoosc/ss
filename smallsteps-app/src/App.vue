@@ -2,10 +2,12 @@
   import config from './config'
   import { getToken } from '@/utils/auth'
   import { useConfigStore } from '@/store'
+  import { useUserStore } from '@/store/modules/user'
   import { getCurrentInstance } from "vue"
   import { onLaunch } from '@dcloudio/uni-app'
 
   const { proxy } = getCurrentInstance()
+  const userStore = useUserStore()
 
   onLaunch(() => {
     initApp()
@@ -25,9 +27,19 @@
     useConfigStore().setConfig(config)
   }
 
-  function checkLogin() {
+  async function checkLogin() {
     if (!getToken()) {
       uni.reLaunch({ url: '/pages/login/index' })
+    } else {
+      // 如果有 token 但没有用户信息，说明是刷新页面，需要重新获取
+      userStore.restoreFromStorage()
+      if (!userStore.userInfo) {
+        try {
+          await userStore.getUserInfo()
+        } catch (e) {
+          console.error('恢复用户信息失败:', e)
+        }
+      }
     }
   }
 </script>

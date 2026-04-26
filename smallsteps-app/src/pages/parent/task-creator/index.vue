@@ -65,7 +65,7 @@
           </label>
         </view>
         
-        <button class="submit-btn" :loading="isSubmitting" @click="handleSubmit">
+        <button class="submit-btn" :loading="isSubmitting" @click.stop.prevent="handleSubmit">
           <text>发布</text>
         </button>
         
@@ -150,13 +150,18 @@ const handleSubmit = () => {
     uni.showToast({ title: '请输入任务', icon: 'error' })
     return
   }
+  
+  if (!userStore.userId) {
+    uni.showToast({ title: '用户信息未加载，请刷新', icon: 'none' })
+    return
+  }
+
   isSubmitting.value = true
   
   const stepsDesc = steps.value.map((s, i) => `${i+1}. ${s.title}: ${s.description}`).join('\n')
   
-  // 注入真实的 userId (Parent ID) 等必要参数
   const newTask = {
-    userId: userStore.id || 1, // Fallback for dev if store is empty
+    userId: userStore.userId,
     title: taskInput.value,
     description: stepsDesc,
     icon: 'task',
@@ -171,7 +176,8 @@ const handleSubmit = () => {
     setTimeout(() => {
       uni.navigateBack()
     }, 1500)
-  }).catch(() => {
+  }).catch((err) => {
+    console.error('Add task failed:', err)
     isSubmitting.value = false
     uni.showToast({ title: '发布失败，请重试', icon: 'error' })
   })

@@ -56,6 +56,9 @@ public class ChildAIServiceImpl implements IChildAIService {
         
         java.util.concurrent.CompletableFuture.runAsync(() -> {
             try {
+                // 0. 发送初始块，防止客户端超时
+                emitter.send(org.springframework.web.servlet.mvc.method.annotation.SseEmitter.event().data(" "));
+                
                 // 1. 分析情感
                 java.util.Map<String, Object> analysis = aiService.emotionAnalysis(childId, userInput);
                 Integer detectedType = (Integer) analysis.getOrDefault("emotionType", 5);

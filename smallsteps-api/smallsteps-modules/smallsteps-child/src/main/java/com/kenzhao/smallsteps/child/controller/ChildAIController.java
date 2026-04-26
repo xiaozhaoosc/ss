@@ -96,11 +96,10 @@ public class ChildAIController {
      */
     @cn.dev33.satoken.annotation.SaIgnore
     @GetMapping(value = "/chat/stream", produces = org.springframework.http.MediaType.TEXT_EVENT_STREAM_VALUE)
-    public org.springframework.web.servlet.mvc.method.annotation.SseEmitter chatWithAIStream(@RequestParam("childId") Long childId, @RequestParam("userInput") String userInput, @RequestParam(value = "emotionType", defaultValue = "5") Integer emotionType) {
-        // For streaming from child app, it might use SaIgnore but we should still 
-        // ideally have a mechanism (like token) to verify. 
-        // For now, if childId is sensitive, we skip strict parent check only if device token matches.
-        // Assuming browser/app parent login for this endpoint too:
+    public org.springframework.web.servlet.mvc.method.annotation.SseEmitter chatWithAIStream(
+            @RequestParam Long childId,
+            @RequestParam String userInput,
+            @RequestParam(required = false) Integer emotionType) {
         return childAIService.chatWithAIStream(childId, userInput, emotionType);
     }
 
@@ -143,13 +142,17 @@ public class ChildAIController {
     }
 
     /**
-     * 校验当前登录家长是否有权访问该儿童数据
+     * 校验当前登录用户是否有权访问该儿童数据
      */
     private void validateChildAccess(Long childId) {
         if (childId == null) return;
         com.kenzhao.smallsteps.common.ss.domain.Child child = childService.selectChildById(childId);
         Long currentUserId = com.kenzhao.smallsteps.common.satoken.utils.LoginHelper.getUserId();
-        if (child == null || !child.getParentId().equals(currentUserId)) {
+        
+        // 允许访问的条件：
+        // 1. 当前登录者就是该儿童本人 (child.id == currentUserId)
+        // 2. 当前登录者是该儿童绑定的家长 (child.parentId == currentUserId)
+        if (child == null || (!child.getId().equals(currentUserId) && !child.getParentId().equals(currentUserId))) {
             throw new com.kenzhao.smallsteps.common.core.exception.ServiceException("无权访问该儿童数据");
         }
     }
