@@ -15,7 +15,7 @@ import java.io.Serializable;
  * @date 2026-02-01
  */
 @Data
-@AutoMapper(target = ParentReward.class)
+@AutoMapper(target = ParentReward.class, reverseConvertGenerate = true)
 public class ParentRewardVo implements Serializable {
 
     @Serial

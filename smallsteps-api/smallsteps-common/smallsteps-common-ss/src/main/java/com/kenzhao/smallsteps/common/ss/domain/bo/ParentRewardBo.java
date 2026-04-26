@@ -4,6 +4,8 @@ import com.kenzhao.smallsteps.common.mybatis.core.domain.BaseEntity;
 import com.kenzhao.smallsteps.common.core.validate.AddGroup;
 import com.kenzhao.smallsteps.common.core.validate.EditGroup;
 import jakarta.validation.constraints.*;
+import io.github.linpeilie.annotations.AutoMapper;
+import com.kenzhao.smallsteps.common.ss.domain.ParentReward;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -15,6 +17,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
+@AutoMapper(target = ParentReward.class, reverseConvertGenerate = true)
 public class ParentRewardBo extends BaseEntity {
 
     /**

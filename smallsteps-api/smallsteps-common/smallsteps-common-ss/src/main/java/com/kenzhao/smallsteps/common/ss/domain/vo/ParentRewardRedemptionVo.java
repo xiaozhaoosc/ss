@@ -12,7 +12,7 @@ import java.util.Date;
  * 奖励兑换记录视图对象
  */
 @Data
-@AutoMapper(target = ParentRewardRedemption.class)
+@AutoMapper(target = ParentRewardRedemption.class, reverseConvertGenerate = true)
 public class ParentRewardRedemptionVo implements Serializable {
 
     @Serial
