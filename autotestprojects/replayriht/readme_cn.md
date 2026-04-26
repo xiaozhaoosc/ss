@@ -26,6 +26,21 @@ AI 助手在编写可靠的端到端 (e2e) 测试时往往会遇到困难（需�
     运行步骤 1 → 步骤 2 → 步骤 3 → 步骤 4  |
 ```
 
+## 简单说明
+```angular2html
+全局安装：执行了 npm install -g .，将 replayright 核心命令安装到了全局环境。现在在任意地方都可以通过 npx replayright 来调用它。
+ Skill 配置集成：已将项目自带的 SKILL.md (也就是 replayright 技能文档) 拷贝并配置到了您的 Gemini CLI 技能库目录 (~/.gemini/skills/replayright/SKILL.md) 中。
+
+  如何使用这个新技能？
+  现在 replayright 已经被配置为您本地可用的技能之一了。当您接下来想要让 AI 执行网页自动化测试或录制脚本时，只需要在对话中触发它：
+
+   * 单次指令录制： 请使用 replayright 技能帮我在有界面的浏览器中测试一下本地的登录页 (http://localhost/#/login)
+   * 逐步探索录制： 
+       1. 使用 replayright 打开 http://localhost/#/login
+       2. 帮我输入账号 admin 和密码 123456，然后点击登录
+       3. 测试成功，保存脚本
+```
+
 ## 安装与设置
 
 向你的 AI Agent 发送以下指令即可安装：
