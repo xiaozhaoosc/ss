@@ -1,0 +1,40 @@
+{
+  "name": "replayright",
+  "version": "0.1.0",
+  "description": "Autonomous browser automation via Playwright with codegen recording",
+  "author": "EnixCoda",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/EnixCoda/replayright.git"
+  },
+  "homepage": "https://github.com/EnixCoda/replayright",
+  "bugs": {
+    "url": "https://github.com/EnixCoda/replayright/issues"
+  },
+  "keywords": [
+    "playwright",
+    "browser",
+    "automation",
+    "codegen",
+    "a11y",
+    "accessibility",
+    "testing",
+    "scraping"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "main": "src/replayright.js",
+  "bin": {
+    "replayright": "./src/cli.js"
+  },
+  "files": [
+    "src/",
+    "README.md"
+  ],
+  "scripts": {},
+  "dependencies": {
+    "playwright": "^1.52.0"
+  }
+}
