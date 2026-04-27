@@ -22,6 +22,7 @@
 - [[ADR-010-AI-Streaming-SSE-Optimization]] - AI 聊天流式 SSE 响应优化与 Vite 代理绕过机制
 
 ## 每日记录 (Journal)
+- [[2026-04-27]] (运行时环境恢复与 MyBatis 异常修复)
 - [[2026-04-26]] (Web 自动化测试与家长端洞察探索)
 - [[2026-04-25]] (V7 脚本交付 & 儿童端 403/500 报错彻底修复)
 - [[Parent-Profile-And-Family-Binding|2026-04-25]] (家长端全功能闭环：档案管理与智能绑定)

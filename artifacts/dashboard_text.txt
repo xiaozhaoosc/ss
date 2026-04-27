@@ -1,0 +1,37 @@
+欢迎回来,
+家长
+notifications
+今日焦点
+详情
+check_circle
+任务总数
+0
+个
+emoji_events
+奖励总数
+0
+个
+执行记录
+查看全部
+history
+暂无执行记录
+🏠
+首页
+📝
+任务
+📊
+洞察
+👤
+我的
+首页
+任务
+洞察
+我的
+系统提示
+Handler dispatch failed: java.lang.Error: Unresolved compilation problems: 
+	The import com.kenzhao.smallsteps.common.mybatis cannot be resolved
+	The method equals(Object) of type ChildTask must override or implement a supertype method
+	The method hashCode() of type ChildTask must override or implement a supertype method
+	BaseEntity cannot be resolved to a type
+
+知道了
