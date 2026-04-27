@@ -15,7 +15,7 @@ export default defineConfig({
     }]
   ],
   use: {
-    baseURL: 'http://localhost:5173',
+    baseURL: 'http://localhost:9091',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
@@ -25,11 +25,16 @@ export default defineConfig({
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
     },
+    {
+      name: 'mobile',
+      use: { ...devices['iPhone 14'] },
+    },
   ],
-  webServer: {
-    command: 'npm run dev:h5',
-    url: 'http://localhost:5173',
-    reuseExistingServer: !process.env.CI,
-    timeout: 120000,
-  },
+  // 注释掉 webServer，因为我们测试的是已经运行的服务器
+  // webServer: {
+  //   command: 'npm run dev:h5',
+  //   url: 'http://localhost:5173',
+  //   reuseExistingServer: !process.env.CI,
+  //   timeout: 120000,
+  // },
 });
