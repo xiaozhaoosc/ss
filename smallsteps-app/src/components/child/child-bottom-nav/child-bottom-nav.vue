@@ -10,7 +10,7 @@
       <!-- Nav Items -->
       <view class="nav-items">
         <!-- Shop -->
-        <view class="nav-item" :class="{ 'active': active === 'shop' }" @click="handleNav('shop')">
+        <view class="nav-item" :class="{ 'active': active === 'shop' }" hover-class="nav-hover" @click="handleNav('shop')">
           <view class="icon-circle">
             <text class="material-symbols-outlined icon">storefront</text>
           </view>
@@ -18,7 +18,7 @@
         </view>
         
         <!-- Home -->
-        <view class="nav-item" :class="{ 'active': active === 'home' }" @click="handleNav('home')">
+        <view class="nav-item" :class="{ 'active': active === 'home' }" hover-class="nav-hover" @click="handleNav('home')">
           <view class="icon-circle home-circle">
             <text class="material-symbols-outlined home-icon">emoji_events</text>
           </view>
@@ -26,7 +26,7 @@
         </view>
         
         <!-- Time Machine -->
-        <view class="nav-item" :class="{ 'active': active === 'map' }" @click="handleNav('map')">
+        <view class="nav-item" :class="{ 'active': active === 'map' }" hover-class="nav-hover" @click="handleNav('map')">
           <view class="icon-circle map-circle">
             <text class="material-symbols-outlined map-icon">history</text>
           </view>
@@ -46,6 +46,7 @@ const props = defineProps({
 })
 
 const handleNav = (tab) => {
+  uni.vibrateShort()
   if (tab === 'shop') {
     uni.navigateTo({ url: '/pages/child/reward-shop/index' })
     return
@@ -194,5 +195,10 @@ const handleNav = (tab) => {
     border-radius: 999px;
     box-shadow: 0 1px 2px rgba(0,0,0,0.05);
   }
+}
+
+.nav-hover {
+  transform: scale(0.9);
+  opacity: 0.8;
 }
 </style>

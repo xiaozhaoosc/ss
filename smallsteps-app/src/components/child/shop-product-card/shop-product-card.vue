@@ -1,5 +1,5 @@
 <template>
-  <view class="product-card" @click="handleCardClick">
+  <view class="product-card" hover-class="card-hover" @click="handleCardClick">
     <view class="image-box" :class="bgClass">
       <image class="product-img" :src="image" mode="aspectFit" />
       <view class="price-tag">
@@ -13,6 +13,7 @@
       
       <button 
         class="redeem-btn" 
+        hover-class="redeem-hover"
         :class="{ 'disabled': disabled }"
         @click.stop="handleRedeem"
       >
@@ -40,10 +41,14 @@ const diff = computed(() => props.price - props.userStars)
 
 const handleRedeem = () => {
   if (disabled.value) return
+  // Add haptic feedback
+  uni.vibrateShort()
   emit('redeem')
 }
 
 const handleCardClick = () => {
+  // Add haptic feedback for card touch
+  uni.vibrateShort()
   // Can show details modal
 }
 </script>
@@ -56,7 +61,12 @@ const handleCardClick = () => {
   box-shadow: 0 4px 12px rgba(0,0,0,0.05);
   transition: transform 0.2s ease;
   
-  &:active { transform: scale(0.98); }
+  &:active { transform: scale(0.96); }
+  
+  &.card-hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+  }
   
   :deep(.dark) & { background-color: #1f2937; }
 }
@@ -136,6 +146,12 @@ const handleCardClick = () => {
   &::after { border: none; }
   
   &:active { background-color: #8CD0A1; color: #fff; }
+  
+  &.redeem-hover {
+    transform: scale(0.96);
+    background-color: #8CD0A1 !important;
+    color: #ffffff !important;
+  }
   
   &.disabled {
     background-color: #f3f4f6;

@@ -18,7 +18,7 @@
       </view>
       
       <!-- Settings (Hidden) -->
-      <view class="settings-btn" @click="handleSettings">
+      <view class="settings-btn" hover-class="btn-hover" @click="handleSettings">
         <text class="material-symbols-outlined">settings</text>
       </view>
       
@@ -28,7 +28,7 @@
 
     <scroll-view scroll-y class="main-content no-scrollbar">
       <!-- Robot Avatar Area -->
-      <view class="robot-area" @click="handleRobotClick">
+      <view class="robot-area" hover-class="robot-hover" @click="handleRobotClick">
         <!-- Speech Bubble -->
         <view class="speech-bubble">
           <text class="bubble-text">{{ greetingText }}</text>
@@ -62,13 +62,13 @@
 
       <!-- Secondary Actions -->
       <view class="quick-links">
-        <view class="link-card" @click="handleQuickLink('艺术课')">
+        <view class="link-card" hover-class="card-hover" @click="handleQuickLink('艺术课')">
           <view class="link-icon bg-purple">
             <text class="material-symbols-outlined">palette</text>
           </view>
           <text class="link-text">艺术课</text>
         </view>
-        <view class="link-card" @click="handleQuickLink('游戏时间')">
+        <view class="link-card" hover-class="card-hover" @click="handleQuickLink('游戏时间')">
           <view class="link-icon bg-green">
             <text class="material-symbols-outlined">sports_soccer</text>
           </view>
@@ -161,11 +161,13 @@ const loadPendingTasks = () => {
 }
 
 const handleSettings = () => {
+  uni.vibrateShort()
   // Easter egg or parent gate could go here
   uni.showToast({ title: 'Parent Zone', icon: 'none' })
 }
 
 const handleMissionComplete = () => {
+  uni.vibrateShort()
   if (currentMission.value && currentMission.value.taskId) {
      navigateToTask(currentMission.value.taskId)
   }
@@ -178,10 +180,12 @@ const navigateToTask = (taskId: number) => {
 }
 
 const handleQuickLink = (name: string) => {
+  uni.vibrateShort()
   uni.showToast({ title: `Open ${name}`, icon: 'none' })
 }
 
 const handleRobotClick = () => {
+  uni.vibrateShort()
   uni.navigateTo({
     url: '/pages/child/treehole-chat/index'
   })
@@ -406,6 +410,22 @@ onShow(() => {
   font-size: 14px;
   font-weight: 700;
   color: #374151;
+}
+
+.btn-hover {
+  opacity: 0.7;
+  transform: scale(0.9);
+}
+
+.card-hover {
+  transform: scale(0.95);
+  background-color: #ffffff !important;
+}
+
+.robot-hover {
+  transform: scale(1.05);
+  filter: brightness(1.1);
+  box-shadow: 0 0 30px rgba(14, 165, 233, 0.4);
 }
 
 .spacer {

@@ -3,8 +3,10 @@ package com.kenzhao.smallsteps.common.ss.domain;
 import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.kenzhao.smallsteps.common.mybatis.core.domain.BaseEntity;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 import java.util.Date;
@@ -18,6 +20,8 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("ss_child")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Child extends BaseEntity {
 
     @Serial

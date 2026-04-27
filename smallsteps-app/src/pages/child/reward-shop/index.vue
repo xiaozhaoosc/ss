@@ -3,7 +3,7 @@
     <!-- Header -->
     <view class="header">
       <view class="top-row">
-        <button class="icon-btn" @click="handleBack">
+        <button class="icon-btn" hover-class="btn-hover" @click="handleBack">
           <text class="material-symbols-outlined icon">arrow_back_ios_new</text>
         </button>
         <view class="avatar-circle">
@@ -94,6 +94,7 @@ onShow(() => {
 })
 
 const handleBack = () => {
+  uni.vibrateShort()
   uni.navigateBack()
 }
 
@@ -167,6 +168,11 @@ const handleRedeem = (prod) => {
   &::after { border: none; }
   
   .icon { font-size: 20px; }
+}
+
+.btn-hover {
+  transform: scale(0.9);
+  background-color: #f0fdf4 !important;
 }
 
 .avatar-circle {

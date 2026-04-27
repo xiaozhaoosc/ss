@@ -13,7 +13,7 @@
         </view>
       </view>
       <view class="actions">
-        <view class="icon-btn" @click="toggleNotifications">
+        <view class="icon-btn" hover-class="btn-hover" @click="toggleNotifications">
           <text class="material-symbols-outlined">notifications</text>
           <view v-if="unreadCount > 0" class="badge-dot"></view>
         </view>
@@ -34,8 +34,8 @@
               <text class="note-text">{{ note.message }}</text>
               <text class="note-time">{{ note.time }}</text>
               <view v-if="note.actions" class="note-actions">
-                <button class="btn btn-primary" size="mini" @click="handleAction(note, 'approve')">批准</button>
-                <button class="btn btn-secondary" size="mini" @click="handleAction(note, 'deny')">拒绝</button>
+                <button class="btn btn-primary" hover-class="btn-hover-primary" size="mini" @click="handleAction(note, 'approve')">批准</button>
+                <button class="btn btn-secondary" hover-class="btn-hover-secondary" size="mini" @click="handleAction(note, 'deny')">拒绝</button>
               </view>
             </view>
           </view>
@@ -337,6 +337,21 @@ onShow(() => {
   :deep(.dark) & {
     background-color: #1e242b;
   }
+}
+
+.btn-hover {
+  transform: scale(0.92);
+  background-color: #f3f4f6 !important;
+}
+
+.btn-hover-primary {
+  transform: scale(0.96);
+  background-color: #4b89c2 !important;
+}
+
+.btn-hover-secondary {
+  transform: scale(0.96);
+  background-color: #e5e7eb !important;
 }
 
 .badge-dot {

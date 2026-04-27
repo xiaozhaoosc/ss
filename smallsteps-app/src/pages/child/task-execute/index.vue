@@ -2,7 +2,7 @@
   <view class="child-task-page" :class="{ 'dark': isDarkMode }">
     <!-- Header -->
     <view class="header">
-      <button class="back-btn" @click="handleBack">
+      <button class="back-btn" hover-class="btn-hover" @click="handleBack">
         <text class="material-symbols-outlined icon">arrow_back</text>
       </button>
       <text class="page-title">专注时刻</text>
@@ -54,7 +54,7 @@
 
     <!-- Footer Action -->
     <view class="footer">
-      <button class="complete-btn" :loading="isLoading" @click="handleAction">
+      <button class="complete-btn" hover-class="complete-hover" :loading="isLoading" @click="handleAction">
         <view class="shine"></view>
         <view class="btn-content">
           <text class="btn-text">{{ actionText }}</text>
@@ -140,6 +140,7 @@ const loadTaskInfo = () => {
 }
 
 const handleBack = () => {
+  uni.vibrateShort()
   if (isRewardVisible.value) return
   uni.showModal({
     title: '确定要离开吗？',
@@ -175,6 +176,7 @@ const handleAction = () => {
 }
 
 const handleComplete = async () => {
+  uni.vibrateShort()
   if (!taskId.value) return
   
   const childId = userStore.id
@@ -428,4 +430,14 @@ const handleRewardCollect = () => {
 
 .blob-1 { width: 96px; height: 96px; background-color: rgba(140, 208, 161, 0.1); top: 80px; left: -20px; }
 .blob-2 { width: 128px; height: 128px; background-color: rgba(19, 236, 84, 0.1); bottom: 160px; right: -10px; }
+
+.btn-hover {
+  opacity: 0.7;
+  transform: scale(0.9);
+}
+
+.complete-hover {
+  transform: scale(0.98) translateY(4px);
+  box-shadow: 0 4px 0 rgba(15, 184, 64, 1) !important;
+}
 </style>

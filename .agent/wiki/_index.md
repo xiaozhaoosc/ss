@@ -5,9 +5,9 @@
 ## 核心状态
 - **当前阶段**: 儿童管理（Child Management）功能与管理后台页面开发完成
 - **重点任务**: 
-  1. 验证儿童管理 API 与 UI 联动；
-  2. 修复 smallsteps-app 单元测试环境异常 (vue/compiler-sfc)；
-  3. 在本地运行 App 预览验证 ADHD 模板库。
+  1. 优化 `smallsteps-app` 按钮交互延迟（影子观察发现）；
+  2. 扩展自动化测试至“奖励兑换审批流”；
+  3. 设计并实现 ADHD 任务模板库数据模型。
 
 ## 快速入口
 - [[JOURNAL]] - 每日执行流水账与 [Morning_Briefing]。
