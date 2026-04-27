@@ -101,7 +101,7 @@ smallsteps-app/
 
 ## 5. Bug记录策略
 
-每次发现问题时，按以下格式追加到 `bug_20260427.md`：
+每次发现问题时，按以下格式追加到 `bug_yyyyMMdd.md`：
 
 ```markdown
 ## [时间戳] - [简短描述]
