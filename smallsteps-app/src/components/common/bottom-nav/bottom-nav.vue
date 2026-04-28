@@ -5,6 +5,8 @@
       :key="item.path"
       class="nav-item"
       :class="{ active: currentPath === item.path }"
+      hover-class="nav-item-hover"
+      :hover-stay-time="50"
       @click="handleNavClick(item)"
     >
       <view class="icon-wrapper">
@@ -132,8 +134,9 @@ const handleNavClick = (item) => {
   cursor: pointer;
   transition: all 0.3s ease;
   
-  &:active {
+  &:active, &.nav-item-hover {
     opacity: 0.7;
+    transform: scale(0.95);
   }
 }
 

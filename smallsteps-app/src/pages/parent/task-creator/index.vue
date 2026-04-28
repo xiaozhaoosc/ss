@@ -22,10 +22,28 @@
           <text class="char-count">{{ taskInput.length }}/200</text>
         </view>
         
-        <button class="ai-btn" :loading="isBreakingDown" @click="handleAiBreakdown">
-          <text class="material-symbols-outlined icon">spark</text>
-          <text>AI 拆解</text>
-        </button>
+        <view class="action-btns">
+          <button 
+            class="ai-btn" 
+            :loading="isBreakingDown" 
+            @click="handleAiBreakdown"
+            hover-class="btn-hover"
+            hover-stay-time="100"
+          >
+            <text class="material-symbols-outlined icon">spark</text>
+            <text>AI 拆解</text>
+          </button>
+          
+          <button 
+            class="template-btn" 
+            @click="handleGoToTemplate"
+            hover-class="btn-hover-subtle"
+            hover-stay-time="100"
+          >
+            <text class="material-symbols-outlined icon">library_books</text>
+            <text>模板库</text>
+          </button>
+        </view>
       </view>
 
       <!-- Steps Section -->
@@ -45,7 +63,12 @@
             @delete="handleDeleteStep(index)"
           />
           
-          <button class="add-step-btn" @click="handleAddStep">
+          <button 
+            class="add-step-btn" 
+            @click="handleAddStep"
+            hover-class="btn-hover-subtle"
+            hover-stay-time="100"
+          >
             <text class="material-symbols-outlined icon">add_circle</text>
             <text>添加步骤</text>
           </button>
@@ -65,7 +88,13 @@
           </label>
         </view>
         
-        <button class="submit-btn" :loading="isSubmitting" @click.stop.prevent="handleSubmit">
+        <button 
+          class="submit-btn" 
+          :loading="isSubmitting" 
+          @click.stop.prevent="handleSubmit"
+          hover-class="btn-hover"
+          hover-stay-time="100"
+        >
           <text>发布</text>
         </button>
         
@@ -131,6 +160,12 @@ const handleAiBreakdown = async () => {
   } finally {
     isBreakingDown.value = false
   }
+}
+
+const handleGoToTemplate = () => {
+  uni.navigateTo({
+    url: '/pages/template/library'
+  })
 }
 
 const handleAddStep = () => {
@@ -269,7 +304,13 @@ const handleSubmit = () => {
   color: #cbd5e1;
 }
 
+.action-btns {
+  display: flex;
+  gap: 12px;
+}
+
 .ai-btn {
+  flex: 2;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -293,6 +334,35 @@ const handleSubmit = () => {
   .icon {
     font-size: 24px;
     animation: sparkle 2s infinite ease-in-out;
+  }
+}
+
+.template-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 56px;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1.5px solid rgba(108, 155, 210, 0.2);
+  color: #64748b;
+  font-weight: 700;
+  font-size: 14px;
+  border-radius: 18px;
+  box-shadow: 0 4px 15px rgba(108, 155, 210, 0.05);
+  
+  &::after { border: none; }
+  
+  .icon {
+    font-size: 20px;
+    color: #6C9BD2;
+  }
+  
+  :deep(.dark) & {
+    background: rgba(30, 41, 59, 0.6);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: #cbd5e1;
   }
 }
 
@@ -421,6 +491,18 @@ const handleSubmit = () => {
     background: #6C9BD2;
     box-shadow: 0 10px 30px rgba(108, 155, 210, 0.3);
   }
+}
+
+.btn-hover {
+  transform: scale(0.96) translateY(2px) !important;
+  opacity: 0.9;
+  filter: brightness(1.1);
+}
+
+.btn-hover-subtle {
+  transform: scale(0.98) !important;
+  background: rgba(108, 155, 210, 0.08) !important;
+  border-color: #6C9BD2 !important;
 }
 
 .safe-area-spacer {

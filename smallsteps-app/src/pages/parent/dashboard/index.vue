@@ -55,7 +55,9 @@
       <!-- 今日焦点 -->
       <view class="section-header">
         <text class="section-title">今日焦点</text>
-        <text class="see-all" @click="navigateToDailyFocus">详情</text>
+        <view class="see-all-btn" hover-class="btn-hover-opacity" @click="navigateToDailyFocus">
+          <text class="see-all">详情</text>
+        </view>
       </view>
       
       <scroll-view scroll-x class="stats-scroll no-scrollbar">
@@ -71,7 +73,9 @@
       <!-- 任务执行记录 (时间轴) -->
       <view class="section-header mt-6">
         <text class="section-title">执行记录</text>
-        <text class="see-all" @click="navigateToExecRecord">查看全部</text>
+        <view class="see-all-btn" hover-class="btn-hover-opacity" @click="navigateToExecRecord">
+          <text class="see-all">查看全部</text>
+        </view>
       </view>
       
       <view class="timeline-container">
@@ -362,6 +366,19 @@ onShow(() => {
 .btn-hover-secondary {
   transform: scale(0.96);
   background-color: #e5e7eb !important;
+}
+
+.btn-hover-opacity {
+  opacity: 0.6;
+}
+
+.see-all-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 8px;
+  margin: -4px -8px;
+  border-radius: 4px;
 }
 
 .badge-dot {

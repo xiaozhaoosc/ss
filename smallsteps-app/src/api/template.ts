@@ -4,27 +4,37 @@ export interface TemplateParams {
   pageNum?: number;
   pageSize?: number;
   category?: string;
+  title?: string;
 }
 
+/**
+ * 获取模板列表
+ */
 export function getTemplateList(params: TemplateParams) {
   return request({
-    url: '/template/list',
+    url: '/parent/template/list',
     method: 'get',
-    data: params
+    params: params
   })
 }
 
+/**
+ * 获取模板详情
+ */
 export function getTemplateDetail(id: string | number) {
   return request({
-    url: `/template/detail/${id}`,
+    url: `/parent/template/${id}`,
     method: 'get'
   })
 }
 
-export function applyTemplate(id: string | number, targetDate: string) {
+/**
+ * 从模板导入任务
+ */
+export function applyTemplate(templateId: string | number, childId: string | number) {
   return request({
-    url: '/template/apply',
+    url: `/parent/template/import/${templateId}`,
     method: 'post',
-    data: { id, targetDate }
+    params: { childId }
   })
 }

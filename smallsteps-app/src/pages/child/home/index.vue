@@ -1,5 +1,5 @@
 <template>
-  <view class="child-home-page">
+  <view class="child-home-page" @click="handleScreenTap">
     <!-- Decorative Background Elements -->
     <view class="blob blob-1"></view>
     <view class="blob blob-2"></view>
@@ -28,7 +28,7 @@
 
     <scroll-view scroll-y class="main-content no-scrollbar">
       <!-- Robot Avatar Area -->
-      <view class="robot-area" hover-class="robot-hover" @click="handleRobotClick">
+      <view class="robot-area" hover-class="robot-hover" @click="handleRobotClick" @longpress="handleRobotLongPress">
         <!-- Speech Bubble -->
         <view class="speech-bubble">
           <text class="bubble-text">{{ greetingText }}</text>
@@ -92,7 +92,7 @@ import MissionCard from '@/components/child/mission-card/mission-card.vue'
 import ChildBottomNav from '@/components/child/child-bottom-nav/child-bottom-nav.vue'
 import { useUserStore } from '@/store/modules/user'
 import { getInfo } from '@/api/auth'
-import { getPendingTasks, getStreak } from '@/api/child'
+import { getPendingTasks, getStreak, submitEmotion } from '@/api/child'
 
 const userStore = useUserStore()
 const streak = ref(0)
@@ -191,7 +191,59 @@ const handleRobotClick = () => {
   })
 }
 
-onShow(() => {
+const handleRobotLongPress = async () => {
+  uni.vibrateLong()
+  try {
+    // 自动记录情绪预警（影子观察者模式）
+    const childId = userStore.id
+    if (childId) {
+      await submitEmotion({
+        childId: Number(childId),
+        moodLevel: 2, // 2: Low/Sad/Frustrated
+        moodType: 'frustrated',
+        description: '[影子观察] 检测到异常长按机器人，可能存在情绪波动或操作困难。'
+      })
+      uni.showToast({
+        title: '已为你记录情绪状态',
+        icon: 'none'
+      })
+      console.log('[Shadow Observer] Emotion warning reported.')
+    }
+  } catch (e) {
+    console.error('Failed to report emotion warning:', e)
+  }
+}
+
+const clickHistory = ref<number[]>([])
+const handleScreenTap = () => {
+  const now = Date.now()
+  clickHistory.value.push(now)
+  
+  // Keep only last 10 clicks within 2 seconds
+  clickHistory.value = clickHistory.value.filter(t => now - t < 2000)
+  
+  if (clickHistory.value.length >= 6) {
+    console.warn('Shadow Observer: High frequency clicking detected!')
+    triggerShadowWarning('躁动点击', '系统检测到高频点击，可能存在焦虑或挫败感。')
+    clickHistory.value = [] // Reset
+  }
+}
+
+const triggerShadowWarning = async (type: string, desc: string) => {
+  try {
+    await submitEmotion({
+      childId: userStore.userId,
+      moodLevel: 3, // High arousal
+      moodType: type,
+      description: desc
+    })
+    console.log('Shadow Warning reported to backend')
+  } catch (err) {
+    console.error('Failed to report shadow warning', err)
+  }
+}
+
+onLoad(() => {
   // 角色校验：防止家长误入儿童界面
   if (userStore.role !== 'child') {
     uni.reLaunch({ url: '/pages/parent/dashboard/index' })

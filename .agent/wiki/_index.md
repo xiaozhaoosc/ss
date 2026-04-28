@@ -38,3 +38,7 @@
  java -jar .\smallsteps-admin.jar --spring.profiles.active=dev --server.port=8081 --file.encoding=UTF-8 --DB_HOST=10.8.0.1 --DB_PORT=15432 --DB_NAME=smallsteps_db --DB_USER=smallsteps --DB_PASS=abdSSsaf#1236548^ --REDIS_HOST=10.8.0.1 --REDIS_PORT=6379 --REDIS_PASS=abdSSsaf#1236548^ --spring.boot.admin.client.username=admin --spring.boot.admin.client.password=abdSSsaf#1236548^ --monitor.username=admin --monitor.password=abdSSsaf#1236548^
  ```
 ---
+## 核心设计与路线图
+- [[SHADOW_OBSERVER]] - 影子观察者功能待实现列表
+- [[UX_SPEC]] - 交互规范 (待补充)
+- [[DATABASE_SCHEMA]] - 数据库 Schema (待补充)

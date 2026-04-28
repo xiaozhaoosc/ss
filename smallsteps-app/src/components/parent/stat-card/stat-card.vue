@@ -1,5 +1,5 @@
 <template>
-  <view class="stat-card">
+  <view class="stat-card" hover-class="stat-card-hover" :hover-stay-time="100">
     <view class="header">
       <view class="icon-box" :class="colorClass">
         <text class="material-symbols-outlined">{{ icon }}</text>
@@ -70,6 +70,16 @@ const trendClass = computed(() => {
   :deep(.dark) & {
     background-color: #1e242b;
     border-color: #1f2937;
+  }
+}
+
+.stat-card-hover {
+  transform: scale(0.96);
+  background-color: #f9fafb !important;
+  border-color: #6C9BD2 !important;
+  
+  :deep(.dark) & {
+    background-color: #242b33 !important;
   }
 }
 

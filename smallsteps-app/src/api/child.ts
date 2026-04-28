@@ -256,9 +256,18 @@ export function updateChild(data: any) {
 
 // 家长创建孩子账号
 export function createChild(data: any) {
-  return request({
-    url: '/parent/child/create',
-    method: 'post',
-    data: data
-  })
+    return request({
+        url: '/parent/child/create',
+        method: 'post',
+        data: data
+    })
+}
+
+// 情绪提交相关API
+export function submitEmotion(data: { childId: number, moodLevel: number, moodType: string, description: string }) {
+    return request({
+        url: '/child/emotion/submit',
+        method: 'POST',
+        data: data
+    })
 }
