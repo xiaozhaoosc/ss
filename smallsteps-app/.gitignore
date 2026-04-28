@@ -4,7 +4,9 @@
 dist/
 /unpackage/*
 /node_modules/*
-
+/allure-results/*
+/playwright-report/*
+/test-results/*
 ######################################################################
 # Development Tools
 

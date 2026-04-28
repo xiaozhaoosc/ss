@@ -1,0 +1,95 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: spec\parent-insights-deep.spec.ts >> 洞察菜单深度测试 >> 底部导航栏测试
+- Location: tests\e2e\spec\parent-insights-deep.spec.ts:104:7
+
+# Error details
+
+```
+TimeoutError: page.waitForURL: Timeout 10000ms exceeded.
+=========================== logs ===========================
+waiting for navigation until "load"
+============================================================
+```
+
+# Page snapshot
+
+```yaml
+- generic [ref=e4]:
+  - generic [ref=e8]: 登录
+  - generic [ref=e12]:
+    - generic [ref=e17]:
+      - generic [ref=e18]: Small Steps
+      - generic [ref=e19]: 每一次进步，都值得被看见
+    - generic [ref=e20]:
+      - generic [ref=e21]: 欢迎回来
+      - generic [ref=e22]:
+        - generic [ref=e23]:
+          - generic [ref=e24]: 
+          - generic [ref=e26]:
+            - generic: 账号
+            - textbox [ref=e27]
+        - generic [ref=e28]:
+          - generic [ref=e29]: 
+          - textbox [ref=e32]: Aa123456
+      - generic [ref=e34] [cursor=pointer]:
+        - generic [ref=e35]: 
+        - generic [ref=e38]: 记住密码
+      - generic [ref=e39]:
+        - generic [ref=e40] [cursor=pointer]: 登 录
+        - generic [ref=e41]:
+          - generic [ref=e42]: 注册账号
+          - generic [ref=e43]: "|"
+          - generic [ref=e44]: 忘记密码?
+    - generic [ref=e46]:
+      - generic [ref=e47]: 登录即代表同意
+      - generic [ref=e48]: 《用户协议》
+      - generic [ref=e49]: "&"
+      - generic [ref=e50]: 《隐私协议》
+```
+
+# Test source
+
+```ts
+  1  | import { Page, Locator } from '@playwright/test';
+  2  | 
+  3  | export class LoginPage {
+  4  |   readonly page: Page;
+  5  |   readonly usernameInput: Locator;
+  6  |   readonly passwordInput: Locator;
+  7  |   readonly loginButton: Locator;
+  8  |   readonly registerLink: Locator;
+  9  | 
+  10 |   constructor(page: Page) {
+  11 |     this.page = page;
+  12 |     this.usernameInput = page.locator('input[type="text"]').first();
+  13 |     this.passwordInput = page.locator('input[type="password"]').first();
+  14 |     this.loginButton = page.locator('.login-btn');
+  15 |     this.registerLink = page.getByText('注册账号');
+  16 |   }
+  17 | 
+  18 |   async goto() {
+  19 |     await this.page.goto('/pages/login/index');
+  20 |   }
+  21 | 
+  22 |   async login(username: string, password: string) {
+  23 |     await this.usernameInput.fill(username);
+  24 |     await this.passwordInput.fill(password);
+  25 |     await this.loginButton.click();
+  26 |     // 等待登录成功跳转到首页
+> 27 |     await this.page.waitForURL(/\/dashboard\//, { timeout: 10000 });
+     |                     ^ TimeoutError: page.waitForURL: Timeout 10000ms exceeded.
+  28 |   }
+  29 | 
+  30 |   async goToRegister() {
+  31 |     await this.registerLink.click();
+  32 |   }
+  33 | }
+  34 | 
+```

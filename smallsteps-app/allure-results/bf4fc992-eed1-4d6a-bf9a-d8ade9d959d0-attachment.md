@@ -1,0 +1,57 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: spec\parent-dashboard.spec.ts >> Parent Dashboard Tests >> Test AI insight card interactions
+- Location: tests\e2e\spec\parent-dashboard.spec.ts:36:7
+
+# Error details
+
+```
+Error: page.goto: Could not connect to server
+Call log:
+  - navigating to "http://localhost:9091/pages/login/index", waiting until "load"
+
+```
+
+# Test source
+
+```ts
+  1  | import { Page, Locator } from '@playwright/test';
+  2  | 
+  3  | export class LoginPage {
+  4  |   readonly page: Page;
+  5  |   readonly usernameInput: Locator;
+  6  |   readonly passwordInput: Locator;
+  7  |   readonly loginButton: Locator;
+  8  |   readonly registerLink: Locator;
+  9  | 
+  10 |   constructor(page: Page) {
+  11 |     this.page = page;
+  12 |     this.usernameInput = page.locator('input[type="text"]').first();
+  13 |     this.passwordInput = page.locator('input[type="password"]').first();
+  14 |     this.loginButton = page.locator('.login-btn');
+  15 |     this.registerLink = page.getByText('注册账号');
+  16 |   }
+  17 | 
+  18 |   async goto() {
+> 19 |     await this.page.goto('/pages/login/index');
+     |                     ^ Error: page.goto: Could not connect to server
+  20 |   }
+  21 | 
+  22 |   async login(username: string, password: string) {
+  23 |     await this.usernameInput.fill(username);
+  24 |     await this.passwordInput.fill(password);
+  25 |     await this.loginButton.click();
+  26 |   }
+  27 | 
+  28 |   async goToRegister() {
+  29 |     await this.registerLink.click();
+  30 |   }
+  31 | }
+  32 | 
+```
