@@ -334,13 +334,21 @@ public class SysUserServiceImpl implements ISysUserService, UserService {
         return DataPermissionHelper.ignore(() -> {
             user.setCreateBy(0L);
             user.setUpdateBy(0L);
-            user.setDeptId(200L); // 设置默认部门为 "Small Steps 家庭" (ID: 200)
+            
+            // 如果是家长角色，自动创建家庭部门
+            Long roleId = user.getRoleId();
+            if (roleId != null && isParentRole(roleId)) {
+                Long deptId = createFamilyDept(user.getNickName());
+                user.setDeptId(deptId);
+            } else {
+                user.setDeptId(200L); // 默认部门
+            }
+            
             SysUser sysUser = MapstructUtils.convert(user, SysUser.class);
             sysUser.setTenantId(tenantId);
             int rows = baseMapper.insert(sysUser);
             if (rows > 0) {
                 user.setUserId(sysUser.getUserId());
-                // 如果 SysUserBo 中设置了 roleId 或 roleIds，则进行角色绑定
                 if (user.getRoleId() != null && user.getRoleIds() == null) {
                     user.setRoleIds(new Long[]{user.getRoleId()});
                 }
@@ -349,6 +357,32 @@ public class SysUserServiceImpl implements ISysUserService, UserService {
             }
             return false;
         });
+    }
+    
+    private boolean isParentRole(Long roleId) {
+        String parentRoleId = SpringUtils.getBean(com.kenzhao.smallsteps.system.service.ISysConfigService.class)
+            .selectConfigByKey("ss.parent.role");
+        return parentRoleId != null && roleId.equals(Long.valueOf(parentRoleId));
+    }
+    
+    private Long createFamilyDept(String familyName) {
+        Long maxDeptId = deptMapper.selectOne(new LambdaQueryWrapper<com.kenzhao.smallsteps.system.domain.SysDept>()
+            .select(com.kenzhao.smallsteps.system.domain.SysDept::getDeptId)
+            .orderByDesc(com.kenzhao.smallsteps.system.domain.SysDept::getDeptId)
+            .last("LIMIT 1"));
+        Long newDeptId = (maxDeptId == null ? 100L : maxDeptId) + 1;
+        
+        com.kenzhao.smallsteps.system.domain.SysDept dept = new com.kenzhao.smallsteps.system.domain.SysDept();
+        dept.setDeptId(newDeptId);
+        dept.setParentId(0L);
+        dept.setAncestors("0");
+        dept.setDeptName(familyName + "的家庭");
+        dept.setOrderNum(1);
+        dept.setStatus("0");
+        dept.setDelFlag("0");
+        
+        deptMapper.insert(dept);
+        return newDeptId;
     }
 
     /**

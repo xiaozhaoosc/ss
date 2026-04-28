@@ -125,6 +125,20 @@
       }
     },
     {
+      "path": "pages/family/invite/index",
+      "style": {
+        "navigationBarTitleText": "邀请加入家庭",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/family/invite/apply",
+      "style": {
+        "navigationBarTitleText": "申请加入家庭",
+        "navigationStyle": "custom"
+      }
+    },
+    {
       "path": "pages/parent/contract/index",
       "style": {
         "navigationBarTitleText": "亲子契约",
