@@ -43,15 +43,28 @@
     - [x] 补全缺失页面 (Gap Filling) <!-- id: 32 -->
         - [x] 情绪详情页 (Emotion Detail)
         - [x] 奖励配置页 (Reward Config)
-        - [x] 父母学堂 (Parenting Guide)
-        - [x] 初始引导 (Onboarding)
-    - [x] **儿童端 UI 生成 (Child App Stitch)**
-        - [x] 任务执行页 (Task Execute)
-        - [x] 奖励兑换页 (Reward Shop)
-        - [x] 角色换装页 (Avatar Editor)
-        - [x] 角色换装页 (Avatar Editor)
-        - [x] 角色换装页 (Avatar Editor)
-        - [x] 扫码同步页 (Scan/Sync)
+        - - [x] 父母学堂 (Parenting Guide)
+      - [x] 初始引导 (Onboarding)
+  - [x] **儿童端 UI 生成 (Child App Stitch)**
+      - [x] 任务执行页 (Task Execute)
+      - [x] 奖励兑换页 (Reward Shop)
+      - [x] 角色换装页 (Avatar Editor)
+      - [x] 角色换装页 (Avatar Editor)
+      - [x] 角色换装页 (Avatar Editor)
+      - [x] 扫码同步页 (Scan/Sync)
+      - [x] 扫码同步页 (Scan/Sync)
+        - [x] Fix uni-mask pointer-events blocking issue in `global.scss`
+- [/] Rebuild and restart backend to apply superadmin bypass fixes
+    - [x] Identify stale code issue (missing log messages)
+    - [/] Stop backend (PID 32404)
+    - [ ] Run `mvn clean install -DskipTests`
+    - [ ] Restart server
+- [ ] Verify H5 Dashboard with Superadmin (admin)
+    - [ ] Check Ability Radar rendering
+    - [ ] Check Emotion Heatmap rendering
+    - [ ] Verify navigation buttons interactivity
+- [ ] Regression test for non-admin parents (if possible)
+- [ ] Final bug closure report (`bug_20260427.md`)
         - [x] 成就墙 (Hall of Fame) (Manual)
         - [x] 任务完成庆祝 (Mission Success) (Manual)
 
