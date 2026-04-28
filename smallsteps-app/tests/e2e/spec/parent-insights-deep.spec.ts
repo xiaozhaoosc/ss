@@ -16,7 +16,6 @@ test.describe('洞察菜单深度测试', () => {
     // 确保登录成功后再跳转，或者直接使用导航组件跳转
     await navPage.goToInsights();
     await page.waitForURL(/insights/);
-    await page.waitForLoadState('networkidle');
   });
 
   test('洞察页面基本元素验证', async ({ page }) => {

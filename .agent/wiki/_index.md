@@ -21,4 +21,20 @@
 
 ## 开发规范
 - [Git 规范]: `<type>: <中文描述>`
-- [测试环境]: http://localhost/#/login (admin / gly321??gly321!!)
+
+## 环境信息
+- 前端服务：http://localhost:88/
+- 后端服务：http://localhost:8081/ssapi
+- 前端Web管理后台登录账号：admin/admin123
+- APP： http://localhost:9090/
+- APP家长1端的账号/密码是：ken2zhao/Aa123456；
+- APP家长2的账号/密码是：parent_zhang/admin123；
+- APP孩子1的账号/密码是：child_xiaoming/admin123；
+- APP孩子2的账号/密码是：child_xiaohong/admin123；
+
+## 项目的运行配置与脚本：
+
+```
+ java -jar .\smallsteps-admin.jar --spring.profiles.active=dev --server.port=8081 --file.encoding=UTF-8 --DB_HOST=10.8.0.1 --DB_PORT=15432 --DB_NAME=smallsteps_db --DB_USER=smallsteps --DB_PASS=abdSSsaf#1236548^ --REDIS_HOST=10.8.0.1 --REDIS_PORT=6379 --REDIS_PASS=abdSSsaf#1236548^ --spring.boot.admin.client.username=admin --spring.boot.admin.client.password=abdSSsaf#1236548^ --monitor.username=admin --monitor.password=abdSSsaf#1236548^
+ ```
+---

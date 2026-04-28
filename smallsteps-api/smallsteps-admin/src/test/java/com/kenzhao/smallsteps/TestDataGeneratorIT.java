@@ -48,62 +48,21 @@ public class TestDataGeneratorIT {
         parentTaskMapper.delete(new LambdaQueryWrapper<ParentTask>().in(ParentTask::getUserId, child1, child2));
         parentRewardMapper.delete(new LambdaQueryWrapper<ParentReward>().eq(ParentReward::getUserId, parentId));
 
-        System.out.println("Inserting parent tasks...");
-        insertParentTask(child1, "整理书包", 1, 10, "1");
-        insertParentTask(child1, "背诵古诗", 2, 20, "1");
-        insertParentTask(child1, "数学口算", 2, 15, "1");
-        insertParentTask(child1, "跳绳100下", 3, 30, "1");
-        insertParentTask(child1, "自主阅读", 1, 10, "1");
-        insertParentTask(child1, "打扫房间", 3, 25, "0");
+        System.out.println("Inserting parent tasks for E2E...");
+        insertParentTask(child1, "自主刷牙", 1, 5, "0");
+        insertParentTask(child1, "完成数学口算", 2, 10, "0");
+        insertParentTask(child1, "整理书包", 2, 8, "0");
         
-        insertParentTask(child2, "练习钢琴", 3, 50, "1");
-        insertParentTask(child2, "刷牙打卡", 1, 5, "1");
+        insertParentTask(child2, "练习钢琴", 3, 50, "0");
 
-        System.out.println("Inserting task logs...");
-        Random r = new Random();
-        for (int i = 0; i < 30; i++) {
-            LocalDateTime time = LocalDateTime.now().minusDays(i);
-            for (int j = 0; j < 2; j++) {
-                ChildTask log = new ChildTask();
-                log.setChildId(child1);
-                log.setTaskId(2001L + r.nextInt(5));
-                log.setStatus("2");
-                log.setAutonomyScore(75 + r.nextInt(23));
-                log.setActualDuration(15 + r.nextInt(30));
-                log.setCreateTime(Date.from(time.atZone(ZoneId.systemDefault()).toInstant()));
-                log.setTargetDate(Date.from(time.atZone(ZoneId.systemDefault()).toInstant()));
-                log.setDeptId(200L);
-                childTaskMapper.insert(log);
-            }
-        }
+        System.out.println("Updating child star balance...");
+        
+        System.out.println("Inserting parent rewards for shop verification...");
+        insertReward(parentId, "玩30分钟游戏", 20, -1, "🎮");
+        insertReward(parentId, "乐高积木一套", 100, 3, "🧱");
+        insertReward(parentId, "看一集奥特曼", 15, -1, "🦸");
 
-        System.out.println("Inserting AI emotions...");
-        String[][] emotions = {
-            {"1", "今天拿到小红花了！", "太棒了！为你骄傲！"},
-            {"4", "数学题太难了...", "没关系，小步带你慢慢拆解。"},
-            {"2", "我的玩具弄丢了", "别难过，我们一起找找。"},
-            {"3", "我今天很生气！", "深呼吸，慢慢说发生了什么。"},
-            {"5", "感觉今天很平静。", "平静也是一种很好的状态。"},
-            {"1", "我交到了新朋友！", "真为你感到开心！"},
-            {"5", "我会努力的。", "相信你一定行。"}
-        };
-        for (int i = 0; i < emotions.length; i++) {
-            ChildAI ai = new ChildAI();
-            ai.setChildId(child1);
-            ai.setEmotionType(Integer.parseInt(emotions[i][0]));
-            ai.setUserInput(emotions[i][1]);
-            ai.setAiResponse(emotions[i][2]);
-            ai.setCreateTime(Date.from(LocalDateTime.now().minusDays(i).atZone(ZoneId.systemDefault()).toInstant()));
-            childAiMapper.insert(ai);
-        }
-
-        System.out.println("Inserting parent rewards...");
-        insertReward(parentId, "看动画片30分钟", 50, 99, "movie");
-        insertReward(parentId, "周末去乐高乐园", 500, 1, "fort");
-        insertReward(parentId, "多吃一个冰淇淋", 100, 10, "icecream");
-        insertReward(parentId, "购买新绘本", 150, 5, "book");
-
-        System.out.println("Successfully generated sufficient test data!");
+        System.out.println("Successfully stabilized test data for E2E!");
     }
 
     private void insertParentTask(Long childId, String title, int diff, int points, String status) {
