@@ -118,6 +118,13 @@
       }
     },
     {
+      "path": "pages/parent/family/create",
+      "style": {
+        "navigationBarTitleText": "创建孩子档案",
+        "navigationStyle": "custom"
+      }
+    },
+    {
       "path": "pages/parent/contract/index",
       "style": {
         "navigationBarTitleText": "亲子契约",

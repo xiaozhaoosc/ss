@@ -253,3 +253,12 @@ export function updateChild(data: any) {
     data: data
   })
 }
+
+// 家长创建孩子账号
+export function createChild(data: any) {
+  return request({
+    url: '/parent/child/create',
+    method: 'post',
+    data: data
+  })
+}
