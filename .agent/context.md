@@ -48,5 +48,10 @@
 - [ ] 游戏化勋章与勇气碎片系统
 - [ ] 家长端实时同步接口
 
+### 4.项目的运行配置与脚本：
+
+```
+ java -jar .\smallsteps-admin.jar --spring.profiles.active=dev --server.port=8081 --file.encoding=UTF-8 --DB_HOST=10.8.0.1 --DB_PORT=15432 --DB_NAME=smallsteps_db --DB_USER=smallsteps --DB_PASS=abdSSsaf#1236548^ --REDIS_HOST=10.8.0.1 --REDIS_PORT=6379 --REDIS_PASS=abdSSsaf#1236548^ --spring.boot.admin.client.username=admin --spring.boot.admin.client.password=abdSSsaf#1236548^ --monitor.username=admin --monitor.password=abdSSsaf#1236548^
+ ```
 ---
 **提示**: 每次开启对话时，请阅读 `archive/` 目录下最新的演示报告以获取详细上下文。
