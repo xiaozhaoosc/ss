@@ -119,6 +119,7 @@
 <script setup lang="ts">
 import * as echarts from 'echarts';
 import { Collection, Timer, Sunny, Monitor, MagicStick } from '@element-plus/icons-vue';
+import { getShadowEmotionTrend } from '@/api/smallsteps/insight';
 
 const mainChartRef = ref();
 const timeRange = ref('week');
@@ -140,15 +141,69 @@ let mainChart: echarts.ECharts | null = null;
 
 onMounted(() => {
   initMainChart();
+  loadShadowData();
   window.addEventListener('resize', () => mainChart?.resize());
 });
+
+const shadowPoints = ref([]);
+
+async function loadShadowData() {
+  // 模拟当前选择的儿童ID，实际项目中应从下拉框或全局状态获取
+  const mockChildId = 1;
+  try {
+    const res = await getShadowEmotionTrend(mockChildId, 7);
+    if (res.data) {
+      // 将后端返回的 frustrationCount 转换为图表上的散点坐标
+      // 这里的坐标是 [x轴索引, 对应的情绪指数值]
+      // 为了让预警点浮在折线图上方，我们取当天情绪值 + 0.5
+      shadowPoints.value = res.data.map((item, index) => {
+        if (item.frustrationCount > 0) {
+          return [index, item.avgMood + 0.3, item.frustrationCount];
+        }
+        return null;
+      }).filter(i => i !== null);
+      
+      updateChartWithShadow();
+    }
+  } catch (error) {
+    console.error('加载影子预警数据失败', error);
+  }
+}
+
+function updateChartWithShadow() {
+  if (!mainChart) return;
+  mainChart.setOption({
+    series: [
+      {}, // 完成量
+      {}, // 情绪指数
+      {
+        name: '影子预警',
+        type: 'scatter',
+        yAxisIndex: 1,
+        symbol: 'path://M12.884 2.532c-.346-.654-1.422-.654-1.768 0l-9 17c-.154.291-.156.639-.005.932.15.293.456.476.789.476h18c.334 0 .639-.183.789-.476.151-.293.149-.641-.005-.932l-9-17zM12 18c-.553 0-1-.447-1-1s.447-1 1-1 1 .447 1 1-.447 1-1 1zm1-3c0 .553-.447 1-1 1s-1-.447-1-1v-5c0-.553.447-1 1-1s1 .447 1 1v5z',
+        symbolSize: 20,
+        itemStyle: {
+          color: '#F56C6C',
+          shadowBlur: 10,
+          shadowColor: 'rgba(245, 108, 108, 0.5)'
+        },
+        data: shadowPoints.value,
+        tooltip: {
+          formatter: (params: any) => {
+            return `影子预警: ${params.data[2]} 次躁动点击`;
+          }
+        }
+      }
+    ]
+  });
+}
 
 function initMainChart() {
   if (mainChartRef.value) {
     mainChart = echarts.init(mainChartRef.value);
     mainChart.setOption({
       tooltip: { trigger: 'axis', axisPointer: { type: 'cross' } },
-      legend: { data: ['完成量', '情绪指数'], bottom: 0 },
+      legend: { data: ['完成量', '情绪指数', '影子预警'], bottom: 0 },
       grid: { left: '3%', right: '4%', bottom: '10%', containLabel: true },
       xAxis: { type: 'category', data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'], axisLine: { lineStyle: { color: '#eee' } }, axisLabel: { color: '#999' } },
       yAxis: [

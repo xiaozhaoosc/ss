@@ -228,6 +228,14 @@ export function getAbilityRadar(childId: number | string) {
     })
 }
 
+export function getShadowEmotionTrend(childId: number | string, days: number = 7) {
+    return request({
+        url: `/parent/insight/emotion/shadow-trend/${childId}`,
+        method: 'GET',
+        params: { days }
+    })
+}
+
 // 查询儿童列表
 export function listChildren(query: any) {
   return request({

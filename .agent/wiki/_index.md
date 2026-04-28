@@ -10,10 +10,10 @@
   3. 设计并实现 ADHD 任务模板库数据模型。
 
 ## 快速入口
-- [[JOURNAL]] - 每日执行流水账与 [Morning_Briefing]。
-- [[CHRONICLE]] - 重大架构变迁与关键决策背景 (ADR)。
-- [[DEBT_LEADGER]] - 技术债账本（NPE 风险、硬编码、性能瓶颈）。
-- [[INBOX]] - 影子观察者发现的灵感与改进建议。
+- [[2026-04-28-JOURNAL]] - 每日执行流水账与 [Morning_Briefing]。
+- [[2026-04-28-CHRONICLE]] - 重大架构变迁与关键决策背景 (ADR)。
+- [[2026-04-28-DEBT_LEADGER]] - 技术债账本（NPE 风险、硬编码、性能瓶颈）。
+- [[2026-04-28-INBOX]] - 影子观察者发现的灵感与改进建议。
 
 ## 业务架构
 - [[docs/brain/System-Architecture]] - 全局引擎架构。
@@ -39,6 +39,7 @@
  ```
 ---
 ## 核心设计与路线图
-- [[SHADOW_OBSERVER]] - 影子观察者功能待实现列表
+- [[2026-04-28-SHADOW_OBSERVER]] - 影子观察者功能待实现列表
+- [[2026-04-28-FEATURE_LIST_AND_TEST_CASES]] - 今日功能清单与测试用例
 - [[UX_SPEC]] - 交互规范 (待补充)
-- [[DATABASE_SCHEMA]] - 数据库 Schema (待补充)
+- [[2026-04-28-DATABASE_SCHEMA]] - 数据库 Schema (待补充)

@@ -57,6 +57,62 @@
         </view>
       </view>
 
+      <!-- 影子观察者：情绪预警趋势 -->
+      <view class="section">
+        <view class="section-header">
+          <text class="section-title">影子观察者：情绪预警趋势</text>
+          <view class="hint-icon" @click="showShadowHint">
+            <text>?</text>
+          </view>
+        </view>
+        
+        <view class="card shadow-card">
+          <view class="shadow-stats">
+            <view class="stat-item">
+              <text class="stat-value">{{ shadowTrendData.reduce((acc, cur) => acc + (cur.frustrationCount || 0), 0) }}</text>
+              <text class="stat-label">本周预警总数</text>
+            </view>
+            <view class="stat-divider"></view>
+            <view class="stat-item">
+              <text class="stat-value">{{ calculateAvgMood() }}</text>
+              <text class="stat-label">平均情绪指数</text>
+            </view>
+          </view>
+
+          <view class="shadow-chart">
+            <view v-for="(item, index) in shadowTrendData" :key="index" class="shadow-bar-item">
+              <view class="chart-column">
+                <!-- 预警次数：顶部的小红点/胶囊 -->
+                <view class="warning-capsule" v-if="item.frustrationCount > 0">
+                  <text>{{ item.frustrationCount }}</text>
+                </view>
+                <!-- 情绪指数：主柱状图 -->
+                <view class="mood-bar-wrapper">
+                  <view class="mood-bar" 
+                        :style="{ 
+                          height: (item.avgMood * 20) + '%',
+                          backgroundColor: getMoodColor(item.avgMood)
+                        }">
+                  </view>
+                </view>
+              </view>
+              <text class="day-label">{{ item.dayLabel }}</text>
+            </view>
+          </view>
+          
+          <view class="chart-legend">
+            <view class="legend-item">
+              <view class="color-block" style="background: linear-gradient(to bottom, #f87171, #ef4444)"></view>
+              <text>高频预警</text>
+            </view>
+            <view class="legend-item">
+              <view class="color-block" style="background: #6b9bd1"></view>
+              <text>情绪指数</text>
+            </view>
+          </view>
+        </view>
+      </view>
+
       <!-- 月度情绪热力图 -->
       <view class="section">
         <text class="section-title">月度情绪热力图</text>
@@ -112,7 +168,7 @@
 import { ref } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
 import BottomNav from '@/components/common/bottom-nav/bottom-nav.vue'
-import { listChildAchievement, getAbilityRadar, getEmotionTrend } from '@/api/child'
+import { listChildAchievement, getAbilityRadar, getEmotionTrend, getShadowEmotionTrend } from '@/api/child'
 import { getFamilyMembers } from '@/api/family'
 import { useUserStore } from '@/store/modules/user'
 
@@ -120,6 +176,7 @@ const userStore = useUserStore()
 const childId = ref(null)
 
 const abilityData = ref([])
+const shadowTrendData = ref([])
 
 // 情绪热力图相关
 const emotionData = ref([])
@@ -204,6 +261,15 @@ const loadData = (cId) => {
 
   loadEmotionHeatmap(cId)
   loadAchievements(cId)
+  loadShadowTrend(cId)
+}
+
+const loadShadowTrend = (cId) => {
+  getShadowEmotionTrend(cId, 7).then(res => {
+    shadowTrendData.value = res.data || []
+  }).catch(err => {
+    console.error('Failed to load shadow trend data:', err)
+  })
 }
 
 const loadAchievements = (cId) => {
@@ -282,6 +348,28 @@ const getEmotionColor = (dateStr) => {
     default:
       return '#d1d5db' // 一般/其他
   }
+}
+
+const calculateAvgMood = () => {
+  if (!shadowTrendData.value.length) return '3.0'
+  const sum = shadowTrendData.value.reduce((acc, cur) => acc + (cur.avgMood || 0), 0)
+  return (sum / shadowTrendData.value.length).toFixed(1)
+}
+
+const getMoodColor = (mood) => {
+  if (mood >= 4.5) return '#10b981' // 极佳
+  if (mood >= 3.5) return '#6b9bd1' // 稳定
+  if (mood >= 2.5) return '#fbbf24' // 一般
+  return '#f87171' // 挫折/波动
+}
+
+const showShadowHint = () => {
+  uni.showModal({
+    title: '影子观察者说明',
+    content: '“影子预警”是系统通过分析孩子在 App 上的交互行为（如高频点击、长时间长按头像等）自动捕捉到的情绪波动，旨在帮助家长发现孩子未能表达的挫败感。',
+    showCancel: false,
+    confirmText: '知道了'
+  })
 }
 </script>
 
@@ -486,6 +574,147 @@ const getEmotionColor = (dateStr) => {
   margin-top: 16rpx;
   font-size: 20rpx;
   color: #5b718b;
+}
+
+// 影子观察者卡片样式
+.shadow-card {
+  padding: 30rpx;
+  background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
+}
+
+.hint-icon {
+  width: 32rpx;
+  height: 32rpx;
+  border-radius: 50%;
+  background-color: #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 10rpx;
+  
+  text {
+    font-size: 20rpx;
+    color: #6b7280;
+    font-weight: bold;
+  }
+}
+
+.shadow-stats {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-bottom: 40rpx;
+  padding: 20rpx 0;
+  background-color: rgba(107, 155, 209, 0.05);
+  border-radius: 20rpx;
+
+  .stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+    .stat-value {
+      font-size: 36rpx;
+      font-weight: bold;
+      color: #101419;
+    }
+    
+    .stat-label {
+      font-size: 20rpx;
+      color: #6b7280;
+      margin-top: 4rpx;
+    }
+  }
+
+  .stat-divider {
+    width: 1rpx;
+    height: 40rpx;
+    background-color: #e5e7eb;
+  }
+}
+
+.shadow-chart {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  height: 240rpx;
+  padding: 20rpx 10rpx;
+}
+
+.shadow-bar-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+}
+
+.chart-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  width: 100%;
+  position: relative;
+}
+
+.warning-capsule {
+  background: linear-gradient(to bottom, #f87171, #ef4444);
+  color: #ffffff;
+  font-size: 18rpx;
+  padding: 2rpx 10rpx;
+  border-radius: 20rpx;
+  margin-bottom: 10rpx;
+  font-weight: bold;
+  box-shadow: 0 4rpx 12rpx rgba(239, 68, 68, 0.3);
+  z-index: 2;
+}
+
+.mood-bar-wrapper {
+  width: 40rpx;
+  height: 160rpx;
+  background-color: #f3f4f6;
+  border-radius: 20rpx;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+}
+
+.mood-bar {
+  width: 100%;
+  border-radius: 20rpx;
+  transition: height 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.day-label {
+  margin-top: 16rpx;
+  font-size: 20rpx;
+  color: #6b7280;
+}
+
+.chart-legend {
+  display: flex;
+  justify-content: center;
+  gap: 30rpx;
+  margin-top: 20rpx;
+  
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8rpx;
+    
+    .color-block {
+      width: 16rpx;
+      height: 16rpx;
+      border-radius: 4rpx;
+    }
+    
+    text {
+      font-size: 20rpx;
+      color: #9ca3af;
+    }
+  }
 }
 
 // 日历样式

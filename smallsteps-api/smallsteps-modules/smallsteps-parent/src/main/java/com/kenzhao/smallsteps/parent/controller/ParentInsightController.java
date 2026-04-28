@@ -35,6 +35,7 @@ public class ParentInsightController extends BaseController {
     private final IChildAIService childAIService;
     private final IChildTaskService childTaskService;
     private final ISysUserService userService;
+    private final com.kenzhao.smallsteps.child.service.IChildEmotionService childEmotionService;
 
     /**
      * 校验是否有权访问该儿童数据 (确保在同一家庭/部门)
@@ -104,6 +105,19 @@ public class ParentInsightController extends BaseController {
         if (!checkChildAccess(finalChildId)) return R.fail("无权访问该儿童数据");
         List<ChildAI> emotions = childAIService.selectEmotionTrendByChildId(finalChildId, days);
         return R.ok(emotions);
+    }
+
+    /**
+     * 获取影子观察者情绪统计趋势 (ss_emotion_record)
+     */
+    @GetMapping({"/emotion/shadow-trend/{childId}", "/emotion/shadow-trend"})
+    public R<List<Map<String, Object>>> getShadowEmotionTrend(@PathVariable(required = false) Long childId, @RequestParam(value = "childId", required = false) Long qid, @RequestParam(required = false) Long cid, @RequestParam(defaultValue = "7") Integer days) {
+        Long finalChildId = childId != null ? childId : (qid != null ? qid : cid);
+        if (finalChildId == null) {
+            return R.fail("未选择儿童");
+        }
+        if (!checkChildAccess(finalChildId)) return R.fail("无权访问该儿童数据");
+        return R.ok(childEmotionService.getShadowEmotionStats(finalChildId, days));
     }
 
     /**
