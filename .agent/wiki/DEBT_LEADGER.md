@@ -1,8 +1,10 @@
-﻿# Small Steps 技术债账本 (DEBT_LEADGER)
+# Small Steps 技术债账本 (DEBT_LEADGER)
 
 | 发现日期 | 类型 | 问题描述 | 详细影响 | 风险等级 | 状态 |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | 2026-04-27 | API | ParentReward 转换器错误 | `RewardConverter` 缺失对 VO 某些字段的映射，导致奖励列表加载失败 | 高 | 🟢 已修复 |
+| 2026-04-28 | UI | Uni-mask 穿透方案 (Hotfix) | 目前使用 `pointer-events: none` 强行穿透遮罩层，可能导致某些真正需要的模态窗口拦截失效 | 中 | 🟢 已修复 |
+| 2026-04-28 | API | 管理员权限硬编码 | `validateChildAccess` 直接依赖 `userId == 1L` 判断管理员，扩展性差 | 低 | 🔴 待处理 |
 | 2026-04-12 | App | 奖励审批页面的“孩子姓名”硬编码 | `reward-config` 页面中 childName 目前为占位符 '孩子' | 中 | 🔴 待处理 |
 | 2026-04-12 | API | AI 模块多模型协议不统一 | `SmartAiClient` 目前只针对 OpenAI 格式做了封装，对私有协议支持不足 | 中 | 🔴 待处理 |
 | 2026-04-13 | 架构 | 后端核心模块底层循环依赖 | `common-core`, `common-excel`, `common-json` 互为引用，导致无法直接通过 Maven 构建 | 极高 | 🔴 待处理 |
