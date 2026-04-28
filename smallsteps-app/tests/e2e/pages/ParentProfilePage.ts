@@ -14,13 +14,13 @@ export class ParentProfilePage {
 
   constructor(page: Page) {
     this.page = page;
-    this.addChildButton = page.getByRole('button', { name: '添加' });
+    this.addChildButton = page.locator('.add-btn');
     this.childrenList = page.locator('.child-card');
     this.notificationSettings = page.getByText('通知设置');
     this.privacyPolicy = page.getByText('隐私政策');
     this.accountSecurity = page.getByText('账号安全');
     this.helpAndFeedback = page.getByText('帮助与反馈');
-    this.logoutButton = page.getByRole('button', { name: '退出登录' });
+    this.logoutButton = page.locator('.logout-btn');
     this.logoutConfirmButton = page.getByRole('button', { name: '确定' });
     this.logoutCancelButton = page.getByRole('button', { name: '取消' });
   }
