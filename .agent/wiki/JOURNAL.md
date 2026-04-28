@@ -1,5 +1,17 @@
 # Small Steps 项目日志 (JOURNAL)
 
+## [2026-04-28] UniApp H5 交互拦截 Bug 修复与体验加固
+### [Project_Reflection]
+| 任务 | 状态 | 成果 |
+| :--- | :--- | :--- |
+| Uni-Mask 交互拦截修复 | [x] 已完成 | 通过全局 CSS 覆盖和 `pointer-events` 优化，解决了 `uni-mask` 拦截点击的 P0 级 Bug。 |
+| 原生 TabBar 冲突消除 | [x] 已完成 | 在 `App.vue` 中增加了 H5 环境下强制隐藏原生 TabBar 的逻辑，确保自定义导航栏可用。 |
+| UI 可交互性验证 | [x] 已完成 | 使用 Browser Subagent 验证了登录页、仪表盘等核心交互点的可点击性，状态良好。 |
+
+**下一步建议**:
+1. 彻底解决后端 `/ssapi/parent/insight/summary/1` 的 500 报错，减少不必要的错误弹窗。
+2. 检查 `DEBT_LEADGER.md` 中关于“遮罩层层级”的潜在风险，考虑引入更优雅的 API 拦截器处理。
+
 ## [2026-04-27] 后端稳定性加固与自动化全路径验证
 ### [Project_Reflection]
 | 任务 | 状态 | 成果 |

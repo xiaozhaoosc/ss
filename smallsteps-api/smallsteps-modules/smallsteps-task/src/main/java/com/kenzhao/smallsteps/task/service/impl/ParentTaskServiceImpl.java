@@ -165,9 +165,10 @@ public class ParentTaskServiceImpl implements IParentTaskService {
     @Override
     public Map<String, Object> getWeeklyReport(Long childId) {
         LocalDate today = LocalDate.now();
+        java.util.Date startDate = cn.hutool.core.date.DateUtil.offsetDay(new java.util.Date(), -7);
         List<ChildTask> logs = childTaskMapper.selectList(new LambdaQueryWrapper<ChildTask>()
             .eq(ChildTask::getChildId, childId)
-            .ge(ChildTask::getCreateTime, today.minusDays(7).atStartOfDay()));
+            .ge(ChildTask::getCreateTime, cn.hutool.core.date.DateUtil.beginOfDay(startDate)));
 
         long completed = logs.stream().filter(t -> "2".equals(t.getStatus()) || "3".equals(t.getStatus())).count();
         int totalPoints = (int)completed * 10;
@@ -191,9 +192,10 @@ public class ParentTaskServiceImpl implements IParentTaskService {
     @Override
     public Map<String, Object> getMonthlyReport(Long childId) {
         LocalDate today = LocalDate.now();
+        java.util.Date startDate = cn.hutool.core.date.DateUtil.offsetDay(new java.util.Date(), -30);
         List<ChildTask> logs = childTaskMapper.selectList(new LambdaQueryWrapper<ChildTask>()
             .eq(ChildTask::getChildId, childId)
-            .ge(ChildTask::getCreateTime, today.minusDays(30).atStartOfDay()));
+            .ge(ChildTask::getCreateTime, cn.hutool.core.date.DateUtil.beginOfDay(startDate)));
 
         long completed = logs.stream().filter(t -> "2".equals(t.getStatus()) || "3".equals(t.getStatus())).count();
         int totalPoints = (int)completed * 10;

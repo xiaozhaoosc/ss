@@ -17,6 +17,12 @@
   function initApp() {
     // 初始化应用配置
     initConfig()
+    
+    // 强制隐藏原生 TabBar (针对 H5 模式下自定义 TabBar 的冲突)
+    //#ifdef H5
+    uni.hideTabBar()
+    //#endif
+
     // 检查用户登录状态
     //#ifdef H5
     checkLogin()

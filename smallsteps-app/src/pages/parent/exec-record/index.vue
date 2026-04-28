@@ -110,9 +110,12 @@ const loadData = async (refresh = false) => {
     const data = res.data || []
     
     if (refresh) {
-      recordList.value = data
+      recordList.value = data.map((item: any) => ({ ...item, id: item.childTaskId || item.id }))
     } else {
-      recordList.value = [...recordList.value, ...data]
+      const mappedData = data.map((item: any) => ({ ...item, id: item.childTaskId || item.id }))
+      const existingIds = new Set(recordList.value.map(item => item.id))
+      const uniqueNewData = mappedData.filter((item: any) => item.id && !existingIds.has(item.id))
+      recordList.value = [...recordList.value, ...uniqueNewData]
     }
     
     // 模拟分页逻辑 (因为目前 API 是全量返回)

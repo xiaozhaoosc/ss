@@ -164,6 +164,12 @@ public class ChildAchievementController {
      */
     private void validateChildAccess(Long childId) {
         if (childId == null) return;
+        
+        // 超级管理员拥有所有权限
+        if (com.kenzhao.smallsteps.common.satoken.utils.LoginHelper.isSuperAdmin()) {
+            return;
+        }
+
         com.kenzhao.smallsteps.common.ss.domain.Child child = childService.selectChildById(childId);
         Long currentUserId = com.kenzhao.smallsteps.common.satoken.utils.LoginHelper.getUserId();
         

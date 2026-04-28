@@ -180,7 +180,17 @@ async function loadData() {
     
     // 3. Get Execution Timeline
     const timelineRes: any = await getTimeline(childId.value)
-    const logs = timelineRes.data || []
+    let logs = timelineRes.data || []
+    
+    // De-duplicate logs by childTaskId or id
+    const uniqueMap = new Map()
+    logs.forEach((l: any) => {
+      const id = l.childTaskId || l.id
+      if (id && !uniqueMap.has(id)) {
+        uniqueMap.set(id, l)
+      }
+    })
+    logs = Array.from(uniqueMap.values())
     
     timeline.value = logs.map((l: any) => ({
       id: l.childTaskId || l.id,
