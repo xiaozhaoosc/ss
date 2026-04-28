@@ -15,6 +15,7 @@ import com.kenzhao.smallsteps.common.satoken.utils.LoginHelper;
 import com.kenzhao.smallsteps.system.service.ISysUserService;
 import com.kenzhao.smallsteps.system.domain.vo.SysUserVo;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,7 @@ import java.util.Map;
 /**
  * 家长成长观察
  */
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/parent/insight")
@@ -38,14 +40,32 @@ public class ParentInsightController extends BaseController {
      * 校验是否有权访问该儿童数据 (确保在同一家庭/部门)
      */
     private boolean checkChildAccess(Long childId) {
-        if (childId == null) return false;
-        if (LoginHelper.isSuperAdmin()) return true;
+        if (childId == null) {
+            log.warn("检查儿童访问权限失败：childId 为空");
+            return false;
+        }
         
+        // 超级管理员拥有所有权限
+        if (LoginHelper.isSuperAdmin()) {
+            log.info("超级管理员访问儿童数据：childId={}", childId);
+            return true;
+        }
+
         SysUserVo child = userService.selectUserById(childId);
-        if (child == null) return false;
+        if (child == null) {
+            log.warn("检查儿童访问权限失败：找不到ID为 {} 的儿童", childId);
+            return false;
+        }
         
         Long parentDeptId = LoginHelper.getDeptId();
-        return parentDeptId != null && parentDeptId.equals(child.getDeptId());
+        boolean hasAccess = parentDeptId != null && parentDeptId.equals(child.getDeptId());
+        if (!hasAccess) {
+            log.warn("拦截未授权的儿童数据访问：家长DeptID={}, 儿童DeptID={}, 儿童ID={}", 
+                parentDeptId, child.getDeptId(), childId);
+        } else {
+            log.debug("授权儿童数据访问：家长DeptID={}, 儿童ID={}", parentDeptId, childId);
+        }
+        return hasAccess;
     }
 
     /**

@@ -246,6 +246,13 @@
         "navigationBarBackgroundColor": "#ffffff",
         "navigationBarTextStyle": "black"
       }
+    },
+    {
+      "path": "pages/system/ai/model/index",
+      "style": {
+        "navigationBarTitleText": "AI 模型配置",
+        "navigationStyle": "custom"
+      }
     }
   ],
   "tabBar": {

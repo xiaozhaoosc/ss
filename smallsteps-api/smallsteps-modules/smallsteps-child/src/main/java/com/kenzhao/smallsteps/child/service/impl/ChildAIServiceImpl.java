@@ -145,6 +145,7 @@ public class ChildAIServiceImpl implements IChildAIService {
             
         // 按日期分组
         java.util.Map<java.time.LocalDate, java.util.List<ChildAI>> grouped = emotions.stream()
+            .filter(e -> e.getCreateTime() != null)
             .collect(java.util.stream.Collectors.groupingBy(e -> 
                 e.getCreateTime().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate()));
             

@@ -96,3 +96,20 @@
       }
     }
   }
+
+/* 彻底解决 UniApp H5 遮罩层拦截点击的 P0 级 Bug */
+/* 通过设置 pointer-events: none 让点击穿透遮罩层，同时让遮罩层内部内容（如 Modal）恢复点击 */
+.uni-mask {
+    pointer-events: none !important;
+    background-color: transparent !important; // 确保透明，防止视觉遮挡
+    
+    & > * {
+        pointer-events: auto !important;
+    }
+}
+
+// 针对自定义底部导航栏的特殊保护
+.bottom-nav {
+    pointer-events: auto !important;
+    z-index: 1000 !important;
+}
