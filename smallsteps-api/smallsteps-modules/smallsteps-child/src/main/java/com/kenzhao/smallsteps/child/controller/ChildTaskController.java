@@ -82,8 +82,8 @@ public class ChildTaskController extends BaseController {
      * 查询儿童待执行任务
      */
     @GetMapping({"/pending/{childId}", "/pending"})
-    public R<List<ChildTaskVo>> pendingTasks(@PathVariable(required = false) Long childId, @RequestParam(required = false) Long cid) {
-        Long finalChildId = childId != null ? childId : cid;
+    public R<List<ChildTaskVo>> pendingTasks(@PathVariable(required = false) Long childId, @RequestParam(value = "childId", required = false) Long qid, @RequestParam(required = false) Long cid) {
+        Long finalChildId = childId != null ? childId : (qid != null ? qid : cid);
         if (finalChildId == null) {
             return R.fail("未选择儿童");
         }
@@ -96,8 +96,8 @@ public class ChildTaskController extends BaseController {
      * 查询儿童正在执行的任务
      */
     @GetMapping({"/current/{childId}", "/current"})
-    public R<ChildTaskVo> currentTask(@PathVariable(required = false) Long childId, @RequestParam(required = false) Long cid) {
-        Long finalChildId = childId != null ? childId : cid;
+    public R<ChildTaskVo> currentTask(@PathVariable(required = false) Long childId, @RequestParam(value = "childId", required = false) Long qid, @RequestParam(required = false) Long cid) {
+        Long finalChildId = childId != null ? childId : (qid != null ? qid : cid);
         if (finalChildId == null) {
             return R.fail("未选择儿童");
         }

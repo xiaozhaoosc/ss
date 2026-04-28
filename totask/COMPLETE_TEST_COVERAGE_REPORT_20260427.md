@@ -207,6 +207,9 @@ tests/
 
 ### 7.1 运行所有测试
 ```bash
+npm install @playwright/test
+npx playwright install 
+
 npx playwright test
 ```
 

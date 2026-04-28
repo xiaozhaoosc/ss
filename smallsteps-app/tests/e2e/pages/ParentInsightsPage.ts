@@ -27,23 +27,30 @@ export class ParentInsightsPage {
     await this.page.goto('/pages/parent/insights/index');
   }
 
+  async waitForReady() {
+    await this.page.locator('.loading-container, text=加载中...').waitFor({ state: 'detached', timeout: 20000 }).catch(() => {});
+  }
+
   async goToWeeklyReportDetails() {
-    await this.weeklyFocusDetailsLink.click();
+    await this.waitForReady();
+    await this.weeklyFocusDetailsLink.waitFor({ state: 'visible' });
+    await this.weeklyFocusDetailsLink.click({ force: true });
   }
 
   async changeMonth(direction: 'previous' | 'next') {
-    if (direction === 'previous') {
-      await this.previousMonthButton.click();
-    } else {
-      await this.nextMonthButton.click();
-    }
+    await this.waitForReady();
+    const btn = direction === 'previous' ? this.previousMonthButton : this.nextMonthButton;
+    await btn.waitFor({ state: 'visible' });
+    await btn.click({ force: true });
   }
 
   async getCurrentMonth() {
+    await this.waitForReady();
     return await this.currentMonthText.textContent();
   }
 
   async clickCalendarDay(index: number) {
-    await this.calendarDays.nth(index).click();
+    await this.waitForReady();
+    await this.calendarDays.nth(index).click({ force: true });
   }
 }

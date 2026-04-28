@@ -8,7 +8,7 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: 'html',
   use: {
-    baseURL: 'http://localhost:9090',
+    baseURL: 'http://localhost:88',
     trace: 'on-first-retry',
     video: 'on',
     screenshot: 'on',

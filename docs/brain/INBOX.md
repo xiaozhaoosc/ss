@@ -71,3 +71,17 @@
 - **临时方案**: 前端代码中加入了针对 `localhost` 的绝对路径跳转（绕过代理），后端加入了初始空格块（SSE Pre-warming）。
 - **建议**: 生产环境部署时，需在 Nginx 层配置 `proxy_set_header Connection ""; proxy_http_version 1.1; proxy_buffering off; proxy_cache off;`。
 - **记录**: 已沉淀为 [[ADR-010-AI-Streaming-SSE-Optimization]]。
+
+## [2026-04-28] 观察发现
+
+### 1. 前端组件依赖鲁棒性 (Frontend Dependency Robustness)
+- **观察**: `mp-html` 依赖缺失导致 500 错误，反映了在跨环境迁移或依赖更新时，`node_modules` 的状态未与 `package.json` 同步。
+- **建议**: 
+    - 确保 `npm install` 流程标准化。
+    - 优化 `weekly-ai-report.vue` 等依赖外部渲染器的组件，增加加载状态与错误边界（Error Boundary）处理。
+
+### 2. 现代 Sass API 兼容性 (Modern Sass API Compatibility)
+- **观察**: `:deep(.dark) &` 在 Vite + Sass (modern API) 环境下导致编译失败（500 Internal Server Error）。
+- **建议**: 
+    - 统一组件内的暗黑模式实现范式，推荐使用 `.dark &` 或 CSS 变量。
+    - 在 Wiki 中增加 [前端开发规范/暗黑模式篇]，明确禁止在 Scoped Style 中使用复杂的非标准深度选择器嵌套。

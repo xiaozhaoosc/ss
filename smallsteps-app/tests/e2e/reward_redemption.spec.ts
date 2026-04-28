@@ -1,47 +1,24 @@
 import { test, expect } from '@playwright/test';
+import { LoginPage } from './pages/LoginPage';
+import { TEST_ACCOUNTS } from '../fixtures/test-data';
 
 /**
  * 奖励兑换全链路验证测试
- * 1. 登录儿童账号
- * 2. 检查星星余额
- * 3. 访问奖励商店
- * 4. 选择奖励并确认兑换
- * 5. 验证余额扣减与成功提示
  */
 test.describe('奖励兑换全链路验证', () => {
   
   test('儿童登录并兑换奖励', async ({ page }) => {
+    const loginPage = new LoginPage(page);
     // 增加超时时间，因为 uni-app 编译和加载可能较慢
     test.setTimeout(60000);
 
-    // 1. 访问登录页
-    await page.goto('http://localhost:9090/#/pages/login/index');
-    
-    // 等待页面加载
-    await expect(page.locator('.login-btn')).toBeVisible();
-
-    // 2. 登录 (优先尝试 child_xiaoming)
-    await page.fill('input[placeholder="账号"]', 'child_xiaoming');
-    await page.fill('input[placeholder="密码"]', 'gly321??gly321!!');
-    
-    // 点击登录
-    await page.click('button.login-btn');
+    // 1. 访问登录页并登录
+    await loginPage.goto();
+    await loginPage.login(TEST_ACCOUNTS.child1.username, TEST_ACCOUNTS.child1.password);
     
     // 3. 验证是否跳转到儿童首页
-    // 如果登录失败或跳转不对，会在这里报错
-    try {
-      await expect(page).toHaveURL(/.*pages\/child\/home\/index/, { timeout: 10000 });
-    } catch (e) {
-      console.log('child_xiaoming 登录失败，尝试 admin 登录并检查角色');
-      await page.goto('http://localhost:9090/#/pages/login/index');
-      await page.fill('input[placeholder="账号"]', 'admin');
-      await page.fill('input[placeholder="密码"]', 'gly321??gly321!!');
-      await page.click('button.login-btn');
-      
-      // 如果 admin 是家长，这个测试将无法继续儿童路径，除非能切换
-      // 这里我们假设测试环境已有正确配置的儿童账号
-      await expect(page).toHaveURL(/.*pages\/child\/home\/index/, { timeout: 10000 });
-    }
+    await expect(page).toHaveURL(/.*pages\/child\/home\/index/, { timeout: 15000 });
+
     
     console.log('成功进入儿童首页');
 

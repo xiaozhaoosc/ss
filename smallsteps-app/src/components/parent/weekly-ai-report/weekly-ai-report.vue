@@ -19,7 +19,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import mpHtml from 'mp-html/dist/uni-app/components/mp-html/mp-html'
+import mpHtml from 'mp-html/dist/uni-app/components/mp-html/mp-html.vue'
 
 const props = defineProps<{
   content: string,
@@ -29,6 +29,7 @@ const props = defineProps<{
 
 // Simple markdown to html conversion or just trust mp-html handles basic MD
 const formattedContent = computed(() => {
+  if (!props.content) return ''
   return props.content
     .replace(/### (.*)/g, '<h3>$1</h3>')
     .replace(/\*\*(.*)\*\*/g, '<strong>$1</strong>')
@@ -46,7 +47,7 @@ const formattedContent = computed(() => {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   border: 1px solid #f3f4f6;
   
-  :deep(.dark) & {
+  .dark & {
     background: #1e242b;
     border-color: #374151;
   }
@@ -64,7 +65,7 @@ const formattedContent = computed(() => {
   padding: 6px 12px;
   border-radius: 8px;
   
-  :deep(.dark) & {
+  .dark & {
     background: rgba(99, 102, 241, 0.1);
   }
 }
@@ -79,7 +80,7 @@ const formattedContent = computed(() => {
   font-weight: 700;
   color: #4F46E5;
   
-  :deep(.dark) & { color: #818CF8; }
+  .dark & { color: #818CF8; }
 }
 
 .report-body {
@@ -87,14 +88,14 @@ const formattedContent = computed(() => {
   line-height: 1.8;
   color: #374151;
   
-  :deep(.dark) & { color: #e5e7eb; }
+  .dark & { color: #e5e7eb; }
   
   :deep(h3) {
     font-size: 16px;
     font-weight: 700;
     margin: 16px 0 8px;
     color: #111827;
-    :deep(.dark) & { color: #fff; }
+    .dark & { color: #fff; }
   }
   
   :deep(li) {

@@ -82,8 +82,8 @@ public class ParentInsightController extends BaseController {
      * 获取孩子的情绪日报
      */
     @GetMapping({"/emotion/daily/{childId}", "/emotion/daily"})
-    public R<List<ChildAI>> getEmotionDaily(@PathVariable(required = false) Long childId, @RequestParam(required = false) Long cid) {
-        Long finalChildId = childId != null ? childId : cid;
+    public R<List<ChildAI>> getEmotionDaily(@PathVariable(required = false) Long childId, @RequestParam(value = "childId", required = false) Long qid, @RequestParam(required = false) Long cid) {
+        Long finalChildId = childId != null ? childId : (qid != null ? qid : cid);
         if (finalChildId == null) {
             return R.fail("未选择儿童");
         }
@@ -96,8 +96,8 @@ public class ParentInsightController extends BaseController {
      * 获取孩子的情绪趋势
      */
     @GetMapping({"/emotion/trend/{childId}", "/emotion/trend"})
-    public R<List<ChildAI>> getEmotionTrend(@PathVariable(required = false) Long childId, @RequestParam(required = false) Long cid, @RequestParam(defaultValue = "7") Integer days) {
-        Long finalChildId = childId != null ? childId : cid;
+    public R<List<ChildAI>> getEmotionTrend(@PathVariable(required = false) Long childId, @RequestParam(value = "childId", required = false) Long qid, @RequestParam(required = false) Long cid, @RequestParam(defaultValue = "7") Integer days) {
+        Long finalChildId = childId != null ? childId : (qid != null ? qid : cid);
         if (finalChildId == null) {
             return R.fail("未选择儿童");
         }
@@ -129,8 +129,8 @@ public class ParentInsightController extends BaseController {
      * 获取AI总结建议 (观察者视角)
      */
     @GetMapping({"/summary/{childId}", "/summary"})
-    public R<String> getSummary(@PathVariable(required = false) Long childId, @RequestParam(required = false) Long cid) {
-        Long finalChildId = childId != null ? childId : cid;
+    public R<String> getSummary(@PathVariable(required = false) Long childId, @RequestParam(value = "childId", required = false) Long qid, @RequestParam(required = false) Long cid) {
+        Long finalChildId = childId != null ? childId : (qid != null ? qid : cid);
         if (finalChildId == null) return R.fail("未选择儿童");
         if (!checkChildAccess(finalChildId)) return R.fail("无权访问该儿童数据");
         return R.ok(parentTaskService.getSummaryInsight(finalChildId));
@@ -140,8 +140,8 @@ public class ParentInsightController extends BaseController {
      * 获取任务执行时间轴 (带凭证图)
      */
     @GetMapping({"/timeline/{childId}", "/timeline"})
-    public R<List<ChildTaskVo>> getTimeline(@PathVariable(required = false) Long childId, @RequestParam(required = false) Long cid) {
-        Long finalChildId = childId != null ? childId : cid;
+    public R<List<ChildTaskVo>> getTimeline(@PathVariable(required = false) Long childId, @RequestParam(value = "childId", required = false) Long qid, @RequestParam(required = false) Long cid) {
+        Long finalChildId = childId != null ? childId : (qid != null ? qid : cid);
         if (finalChildId == null) return R.fail("未选择儿童");
         if (!checkChildAccess(finalChildId)) return R.fail("无权访问该儿童数据");
         
@@ -174,8 +174,8 @@ public class ParentInsightController extends BaseController {
      * 获取周情绪/表现热力图
      */
     @GetMapping({"/weekly/heatmap/{childId}", "/weekly/heatmap"})
-    public R<List<Map<String, Object>>> getWeeklyHeatmap(@PathVariable(required = false) Long childId, @RequestParam(required = false) Long cid) {
-        Long finalChildId = childId != null ? childId : cid;
+    public R<List<Map<String, Object>>> getWeeklyHeatmap(@PathVariable(required = false) Long childId, @RequestParam(value = "childId", required = false) Long qid, @RequestParam(required = false) Long cid) {
+        Long finalChildId = childId != null ? childId : (qid != null ? qid : cid);
         if (finalChildId == null) return R.fail("未选择儿童");
         if (!checkChildAccess(finalChildId)) return R.fail("无权访问该儿童数据");
         return R.ok(childAIService.getWeeklyHeatmap(finalChildId));
@@ -185,8 +185,8 @@ public class ParentInsightController extends BaseController {
      * 获取周深度AI分析报告
      */
     @GetMapping({"/weekly/analysis/{childId}", "/weekly/analysis"})
-    public R<String> getWeeklyAiAnalysis(@PathVariable(required = false) Long childId, @RequestParam(required = false) Long cid) {
-        Long finalChildId = childId != null ? childId : cid;
+    public R<String> getWeeklyAiAnalysis(@PathVariable(required = false) Long childId, @RequestParam(value = "childId", required = false) Long qid, @RequestParam(required = false) Long cid) {
+        Long finalChildId = childId != null ? childId : (qid != null ? qid : cid);
         if (finalChildId == null) return R.fail("未选择儿童");
         if (!checkChildAccess(finalChildId)) return R.fail("无权访问该儿童数据");
         return R.ok(parentTaskService.getWeeklyAiAnalysis(finalChildId));

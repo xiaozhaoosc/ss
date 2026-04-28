@@ -60,7 +60,7 @@ const activeDay = computed(() => props.data[activeIndex.value])
   margin: 16px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   
-  :deep(.dark) & {
+  .dark & {
     background: #1e242b;
   }
 }
@@ -76,7 +76,7 @@ const activeDay = computed(() => props.data[activeIndex.value])
   font-size: 16px;
   font-weight: 700;
   color: #111827;
-  :deep(.dark) & { color: #fff; }
+  .dark & { color: #fff; }
 }
 
 .legend {
@@ -138,7 +138,7 @@ const activeDay = computed(() => props.data[activeIndex.value])
 }
 
 /* Heatmap Levels */
-.level-0 { background-color: #f3f4f6; :deep(.dark) & { background-color: #374151; } }
+.level-0 { background-color: #f3f4f6; .dark & { background-color: #374151; } }
 .level-1 { background-color: #dbeafe; color: #1e40af; }
 .level-2 { background-color: #93c5fd; color: #1e40af; }
 .level-3 { background-color: #60a5fa; color: #ffffff; }
@@ -152,7 +152,7 @@ const activeDay = computed(() => props.data[activeIndex.value])
   background: #f9fafb;
   border-radius: 12px;
   
-  :deep(.dark) & {
+  .dark & {
     background: #262c35;
   }
 }
@@ -172,7 +172,7 @@ const activeDay = computed(() => props.data[activeIndex.value])
   font-size: 14px;
   font-weight: 700;
   color: #111827;
-  :deep(.dark) & { color: #fff; }
+  .dark & { color: #fff; }
 }
 
 .detail-hint {

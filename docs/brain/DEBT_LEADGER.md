@@ -23,3 +23,4 @@
 | 2026-04-26 | `smallsteps-ui` | AI 管理模块视图目录重复 (`views/ai` vs `views/system/ai`) 且路由映射不一致 | 高 | 待处理 | [[bug_web_20260426]] |
 | 2026-04-26 | `smallsteps-ui` | AI 模型管理对话框缺失 `context_window` 字段输入项 | 中 | 待处理 | [[bug_web_20260426]] |
 | 2026-04-27 | `runtime` | 核心依赖 `common-mybatis` 运行时解析失败导致 ReflectionException | 紧急 | 已解决 | [[2026-04-27]] |
+| 2026-04-28 | `controller` | 后端请求参数名不一致 (`childId` vs `cid`)，导致前端/硬件端调用冲突 | 中 | 已修复(兼容模式) | [[ADR-011-Backend-Parameter-Mapping-Fix]] |

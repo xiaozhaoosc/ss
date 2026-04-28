@@ -27,24 +27,39 @@ export class ParentDashboardPage {
     await this.page.goto('/pages/parent/dashboard/index');
   }
 
+  async waitForReady() {
+    await this.page.locator('.loading-container, text=加载中...').waitFor({ state: 'detached', timeout: 20000 }).catch(() => {});
+    // AI 卡片可能是动态加载的
+    await this.aiInsightCard.waitFor({ state: 'attached', timeout: 10000 }).catch(() => {});
+  }
+
   async toggleNotifications() {
-    await this.notificationBell.click();
+    await this.waitForReady();
+    await this.notificationBell.waitFor({ state: 'visible' });
+    await this.notificationBell.click({ force: true });
   }
 
   async markAllNotificationsAsRead() {
-    await this.markAllReadButton.click();
+    await this.markAllReadButton.waitFor({ state: 'visible' });
+    await this.markAllReadButton.click({ force: true });
   }
 
   async clickAiInsightCard() {
-    await this.aiInsightCard.click();
+    await this.waitForReady();
+    await this.aiInsightCard.waitFor({ state: 'visible' });
+    await this.aiInsightCard.click({ force: true });
   }
 
   async goToDailyFocusDetails() {
-    await this.dailyFocusDetailsLink.click();
+    await this.waitForReady();
+    await this.dailyFocusDetailsLink.waitFor({ state: 'visible' });
+    await this.dailyFocusDetailsLink.click({ force: true });
   }
 
   async goToExecRecord() {
-    await this.execRecordViewAllLink.click();
+    await this.waitForReady();
+    await this.execRecordViewAllLink.waitFor({ state: 'visible' });
+    await this.execRecordViewAllLink.click({ force: true });
   }
 
   async scrollStatsHorizontally() {

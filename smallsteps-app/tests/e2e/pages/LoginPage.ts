@@ -23,6 +23,10 @@ export class LoginPage {
     await this.usernameInput.fill(username);
     await this.passwordInput.fill(password);
     await this.loginButton.click();
+    // 等待登录成功跳转（可能是首页或儿童首页）
+    await this.page.waitForURL(/.*pages\/(parent\/dashboard|child\/home)\/index/, { timeout: 15000 });
+    // 等待页面关键元素可见，确保会话已初始化
+    await this.page.locator('.welcome-text, .streak-val, .icon-btn').first().waitFor({ state: 'visible', timeout: 10000 });
   }
 
   async goToRegister() {

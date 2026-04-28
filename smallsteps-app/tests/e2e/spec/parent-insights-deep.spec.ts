@@ -1,15 +1,21 @@
 import { test, expect } from '@playwright/test';
 import { LoginPage } from '../pages/LoginPage';
+import { ParentNavPage } from '../pages/ParentNavPage';
 import { TEST_ACCOUNTS } from '../../fixtures/test-data';
 
 test.describe('洞察菜单深度测试', () => {
   let loginPage: LoginPage;
+  let navPage: ParentNavPage;
 
   test.beforeEach(async ({ page }) => {
     loginPage = new LoginPage(page);
+    navPage = new ParentNavPage(page);
     await loginPage.goto();
     await loginPage.login(TEST_ACCOUNTS.parent1.username, TEST_ACCOUNTS.parent1.password);
-    await page.goto('/pages/parent/insights/index');
+    
+    // 确保登录成功后再跳转，或者直接使用导航组件跳转
+    await navPage.goToInsights();
+    await page.waitForURL(/insights/);
     await page.waitForLoadState('networkidle');
   });
 
@@ -21,10 +27,10 @@ test.describe('洞察菜单深度测试', () => {
     await expect(page.locator('.section-title').first()).toBeVisible();
 
     // 验证底部导航栏
-    await expect(page.getByText('首页')).toBeVisible();
-    await expect(page.getByText('任务')).toBeVisible();
-    await expect(page.getByText('洞察')).toBeVisible();
-    await expect(page.getByText('我的')).toBeVisible();
+    await expect(navPage.homeTab).toBeVisible();
+    await expect(navPage.taskTab).toBeVisible();
+    await expect(navPage.insightsTab).toBeVisible();
+    await expect(navPage.profileTab).toBeVisible();
   });
 
   test('每周重点卡片测试', async ({ page }) => {
@@ -97,19 +103,19 @@ test.describe('洞察菜单深度测试', () => {
 
   test('底部导航栏测试', async ({ page }) => {
     // 导航到首页
-    await page.getByText('首页').click();
+    await navPage.goToHome();
     await expect(page).toHaveURL(/dashboard/);
 
     // 导航到任务
-    await page.getByText('任务').click();
+    await navPage.goToTaskCreator();
     await expect(page).toHaveURL(/task-creator/);
 
     // 导航到我的
-    await page.getByText('我的').click();
+    await navPage.goToProfile();
     await expect(page).toHaveURL(/profile/);
 
     // 返回洞察
-    await page.getByText('洞察').click();
+    await navPage.goToInsights();
     await expect(page).toHaveURL(/insights/);
   });
 

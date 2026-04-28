@@ -20,8 +20,10 @@
 - [[ADR-008-Data-Isolation-Audit]] - 家长端多租户数据隔离审计与架构约束
 - [[ADR-009-AI-Chat-Timeout-JSON-Exception]] - AI 深度思考 JSON 解析异常与长链接超时解决机制
 - [[ADR-010-AI-Streaming-SSE-Optimization]] - AI 聊天流式 SSE 响应优化与 Vite 代理绕过机制
+- [[ADR-011-Backend-Parameter-Mapping-Fix]] - 后端 Controller 儿童 ID 参数名兼容性修正 ADR
 
 ## 每日记录 (Journal)
+- [[2026-04-28]] (时光机修复 & 后端参数对齐)
 - [[2026-04-27]] (运行时环境恢复与 MyBatis 异常修复)
 - [[2026-04-26]] (Web 自动化测试与家长端洞察探索)
 - [[2026-04-25]] (V7 脚本交付 & 儿童端 403/500 报错彻底修复)
@@ -36,7 +38,7 @@
 - [[2026-04-08]] (历史记录 - 角色分流修复 & 数据库模型增强)
 - [[20260408_Parent模块工程化重构纪要]] (关键会议记录)
 
-## 研发文档
+- [[Child-Activity-Placeholders]] (儿童端辅助活动占位说明 - 艺术课/游戏时间)
 - [[SmallSteps-AI-Architecture]] (AI 模块架构配置中心)
 - **核心模块数据定义**
     - [[ss_child]] (儿童档案与星星余额)

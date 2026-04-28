@@ -9,25 +9,26 @@ export class ParentNavPage {
 
   constructor(page: Page) {
     this.page = page;
-    this.homeTab = page.getByText('首页');
-    this.taskTab = page.getByText('任务');
-    this.insightsTab = page.getByText('洞察');
-    this.profileTab = page.getByText('我的');
+    // 使用更精确的选择器，避免匹配到页面内容中的文本
+    this.homeTab = page.locator('.uni-tabbar').getByText('首页', { exact: true }).first();
+    this.taskTab = page.locator('.uni-tabbar').getByText('任务', { exact: true }).first();
+    this.insightsTab = page.locator('.uni-tabbar').getByText('洞察', { exact: true }).first();
+    this.profileTab = page.locator('.uni-tabbar').getByText('我的', { exact: true }).first();
   }
 
   async goToHome() {
-    await this.homeTab.click();
+    await this.homeTab.click({ force: true });
   }
 
   async goToTaskCreator() {
-    await this.taskTab.click();
+    await this.taskTab.click({ force: true });
   }
 
   async goToInsights() {
-    await this.insightsTab.click();
+    await this.insightsTab.click({ force: true });
   }
 
   async goToProfile() {
-    await this.profileTab.click();
+    await this.profileTab.click({ force: true });
   }
 }

@@ -15,7 +15,7 @@ export default defineConfig({
     }]
   ],
   use: {
-    baseURL: 'http://localhost:9091',
+    baseURL: 'http://localhost:9090',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
