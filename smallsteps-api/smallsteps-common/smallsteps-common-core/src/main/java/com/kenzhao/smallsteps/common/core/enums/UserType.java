@@ -14,14 +14,19 @@ import com.kenzhao.smallsteps.common.core.utils.StringUtils;
 public enum UserType {
 
     /**
-     * 后台系统用户
+     * 家长
      */
-    SYS_USER("sys_user"),
+    PARENT("1"),
 
     /**
-     * 移动客户端用户
+     * 儿童
      */
-    APP_USER("app_user");
+    CHILD("2"),
+
+    /**
+     * 系统管理员
+     */
+    SYS_USER("sys_user");
 
     /**
      * 用户类型标识（用于 token、权限识别等）
@@ -29,8 +34,11 @@ public enum UserType {
     private final String userType;
 
     public static UserType getUserType(String str) {
+        if (str == null) {
+            throw new RuntimeException("'UserType' not found By null");
+        }
         for (UserType value : values()) {
-            if (StringUtils.contains(str, value.getUserType())) {
+            if (str.equals(value.getUserType()) || str.startsWith(value.getUserType() + ":")) {
                 return value;
             }
         }

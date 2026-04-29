@@ -38,6 +38,7 @@ public class ParentRewardController extends BaseController {
     private final IParentRewardService parentRewardService;
     private final com.kenzhao.smallsteps.child.service.IScoreService scoreService;
     private final com.kenzhao.smallsteps.parent.service.IParentRewardRedemptionService redemptionService;
+    private final com.kenzhao.smallsteps.child.service.IChildService childService;
 
     /**
      * 查询奖励兑换申请列表
@@ -76,9 +77,14 @@ public class ParentRewardController extends BaseController {
     public TableDataInfo<ParentRewardVo> list(ParentRewardBo bo, PageQuery pageQuery) {
         if (bo.getUserId() == null) {
             Long userId = com.kenzhao.smallsteps.common.satoken.utils.LoginHelper.getUserId();
-            // E2E 特殊逻辑：如果是 child_xiaoming (10001) 查询，则重定向到 ken2zhao (2035392423676469250) 的奖励列表
-            if (userId != null && userId == 10001L) {
-                userId = 2035392423676469250L;
+            com.kenzhao.smallsteps.common.core.enums.UserType userType = com.kenzhao.smallsteps.common.satoken.utils.LoginHelper.getUserType();
+            
+            // 如果是儿童，自动重定向到其家长的奖励列表
+            if (userType == com.kenzhao.smallsteps.common.core.enums.UserType.CHILD) {
+                com.kenzhao.smallsteps.common.ss.domain.Child child = childService.selectChildById(userId);
+                if (child != null && child.getParentId() != null) {
+                    userId = child.getParentId();
+                }
             }
             bo.setUserId(userId);
         }

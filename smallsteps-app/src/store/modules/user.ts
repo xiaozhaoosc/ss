@@ -75,11 +75,11 @@ export const useUserStore = defineStore('user', {
           const data = res.data
           this.setUserInfo(data)
           
-          // 确定角色类型 (优先基于 user_type: 3-儿童, 2-家长)
-          const userType = data.user?.userType
+          // 确定角色类型 (1-家长, 2-儿童)
+          const userType = String(data.user?.userType)
           const roles = data.roles || []
           
-          if (userType === '3' || userType === 3 || roles.includes('child')) {
+          if (userType === '2' || roles.includes('child')) {
             this.updateRole('child')
           } else {
             this.updateRole('parent')

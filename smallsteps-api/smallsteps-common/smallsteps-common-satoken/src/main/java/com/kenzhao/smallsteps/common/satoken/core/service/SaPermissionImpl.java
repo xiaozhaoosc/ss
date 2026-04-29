@@ -37,7 +37,7 @@ public class SaPermissionImpl implements StpInterface {
             }
         }
         UserType userType = UserType.getUserType(loginUser.getUserType());
-        if (userType == UserType.APP_USER) {
+        if (userType == UserType.PARENT || userType == UserType.CHILD) {
             // 其他端 自行根据业务编写
         }
         if (CollUtil.isNotEmpty(loginUser.getMenuPermission())) {
@@ -64,7 +64,7 @@ public class SaPermissionImpl implements StpInterface {
             }
         }
         UserType userType = UserType.getUserType(loginUser.getUserType());
-        if (userType == UserType.APP_USER) {
+        if (userType == UserType.PARENT || userType == UserType.CHILD) {
             // 其他端 自行根据业务编写
         }
         if (CollUtil.isNotEmpty(loginUser.getRolePermission())) {

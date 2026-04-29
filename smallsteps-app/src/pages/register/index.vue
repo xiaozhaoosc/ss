@@ -117,7 +117,7 @@
     code: "",
     uuid: "",
     tenantId: "000000",
-    userType: "sys_user",
+    userType: "1",
     clientId: "428a8310cd442757ae699df5d894f051",
     grantType: "password"
   })
@@ -197,6 +197,7 @@
 
     isRegistering.value = true
     try {
+      console.log('[DEBUG] Registering user with type:', registerForm.value.userType)
       await register(registerForm.value)
       uni.showModal({
         title: "欢迎加入",
