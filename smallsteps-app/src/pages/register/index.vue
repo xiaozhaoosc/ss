@@ -197,7 +197,6 @@
 
     isRegistering.value = true
     try {
-      console.log('[DEBUG] Registering user with type:', registerForm.value.userType)
       await register(registerForm.value)
       uni.showModal({
         title: "欢迎加入",
