@@ -6,7 +6,9 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.kenzhao.smallsteps.common.ai.domain.AiModel;
 import com.kenzhao.smallsteps.common.ai.mapper.AiModelMapper;
+import com.kenzhao.smallsteps.common.core.constant.CacheConstants;
 import com.kenzhao.smallsteps.common.core.utils.MapstructUtils;
+import com.kenzhao.smallsteps.common.redis.utils.RedisUtils;
 import com.kenzhao.smallsteps.system.domain.bo.SysAiModelBo;
 import com.kenzhao.smallsteps.system.domain.vo.SysAiModelVo;
 import com.kenzhao.smallsteps.system.service.ISysAiModelService;
@@ -75,17 +77,31 @@ public class SysAiModelServiceImpl implements ISysAiModelService {
     @Override
     public Boolean insertByBo(SysAiModelBo bo) {
         AiModel add = MapstructUtils.convert(bo, AiModel.class);
-        return baseMapper.insert(add) > 0;
+        boolean flag = baseMapper.insert(add) > 0;
+        if (flag && add.getId() != null) {
+            RedisUtils.deleteObject(CacheConstants.AI_MODEL_KEY + add.getId());
+        }
+        return flag;
     }
 
     @Override
     public Boolean updateByBo(SysAiModelBo bo) {
         AiModel update = MapstructUtils.convert(bo, AiModel.class);
-        return baseMapper.updateById(update) > 0;
+        boolean flag = baseMapper.updateById(update) > 0;
+        if (flag) {
+            RedisUtils.deleteObject(CacheConstants.AI_MODEL_KEY + bo.getId());
+        }
+        return flag;
     }
 
     @Override
     public Boolean deleteWithValidByIds(Collection<Long> ids, Boolean isValid) {
-        return baseMapper.deleteBatchIds(ids) > 0;
+        boolean flag = baseMapper.deleteBatchIds(ids) > 0;
+        if (flag) {
+            for (Long id : ids) {
+                RedisUtils.deleteObject(CacheConstants.AI_MODEL_KEY + id);
+            }
+        }
+        return flag;
     }
 }

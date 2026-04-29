@@ -27,4 +27,14 @@ public interface CacheConstants {
      */
     String PWD_ERR_CNT_KEY = "pwd_err_cnt:";
 
+    /**
+     * AI 路由配置 cache key
+     */
+    String AI_ROUTE_KEY = "ai:route:";
+
+    /**
+     * AI 模型配置 cache key
+     */
+    String AI_MODEL_KEY = "ai:model:";
+
 }

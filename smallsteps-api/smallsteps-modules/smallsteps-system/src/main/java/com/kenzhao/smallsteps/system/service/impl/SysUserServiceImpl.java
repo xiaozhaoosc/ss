@@ -366,10 +366,11 @@ public class SysUserServiceImpl implements ISysUserService, UserService {
     }
     
     private Long createFamilyDept(String familyName) {
-        Long maxDeptId = deptMapper.selectOne(new LambdaQueryWrapper<com.kenzhao.smallsteps.system.domain.SysDept>()
+        com.kenzhao.smallsteps.system.domain.SysDept maxDept = deptMapper.selectOne(new LambdaQueryWrapper<com.kenzhao.smallsteps.system.domain.SysDept>()
             .select(com.kenzhao.smallsteps.system.domain.SysDept::getDeptId)
             .orderByDesc(com.kenzhao.smallsteps.system.domain.SysDept::getDeptId)
             .last("LIMIT 1"));
+        Long maxDeptId = maxDept != null ? maxDept.getDeptId() : null;
         Long newDeptId = (maxDeptId == null ? 100L : maxDeptId) + 1;
         
         com.kenzhao.smallsteps.system.domain.SysDept dept = new com.kenzhao.smallsteps.system.domain.SysDept();

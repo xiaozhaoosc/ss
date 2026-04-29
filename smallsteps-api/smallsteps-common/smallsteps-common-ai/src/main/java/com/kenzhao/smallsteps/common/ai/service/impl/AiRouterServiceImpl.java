@@ -5,9 +5,13 @@ import com.kenzhao.smallsteps.common.ai.domain.AiRoute;
 import com.kenzhao.smallsteps.common.ai.mapper.AiModelMapper;
 import com.kenzhao.smallsteps.common.ai.mapper.AiRouteMapper;
 import com.kenzhao.smallsteps.common.ai.service.IAiRouterService;
+import com.kenzhao.smallsteps.common.core.constant.CacheConstants;
+import com.kenzhao.smallsteps.common.redis.utils.RedisUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.time.Duration;
 
 /**
  * AI路由服务实现
@@ -29,15 +33,21 @@ public class AiRouterServiceImpl implements IAiRouterService {
     @Override
     public AiModel route(String sceneKey, Long userId) {
         log.info("Routing for scene: {}", sceneKey);
+
+        // 1. 获取场景配置 (优先从缓存获取)
+        AiRoute route = RedisUtils.getCacheObject(CacheConstants.AI_ROUTE_KEY + sceneKey);
         
-        // 1. 获取场景配置
-        AiRoute route = aiRouteMapper.selectById(sceneKey);
-        
-        // 1.1 如果没找到，尝试小写并加 _scene 后缀 (兼容旧版或不同命名习惯)
         if (route == null) {
-            String altKey = sceneKey.toLowerCase() + "_scene";
-            log.debug("Scene {} not found, trying alt key: {}", sceneKey, altKey);
-            route = aiRouteMapper.selectById(altKey);
+            route = aiRouteMapper.selectById(sceneKey);
+            // 1.1 如果没找到，尝试小写并加 _scene 后缀
+            if (route == null) {
+                String altKey = sceneKey.toLowerCase() + "_scene";
+                log.debug("Scene {} not found, trying alt key: {}", sceneKey, altKey);
+                route = aiRouteMapper.selectById(altKey);
+            }
+            if (route != null) {
+                RedisUtils.setCacheObject(CacheConstants.AI_ROUTE_KEY + sceneKey, route, Duration.ofHours(24));
+            }
         }
 
         Long modelId;
@@ -45,19 +55,32 @@ public class AiRouterServiceImpl implements IAiRouterService {
             modelId = route.getDefaultModelId();
             log.debug("Found route for scene: {}, using modelId: {}", sceneKey, modelId);
         } else {
-            // 回退到默认场景
-            AiRoute defaultRoute = aiRouteMapper.selectById("default_scene");
+            // 回退到默认场景 (也走缓存)
+            String defaultKey = "default_scene";
+            AiRoute defaultRoute = RedisUtils.getCacheObject(CacheConstants.AI_ROUTE_KEY + defaultKey);
+            if (defaultRoute == null) {
+                defaultRoute = aiRouteMapper.selectById(defaultKey);
+                if (defaultRoute != null) {
+                    RedisUtils.setCacheObject(CacheConstants.AI_ROUTE_KEY + defaultKey, defaultRoute, Duration.ofHours(24));
+                }
+            }
             modelId = (defaultRoute != null) ? defaultRoute.getDefaultModelId() : 2001L; // 兜底使用 Gemma
-            log.warn("Scene {} not found in DB, fallback to modelId: {}", sceneKey, modelId);
+            log.warn("Scene {} not found in DB/Cache, fallback to modelId: {}", sceneKey, modelId);
         }
 
-        // 2. 获取模型详情
-        AiModel model = aiModelMapper.selectById(modelId);
+        // 2. 获取模型详情 (优先从缓存获取)
+        AiModel model = RedisUtils.getCacheObject(CacheConstants.AI_MODEL_KEY + modelId);
         if (model == null) {
-            // 如果模型不存在，尝试寻找任意可用的模型
-            model = aiModelMapper.selectOne(new com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<AiModel>()
-                .eq(AiModel::getStatus, "0")
-                .last("LIMIT 1"));
+            model = aiModelMapper.selectById(modelId);
+            if (model == null) {
+                // 如果模型不存在，尝试寻找任意可用的模型
+                model = aiModelMapper.selectOne(new com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<AiModel>()
+                    .eq(AiModel::getStatus, "0")
+                    .last("LIMIT 1"));
+            }
+            if (model != null) {
+                RedisUtils.setCacheObject(CacheConstants.AI_MODEL_KEY + modelId, model, Duration.ofHours(24));
+            }
         }
         
         return model;

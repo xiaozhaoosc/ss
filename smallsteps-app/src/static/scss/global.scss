@@ -10,6 +10,11 @@
 	text-align: center;
 }
 
+/* 优化 H5 点击延迟 (消除移动端 300ms 等待延迟) */
+html, body, button, [role="button"], .uni-btn {
+    touch-action: manipulation;
+}
+
 .font-13 {
 	font-size: 13px;
 }

@@ -8,8 +8,7 @@
 - [ ] **Prompt 注入安全**: 动态参数 `{content}` 直接填充进 Prompt。若用户输入包含特定 Prompt Injection 词汇（如 "Ignore all previous instructions"），可能导致 AI 失控。建议在 `AiServiceImpl` 中增加简单的敏感词/指令过滤。
 - [ ] **数据一致性风险**: `sys_ai_route` 的主键为 `scene_key`，限制了同一场景多模型权重分配的扩展性。未来应考虑将主键改为 `id`，并增加 `weight` 字段实现 A/B Test。
 
-- **待办 (下次行动)**: 修复 `smallsteps-app` 单元测试环境异常 (`vue/compiler-sfc` 版本冲突)，并运行 `npm run dev:app` 或 `npm run dev:h5` 在本地预览、验证 ADHD 模板库页面的真实效果。
-- [ ] **自动化测试覆盖率**: 当前自动化测试已覆盖首页和任务核心路径。建议下一步增加对“奖励兑换审批流”的 E2E 测试，确保积分扣减与奖励下发的事务一致性。
-- [ ] **影子观察 (Shadow Observer)**: 在执行自动化测试过程中，发现 `smallsteps-app` 的按钮点击反馈存在约 200ms 的延迟（可能是 Uni-app 的 `tap` 事件处理逻辑），建议优化为 `touchstart` 或增加点击态样式以提升响应感。
-
-- **待办 (下次行动)**: 运行最新的自动化测试脚本验证“奖励兑换”全链路，并优化 `smallsteps-app` 的按钮交互响应。
+- [x] **自动化测试数据预置**: 解决了手动初始化测试状态繁琐的问题，现支持一键脚本配置。
+- [ ] **AI 路由性能优化**: 当前 `AiRouterServiceImpl` 每次都查询数据库。虽然使用了 MyBatis-Plus 缓存，但在高并发场景下，建议引入 Redis 缓存路由规则。
+- [ ] **自动化测试覆盖率**: 下一步增加对“奖励兑换审批流”的 E2E 测试，确保积分扣减与奖励下发的事务一致性。
+- [ ] **影子观察 (Shadow Observer)**: 在 H5 环境下优化按钮点击延迟。

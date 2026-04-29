@@ -6,7 +6,9 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.kenzhao.smallsteps.common.ai.domain.AiRoute;
 import com.kenzhao.smallsteps.common.ai.mapper.AiRouteMapper;
+import com.kenzhao.smallsteps.common.core.constant.CacheConstants;
 import com.kenzhao.smallsteps.common.core.utils.MapstructUtils;
+import com.kenzhao.smallsteps.common.redis.utils.RedisUtils;
 import com.kenzhao.smallsteps.system.domain.bo.SysAiRouteBo;
 import com.kenzhao.smallsteps.system.domain.vo.SysAiRouteVo;
 import com.kenzhao.smallsteps.system.service.ISysAiRouteService;
@@ -58,17 +60,31 @@ public class SysAiRouteServiceImpl implements ISysAiRouteService {
     @Override
     public Boolean insertByBo(SysAiRouteBo bo) {
         AiRoute add = MapstructUtils.convert(bo, AiRoute.class);
-        return baseMapper.insert(add) > 0;
+        boolean flag = baseMapper.insert(add) > 0;
+        if (flag) {
+            RedisUtils.deleteObject(CacheConstants.AI_ROUTE_KEY + bo.getSceneKey());
+        }
+        return flag;
     }
 
     @Override
     public Boolean updateByBo(SysAiRouteBo bo) {
         AiRoute update = MapstructUtils.convert(bo, AiRoute.class);
-        return baseMapper.updateById(update) > 0;
+        boolean flag = baseMapper.updateById(update) > 0;
+        if (flag) {
+            RedisUtils.deleteObject(CacheConstants.AI_ROUTE_KEY + bo.getSceneKey());
+        }
+        return flag;
     }
 
     @Override
     public Boolean deleteWithValidByIds(Collection<String> ids, Boolean isValid) {
-        return baseMapper.deleteBatchIds(ids) > 0;
+        boolean flag = baseMapper.deleteBatchIds(ids) > 0;
+        if (flag) {
+            for (String id : ids) {
+                RedisUtils.deleteObject(CacheConstants.AI_ROUTE_KEY + id);
+            }
+        }
+        return flag;
     }
 }
