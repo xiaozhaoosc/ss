@@ -2,13 +2,10 @@ import { test, expect } from '@playwright/test';
 import { LoginPage } from '../pages/LoginPage';
 import { TEST_ACCOUNTS } from '../../fixtures/test-data';
 
-test.describe('家长中心深度测试', () => {
-  let loginPage: LoginPage;
+test.describe('个人中心页面深度测试', () => {
+  test.use({ storageState: 'playwright/.auth/parent.json' });
 
   test.beforeEach(async ({ page }) => {
-    loginPage = new LoginPage(page);
-    await loginPage.goto();
-    await loginPage.login(TEST_ACCOUNTS.parent1.username, TEST_ACCOUNTS.parent1.password);
     await page.goto('/pages/parent/profile/index');
     await page.waitForLoadState('networkidle');
   });

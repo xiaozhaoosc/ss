@@ -2,13 +2,13 @@ import { test, expect } from '@playwright/test';
 import { LoginPage } from '../pages/LoginPage';
 import { TEST_ACCOUNTS } from '../../fixtures/test-data';
 
+test.describe.configure({ mode: 'serial' });
+
 test.describe('ADHD 支架式模板库 (Scaffolding Library) 测试', () => {
-  let loginPage: LoginPage;
+  test.use({ storageState: 'playwright/.auth/parent.json' });
 
   test.beforeEach(async ({ page }) => {
-    loginPage = new LoginPage(page);
-    await loginPage.goto();
-    await loginPage.login(TEST_ACCOUNTS.parent1.username, TEST_ACCOUNTS.parent1.password);
+    // 使用 storageState 后无需手动登录
   });
 
   test('模板库页面加载测试', async ({ page }) => {
@@ -121,12 +121,10 @@ test.describe('ADHD 支架式模板库 (Scaffolding Library) 测试', () => {
 });
 
 test.describe('AI 任务拆解测试', () => {
-  let loginPage: LoginPage;
+  test.use({ storageState: 'playwright/.auth/parent.json' });
 
   test.beforeEach(async ({ page }) => {
-    loginPage = new LoginPage(page);
-    await loginPage.goto();
-    await loginPage.login(TEST_ACCOUNTS.parent1.username, TEST_ACCOUNTS.parent1.password);
+    // 使用 storageState 后无需手动登录
   });
 
   test('任务创建页面 - AI 拆解按钮存在性', async ({ page }) => {

@@ -5,16 +5,15 @@ import { ParentNavPage } from '../pages/ParentNavPage';
 import { TEST_ACCOUNTS } from '../../fixtures/test-data';
 
 test.describe('Parent Dashboard Tests', () => {
-  let loginPage: LoginPage;
+  test.use({ storageState: 'playwright/.auth/parent.json' });
+
   let dashboardPage: ParentDashboardPage;
   let navPage: ParentNavPage;
 
   test.beforeEach(async ({ page }) => {
-    loginPage = new LoginPage(page);
     dashboardPage = new ParentDashboardPage(page);
     navPage = new ParentNavPage(page);
-    await loginPage.goto();
-    await loginPage.login(TEST_ACCOUNTS.parent1.username, TEST_ACCOUNTS.parent1.password);
+    await dashboardPage.goto();
   });
 
   test('Verify dashboard page loads correctly', async ({ page }) => {

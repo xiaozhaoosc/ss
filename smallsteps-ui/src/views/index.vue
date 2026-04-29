@@ -113,6 +113,9 @@
         </el-card>
       </el-col>
     </el-row>
+
+    <!-- Onboarding Overlay -->
+    <OnboardingOverlay v-model="showOnboarding" @complete="handleOnboardingComplete" />
   </div>
 </template>
 
@@ -120,9 +123,12 @@
 import * as echarts from 'echarts';
 import { Collection, Timer, Sunny, Monitor, MagicStick } from '@element-plus/icons-vue';
 import { getShadowEmotionTrend } from '@/api/smallsteps/insight';
+import OnboardingOverlay from '@/components/SmallSteps/OnboardingOverlay.vue';
 
+const { proxy } = getCurrentInstance() as any;
 const mainChartRef = ref();
 const timeRange = ref('week');
+const showOnboarding = ref(false);
 
 const topStats = [
   { label: '在线儿童', value: '42', icon: Monitor, color: 'blue', hexColor: '#409EFF', progress: 85, trend: '+12%' },
@@ -130,6 +136,12 @@ const topStats = [
   { label: '平均专注时长', value: '45m', icon: Timer, color: 'orange', hexColor: '#E6A23C', progress: 65, trend: '稳定' },
   { label: '情绪平衡度', value: '优', icon: Sunny, color: 'purple', hexColor: '#B37FEB', progress: 92, trend: '显著改善' }
 ];
+
+function handleOnboardingComplete() {
+  console.log('引导完成，触发新手奖励逻辑');
+  // 此处可调用后端接口发放新手礼包，或弹出成功提示
+  proxy.$modal.msgSuccess("恭喜获得新手星星包！🌟");
+}
 
 const activeTasks = [
   { title: '晨间洗漱挑战', stage: '刷牙中', time: '10分钟前', type: 'primary', color: '#409EFF', hollow: false },

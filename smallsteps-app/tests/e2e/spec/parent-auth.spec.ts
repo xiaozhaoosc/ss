@@ -3,6 +3,8 @@ import { LoginPage } from '../pages/LoginPage';
 import { ParentDashboardPage } from '../pages/ParentDashboardPage';
 import { TEST_ACCOUNTS } from '../../fixtures/test-data';
 
+test.describe.configure({ mode: 'serial' });
+
 test.describe('Parent Authentication Tests', () => {
   let loginPage: LoginPage;
   let dashboardPage: ParentDashboardPage;

@@ -1,0 +1,22 @@
+{
+  "cookies": [],
+  "origins": [
+    {
+      "origin": "http://127.0.0.1:9090",
+      "localStorage": [
+        {
+          "name": "role",
+          "value": "parent"
+        },
+        {
+          "name": "App-Token",
+          "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpblR5cGUiOiJsb2dpbiIsImxvZ2luSWQiOiJzeXNfdXNlcjoyMDM1MzkyNDIzNjc2NDY5MjUwIiwicm5TdHIiOiJQUjR3VWdaejljaW5uN1lBVk9yb3pKYndKcU9ocVIwUCIsImNsaWVudGlkIjoiNDI4YTgzMTBjZDQ0Mjc1N2FlNjk5ZGY1ZDg5NGYwNTEiLCJ0ZW5hbnRJZCI6IjAwMDAwMCIsInVzZXJJZCI6MjAzNTM5MjQyMzY3NjQ2OTI1MCwidXNlck5hbWUiOiJrZW4yemhhbyIsImRlcHRJZCI6MjAwLCJkZXB0TmFtZSI6IlNtYWxsIFN0ZXBzIOWutuW6rSIsImRlcHRDYXRlZ29yeSI6IiJ9.zOLYdQO_nH0alkjjLitPChDUqPQuur0kywniVUkBOYM"
+        },
+        {
+          "name": "App-ClientId",
+          "value": "428a8310cd442757ae699df5d894f051"
+        }
+      ]
+    }
+  ]
+}

@@ -4,18 +4,12 @@ import { ParentNavPage } from '../pages/ParentNavPage';
 import { TEST_ACCOUNTS } from '../../fixtures/test-data';
 
 test.describe('洞察菜单深度测试', () => {
-  let loginPage: LoginPage;
+  test.use({ storageState: 'playwright/.auth/parent.json' });
   let navPage: ParentNavPage;
 
   test.beforeEach(async ({ page }) => {
-    loginPage = new LoginPage(page);
     navPage = new ParentNavPage(page);
-    await loginPage.goto();
-    await loginPage.login(TEST_ACCOUNTS.parent1.username, TEST_ACCOUNTS.parent1.password);
-    
-    // 确保登录成功后再跳转，或者直接使用导航组件跳转
-    await navPage.goToInsights();
-    await page.waitForURL(/insights/);
+    await page.goto('/insights');
   });
 
   test('洞察页面基本元素验证', async ({ page }) => {

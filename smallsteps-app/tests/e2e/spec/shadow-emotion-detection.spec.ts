@@ -6,10 +6,10 @@ test.describe('情绪影子检测 (Shadow Emotion Detection) 测试', () => {
   let loginPage: LoginPage;
 
   test.describe('家长端 - 情绪监控', () => {
+    test.use({ storageState: 'playwright/.auth/parent.json' });
+
     test.beforeEach(async ({ page }) => {
-      loginPage = new LoginPage(page);
-      await loginPage.goto();
-      await loginPage.login(TEST_ACCOUNTS.parent1.username, TEST_ACCOUNTS.parent1.password);
+      // 使用 storageState 后无需手动登录
     });
 
     test('情绪警报页面 - 加载和显示', async ({ page }) => {
@@ -129,10 +129,10 @@ test.describe('情绪影子检测 (Shadow Emotion Detection) 测试', () => {
   });
 
   test.describe('儿童端 - 影子行为检测', () => {
+    test.use({ storageState: 'playwright/.auth/child.json' });
+
     test.beforeEach(async ({ page }) => {
-      loginPage = new LoginPage(page);
-      await loginPage.goto();
-      await loginPage.login(TEST_ACCOUNTS.child1.username, TEST_ACCOUNTS.child1.password);
+      // 使用 storageState 后无需手动登录
     });
 
     test('影子摘要上报 - API 请求验证', async ({ page }) => {

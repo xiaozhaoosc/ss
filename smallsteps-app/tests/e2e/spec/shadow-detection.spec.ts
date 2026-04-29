@@ -1,14 +1,10 @@
 import { test, expect } from '@playwright/test';
-import { LoginPage } from '../pages/LoginPage';
-import { TEST_ACCOUNTS } from '../../fixtures/test-data';
 
-test.describe('异常交互感知 (Shadow Detection) 测试', () => {
-  let loginPage: LoginPage;
+test.describe('影子观察者 - 行为检测系统测试', () => {
+  test.use({ storageState: 'playwright/.auth/child.json' });
 
   test.beforeEach(async ({ page }) => {
-    loginPage = new LoginPage(page);
-    await loginPage.goto();
-    await loginPage.login(TEST_ACCOUNTS.child1.username, TEST_ACCOUNTS.child1.password);
+    // 使用 storageState 后无需手动登录
   });
 
   test('SOS 级长按 - 机器人头像 >2s 长按识别为情绪波动信号', async ({ page }) => {

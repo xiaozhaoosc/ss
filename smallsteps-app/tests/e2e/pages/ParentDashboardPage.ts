@@ -24,55 +24,54 @@ export class ParentDashboardPage {
   }
 
   async goto() {
-    await this.page.goto('/pages/parent/dashboard/index');
+    await this.page.goto('/#/pages/parent/dashboard/index');
   }
 
   async waitForReady() {
-    await this.page.locator('.loading-container, text=加载中...').waitFor({ state: 'detached', timeout: 20000 }).catch(() => {});
-    // AI 卡片可能是动态加载的
-    await this.aiInsightCard.waitFor({ state: 'attached', timeout: 10000 }).catch(() => {});
+    // Wait for the main content or loading indicator to resolve
+    const loading = this.page.locator('.loading-container, text=加载中...');
+    if (await loading.isVisible()) {
+      await loading.waitFor({ state: 'detached', timeout: 15000 });
+    }
+    // AI card is a core part of the dashboard
+    await this.aiInsightCard.waitFor({ state: 'visible', timeout: 10000 });
   }
 
   async toggleNotifications() {
     await this.waitForReady();
-    await this.notificationBell.waitFor({ state: 'visible' });
-    await this.notificationBell.click({ force: true });
+    await this.notificationBell.click();
   }
 
   async markAllNotificationsAsRead() {
     await this.markAllReadButton.waitFor({ state: 'visible' });
-    await this.markAllReadButton.click({ force: true });
+    await this.markAllReadButton.click();
   }
 
   async clickAiInsightCard() {
     await this.waitForReady();
-    await this.aiInsightCard.waitFor({ state: 'visible' });
-    await this.aiInsightCard.click({ force: true });
+    await this.aiInsightCard.click();
   }
 
   async goToDailyFocusDetails() {
     await this.waitForReady();
-    await this.dailyFocusDetailsLink.waitFor({ state: 'visible' });
-    await this.dailyFocusDetailsLink.click({ force: true });
+    await this.dailyFocusDetailsLink.click();
   }
 
   async goToExecRecord() {
     await this.waitForReady();
-    await this.execRecordViewAllLink.waitFor({ state: 'visible' });
-    await this.execRecordViewAllLink.click({ force: true });
+    await this.execRecordViewAllLink.click();
   }
 
   async scrollStatsHorizontally() {
     const statsScroll = this.page.locator('.stats-scroll');
-    await statsScroll.hover();
-    await this.page.mouse.move(100, 0);
-    await this.page.mouse.down();
-    await this.page.mouse.move(300, 0);
-    await this.page.mouse.up();
+    await statsScroll.waitFor({ state: 'visible' });
+    // Use evaluate for more reliable scrolling than mouse moves
+    await statsScroll.evaluate(el => el.scrollBy(200, 0));
   }
 
   async clickTimelineItem(index: number) {
-    const timelineItems = this.timelineContainer.locator('timeline-item');
+    const timelineItems = this.timelineContainer.locator('.timeline-item');
+    await timelineItems.nth(index).waitFor({ state: 'visible' });
     await timelineItems.nth(index).click();
   }
 }

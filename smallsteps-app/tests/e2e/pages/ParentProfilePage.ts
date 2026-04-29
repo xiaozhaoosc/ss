@@ -26,7 +26,7 @@ export class ParentProfilePage {
   }
 
   async goto() {
-    await this.page.goto('/pages/parent/profile/index');
+    await this.page.goto('/#/pages/parent/profile/index');
   }
 
   async addChild() {

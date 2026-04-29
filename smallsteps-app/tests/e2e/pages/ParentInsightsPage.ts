@@ -24,7 +24,7 @@ export class ParentInsightsPage {
   }
 
   async goto() {
-    await this.page.goto('/pages/parent/insights/index');
+    await this.page.goto('/#/pages/parent/insights/index');
   }
 
   async waitForReady() {

@@ -2,13 +2,11 @@ import { test, expect } from '@playwright/test';
 import { LoginPage } from '../pages/LoginPage';
 import { TEST_ACCOUNTS } from '../../fixtures/test-data';
 
-test.describe('Shadow Fast-track 全局微动效测试', () => {
-  let loginPage: LoginPage;
+test.describe('影子观察者 - 快速通道测试', () => {
+  test.use({ storageState: 'playwright/.auth/child.json' });
 
   test.beforeEach(async ({ page }) => {
-    loginPage = new LoginPage(page);
-    await loginPage.goto();
-    await loginPage.login(TEST_ACCOUNTS.child1.username, TEST_ACCOUNTS.child1.password);
+    // 使用 storageState 后无需手动登录
   });
 
   test('儿童首页 hover-class 点击反馈应在 100ms 内响应', async ({ page }) => {
