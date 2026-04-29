@@ -97,6 +97,20 @@
       }
     },
     {
+      "path": "pages/child/art-class/index",
+      "style": {
+        "navigationStyle": "custom",
+        "backgroundColor": "#FDF2F8"
+      }
+    },
+    {
+      "path": "pages/child/game-time/index",
+      "style": {
+        "navigationStyle": "custom",
+        "backgroundColor": "#ECFDF5"
+      }
+    },
+    {
       "path": "pages/parent/profile/index",
       "style": {
         "navigationBarTitleText": "家长中心",

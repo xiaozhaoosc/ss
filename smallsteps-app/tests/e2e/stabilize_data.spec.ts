@@ -9,6 +9,7 @@ import { TEST_ACCOUNTS } from '../fixtures/test-data';
  */
 test.describe('稳定业务数据预置', () => {
 
+
   const STABLE_REWARDS = [
     { name: '看动画片30分钟', points: 10, icon: '🎬' },
     { name: '吃美味冰淇淋', points: 20, icon: '🍦' },
@@ -21,6 +22,20 @@ test.describe('稳定业务数据预置', () => {
   };
 
   test('全链路预置业务数据', async ({ page }) => {
+    // 启用全量日志监听
+    page.on('console', msg => console.log(`[BROWSER-CONSOLE] ${msg.text()}`));
+    page.on('request', request => {
+      if (request.url().includes('/ssapi/')) {
+        console.log(`[BROWSER-API-REQ] ${request.method()} ${request.url()}`);
+      }
+    });
+    page.on('response', response => {
+      if (response.url().includes('/ssapi/')) {
+        console.log(`[BROWSER-API-RES] ${response.status()} ${response.url()}`);
+      }
+    });
+
+    console.log('Step 1: Parent Login (ken2zhao)');
     const loginPage = new LoginPage(page);
     test.setTimeout(120000); // 流程较长，设置 2 分钟超时
 
@@ -31,7 +46,7 @@ test.describe('稳定业务数据预置', () => {
     
     // 导航到奖励配置页
     console.log('Navigating to Reward Config...');
-    await page.goto('/pages/parent/reward-config/index');
+    await page.goto('/#/pages/parent/reward-config/index');
     await page.waitForSelector('.add-reward-btn');
 
     for (const reward of STABLE_REWARDS) {
@@ -43,12 +58,14 @@ test.describe('稳定业务数据预置', () => {
       }
 
       console.log(`Adding reward: ${reward.name}`);
-      await page.click('.add-reward-btn');
-      await page.waitForURL(/.*pages\/parent\/reward-creator\/index/);
+      await page.goto('/#/pages/parent/reward-creator/index');
+      await page.waitForSelector('.save-btn', { timeout: 10000 });
       
       // 填写奖励信息
-      await page.fill('input[placeholder*="看动画片30分钟"]', reward.name);
-      await page.fill('input[type="number"]', reward.points.toString());
+      // 填写奖励信息
+      await page.locator('.input-field input').first().fill(reward.name);
+      await page.locator('.input-field input').nth(1).fill(reward.points.toString());
+      await page.waitForTimeout(500); // 确保 Vue 响应式更新
       
       // 选择图标 (可选，这里点击匹配的表情符号)
       await page.click(`text=${reward.icon}`);
@@ -57,46 +74,52 @@ test.describe('稳定业务数据预置', () => {
       await page.click('.save-btn');
       
       // 等待返回并加载
-      await page.waitForURL(/.*pages\/parent\/reward-config\/index/);
+      try {
+        await page.waitForURL('**/pages/parent/reward-config/index**', { timeout: 8000 });
+      } catch (e) {
+        console.log('Navigation after save timed out, forcing goto config page...');
+        await page.goto('/#/pages/parent/reward-config/index');
+      }
       await page.waitForSelector('.add-reward-btn');
+      await page.waitForTimeout(1000); // Wait for list to refresh
     }
 
     // --- STEP 2: 家长发布加星任务 ---
     console.log('Step 2: Creating star booster task...');
-    await page.goto('/pages/parent/task-creator/index');
+    await page.goto('/#/pages/parent/task-creator/index');
     await page.waitForSelector('.task-textarea');
     
-    await page.fill('.task-textarea', STAR_BOOSTER_TASK.name);
-    // 这里简化，直接发布，默认奖励假设是足够的，或者如果能改奖励点数则更好
-    // 根据 src/pages/parent/task-creator/index.vue, 默认 rewardPoints 是 10
-    // 如果需要 500 星，可能需要修改 UI 或 API。
-    // 但作为自动化脚本，我们可以尝试通过控制台调用或寻找 UI 上的奖励设置（如果存在）
-    // 看来当前 UI 没暴露 rewardPoints 的输入，但我们可以尝试直接发布。
-    // 如果需要大量星，可能需要多次执行。
-    
+    await page.fill('.task-textarea textarea', STAR_BOOSTER_TASK.name);
     await page.click('.submit-btn');
-    await page.waitForURL(/.*pages\/parent\/dashboard\/index/);
+    // 根据导航历史，可能返回到 reward-config 或 dashboard
+    await page.waitForURL(/.*pages\/parent\/(dashboard|reward-config)\/index.*/, { timeout: 10000 });
     console.log('Task booster published.');
 
     // --- STEP 3: 儿童登录并完成任务 ---
     console.log('Step 3: Child login and complete task...');
-    await page.goto('/pages/login/index');
+    await page.goto('/#/pages/login/index');
     await loginPage.login(TEST_ACCOUNTS.child1.username, TEST_ACCOUNTS.child1.password);
     
-    await expect(page).toHaveURL(/.*pages\/child\/home\/index/);
-    
+    await expect(page).toHaveURL(/.*pages\/child\/home\/index.*/, { timeout: 15000 });
+    await page.waitForTimeout(2000); // 等待异步数据加载
+
     // 找到刚才发布的任务
     console.log(`Searching for task: ${STAR_BOOSTER_TASK.name}`);
-    // 任务卡片在 child-home-page 中
-    const missionCard = page.locator('.mission-card').filter({ hasText: STAR_BOOSTER_TASK.name });
     
-    // 如果首页没看到，尝试滚动或等待
-    await missionCard.scrollIntoViewIfNeeded();
+    let missionCard = page.locator('.mission-card').filter({ hasText: STAR_BOOSTER_TASK.name });
     
+    // 增加重试刷新逻辑，应对后端同步延迟
+    if (!(await missionCard.isVisible())) {
+      console.log('Task not visible initially, reloading page...');
+      await page.reload();
+      await page.waitForTimeout(3000);
+      missionCard = page.locator('.mission-card').filter({ hasText: STAR_BOOSTER_TASK.name });
+    }
+
     if (await missionCard.isVisible()) {
       await missionCard.click(); // 进入执行页
       console.log('Navigating to task execution page...');
-      await page.waitForURL(/.*pages\/child\/task-execute\/index/);
+      await page.waitForURL('**/pages/child/task-execute/index**', { timeout: 15000 });
       
       // 在执行页点击“我完成了！”
       console.log('Clicking complete button...');
@@ -117,7 +140,7 @@ test.describe('稳定业务数据预置', () => {
 
     // --- STEP 4: 家长登录并批准任务 ---
     console.log('Step 4: Parent approve task...');
-    await page.goto('/pages/login/index');
+    await page.goto('/#/pages/login/index');
     await loginPage.login(TEST_ACCOUNTS.parent1.username, TEST_ACCOUNTS.parent1.password);
     
     // 点击通知铃铛
@@ -147,7 +170,7 @@ test.describe('稳定业务数据预置', () => {
 
     // --- FINAL VERIFICATION ---
     console.log('Final verification...');
-    await page.goto('/pages/login/index');
+    await page.goto('/#/pages/login/index');
     await loginPage.login(TEST_ACCOUNTS.child1.username, TEST_ACCOUNTS.child1.password);
     
     const balance = await page.locator('.streak-val').textContent();

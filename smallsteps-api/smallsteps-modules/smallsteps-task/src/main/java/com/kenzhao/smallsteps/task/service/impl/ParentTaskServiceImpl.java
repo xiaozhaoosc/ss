@@ -28,6 +28,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ParentTaskServiceImpl implements IParentTaskService {
 
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ParentTaskServiceImpl.class);
+
     private final ParentTaskMapper parentTaskMapper;
     private final ChildTaskMapper childTaskMapper;
     private final IAiService aiService;
@@ -67,7 +69,14 @@ public class ParentTaskServiceImpl implements IParentTaskService {
     public boolean insertByBo(ParentTaskBo bo) {
         ParentTask parentTask = new ParentTask();
         cn.hutool.core.bean.BeanUtil.copyProperties(bo, parentTask);
-        return parentTaskMapper.insert(parentTask) > 0;
+        boolean success = parentTaskMapper.insert(parentTask) > 0;
+        if (success) {
+            bo.setTaskId(parentTask.getTaskId());
+            // --- [Shadow-Service] 记录所有任务创建 ---
+            log.error("[Shadow-Service] TASK_CREATED | TaskID: {} | UserID: {} | Title: {}", 
+                parentTask.getTaskId(), parentTask.getUserId(), parentTask.getTitle());
+        }
+        return success;
     }
 
     @Override

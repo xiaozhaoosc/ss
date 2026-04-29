@@ -181,7 +181,13 @@ const navigateToTask = (taskId: number) => {
 
 const handleQuickLink = (name: string) => {
   uni.vibrateShort()
-  uni.showToast({ title: `Open ${name}`, icon: 'none' })
+  if (name === '艺术课') {
+    uni.navigateTo({ url: '/pages/child/art-class/index' })
+  } else if (name === '游戏时间') {
+    uni.navigateTo({ url: '/pages/child/game-time/index' })
+  } else {
+    uni.showToast({ title: `Open ${name}`, icon: 'none' })
+  }
 }
 
 const handleRobotClick = () => {

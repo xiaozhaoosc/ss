@@ -41,5 +41,6 @@
 ## 核心设计与路线图
 - [[SHADOW_OBSERVER]] - 影子观察者功能待实现列表
 - [[2026-04-28-FEATURE_LIST_AND_TEST_CASES]] - 今日功能清单与测试用例
+- [[features/art_and_game_design]] - 艺术课 & 游戏时间功能设计
 - [[UX_SPEC]] - 交互规范 (待补充)
 - [[DATABASE_SCHEMA]] - 数据库 Schema (待补充)
