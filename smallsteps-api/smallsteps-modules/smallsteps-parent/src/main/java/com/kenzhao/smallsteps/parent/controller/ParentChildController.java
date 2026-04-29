@@ -40,7 +40,7 @@ public class ParentChildController {
             result.put("username", request.getUsername());
             result.put("nickname", request.getNickname());
             
-            return ResponseEntity.ok(R.ok(result, "创建成功"));
+            return ResponseEntity.ok(R.ok("创建成功", result));
         } catch (RuntimeException e) {
             log.warn("创建孩子账号失败: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(R.fail(e.getMessage()));

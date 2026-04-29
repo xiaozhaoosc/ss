@@ -95,4 +95,9 @@ public class ParentTaskBo extends BaseEntity {
      */
     private String status;
 
+    /**
+     * 指定关联儿童ID (用于创建任务时直接指派)
+     */
+    private Long childId;
+
 }

@@ -3,6 +3,7 @@ import request from '@/utils/request'
 export interface ParentTask {
     taskId?: number
     userId?: number
+    childId?: number
     title: string
     description?: string
     icon?: string

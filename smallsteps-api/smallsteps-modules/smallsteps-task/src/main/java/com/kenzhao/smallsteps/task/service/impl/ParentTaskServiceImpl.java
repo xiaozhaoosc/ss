@@ -9,6 +9,7 @@ import com.kenzhao.smallsteps.common.ss.domain.ParentTask;
 import com.kenzhao.smallsteps.common.ss.domain.bo.ParentTaskBo;
 import com.kenzhao.smallsteps.common.ss.domain.vo.ParentTaskVo;
 import com.kenzhao.smallsteps.common.ss.domain.vo.TaskStepTemplateVo;
+import com.kenzhao.smallsteps.common.satoken.utils.LoginHelper;
 import com.kenzhao.smallsteps.task.mapper.ChildTaskMapper;
 import com.kenzhao.smallsteps.task.mapper.ParentTaskMapper;
 import com.kenzhao.smallsteps.task.service.IParentTaskService;
@@ -72,6 +73,20 @@ public class ParentTaskServiceImpl implements IParentTaskService {
         boolean success = parentTaskMapper.insert(parentTask) > 0;
         if (success) {
             bo.setTaskId(parentTask.getTaskId());
+            
+            // 如果指定了儿童，自动创建执行任务 (ChildTask)
+            if (bo.getChildId() != null) {
+                ChildTask childTask = new ChildTask();
+                childTask.setTaskId(parentTask.getTaskId());
+                childTask.setChildId(bo.getChildId());
+                childTask.setDeptId(LoginHelper.getDeptId());
+                childTask.setStatus(ChildTask.STATUS_ONGOING);
+                childTask.setDelFlag("0");
+                childTask.setTargetDate(new java.util.Date());
+                childTaskMapper.insert(childTask);
+                log.info("[Task] Auto-assigned task {} to child {}", parentTask.getTaskId(), bo.getChildId());
+            }
+
             // --- [Shadow-Service] 记录所有任务创建 ---
             log.error("[Shadow-Service] TASK_CREATED | TaskID: {} | UserID: {} | Title: {}", 
                 parentTask.getTaskId(), parentTask.getUserId(), parentTask.getTitle());

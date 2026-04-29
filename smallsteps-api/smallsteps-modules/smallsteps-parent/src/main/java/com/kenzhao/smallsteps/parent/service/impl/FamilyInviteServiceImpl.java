@@ -1,6 +1,7 @@
 package com.kenzhao.smallsteps.parent.service.impl;
 
 import cn.hutool.core.util.IdUtil;
+import com.kenzhao.smallsteps.parent.service.IFamilyInviteService;
 import com.kenzhao.smallsteps.common.ss.domain.SsFamilyInvite;
 import com.kenzhao.smallsteps.common.ss.domain.SsFamilyJoinRequest;
 import com.kenzhao.smallsteps.common.ss.domain.dto.JoinRequestDTO;
@@ -69,7 +70,7 @@ public class FamilyInviteServiceImpl implements IFamilyInviteService {
         }
 
         SysDept dept = deptMapper.selectById(invite.getDeptId());
-        SysUser creator = userMapper.selectUserById(invite.getCreatorId());
+        SysUser creator = userMapper.selectById(invite.getCreatorId());
 
         vo.setIsValid(true);
         vo.setFamilyName(dept != null ? dept.getDeptName() : "未知家庭");
@@ -91,7 +92,7 @@ public class FamilyInviteServiceImpl implements IFamilyInviteService {
             throw new RuntimeException("邀请码无效或已过期");
         }
 
-        SysUser applicant = userMapper.selectUserById(applicantId);
+        SysUser applicant = userMapper.selectById(applicantId);
         if (applicant == null) {
             throw new RuntimeException("用户不存在");
         }
@@ -115,7 +116,7 @@ public class FamilyInviteServiceImpl implements IFamilyInviteService {
     public List<SsFamilyJoinRequest> getPendingRequests(Long deptId) {
         List<SsFamilyJoinRequest> requests = requestMapper.selectPendingByDeptId(deptId);
         for (SsFamilyJoinRequest request : requests) {
-            SysUser applicant = userMapper.selectUserById(request.getApplicantId());
+            SysUser applicant = userMapper.selectById(request.getApplicantId());
             if (applicant != null) {
                 request.setInviteCode(applicant.getNickName());
             }
@@ -134,7 +135,7 @@ public class FamilyInviteServiceImpl implements IFamilyInviteService {
         request.setStatus("1");
         requestMapper.updateById(request);
 
-        SysUser applicant = userMapper.selectUserById(request.getApplicantId());
+        SysUser applicant = userMapper.selectById(request.getApplicantId());
         if (applicant != null) {
             applicant.setDeptId(request.getTargetDeptId());
             userMapper.updateById(applicant);

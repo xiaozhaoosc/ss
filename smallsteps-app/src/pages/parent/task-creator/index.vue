@@ -45,6 +45,45 @@
           </button>
         </view>
       </view>
+      
+      <!-- Child Selection Section -->
+      <view class="child-selection-section">
+        <view class="section-header">
+          <text class="section-title">指派给</text>
+          <text class="section-subtitle">点击头像选择孩子</text>
+        </view>
+        <scroll-view scroll-x class="child-list no-scrollbar" :show-scrollbar="false">
+          <view class="child-list-inner">
+            <view 
+              v-for="child in children" 
+              :key="child.userId"
+              class="child-item"
+              :class="{ 'active': selectedChildId === child.userId }"
+              @click="selectedChildId = child.userId"
+            >
+              <view class="avatar-wrapper">
+                <image 
+                  :src="child.avatar || '/static/images/default-avatar.png'" 
+                  class="child-avatar"
+                  mode="aspectFill"
+                />
+                <view class="active-ring" v-if="selectedChildId === child.userId"></view>
+                <view class="check-badge" v-if="selectedChildId === child.userId">
+                  <text class="material-symbols-outlined">done</text>
+                </view>
+              </view>
+              <text class="child-name">{{ child.nickName }}</text>
+            </view>
+            
+            <view class="add-child-item" @click="handleAddChild">
+              <view class="add-avatar-placeholder">
+                <text class="material-symbols-outlined">person_add</text>
+              </view>
+              <text class="child-name">添加</text>
+            </view>
+          </view>
+        </scroll-view>
+      </view>
 
       <!-- Steps Section -->
       <view class="steps-section">
@@ -108,12 +147,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import TopBar from '@/components/common/top-bar/top-bar.vue'
 import TaskStep from '@/components/parent/task-step/task-step.vue'
 import BottomNav from '@/components/common/bottom-nav/bottom-nav.vue'
 import { taskBreakdown } from '@/api/ai'
 import { addTask } from '@/api/task'
+import { getFamilyMembers } from '@/api/family'
 import { useUserStore } from '@/store/modules/user'
 
 const userStore = useUserStore()
@@ -130,6 +170,38 @@ const steps = ref([
   { title: '穿好鞋子', description: '区分左右脚，系好鞋带' },
   { title: '拿上书包', description: '确认作业都在书包里' }
 ])
+
+const children = ref([])
+const selectedChildId = ref<number | null>(null)
+
+onMounted(async () => {
+  try {
+    const res: any = await getFamilyMembers()
+    if (res.code === 200 && res.data) {
+      // 过滤出角色为儿童的成员
+      children.value = res.data.filter((m: any) => 
+        m.roles && m.roles.some((r: any) => r.roleKey === 'child' || r.roleName === '儿童')
+      )
+      
+      // 如果没有专门的儿童角色，则显示所有非家长成员（简化逻辑）
+      if (children.value.length === 0) {
+        children.value = res.data.filter((m: any) => m.userId !== userStore.userId)
+      }
+
+      if (children.value.length > 0) {
+        selectedChildId.value = children.value[0].userId
+      }
+    }
+  } catch (error) {
+    console.error('Fetch family members failed:', error)
+  }
+})
+
+const handleAddChild = () => {
+  uni.navigateTo({
+    url: '/pages/parent/family/index'
+  })
+}
 
 const handleAiBreakdown = async () => {
   if (!taskInput.value) {
@@ -197,6 +269,7 @@ const handleSubmit = () => {
   
   const newTask = {
     userId: userStore.userId,
+    childId: selectedChildId.value,
     title: taskInput.value,
     description: stepsDesc,
     icon: 'task',
@@ -369,6 +442,136 @@ const handleSubmit = () => {
 @keyframes sparkle {
   0%, 100% { opacity: 0.8; transform: scale(1); }
   50% { opacity: 1; transform: scale(1.2) rotate(15deg); }
+}
+
+.child-selection-section {
+  margin-bottom: 32px;
+}
+
+.section-subtitle {
+  font-size: 12px;
+  color: #94a3b8;
+  font-weight: 500;
+  margin-left: 8px;
+}
+
+.child-list {
+  width: 100%;
+  white-space: nowrap;
+}
+
+.child-list-inner {
+  display: inline-flex;
+  gap: 20px;
+  padding: 10px 4px;
+}
+
+.child-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  
+  &.active {
+    .child-name {
+      color: #6C9BD2;
+      font-weight: 800;
+    }
+  }
+}
+
+.avatar-wrapper {
+  position: relative;
+  width: 64px;
+  height: 64px;
+}
+
+.child-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: #e2e8f0;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+  
+  .active & {
+    border-color: #6C9BD2;
+    transform: scale(1.05);
+  }
+}
+
+.active-ring {
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  right: -4px;
+  bottom: -4px;
+  border: 2px solid #6C9BD2;
+  border-radius: 50%;
+  opacity: 0.3;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.95); opacity: 0.5; }
+  50% { transform: scale(1.05); opacity: 0.2; }
+  100% { transform: scale(0.95); opacity: 0.5; }
+}
+
+.check-badge {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 20px;
+  height: 20px;
+  background: #6C9BD2;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #ffffff;
+  
+  .material-symbols-outlined {
+    font-size: 14px;
+    color: #ffffff;
+    font-weight: 900;
+  }
+}
+
+.child-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748b;
+  transition: all 0.3s ease;
+}
+
+.add-child-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.add-avatar-placeholder {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(108, 155, 210, 0.05);
+  border: 2px dashed rgba(108, 155, 210, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  .material-symbols-outlined {
+    font-size: 28px;
+    color: #6C9BD2;
+  }
+  
+  &:active {
+    background: rgba(108, 155, 210, 0.1);
+    transform: scale(0.95);
+  }
 }
 
 .steps-section {
