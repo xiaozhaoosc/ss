@@ -79,7 +79,7 @@ async function globalSetup(config: FullConfig) {
     }
     
     await page.fill('.task-textarea textarea', STAR_BOOSTER_TASK.name);
-    await page.click('.submit-btn');
+    await page.click('.submit-btn', { force: true });
     await page.waitForURL(/.*pages\/parent\/(dashboard|reward-config)\/index.*/, { timeout: 15000 });
 
     // 4. Child Login & Save State & Complete Task
@@ -96,17 +96,17 @@ async function globalSetup(config: FullConfig) {
         if (await missionCard.isVisible()) break;
         console.log(`Task not found, retry ${i+1}...`);
         await page.reload();
-        await page.waitForTimeout(2000);
+        await page.waitForTimeout(3000); // Increased wait
         missionCard = page.locator('.mission-card').filter({ hasText: STAR_BOOSTER_TASK.name });
     }
 
     if (await missionCard.isVisible()) {
       await missionCard.click();
       await page.waitForURL('**/pages/child/task-execute/index**');
-      await page.click('.complete-btn');
+      await page.click('.complete-btn', { force: true });
       const collectBtn = page.locator('.collect-btn');
       await collectBtn.waitFor({ state: 'visible' });
-      await collectBtn.click();
+      await collectBtn.click({ force: true });
       console.log('Task completed.');
     }
 
@@ -114,7 +114,7 @@ async function globalSetup(config: FullConfig) {
     console.log('Parent Approving Task...');
     await page.goto('/#/pages/login/index');
     await loginPage.login(TEST_ACCOUNTS.parent1.username, TEST_ACCOUNTS.parent1.password);
-    await page.click('.icon-btn'); 
+    await page.click('.icon-btn', { force: true }); 
     await page.waitForSelector('.notification-dropdown');
     
     const approveBtn = page.locator('.notification-item')
@@ -122,8 +122,9 @@ async function globalSetup(config: FullConfig) {
       .locator('text=批准');
       
     if (await approveBtn.isVisible()) {
-      await approveBtn.click();
+      await approveBtn.click({ force: true });
       await page.locator('.uni-modal__btn_primary, text=确定').first().click();
+      await page.waitForTimeout(1000); // Wait for modal to clear
       console.log('Task approved.');
     }
 

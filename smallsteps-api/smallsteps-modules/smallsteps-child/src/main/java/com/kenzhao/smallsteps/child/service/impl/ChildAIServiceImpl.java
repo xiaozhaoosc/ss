@@ -60,12 +60,16 @@ public class ChildAIServiceImpl implements IChildAIService {
                 emitter.send(org.springframework.web.servlet.mvc.method.annotation.SseEmitter.event().data(" "));
                 
                 // 1. 分析情感
+                System.out.println(">>> [DEBUG] AI Stream: Analyzing emotion for child: " + childId);
                 java.util.Map<String, Object> analysis = aiService.emotionAnalysis(childId, userInput);
                 Integer detectedType = (Integer) analysis.getOrDefault("emotionType", 5);
+                System.out.println(">>> [DEBUG] AI Stream: Emotion analyzed: " + detectedType);
                 
                 // 由于现有 aiService.chat 返回 String，若不支持流式，则暂做模拟分块发送
                 // TODO: 若 aiService 有 chatStream 请替换为真实调用
+                System.out.println(">>> [DEBUG] AI Stream: Getting chat response...");
                 String aiReply = aiService.chat(childId, userInput, analysis);
+                System.out.println(">>> [DEBUG] AI Stream: Chat response received: " + aiReply);
                 
                 // 模拟流式输出
                 int chunkSize = 2;

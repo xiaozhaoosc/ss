@@ -35,11 +35,19 @@ export const constantRoutes = [
           path: 'dashboard',
           component: () => import('@/views/index.vue'),
           name: 'Dashboard',
-          meta: {
-            title: '首页',
-            icon: 'dashboard',
-            affix: true
-          }
+          meta: { title: '首页', icon: 'dashboard', affix: true }
+        },
+        {
+          path: 'ai/log',
+          component: () => import('@/views/system/ai/log/index.vue'),
+          name: 'AiLog',
+          meta: { title: 'AI日志', icon: 'log' }
+        },
+        {
+          path: 'ai/model',
+          component: () => import('@/views/system/ai/model/index.vue'),
+          name: 'AiModel',
+          meta: { title: 'AI模型', icon: 'model' }
         }
       ]
     },

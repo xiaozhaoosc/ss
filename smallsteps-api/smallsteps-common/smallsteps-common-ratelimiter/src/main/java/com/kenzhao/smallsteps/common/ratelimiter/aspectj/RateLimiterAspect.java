@@ -52,6 +52,12 @@ public class RateLimiterAspect {
 
     @Before("@annotation(rateLimiter)")
     public void doBefore(JoinPoint point, RateLimiter rateLimiter) {
+        // 白名单检查：本地 127.0.0.1 不限流
+        String clientIP = ServletUtils.getClientIP();
+        if (StringUtils.equalsAny(clientIP, "127.0.0.1", "0:0:0:0:0:0:0:1")) {
+            return;
+        }
+
         int time = rateLimiter.time();
         int count = rateLimiter.count();
         int timeout = rateLimiter.timeout();

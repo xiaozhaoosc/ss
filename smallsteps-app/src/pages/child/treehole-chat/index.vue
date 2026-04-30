@@ -83,9 +83,10 @@ const sendMessage = async () => {
   })
   
   const baseUrl = getBaseUrl() === '/ssapi' ? 'http://localhost:8081/ssapi' : getBaseUrl()
-  const url = `${baseUrl}/child/ai/chat/stream?childId=${childId}&userInput=${encodeURIComponent(userMsg)}`
   const token = getToken() || userStore.token
   const clientid = uni.getStorageSync('clientid') || 'e5cd7e4891bf95d1d19206ce24a7b32e'
+  const url = `${baseUrl}/child/ai/chat/stream?childId=${childId}&userInput=${encodeURIComponent(userMsg)}&Authorization=${encodeURIComponent('Bearer ' + token)}&clientid=${clientid}`
+
   
   // uni.request 支持 enableChunked
   const requestTask = uni.request({

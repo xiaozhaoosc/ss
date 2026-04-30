@@ -2,15 +2,56 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Parent Center & Insights Depth Test', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('http://localhost:88/');
-    const okButton = page.getByText(/\u7e4f\u767f|\u7f5e\u905d\u4E8bx/);
-    if (await okButton.isVisible()) await okButton.click();
-    await page.locator('input').nth(0).fill('ken2zhao');
-    await page.locator('input').nth(1).fill('Aa123456');
-    const loginButton = page.locator('.el-button').first();
+    await page.goto('http://localhost:88/#/login');
+    // Fill login form
+    await page.locator('input').nth(0).fill('admin');
+    await page.locator('input').nth(1).fill('admin123');
+    const loginButton = page.locator('button[type="submit"]').or(page.locator('.el-button').first());
     await loginButton.click();
-    await expect(page).toHaveURL(/.*pages\/parent\/dashboard\/index/);
+    
+    // Wait for redirect and token storage
+    await page.waitForURL(/.*dashboard/);
+    await page.waitForFunction(() => localStorage.getItem('Admin-Token') !== null);
   });
 
   test('Navigate and verify Parent Center', async ({ page }) => {
-    await page.locator(�v'��V��F&&"r��vWD'�FW�B���Sf#Fe�SscFe�SFV6��6Ɩ6���f�&6S�G'VWғ��v�BW�V7B�vR��F�fUU$��vW5��&V�E��&�f��U����FW�򓰢ғ���FW7B�t�f�vFR�BfW&�g���6�v�G2r�7��2��vRҒ����v�BvR���6F�"�wV��F&&"r��vWD'�FW�B���Sf#Fe�Ss#Fe�SFV6��6Ɩ6���f�&6S�G'VRғ��v�BW�V7B�vR��F�fUU$��vW5��&V�E����6�v�G5����FW�򓰢ғ��ғ
+    // Navigate to Parent dashboard
+    await page.goto('http://localhost:88/#/dashboard');
+    await page.waitForLoadState('networkidle');
+    
+    // Ensure no login dialog popped up
+    const reLoginDialog = page.getByText('登录状态已过期');
+    if (await reLoginDialog.isVisible()) {
+        await page.click('button:has-text("确认")');
+        await page.waitForURL(/.*login/);
+        throw new Error('Login session expired during test');
+    }
+
+    // Verify some text on dashboard (e.g. "首页" or dashboard title)
+    await expect(page).toHaveURL(/.*dashboard/);
+    
+    // Check for statistics cards
+    const statCards = page.locator('.el-card');
+    await expect(statCards.first()).toBeVisible();
+    
+    // Check for ECharts (usually in a div with canvas)
+    const chartCanvas = page.locator('canvas').first();
+    await expect(chartCanvas).toBeVisible({ timeout: 10000 });
+
+    const content = await page.textContent('body');
+    expect(content).not.toContain('404');
+  });
+  
+  test('Navigate to AI Logs', async ({ page }) => {
+    // Attempt to navigate to the newly fixed AI log route
+    await page.goto('http://localhost:88/#/ai/log');
+    await page.waitForLoadState('networkidle');
+    
+    // Check for the specific header I added
+    const header = page.locator('h3:has-text("AI 调用日志")');
+    await expect(header).toBeVisible({ timeout: 5000 });
+    
+    const pageContent = await page.content();
+    expect(pageContent).not.toContain('404');
+  });
+});

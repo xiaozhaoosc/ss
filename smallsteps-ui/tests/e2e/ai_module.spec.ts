@@ -3,9 +3,9 @@ import { test, expect } from '@playwright/test';
 test.describe('AI管理模块测试', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
-    await page.fill('input[type="username"]', 'admin');
-    await page.fill('input[type="password"]', 'admin123');
-    await page.click('button[type="submit"]');
+    await page.getByPlaceholder('用户名').fill('admin');
+    await page.getByPlaceholder('密码').fill('admin123');
+    await page.click('button:has-text("登 录")');
     await page.waitForURL('**/index**', { timeout: 10000 });
   });
 
