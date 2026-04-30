@@ -1,6 +1,6 @@
 import { test, expect, Page } from '@playwright/test';
 
-const MOBILE_URL = 'http://localhost:9090';
+// MOBILE_URL is handled by baseURL in playwright.config.ts
 
 const ACCOUNTS = {
   parent: { user: 'ken2zhao', pass: 'Aa123456' },

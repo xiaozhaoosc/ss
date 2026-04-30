@@ -3,19 +3,19 @@ import { test, expect } from '@playwright/test';
 test.describe('Backend Converter Verification', () => {
   test('should load parent rewards without converter error', async ({ page }) => {
     // 1. Login as parent
-    await page.goto('http://localhost:9090/#/login');
+    await page.goto('/');
     await page.fill('input[type="text"]', 'ken2zhao');
     await page.fill('input[type="password"]', 'Aa123456');
     await page.click('text=登 录');
     
     // Wait for navigation
-    await page.waitForTimeout(3000); // Give it some time to load everything
+    await page.waitForURL(/.*dashboard|.*home/, { timeout: 15000 });
     
     // 2. Go to Reward Shop (Parent side)
     // We need to find the entry to reward shop. In the previous test, it was on the "Task" tab or "Home" tab.
     // Let's try the Home tab first.
     await page.click('text=任务');
-    await page.waitForTimeout(2000); // Wait for list to load
+    await page.waitForURL(/.*task-creator|.*task/, { timeout: 10000 });
     
     // Check if there is a uni-modal with the error message
     const modal = page.locator('.uni-modal');

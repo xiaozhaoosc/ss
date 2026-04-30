@@ -96,7 +96,7 @@ async function globalSetup(config: FullConfig) {
         if (await missionCard.isVisible()) break;
         console.log(`Task not found, retry ${i+1}...`);
         await page.reload();
-        await page.waitForTimeout(3000); // Increased wait
+        await missionCard.waitFor({ state: 'visible', timeout: 5000 }).catch(() => {}); 
         missionCard = page.locator('.mission-card').filter({ hasText: STAR_BOOSTER_TASK.name });
     }
 
@@ -124,7 +124,7 @@ async function globalSetup(config: FullConfig) {
     if (await approveBtn.isVisible()) {
       await approveBtn.click({ force: true });
       await page.locator('.uni-modal__btn_primary, text=确定').first().click();
-      await page.waitForTimeout(1000); // Wait for modal to clear
+      await page.locator('.uni-modal').waitFor({ state: 'hidden', timeout: 5000 }).catch(() => {});
       console.log('Task approved.');
     }
 

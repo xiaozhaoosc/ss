@@ -7,7 +7,9 @@ export class ParentDashboardPage {
   readonly markAllReadButton: Locator;
   readonly aiInsightCard: Locator;
   readonly dailyFocusDetailsLink: Locator;
+  readonly dailyFocusSection: Locator;
   readonly execRecordViewAllLink: Locator;
+  readonly execRecordSection: Locator;
   readonly statsContainer: Locator;
   readonly timelineContainer: Locator;
 
@@ -16,9 +18,11 @@ export class ParentDashboardPage {
     this.notificationBell = page.locator('.icon-btn');
     this.notificationDropdown = page.locator('.notification-dropdown');
     this.markAllReadButton = page.getByText('全部已读');
-    this.aiInsightCard = page.locator('ai-insight-card');
+    this.aiInsightCard = page.locator('.insight-card');
     this.dailyFocusDetailsLink = page.getByText('详情').first();
+    this.dailyFocusSection = page.locator('.stats-container');
     this.execRecordViewAllLink = page.getByText('查看全部');
+    this.execRecordSection = page.locator('.timeline-container');
     this.statsContainer = page.locator('.stats-container');
     this.timelineContainer = page.locator('.timeline-container');
   }
@@ -60,6 +64,11 @@ export class ParentDashboardPage {
   async goToExecRecord() {
     await this.waitForReady();
     await this.execRecordViewAllLink.click();
+  }
+
+  async viewWeeklyReport() {
+    await this.waitForReady();
+    await this.aiInsightCard.locator('.weekly-btn').click();
   }
 
   async scrollStatsHorizontally() {

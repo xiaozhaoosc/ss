@@ -19,7 +19,7 @@ test.describe('ADHD 支架式模板库 (Scaffolding Library) 测试', () => {
     await expect(page).toHaveURL(/template\/library/);
 
     // 等待内容加载
-    await page.waitForTimeout(2000);
+    await page.locator('.min-h-screen, .template-library, view').first().waitFor({ state: 'visible', timeout: 10000 });
 
     // 验证页面标题或关键元素
     const pageContent = page.locator('.min-h-screen, .template-library, view');
@@ -29,7 +29,7 @@ test.describe('ADHD 支架式模板库 (Scaffolding Library) 测试', () => {
   test('模板列表分类展示测试', async ({ page }) => {
     await page.goto('/pages/template/library');
     await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(2000);
+    await page.locator('.template-card, .card-item').first().waitFor({ state: 'visible', timeout: 10000 }).catch(() => {});
 
     // 验证分类标签存在（如果有的话）
     const categoryTabs = page.locator('.category-tab, .tag, text=ADHD友好');

@@ -13,6 +13,20 @@ test.describe('Parent Dashboard Tests', () => {
   test.beforeEach(async ({ page }) => {
     dashboardPage = new ParentDashboardPage(page);
     navPage = new ParentNavPage(page);
+    
+    // Mock AI Insight API to ensure the card is visible
+    await page.route('**/ssapi/parent/insight/summary**', async route => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          code: 200,
+          msg: 'Success',
+          data: '根据最近的表现，您的孩子在“动作执行”方面有显著进步！建议尝试增加一些挑战。'
+        })
+      });
+    });
+
     await dashboardPage.goto();
   });
 
