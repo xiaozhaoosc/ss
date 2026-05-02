@@ -22,9 +22,8 @@ test.describe('Parent Full E2E Flow Tests', () => {
   });
 
   test('Complete parent workflow', async ({ page }) => {
-    // 1. 登录
-    await loginPage.goto();
-    await loginPage.login(TEST_ACCOUNTS.parent1.username, TEST_ACCOUNTS.parent1.password);
+    // 1. 自动登录后直接验证仪表盘
+    await page.goto('/#/pages/parent/dashboard/index');
     await expect(page).toHaveURL(/dashboard/);
 
     // 2. 仪表盘操作
@@ -63,7 +62,7 @@ test.describe('Parent Full E2E Flow Tests', () => {
   });
 
   test('Test with parent2 account', async ({ page }) => {
-    // 1. 登录 parent2
+    // 1. 登录 parent2 (显式覆盖)
     await loginPage.goto();
     await loginPage.login(TEST_ACCOUNTS.parent2.username, TEST_ACCOUNTS.parent2.password);
     await expect(page).toHaveURL(/dashboard/);

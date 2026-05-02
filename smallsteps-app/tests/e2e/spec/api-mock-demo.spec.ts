@@ -10,8 +10,9 @@ test.describe('API Mocking & Edge Cases', () => {
   test.beforeEach(async ({ page }) => {
     loginPage = new LoginPage(page);
     homePage = new ChildHomePage(page);
-    await loginPage.goto();
-    await loginPage.login(TEST_ACCOUNTS.child1.username, TEST_ACCOUNTS.child1.password);
+    // 使用 storageState 自动登录，直接跳转到儿童首页
+    await page.goto('/#/pages/child/home/index');
+    await page.waitForLoadState('networkidle');
   });
 
   test('Mock empty task list', async ({ page }) => {
