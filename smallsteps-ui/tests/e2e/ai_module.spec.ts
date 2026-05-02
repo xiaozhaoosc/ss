@@ -20,8 +20,10 @@ test.describe('AI管理模块测试', () => {
   test('AI模型管理 - 列表页面加载', async ({ page }) => {
     await page.goto('/#/ai/model');
     await page.waitForLoadState('networkidle');
-    const title = await page.textContent('h3');
-    expect(title).toContain('AI');
+    // Check for the table instead of h3 which doesn't exist in this view
+    await page.waitForSelector('.el-table', { timeout: 10000 });
+    const table = await page.locator('.el-table');
+    await expect(table).toBeVisible();
   });
 
   test('AI模型管理 - 添加模型', async ({ page }) => {

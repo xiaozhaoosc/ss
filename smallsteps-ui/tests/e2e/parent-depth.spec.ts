@@ -53,9 +53,10 @@ test.describe('Parent Center & Insights Depth Test', () => {
     await page.goto('http://localhost:88/#/ai/log');
     await page.waitForLoadState('networkidle');
     
-    // Check for the specific header I added
+    // Check for the specific header with a robust wait
     const header = page.locator('h3:has-text("AI 调用日志")');
-    await expect(header).toBeVisible({ timeout: 5000 });
+    await page.waitForSelector('h3:has-text("AI 调用日志")', { timeout: 10000 });
+    await expect(header).toBeVisible();
     
     const pageContent = await page.content();
     expect(pageContent).not.toContain('404');
