@@ -2,7 +2,7 @@
   "cookies": [],
   "origins": [
     {
-      "origin": "http://127.0.0.1:9090",
+      "origin": "http://localhost:9090",
       "localStorage": [
         {
           "name": "role",
@@ -10,7 +10,7 @@
         },
         {
           "name": "App-Token",
-          "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpblR5cGUiOiJsb2dpbiIsImxvZ2luSWQiOiIyOjEwMDIiLCJyblN0ciI6IlJSQUxHbDFHeXpjN3o0WTdBSHBaS3pEOFI1T1ZzOUFYIiwiY2xpZW50aWQiOiI0MjhhODMxMGNkNDQyNzU3YWU2OTlkZjVkODk0ZjA1MSIsInRlbmFudElkIjoiMDAwMDAwIiwidXNlcklkIjoxMDAyLCJ1c2VyTmFtZSI6ImNoaWxkX3hpYW9taW5nIiwiZGVwdElkIjoyMDAsImRlcHROYW1lIjoiU21hbGwgU3RlcHMg5a625bqtIiwiZGVwdENhdGVnb3J5IjoiIn0.GbKehu1wFYvZBlvA33uWKcq-lGslwoX6Whxln9AI_CE"
+          "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpblR5cGUiOiJsb2dpbiIsImxvZ2luSWQiOiIyOjEwMDIiLCJyblN0ciI6IjB2azZBT3NPb0dsWEdseWZsYjBVbnRPUzRVQk1URVE5IiwiY2xpZW50aWQiOiI0MjhhODMxMGNkNDQyNzU3YWU2OTlkZjVkODk0ZjA1MSIsInRlbmFudElkIjoiMDAwMDAwIiwidXNlcklkIjoxMDAyLCJ1c2VyTmFtZSI6ImNoaWxkX3hpYW9taW5nIiwiZGVwdElkIjoyMDAsImRlcHROYW1lIjoiU21hbGwgU3RlcHMg5a625bqtIiwiZGVwdENhdGVnb3J5IjoiIn0.s27WLvtHFI7YNLwqHZurKWEcreFbJOC0cqgq9I8kEBU"
         },
         {
           "name": "App-ClientId",

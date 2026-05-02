@@ -13,9 +13,9 @@ test.describe('Parent Insights Tests', () => {
     loginPage = new LoginPage(page);
     insightsPage = new ParentInsightsPage(page);
     navPage = new ParentNavPage(page);
-    await loginPage.goto();
-    await loginPage.login(TEST_ACCOUNTS.parent1.username, TEST_ACCOUNTS.parent1.password);
-    await navPage.goToInsights();
+    // 使用 storageState 自动登录，直接跳转到洞察页面
+    await page.goto('/#/pages/parent/insights/index');
+    await page.waitForLoadState('networkidle');
   });
 
   test('Verify insights page loads correctly', async ({ page }) => {

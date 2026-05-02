@@ -97,6 +97,7 @@ const sendMessage = async () => {
       'Authorization': 'Bearer ' + token,
       'clientid': clientid
     },
+    timeout: 300000,
     success: () => {
       isLoading.value = false
     },

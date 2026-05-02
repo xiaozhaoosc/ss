@@ -54,7 +54,7 @@ const request = (options: any): Promise<any> => {
             method: options.method || 'GET',
             data: options.data,
             header: header,
-            timeout: options.timeout || 60000,
+            timeout: options.timeout || 120000,
             success: (res: any) => {
                 const { statusCode, data: rawData } = res
                 

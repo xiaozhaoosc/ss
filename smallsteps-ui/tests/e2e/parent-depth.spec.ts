@@ -10,8 +10,14 @@ test.describe('Parent Center & Insights Depth Test', () => {
     await loginButton.click();
     
     // Wait for redirect and token storage
-    await page.waitForURL(/.*dashboard/);
+    await page.waitForURL(/.*dashboard/, { timeout: 15000 });
     await page.waitForFunction(() => localStorage.getItem('Admin-Token') !== null);
+
+    // Skip guided tour if present
+    const skipBtn = page.locator('.introjs-skipbutton');
+    if (await skipBtn.isVisible()) {
+      await skipBtn.click();
+    }
   });
 
   test('Navigate and verify Parent Center', async ({ page }) => {

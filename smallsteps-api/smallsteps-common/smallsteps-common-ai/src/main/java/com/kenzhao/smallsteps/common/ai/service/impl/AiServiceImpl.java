@@ -289,7 +289,25 @@ public class AiServiceImpl implements IAiService {
         if (text == null || text.trim().isEmpty()) return "";
         
         // 1. 过滤 <think> 标签及其内容 (适配 Qwen 等思考模型)
-        String cleanText = text.replaceAll("(?s)<think>.*?</think>", "").trim();
+        // 改进：增加对未闭合标签的处理
+        String cleanText = text;
+        if (cleanText.contains("<think>")) {
+            int thinkStart = cleanText.indexOf("<think>");
+            int thinkEnd = cleanText.indexOf("</think>");
+            if (thinkEnd != -1) {
+                // 标签闭合，删除中间内容
+                cleanText = cleanText.substring(0, thinkStart) + cleanText.substring(thinkEnd + 8);
+            } else {
+                // 标签未闭合，尝试找到 JSON 开始的位置，或者干脆截断 <think> 之后的所有内容
+                int jsonStart = Math.max(cleanText.indexOf("{"), cleanText.indexOf("["));
+                if (jsonStart != -1 && jsonStart > thinkStart) {
+                    cleanText = cleanText.substring(0, thinkStart) + cleanText.substring(jsonStart);
+                } else {
+                    cleanText = cleanText.substring(0, thinkStart);
+                }
+            }
+        }
+        cleanText = cleanText.trim();
         
         // 2. 尝试匹配 ```json ... ``` 或 ``` ... ```
         String json = ReUtil.getGroup1("(?s)```json\\s*(.*?)\\s*```", cleanText);

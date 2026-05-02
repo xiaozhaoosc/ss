@@ -6,7 +6,7 @@ test.describe('Parent Basic Tests', () => {
   test.use({ storageState: 'playwright/.auth/parent.json' });
 
   test('Login verification (Already logged in via storageState)', async ({ page }) => {
-    await page.goto('/pages/parent/dashboard/index');
+    await page.goto('/#/pages/parent/dashboard/index');
     await expect(page).toHaveURL(/dashboard/);
   });
 
@@ -18,32 +18,32 @@ test.describe('Parent Basic Tests', () => {
   });
 
   test('Navigate to profile page', async ({ page }) => {
-    await page.goto('/pages/parent/profile/index');
+    await page.goto('/#/pages/parent/profile/index');
     await expect(page).toHaveURL(/profile/);
   });
 
   test('Navigate to insights page', async ({ page }) => {
-    await page.goto('/pages/parent/insights/index');
+    await page.goto('/#/pages/parent/insights/index');
     await expect(page).toHaveURL(/insights/);
   });
 
   test('Navigate to task creator page', async ({ page }) => {
-    await page.goto('/pages/parent/task-creator/index');
+    await page.goto('/#/pages/parent/task-creator/index');
     await expect(page).toHaveURL(/task-creator/);
   });
 
   test('Navigate to daily focus page', async ({ page }) => {
-    await page.goto('/pages/parent/daily-focus/index');
+    await page.goto('/#/pages/parent/daily-focus/index');
     await expect(page).toHaveURL(/daily-focus/);
   });
 
   test('Navigate to exec record page', async ({ page }) => {
-    await page.goto('/pages/parent/exec-record/index');
+    await page.goto('/#/pages/parent/exec-record/index');
     await expect(page).toHaveURL(/exec-record/);
   });
 
   test('Navigate to weekly report page', async ({ page }) => {
-    await page.goto('/pages/parent/weekly-report/index');
+    await page.goto('/#/pages/parent/weekly-report/index');
     await expect(page).toHaveURL(/weekly-report/);
   });
 });

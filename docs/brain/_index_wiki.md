@@ -21,8 +21,13 @@
 - [[ADR-009-AI-Chat-Timeout-JSON-Exception]] - AI 深度思考 JSON 解析异常与长链接超时解决机制
 - [[ADR-010-AI-Streaming-SSE-Optimization]] - AI 聊天流式 SSE 响应优化与 Vite 代理绕过机制
 - [[ADR-011-Backend-Parameter-Mapping-Fix]] - 后端 Controller 儿童 ID 参数名兼容性修正 ADR
+- [[ADR-012-E2E-Testing-Modernization]] - E2E 自动化测试架构现代化 ADR
+- [[ADR-013-Onboarding-System-Design]] - ADHD 友好型新手引导系统设计 ADR
 
 ## 每日记录 (Journal)
+- [[2026-05-02]] (Wiki 初始化 & 4月末进度同步)
+- [[2026-04-30]] (自动化测试硬化 & UI 变量修复)
+- [[2026-04-29]] (新手引导系统 & 角色动态分发)
 - [[2026-04-28]] (时光机修复 & 后端参数对齐)
 - [[2026-04-27]] (运行时环境恢复与 MyBatis 异常修复)
 - [[2026-04-26]] (Web 自动化测试与家长端洞察探索)

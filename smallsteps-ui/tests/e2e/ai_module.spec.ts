@@ -6,7 +6,15 @@ test.describe('AI管理模块测试', () => {
     await page.getByPlaceholder('用户名').fill('admin');
     await page.getByPlaceholder('密码').fill('admin123');
     await page.click('button:has-text("登 录")');
-    await page.waitForURL('**/index**', { timeout: 10000 });
+    
+    // Updated to match /#/dashboard
+    await page.waitForURL(/.*dashboard/, { timeout: 15000 });
+    
+    // Skip guided tour if present
+    const skipBtn = page.locator('.introjs-skipbutton');
+    if (await skipBtn.isVisible()) {
+      await skipBtn.click();
+    }
   });
 
   test('AI模型管理 - 列表页面加载', async ({ page }) => {

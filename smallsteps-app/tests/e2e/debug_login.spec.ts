@@ -9,8 +9,8 @@ test('Debug Login', async ({ page }) => {
   
   await page.screenshot({ path: 'debug_login_start.png' });
   
-  await page.locator('input[placeholder="账号"]').fill(TEST_ACCOUNTS.parent1.username);
-  await page.locator('input[placeholder="密码"]').fill(TEST_ACCOUNTS.parent1.password);
+  await page.locator('input[type="text"]').first().fill(TEST_ACCOUNTS.parent1.username);
+  await page.locator('input[type="password"]').first().fill(TEST_ACCOUNTS.parent1.password);
   
   await page.screenshot({ path: 'debug_login_filled.png' });
   

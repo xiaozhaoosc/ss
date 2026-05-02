@@ -160,14 +160,14 @@ public class ParentTaskServiceImpl implements IParentTaskService {
             .mapToInt(t -> t.getAutonomyScore() != null ? t.getAutonomyScore() : 0)
             .average().orElse(70.0);
 
-        List<Integer> scores = List.of(
+        List<Integer> scores = new java.util.ArrayList<>(java.util.Arrays.asList(
             (int)avgAutonomy, // 专注力
             executionScore,   // 执行力
             65,               // 创造力 (暂无数据)
             70,               // 社交能力 (暂无数据)
             75,               // 情绪管理 (由 ChildAIService 处理)
             80                // 学习能力 (暂无数据)
-        );
+        ));
 
         result.put("abilities", abilities);
         result.put("scores", scores);

@@ -13,9 +13,9 @@ test.describe('Parent Profile Tests', () => {
     loginPage = new LoginPage(page);
     profilePage = new ParentProfilePage(page);
     navPage = new ParentNavPage(page);
-    await loginPage.goto();
-    await loginPage.login(TEST_ACCOUNTS.parent1.username, TEST_ACCOUNTS.parent1.password);
-    await navPage.goToProfile();
+    // 使用 storageState 自动登录，直接跳转到个人中心
+    await page.goto('/#/pages/parent/profile/index');
+    await page.waitForLoadState('networkidle');
   });
 
   test('Verify profile page loads correctly', async ({ page }) => {

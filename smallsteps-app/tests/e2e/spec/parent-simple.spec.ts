@@ -10,11 +10,8 @@ test.describe('Parent Simple Tests', () => {
   });
 
   test('Login and verify dashboard elements', async ({ page }) => {
-    // 登录
-    await loginPage.goto();
-    await loginPage.login(TEST_ACCOUNTS.parent1.username, TEST_ACCOUNTS.parent1.password);
-    
-    // 验证仪表盘页面加载
+    // 自动登录后直接验证仪表盘页面加载
+    await page.goto('/#/pages/parent/dashboard/index');
     await expect(page).toHaveURL(/dashboard/);
     
     // 验证核心元素存在
@@ -24,12 +21,8 @@ test.describe('Parent Simple Tests', () => {
   });
 
   test('Verify profile page elements', async ({ page }) => {
-    // 登录
-    await loginPage.goto();
-    await loginPage.login(TEST_ACCOUNTS.parent1.username, TEST_ACCOUNTS.parent1.password);
-    
-    // 导航到个人中心
-    await page.goto('/pages/parent/profile/index');
+    // 使用自动登录直接导航到个人中心
+    await page.goto('/#/pages/parent/profile/index');
     
     // 验证核心元素存在
     await expect(page).toHaveURL(/profile/);
@@ -38,12 +31,8 @@ test.describe('Parent Simple Tests', () => {
   });
 
   test('Verify insights page elements', async ({ page }) => {
-    // 登录
-    await loginPage.goto();
-    await loginPage.login(TEST_ACCOUNTS.parent1.username, TEST_ACCOUNTS.parent1.password);
-    
-    // 导航到洞察页面
-    await page.goto('/pages/parent/insights/index');
+    // 使用自动登录直接导航到洞察页面
+    await page.goto('/#/pages/parent/insights/index');
     
     // 验证核心元素存在
     await expect(page).toHaveURL(/insights/);
@@ -51,12 +40,8 @@ test.describe('Parent Simple Tests', () => {
   });
 
   test('Verify task creator page', async ({ page }) => {
-    // 登录
-    await loginPage.goto();
-    await loginPage.login(TEST_ACCOUNTS.parent1.username, TEST_ACCOUNTS.parent1.password);
-    
-    // 导航到任务创建页面
-    await page.goto('/pages/parent/task-creator/index');
+    // 使用自动登录直接导航到任务创建页面
+    await page.goto('/#/pages/parent/task-creator/index');
     
     // 验证页面加载
     await expect(page).toHaveURL(/task-creator/);

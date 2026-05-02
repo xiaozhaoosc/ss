@@ -3,8 +3,10 @@ import { test, expect } from '@playwright/test';
 test.describe('Small Steps Web端 - 首页模块详细测试', () => {
   test('首页 - 登录页面元素验证', async ({ page }) => {
     await page.goto('/');
-    await page.waitForLoadState('domcontentloaded');
-    await page.waitForTimeout(2000);
+    // Wait for the loader to disappear
+    await page.waitForSelector('#loader-wrapper', { state: 'hidden', timeout: 15000 });
+    // Wait for login form text
+    await page.waitForSelector('text=用户名', { timeout: 10000 });
 
     const pageContent = await page.content();
     expect(pageContent).toContain('用户名');
@@ -14,13 +16,14 @@ test.describe('Small Steps Web端 - 首页模块详细测试', () => {
 
   test('首页 - 登录功能测试', async ({ page }) => {
     await page.goto('/');
-    await page.waitForLoadState('domcontentloaded');
-    await page.waitForTimeout(2000);
+    await page.waitForSelector('#loader-wrapper', { state: 'hidden', timeout: 15000 });
 
     await page.locator('input[placeholder="用户名"]').fill('admin');
     await page.locator('input[placeholder="密码"]').fill('admin123');
     await page.getByRole('button', { name: '登 录' }).click();
-    await page.waitForTimeout(5000);
+    
+    // Use the safer URL check
+    await page.waitForURL(/.*(index|dashboard)/, { timeout: 15000 });
 
     const url = page.url();
     console.log('登录后URL:', url);

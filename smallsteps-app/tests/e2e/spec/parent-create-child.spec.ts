@@ -17,9 +17,8 @@ test.describe('家长创建/绑定儿童账号流程', () => {
     profilePage = new ParentProfilePage(page);
     navPage = new ParentNavPage(page);
 
-    // 登录家长账号
-    await loginPage.goto();
-    await loginPage.login(TEST_ACCOUNTS.parent1.username, TEST_ACCOUNTS.parent1.password);
+    // 使用 storageState 自动登录，直接跳转到家长首页
+    await page.goto('/#/pages/parent/dashboard/index');
     await dashboardPage.waitForReady();
   });
 
