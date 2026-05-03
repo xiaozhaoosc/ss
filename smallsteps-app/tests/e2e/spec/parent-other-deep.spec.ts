@@ -8,7 +8,7 @@ test.describe('设备配置和亲子契约页面测试', () => {
   });
 
   test('设备配置页面加载测试', async ({ page }) => {
-    await page.goto('/pages/parent/device-config/index');
+    await page.goto('/#/pages/parent/device-config/index');
     await page.waitForLoadState('networkidle');
 
     // 验证页面加载
@@ -23,7 +23,7 @@ test.describe('设备配置和亲子契约页面测试', () => {
   });
 
   test('设备配置页面 - 返回按钮', async ({ page }) => {
-    await page.goto('/pages/parent/device-config/index');
+    await page.goto('/#/pages/parent/device-config/index');
     await page.waitForLoadState('networkidle');
 
     // 查找返回按钮
@@ -35,7 +35,7 @@ test.describe('设备配置和亲子契约页面测试', () => {
   });
 
   test('亲子契约页面加载测试', async ({ page }) => {
-    await page.goto('/pages/parent/contract/index');
+    await page.goto('/#/pages/parent/contract/index');
     await page.waitForLoadState('networkidle');
 
     // 验证页面加载
@@ -49,7 +49,7 @@ test.describe('设备配置和亲子契约页面测试', () => {
   });
 
   test('亲子契约页面 - 待处理兑换区域', async ({ page }) => {
-    await page.goto('/pages/parent/contract/index');
+    await page.goto('/#/pages/parent/contract/index');
     await page.waitForLoadState('networkidle');
 
     // 验证待处理兑换标题
@@ -64,7 +64,7 @@ test.describe('设备配置和亲子契约页面测试', () => {
   });
 
   test('亲子契约页面 - 活跃契约区域', async ({ page }) => {
-    await page.goto('/pages/parent/contract/index');
+    await page.goto('/#/pages/parent/contract/index');
     await page.waitForLoadState('networkidle');
 
     // 验证活跃契约标题
@@ -81,7 +81,7 @@ test.describe('设备配置和亲子契约页面测试', () => {
   });
 
   test('亲子契约页面 - 契约卡片内容', async ({ page }) => {
-    await page.goto('/pages/parent/contract/index');
+    await page.goto('/#/pages/parent/contract/index');
     await page.waitForLoadState('networkidle');
 
     // 等待数据加载
@@ -101,7 +101,7 @@ test.describe('设备配置和亲子契约页面测试', () => {
   });
 
   test('亲子契约页面 - 进度条', async ({ page }) => {
-    await page.goto('/pages/parent/contract/index');
+    await page.goto('/#/pages/parent/contract/index');
     await page.waitForLoadState('networkidle');
 
     // 等待数据加载
@@ -115,7 +115,7 @@ test.describe('设备配置和亲子契约页面测试', () => {
   });
 
   test('亲子契约页面 - 星星数量显示', async ({ page }) => {
-    await page.goto('/pages/parent/contract/index');
+    await page.goto('/#/pages/parent/contract/index');
     await page.waitForLoadState('networkidle');
 
     // 验证星星图标

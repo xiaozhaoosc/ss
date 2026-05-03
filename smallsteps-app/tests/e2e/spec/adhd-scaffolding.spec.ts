@@ -12,7 +12,7 @@ test.describe('ADHD 支架式模板库 (Scaffolding Library) 测试', () => {
   });
 
   test('模板库页面加载测试', async ({ page }) => {
-    await page.goto('/pages/template/library');
+    await page.goto('/#/pages/template/library');
     await page.waitForLoadState('networkidle');
 
     // 验证页面加载
@@ -27,7 +27,7 @@ test.describe('ADHD 支架式模板库 (Scaffolding Library) 测试', () => {
   });
 
   test('模板列表分类展示测试', async ({ page }) => {
-    await page.goto('/pages/template/library');
+    await page.goto('/#/pages/template/library');
     await page.waitForLoadState('networkidle');
     await page.locator('.template-card, .card-item').first().waitFor({ state: 'visible', timeout: 10000 }).catch(() => {});
 
@@ -44,7 +44,7 @@ test.describe('ADHD 支架式模板库 (Scaffolding Library) 测试', () => {
   });
 
   test('动作化拆解 - 模板步骤基于"动作"而非"结果"', async ({ page }) => {
-    await page.goto('/pages/template/detail?id=101');
+    await page.goto('/#/pages/template/detail?id=101');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
 
@@ -65,7 +65,7 @@ test.describe('ADHD 支架式模板库 (Scaffolding Library) 测试', () => {
   });
 
   test('分级提示 (Fading Strategy) - 预设强中弱三档引导', async ({ page }) => {
-    await page.goto('/pages/template/detail?id=101');
+    await page.goto('/#/pages/template/detail?id=101');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
 
@@ -84,7 +84,7 @@ test.describe('ADHD 支架式模板库 (Scaffolding Library) 测试', () => {
   });
 
   test('模板详情页 - 立即启用按钮', async ({ page }) => {
-    await page.goto('/pages/template/detail?id=101');
+    await page.goto('/#/pages/template/detail?id=101');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
 
@@ -104,7 +104,7 @@ test.describe('ADHD 支架式模板库 (Scaffolding Library) 测试', () => {
   });
 
   test('模板详情页 - 返回按钮', async ({ page }) => {
-    await page.goto('/pages/template/detail?id=101');
+    await page.goto('/#/pages/template/detail?id=101');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(1000);
 
@@ -128,7 +128,7 @@ test.describe('AI 任务拆解测试', () => {
   });
 
   test('任务创建页面 - AI 拆解按钮存在性', async ({ page }) => {
-    await page.goto('/pages/parent/task-creator/index');
+    await page.goto('/#/pages/parent/task-creator/index');
     await page.waitForLoadState('networkidle');
 
     // 验证 AI 拆解按钮存在
@@ -137,7 +137,7 @@ test.describe('AI 任务拆解测试', () => {
   });
 
   test('任务创建页面 - 模板库按钮跳转', async ({ page }) => {
-    await page.goto('/pages/parent/task-creator/index');
+    await page.goto('/#/pages/parent/task-creator/index');
     await page.waitForLoadState('networkidle');
 
     // 查找模板库按钮
@@ -153,7 +153,7 @@ test.describe('AI 任务拆解测试', () => {
   });
 
   test('任务创建页面 - 输入任务描述', async ({ page }) => {
-    await page.goto('/pages/parent/task-creator/index');
+    await page.goto('/#/pages/parent/task-creator/index');
     await page.waitForLoadState('networkidle');
 
     // 查找文本输入框
@@ -170,7 +170,7 @@ test.describe('AI 任务拆解测试', () => {
   });
 
   test('任务创建页面 - AI 拆解功能', async ({ page }) => {
-    await page.goto('/pages/parent/task-creator/index');
+    await page.goto('/#/pages/parent/task-creator/index');
     await page.waitForLoadState('networkidle');
 
     // 输入任务描述
@@ -194,7 +194,7 @@ test.describe('AI 任务拆解测试', () => {
   });
 
   test('任务创建页面 - 添加自定义步骤', async ({ page }) => {
-    await page.goto('/pages/parent/task-creator/index');
+    await page.goto('/#/pages/parent/task-creator/index');
     await page.waitForLoadState('networkidle');
 
     // 查找添加步骤按钮
@@ -212,7 +212,7 @@ test.describe('AI 任务拆解测试', () => {
   });
 
   test('任务创建页面 - 删除步骤', async ({ page }) => {
-    await page.goto('/pages/parent/task-creator/index');
+    await page.goto('/#/pages/parent/task-creator/index');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(1000);
 
@@ -232,7 +232,7 @@ test.describe('AI 任务拆解测试', () => {
   });
 
   test('任务创建页面 - 提交任务', async ({ page }) => {
-    await page.goto('/pages/parent/task-creator/index');
+    await page.goto('/#/pages/parent/task-creator/index');
     await page.waitForLoadState('networkidle');
 
     // 输入任务
@@ -255,7 +255,7 @@ test.describe('AI 任务拆解测试', () => {
   });
 
   test('任务创建页面 - 高级选项（每天重复、存为模板）', async ({ page }) => {
-    await page.goto('/pages/parent/task-creator/index');
+    await page.goto('/#/pages/parent/task-creator/index');
     await page.waitForLoadState('networkidle');
 
     // 验证高级选项存在

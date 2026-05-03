@@ -30,6 +30,28 @@
         </view>
       </view> -->
 
+      <!-- User Profile Section -->
+      <view class="section">
+        <view class="user-card">
+          <view class="user-info-box" @click="handleToInfo">
+            <view class="avatar-wrapper">
+              <image class="avatar" :src="userStore.userInfo?.user?.avatar || 'https://lh3.googleusercontent.com/aida-public/AB6AXuAJ1cciJ4i8VZa4i84tUg3c73WgpXsHDPWFJTFC1HCyoJaWAw63sCD6sYtGoggTmCxZPkFLdgXZ0jMVUEjuhNaybs-1a06VWI-j7Tv_k-GcxylNpE1U9cjTL6ICQBnyg02gLWhSCCy1SnHe6psYMG-13HPVdTV9vR6odzmSIWG_6kD9m5MrzeKyalS3Ewhx_px4_a3iAVFvHE4SYxL6Z13ZA7UVC9fVC7U29WKKz0G9msv4O4zW9MUm2t6NZ6FOtcNY4-8SHhP3MgM'" mode="aspectFill" />
+            </view>
+            <view class="name-box">
+              <text class="user-name">{{ userStore.userInfo?.user?.nickName || '小红' }}</text>
+            </view>
+          </view>
+          <view class="user-actions">
+            <view class="icon-btn" @click="handleShowMyQr">
+              <text class="material-symbols-outlined">qr_code_2</text>
+            </view>
+            <view class="icon-btn" @click="handleToEditInfo">
+              <text class="material-symbols-outlined">edit</text>
+            </view>
+          </view>
+        </view>
+      </view>
+
       <!-- Child Profile Section -->
       <view class="section">
         <view class="section-header">
@@ -128,9 +150,9 @@ const children = ref([])
 const loading = ref(false)
 
 const settings = ref([
-  { title: '通知设置', icon: 'notifications', colorClass: 'blue' },
-  { title: '隐私政策', icon: 'shield', colorClass: 'purple' },
-  { title: '账号安全', icon: 'lock', colorClass: 'emerald' }
+  { title: '通知设置', icon: 'notifications', colorClass: 'blue', url: '/pages/mine/setting/notification' },
+  { title: '隐私政策', icon: 'shield', colorClass: 'purple', url: '/pages/mine/about/privacy' },
+  { title: '账号安全', icon: 'lock', colorClass: 'emerald', url: '/pages/mine/pwd/index' }
 ])
 
 // 获取儿童列表
@@ -192,14 +214,35 @@ const handleShowQr = (child) => {
   })
 }
 
+const handleToInfo = () => {
+  uni.navigateTo({ url: '/pages/mine/info/index' })
+}
+
+const handleToEditInfo = () => {
+  uni.navigateTo({ url: '/pages/mine/info/edit' })
+}
+
+const handleShowMyQr = () => {
+  uni.showModal({
+    title: '我的名片',
+    content: '这是您的个人名片二维码（展示用）',
+    showCancel: false
+  })
+}
+
 const handleSettingClick = (item) => {
-  uni.showToast({ title: `进入 ${item.title}`, icon: 'none' })
+  if (item.url) {
+    uni.navigateTo({ url: item.url })
+  } else if (item.title === '帮助与反馈') {
+    uni.navigateTo({ url: '/pages/mine/help/index' })
+  }
 }
 
 const handleLogout = () => {
   uni.showModal({
-    title: '提示',
-    content: '确定要退出登录吗？',
+    title: '退出登录',
+    content: '确定要退出当前账号吗？',
+    confirmColor: '#ef4444',
     success: (res) => {
       if (res.confirm) {
         userStore.logOut()
@@ -260,6 +303,43 @@ onMounted(() => {
 
 .section {
   margin-bottom: 24px;
+}
+
+.user-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px;
+  background-color: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+}
+
+.user-info-box {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.avatar-wrapper {
+  width: 64px;
+  height: 64px;
+  border-radius: 999px;
+  overflow: hidden;
+  background-color: #f3f4f6;
+  border: 4px solid #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.user-name {
+  font-size: 20px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.user-actions {
+  display: flex;
+  gap: 12px;
 }
 
 .device-card {

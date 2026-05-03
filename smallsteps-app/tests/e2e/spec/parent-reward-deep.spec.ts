@@ -12,7 +12,7 @@ test.describe('奖励相关页面深度测试', () => {
   });
 
   test('奖励配置页面加载测试', async ({ page }) => {
-    await page.goto('/pages/parent/reward-config/index');
+    await page.goto('/#/pages/parent/reward-config/index');
     await page.waitForLoadState('networkidle');
 
     // 验证页面加载
@@ -30,7 +30,7 @@ test.describe('奖励相关页面深度测试', () => {
   });
 
   test('奖励配置页面 - Tab 切换测试', async ({ page }) => {
-    await page.goto('/pages/parent/reward-config/index');
+    await page.goto('/#/pages/parent/reward-config/index');
     await page.waitForLoadState('networkidle');
 
     // 等待页面加载
@@ -52,7 +52,7 @@ test.describe('奖励相关页面深度测试', () => {
   });
 
   test('奖励配置页面 - 添加新奖励按钮', async ({ page }) => {
-    await page.goto('/pages/parent/reward-config/index');
+    await page.goto('/#/pages/parent/reward-config/index');
     await page.waitForLoadState('networkidle');
 
     // 等待页面加载
@@ -69,7 +69,7 @@ test.describe('奖励相关页面深度测试', () => {
   });
 
   test('奖励配置页面 - 待处理请求', async ({ page }) => {
-    await page.goto('/pages/parent/reward-config/index');
+    await page.goto('/#/pages/parent/reward-config/index');
     await page.waitForLoadState('networkidle');
 
     // 等待数据加载
@@ -84,7 +84,7 @@ test.describe('奖励相关页面深度测试', () => {
   });
 
   test('奖励配置页面 - 现有奖励列表', async ({ page }) => {
-    await page.goto('/pages/parent/reward-config/index');
+    await page.goto('/#/pages/parent/reward-config/index');
     await page.waitForLoadState('networkidle');
 
     // 等待数据加载
@@ -100,7 +100,7 @@ test.describe('奖励相关页面深度测试', () => {
   });
 
   test('奖励配置页面 - 底部导航栏', async ({ page }) => {
-    await page.goto('/pages/parent/reward-config/index');
+    await page.goto('/#/pages/parent/reward-config/index');
     await page.waitForLoadState('networkidle');
 
     // 验证底部导航
@@ -111,7 +111,7 @@ test.describe('奖励相关页面深度测试', () => {
   });
 
   test('奖励创建页面加载测试', async ({ page }) => {
-    await page.goto('/pages/parent/reward-creator/index');
+    await page.goto('/#/pages/parent/reward-creator/index');
     await page.waitForLoadState('networkidle');
 
     // 验证页面加载
@@ -129,7 +129,7 @@ test.describe('奖励相关页面深度测试', () => {
   });
 
   test('奖励创建页面 - 表单字段验证', async ({ page }) => {
-    await page.goto('/pages/parent/reward-creator/index');
+    await page.goto('/#/pages/parent/reward-creator/index');
     await page.waitForLoadState('networkidle');
 
     // 等待表单加载
@@ -146,7 +146,7 @@ test.describe('奖励相关页面深度测试', () => {
   });
 
   test('奖励创建页面 - 保存按钮', async ({ page }) => {
-    await page.goto('/pages/parent/reward-creator/index');
+    await page.goto('/#/pages/parent/reward-creator/index');
     await page.waitForLoadState('networkidle');
 
     // 等待页面加载
@@ -161,7 +161,7 @@ test.describe('奖励相关页面深度测试', () => {
   });
 
   test('奖励创建页面 - 取消按钮', async ({ page }) => {
-    await page.goto('/pages/parent/reward-creator/index');
+    await page.goto('/#/pages/parent/reward-creator/index');
     await page.waitForLoadState('networkidle');
 
     // 等待页面加载

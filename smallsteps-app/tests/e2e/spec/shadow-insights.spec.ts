@@ -14,7 +14,7 @@ test.describe('家长端 - 影子观察者情绪预警趋势测试', () => {
    * 验证家长端洞察页面显示情绪预警趋势图表
    */
   test('情绪预警趋势页面加载', async ({ page }) => {
-    await page.goto('/pages/parent/insights/index');
+    await page.goto('/#/pages/parent/insights/index');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
 
@@ -30,7 +30,7 @@ test.describe('家长端 - 影子观察者情绪预警趋势测试', () => {
    * TC-C01 扩展: 验证本周预警总数统计
    */
   test('影子观察者统计数据展示', async ({ page }) => {
-    await page.goto('/pages/parent/insights/index');
+    await page.goto('/#/pages/parent/insights/index');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
 
@@ -57,7 +57,7 @@ test.describe('家长端 - 影子观察者情绪预警趋势测试', () => {
    * TC-C01 扩展: 验证预警胶囊显示
    */
   test('情绪预警趋势柱状图 - 预警胶囊显示', async ({ page }) => {
-    await page.goto('/pages/parent/insights/index');
+    await page.goto('/#/pages/parent/insights/index');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(3000);
 
@@ -80,7 +80,7 @@ test.describe('家长端 - 影子观察者情绪预警趋势测试', () => {
    * TC-C01 扩展: 验证柱状图颜色编码
    */
   test('情绪预警趋势柱状图 - 颜色编码验证', async ({ page }) => {
-    await page.goto('/pages/parent/insights/index');
+    await page.goto('/#/pages/parent/insights/index');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
 
@@ -99,7 +99,7 @@ test.describe('家长端 - 影子观察者情绪预警趋势测试', () => {
    * 测试情绪热力图显示
    */
   test('月度情绪热力图显示', async ({ page }) => {
-    await page.goto('/pages/parent/insights/index');
+    await page.goto('/#/pages/parent/insights/index');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
 
@@ -116,7 +116,7 @@ test.describe('家长端 - 影子观察者情绪预警趋势测试', () => {
    * 测试影子观察者说明弹窗
    */
   test('影子观察者说明弹窗', async ({ page }) => {
-    await page.goto('/pages/parent/insights/index');
+    await page.goto('/#/pages/parent/insights/index');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(1000);
 
@@ -138,7 +138,7 @@ test.describe('家长端 - 影子观察者情绪预警趋势测试', () => {
    * 测试每周重点区域
    */
   test('每周重点区域显示', async ({ page }) => {
-    await page.goto('/pages/parent/insights/index');
+    await page.goto('/#/pages/parent/insights/index');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
 
@@ -155,7 +155,7 @@ test.describe('家长端 - 影子观察者情绪预警趋势测试', () => {
    * 测试详情按钮导航
    */
   test('详情按钮导航', async ({ page }) => {
-    await page.goto('/pages/parent/insights/index');
+    await page.goto('/#/pages/parent/insights/index');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(1000);
 

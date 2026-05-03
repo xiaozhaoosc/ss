@@ -1,27 +1,24 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch">
-      <el-form-item label="模型名称" prop="name">
+      <el-form-item label="供应商名称" prop="name">
         <el-input
           v-model="queryParams.name"
-          placeholder="请输入模型名称"
+          placeholder="请输入供应商名称"
           clearable
           style="width: 200px"
           @keyup.enter="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="供应商" prop="providerId">
-        <el-select v-model="queryParams.providerId" placeholder="选择供应商" clearable style="width: 200px">
-          <el-option
-            v-for="item in providerOptions"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id"
-          />
+      <el-form-item label="类型" prop="type">
+        <el-select v-model="queryParams.type" placeholder="请选择类型" clearable style="width: 200px">
+          <el-option label="OpenAI" value="openai" />
+          <el-option label="Azure" value="azure" />
+          <el-option label="SDK/Ollama" value="sdk" />
         </el-select>
       </el-form-item>
       <el-form-item label="状态" prop="status">
-        <el-select v-model="queryParams.status" placeholder="模型状态" clearable style="width: 200px">
+        <el-select v-model="queryParams.status" placeholder="状态" clearable style="width: 200px">
           <el-option label="正常" value="0" />
           <el-option label="停用" value="1" />
         </el-select>
@@ -39,7 +36,7 @@
           plain
           icon="Plus"
           @click="handleAdd"
-          v-hasPermi="['ai:model:add']"
+          v-hasPermi="['ai:provider:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -49,7 +46,7 @@
           icon="Edit"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['ai:model:edit']"
+          v-hasPermi="['ai:provider:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -59,20 +56,24 @@
           icon="Delete"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['ai:model:remove']"
+          v-hasPermi="['ai:provider:remove']"
         >删除</el-button>
       </el-col>
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="modelList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="providerList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="模型ID" align="center" prop="id" />
-      <el-table-column label="模型名称" align="center" prop="name" />
+      <el-table-column label="ID" align="center" prop="id" />
       <el-table-column label="供应商代码" align="center" prop="providerCode" />
-      <el-table-column label="供应商名称" align="center" prop="providerName" />
-      <el-table-column label="模型代码" align="center" prop="modelCode" />
-      <el-table-column label="上下文" align="center" prop="contextWindow" />
+      <el-table-column label="供应商名称" align="center" prop="name" />
+      <el-table-column label="类型" align="center" prop="type">
+        <template #default="scope">
+          <el-tag>{{ scope.row.type }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="API地址" align="center" prop="baseUrl" :show-overflow-tooltip="true" />
+      <el-table-column label="权重" align="center" prop="weight" width="80" />
       <el-table-column label="状态" align="center" prop="status">
         <template #default="scope">
           <el-tag :type="scope.row.status === '0' ? 'success' : 'danger'">
@@ -87,8 +88,8 @@
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
-          <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['ai:model:edit']">修改</el-button>
-          <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)" v-hasPermi="['ai:model:remove']">删除</el-button>
+          <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['ai:provider:edit']">修改</el-button>
+          <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)" v-hasPermi="['ai:provider:remove']">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -101,29 +102,32 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改模型配置对话框 -->
-    <el-dialog :title="title" v-model="open" width="500px" append-to-body>
-      <el-form ref="modelRef" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="模型名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入模型名称" />
+    <!-- 添加或修改供应商对话框 -->
+    <el-dialog :title="title" v-model="open" width="600px" append-to-body>
+      <el-form ref="providerRef" :model="form" :rules="rules" label-width="100px">
+        <el-form-item label="供应商代码" prop="providerCode">
+          <el-input v-model="form.providerCode" placeholder="请输入供应商代码 (如 ALIYUN, OPENAI)" />
         </el-form-item>
-        <el-form-item label="供应商" prop="providerId">
-          <el-select v-model="form.providerId" placeholder="请选择供应商" style="width: 100%">
-            <el-option
-              v-for="item in providerOptions"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            />
+        <el-form-item label="供应商名称" prop="name">
+          <el-input v-model="form.name" placeholder="请输入供应商名称" />
+        </el-form-item>
+        <el-form-item label="供应商类型" prop="type">
+          <el-select v-model="form.type" placeholder="请选择类型" style="width: 100%">
+            <el-option label="OpenAI" value="openai" />
+            <el-option label="Azure" value="azure" />
+            <el-option label="SDK/Ollama" value="sdk" />
           </el-select>
         </el-form-item>
-        <el-form-item label="模型代码" prop="modelCode">
-          <el-input v-model="form.modelCode" placeholder="如 deepseek-chat" />
+        <el-form-item label="API地址" prop="baseUrl">
+          <el-input v-model="form.baseUrl" placeholder="请输入API地址，如 https://api.openai.com/v1" />
         </el-form-item>
-        <el-form-item label="上下文" prop="contextWindow">
-          <el-input-number v-model="form.contextWindow" :min="1" :step="1024" style="width: 100%" />
+        <el-form-item label="API密钥" prop="apiKey">
+          <el-input v-model="form.apiKey" type="password" show-password placeholder="请输入密钥" />
         </el-form-item>
-        <el-form-item label="状态">
+        <el-form-item label="权重" prop="weight">
+          <el-input-number v-model="form.weight" :min="1" :max="100" />
+        </el-form-item>
+        <el-form-item label="状态" prop="status">
           <el-radio-group v-model="form.status">
             <el-radio label="0">正常</el-radio>
             <el-radio label="1">停用</el-radio>
@@ -140,17 +144,12 @@
   </div>
 </template>
 
-<script setup name="AiModel">
-import { listModel, getModel, delModel, addModel, updateModel } from "@/api/system/ai/model";
-import { listAllProvider } from "@/api/system/ai/provider";
+<script setup name="AiProvider">
+import { listProvider, getProvider, delProvider, addProvider, updateProvider } from "@/api/ai/provider";
 
 const { proxy } = getCurrentInstance();
 
-const queryRef = ref();
-const modelRef = ref();
-
-const modelList = ref([]);
-const providerOptions = ref([]);
+const providerList = ref([]);
 const open = ref(false);
 const loading = ref(true);
 const showSearch = ref(true);
@@ -160,19 +159,23 @@ const multiple = ref(true);
 const total = ref(0);
 const title = ref("");
 
+const queryRef = ref();
+const providerRef = ref();
+
 const data = reactive({
   form: {},
   queryParams: {
     pageNum: 1,
     pageSize: 10,
     name: undefined,
-    providerId: undefined,
+    type: undefined,
     status: undefined
   },
   rules: {
-    name: [{ required: true, message: "模型名称不能为空", trigger: "blur" }],
-    providerId: [{ required: true, message: "请选择供应商", trigger: "change" }],
-    modelCode: [{ required: true, message: "模型代码不能为空", trigger: "blur" }],
+    providerCode: [{ required: true, message: "供应商代码不能为空", trigger: "blur" }],
+    name: [{ required: true, message: "供应商名称不能为空", trigger: "blur" }],
+    type: [{ required: true, message: "供应商类型不能为空", trigger: "change" }],
+    baseUrl: [{ required: true, message: "API地址不能为空", trigger: "blur" }]
   }
 });
 
@@ -180,23 +183,11 @@ const { queryParams, form, rules } = toRefs(data);
 
 function getList() {
   loading.value = true;
-  listModel(queryParams.value).then(response => {
-    modelList.value = response.rows;
+  listProvider(queryParams.value).then(response => {
+    providerList.value = response.rows;
     total.value = response.total;
     loading.value = false;
   });
-}
-
-/** 查询所有供应商用于下拉框 */
-function getProviderOptions() {
-  listAllProvider().then(response => {
-    providerOptions.value = response.rows;
-  });
-}
-
-function getProviderName(providerId) {
-  const provider = providerOptions.value.find(item => item.id === providerId);
-  return provider ? provider.name : '未知供应商';
 }
 
 function cancel() {
@@ -207,13 +198,15 @@ function cancel() {
 function reset() {
   form.value = {
     id: undefined,
+    providerCode: undefined,
     name: undefined,
-    providerId: undefined,
-    modelCode: undefined,
-    contextWindow: 4096,
+    type: "openai",
+    baseUrl: undefined,
+    apiKey: undefined,
+    weight: 1,
     status: "0"
   };
-  modelRef.value?.resetFields();
+  providerRef.value?.resetFields();
 }
 
 function handleQuery() {
@@ -235,30 +228,30 @@ function handleSelectionChange(selection) {
 function handleAdd() {
   reset();
   open.value = true;
-  title.value = "添加模型配置";
+  title.value = "添加供应商配置";
 }
 
 function handleUpdate(row) {
   reset();
   const id = row.id || ids.value;
-  getModel(id).then(response => {
+  getProvider(id).then(response => {
     form.value = response.data;
     open.value = true;
-    title.value = "修改模型配置";
+    title.value = "修改供应商配置";
   });
 }
 
 function submitForm() {
-  modelRef.value.validate(valid => {
+  providerRef.value.validate(valid => {
     if (valid) {
       if (form.value.id != undefined) {
-        updateModel(form.value).then(response => {
+        updateProvider(form.value).then(response => {
           proxy.$modal.msgSuccess("修改成功");
           open.value = false;
           getList();
         });
       } else {
-        addModel(form.value).then(response => {
+        addProvider(form.value).then(response => {
           proxy.$modal.msgSuccess("新增成功");
           open.value = false;
           getList();
@@ -269,9 +262,9 @@ function submitForm() {
 }
 
 function handleDelete(row) {
-  const modelIds = row.id || ids.value;
-  proxy.$modal.confirm('是否确认删除模型配置编号为"' + modelIds + '"的数据项？').then(function() {
-    return delModel(modelIds);
+  const providerIds = row.id || ids.value;
+  proxy.$modal.confirm('是否确认删除供应商配置编号为"' + providerIds + '"的数据项？').then(function() {
+    return delProvider(providerIds);
   }).then(() => {
     getList();
     proxy.$modal.msgSuccess("删除成功");
@@ -279,6 +272,4 @@ function handleDelete(row) {
 }
 
 getList();
-getProviderOptions();
 </script>
-

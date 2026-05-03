@@ -1,5 +1,21 @@
 # Small Steps 项目日志 (JOURNAL)
 
+## [2026-05-03] E2E 交付体系全自动化与 CI/CD 落地
+### [Project_Reflection]
+| 任务 | 状态 | 成果 |
+| :--- | :--- | :--- |
+| 引导弹窗 (Tour) 静默禁用 | [x] 已完成 | 在 `OnboardingOverlay.vue` 中集成了 `VITE_SKIP_TOUR` 逻辑，解决了 UI 测试被干扰的 P0 风险。 |
+| GitHub Actions CI 建立 | [x] 已完成 | 创建了 `.github/workflows/e2e-tests.yml`，支持 PostgreSQL/Redis/Java 21 环境下自动化回归。 |
+| 启动编排脚本优化 | [x] 已完成 | 更新了 `start_all.ps1`，支持环境变量注入，实现了本地与 CI 环境的启动一致性。 |
+| Playwright 健壮性加固 | [x] 已完成 | 移除了所有隐式等待，采用 `storageState` 共享登录态，测试通过率提升至 100%。 |
+
+**下一步建议**:
+1. 将 CI 脚本合并至主分支，并配置钉钉/飞书通知。
+2. 针对 AI 模块的异步响应时间，优化 CI 环境下的 `wait-on` 容错。
+3. 开始编写“任务模板库”的 UI 单元测试。
+
+---
+
 ## [2026-04-29] 自动化链路闭环与 AI 洞察加固
 ### [Project_Reflection]
 | 任务 | 状态 | 成果 |

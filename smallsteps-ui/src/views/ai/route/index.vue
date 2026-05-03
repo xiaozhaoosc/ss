@@ -130,8 +130,8 @@
 </template>
 
 <script setup name="AiRoute">
-import { listRoute, getRoute, delRoute, addRoute, updateRoute } from "@/api/system/ai/route";
-import { listModel } from "@/api/system/ai/model";
+import { listRoute, getRoute, delRoute, addRoute, updateRoute } from "@/api/ai/route";
+import { listModel } from "@/api/ai/model";
 
 const { proxy } = getCurrentInstance();
 

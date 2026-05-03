@@ -1,6 +1,6 @@
 {
   "round": 3,
-  "date": "2026-04-01T16:37:10.306Z",
+  "date": "2026-05-03T03:36:06.742Z",
   "testCases": [
     {
       "id": "TC-LOGIN-001",
@@ -8,7 +8,7 @@
       "category": "登录",
       "page": "登录页",
       "status": "pass",
-      "duration": 1758
+      "duration": 1099
     },
     {
       "id": "TC-LOGIN-002",
@@ -16,15 +16,16 @@
       "category": "登录",
       "page": "登录页",
       "status": "pass",
-      "duration": 427
+      "duration": 1410
     },
     {
       "id": "TC-LOGIN-003",
       "name": "验证空密码登录提示",
       "category": "登录",
       "page": "登录页",
-      "status": "pass",
-      "duration": 1238
+      "status": "fail",
+      "duration": 317,
+      "error": "一般性错误 - 偶发问题"
     },
     {
       "id": "TC-LOGIN-004",
@@ -32,7 +33,7 @@
       "category": "登录",
       "page": "登录页",
       "status": "pass",
-      "duration": 1150
+      "duration": 301
     },
     {
       "id": "TC-LOGIN-005",
@@ -40,7 +41,7 @@
       "category": "登录",
       "page": "登录页",
       "status": "fail",
-      "duration": 1480,
+      "duration": 943,
       "error": "受问题 ISSUE-005 影响: 记住密码功能密码明文存储"
     },
     {
@@ -49,7 +50,7 @@
       "category": "登录",
       "page": "登录页",
       "status": "pass",
-      "duration": 802
+      "duration": 495
     },
     {
       "id": "TC-LOGIN-007",
@@ -57,7 +58,7 @@
       "category": "登录",
       "page": "登录页",
       "status": "fail",
-      "duration": 353,
+      "duration": 1611,
       "error": "一般性错误 - 偶发问题"
     },
     {
@@ -66,7 +67,7 @@
       "category": "登录",
       "page": "登录页",
       "status": "pass",
-      "duration": 535
+      "duration": 1262
     },
     {
       "id": "TC-P-DASH-001",
@@ -74,7 +75,7 @@
       "category": "家长端",
       "page": "家长仪表盘",
       "status": "pass",
-      "duration": 1092
+      "duration": 1653
     },
     {
       "id": "TC-P-DASH-002",
@@ -82,7 +83,7 @@
       "category": "家长端",
       "page": "家长仪表盘",
       "status": "pass",
-      "duration": 1664
+      "duration": 1029
     },
     {
       "id": "TC-P-DASH-003",
@@ -90,7 +91,7 @@
       "category": "家长端",
       "page": "家长仪表盘",
       "status": "fail",
-      "duration": 575,
+      "duration": 1174,
       "error": "受问题 ISSUE-007 影响: 通知下拉菜单样式错位"
     },
     {
@@ -99,7 +100,7 @@
       "category": "家长端",
       "page": "家长仪表盘",
       "status": "pass",
-      "duration": 1103
+      "duration": 1001
     },
     {
       "id": "TC-P-DASH-005",
@@ -107,24 +108,24 @@
       "category": "家长端",
       "page": "家长仪表盘",
       "status": "pass",
-      "duration": 876
+      "duration": 481
     },
     {
       "id": "TC-P-DASH-006",
       "name": "验证日程时间轴显示",
       "category": "家长端",
       "page": "家长仪表盘",
-      "status": "pass",
-      "duration": 1355
+      "status": "fail",
+      "duration": 1730,
+      "error": "一般性错误 - 偶发问题"
     },
     {
       "id": "TC-P-TASK-001",
       "name": "验证任务创建页面加载",
       "category": "家长端",
       "page": "任务创建",
-      "status": "fail",
-      "duration": 1446,
-      "error": "一般性错误 - 偶发问题"
+      "status": "pass",
+      "duration": 766
     },
     {
       "id": "TC-P-TASK-002",
@@ -132,7 +133,7 @@
       "category": "家长端",
       "page": "任务创建",
       "status": "pass",
-      "duration": 1181
+      "duration": 896
     },
     {
       "id": "TC-P-TASK-003",
@@ -140,7 +141,7 @@
       "category": "家长端",
       "page": "任务创建",
       "status": "fail",
-      "duration": 1204,
+      "duration": 1047,
       "error": "受问题 ISSUE-006 影响: 创建任务后页面崩溃"
     },
     {
@@ -149,7 +150,7 @@
       "category": "家长端",
       "page": "奖励配置",
       "status": "pass",
-      "duration": 1572
+      "duration": 1733
     },
     {
       "id": "TC-P-REWARD-002",
@@ -157,7 +158,7 @@
       "category": "家长端",
       "page": "奖励配置",
       "status": "pass",
-      "duration": 1684
+      "duration": 1741
     },
     {
       "id": "TC-P-REWARD-003",
@@ -165,15 +166,16 @@
       "category": "家长端",
       "page": "奖励配置",
       "status": "pass",
-      "duration": 1129
+      "duration": 657
     },
     {
       "id": "TC-P-REWARD-004",
       "name": "验证删除奖励",
       "category": "家长端",
       "page": "奖励配置",
-      "status": "pass",
-      "duration": 766
+      "status": "fail",
+      "duration": 1250,
+      "error": "一般性错误 - 偶发问题"
     },
     {
       "id": "TC-C-HOME-001",
@@ -181,15 +183,16 @@
       "category": "儿童端",
       "page": "儿童首页",
       "status": "pass",
-      "duration": 865
+      "duration": 1546
     },
     {
       "id": "TC-C-HOME-002",
       "name": "验证任务卡片显示",
       "category": "儿童端",
       "page": "儿童首页",
-      "status": "pass",
-      "duration": 1664
+      "status": "fail",
+      "duration": 352,
+      "error": "一般性错误 - 偶发问题"
     },
     {
       "id": "TC-C-HOME-003",
@@ -197,7 +200,7 @@
       "category": "儿童端",
       "page": "儿童首页",
       "status": "pass",
-      "duration": 1128
+      "duration": 1779
     },
     {
       "id": "TC-C-HOME-004",
@@ -205,7 +208,7 @@
       "category": "儿童端",
       "page": "儿童首页",
       "status": "pass",
-      "duration": 1657
+      "duration": 1124
     },
     {
       "id": "TC-C-TASK-001",
@@ -213,7 +216,7 @@
       "category": "儿童端",
       "page": "任务执行",
       "status": "pass",
-      "duration": 310
+      "duration": 958
     },
     {
       "id": "TC-C-TASK-002",
@@ -221,7 +224,7 @@
       "category": "儿童端",
       "page": "任务执行",
       "status": "fail",
-      "duration": 1581,
+      "duration": 1620,
       "error": "受问题 ISSUE-003 影响: 儿童端任务步骤点击无反馈"
     },
     {
@@ -229,8 +232,9 @@
       "name": "验证完成全部步骤",
       "category": "儿童端",
       "page": "任务执行",
-      "status": "pass",
-      "duration": 916
+      "status": "fail",
+      "duration": 358,
+      "error": "一般性错误 - 偶发问题"
     },
     {
       "id": "TC-C-SHOP-001",
@@ -238,7 +242,7 @@
       "category": "儿童端",
       "page": "奖励商店",
       "status": "fail",
-      "duration": 414,
+      "duration": 535,
       "error": "受问题 ISSUE-004 影响: 奖励商店加载动画卡顿"
     },
     {
@@ -247,7 +251,7 @@
       "category": "儿童端",
       "page": "奖励商店",
       "status": "pass",
-      "duration": 1061
+      "duration": 485
     },
     {
       "id": "TC-C-SHOP-003",
@@ -255,7 +259,7 @@
       "category": "儿童端",
       "page": "奖励商店",
       "status": "pass",
-      "duration": 1126
+      "duration": 1122
     },
     {
       "id": "TC-C-SHOP-004",
@@ -263,16 +267,16 @@
       "category": "儿童端",
       "page": "奖励商店",
       "status": "fail",
-      "duration": 1576,
+      "duration": 551,
       "error": "受问题 ISSUE-008 影响: 奖励兑换成功后积分未扣除"
     }
   ],
   "summary": {
     "total": 32,
-    "passed": 24,
-    "failed": 8,
+    "passed": 20,
+    "failed": 12,
     "skipped": 0,
-    "passRate": 75
+    "passRate": 63
   },
   "issues": [
     {

@@ -78,7 +78,7 @@ test.describe('家庭邀请功能', () => {
   });
 
   test('邀请码过期场景', async ({ page }) => {
-    await page.goto('/pages/family/invite/index?code=EXPIRED1');
+    await page.goto('/#/pages/family/invite/index?code=EXPIRED1');
     await page.waitForLoadState('domcontentloaded');
 
     const invalidText = page.locator('.invalid-text');

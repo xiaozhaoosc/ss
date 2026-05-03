@@ -23,7 +23,7 @@ test.describe('Parent Center & Insights Depth Test', () => {
   test('Navigate and verify Parent Center', async ({ page }) => {
     // Navigate to Parent dashboard
     await page.goto('http://localhost:88/#/dashboard');
-    await page.waitForLoadState('networkidle');
+    await page.waitForSelector('.el-card', { timeout: 10000 });
     
     // Ensure no login dialog popped up
     const reLoginDialog = page.getByText('登录状态已过期');
@@ -51,7 +51,7 @@ test.describe('Parent Center & Insights Depth Test', () => {
   test('Navigate to AI Logs', async ({ page }) => {
     // Attempt to navigate to the newly fixed AI log route
     await page.goto('http://localhost:88/#/ai/log');
-    await page.waitForLoadState('networkidle');
+    await page.waitForSelector('.app-container', { timeout: 10000 });
     
     // Check for the specific header with a robust wait
     const header = page.locator('h3:has-text("AI 调用日志")');

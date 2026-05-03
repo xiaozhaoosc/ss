@@ -48,7 +48,7 @@ async function globalSetup(config: FullConfig) {
     await page.waitForSelector('.add-reward-btn');
 
     for (const reward of STABLE_REWARDS) {
-      const exists = await page.getByText(reward.name).isVisible();
+      const exists = await page.getByText(reward.name).first().isVisible();
       if (exists) {
         console.log(`Reward "${reward.name}" already exists, skipping.`);
         continue;

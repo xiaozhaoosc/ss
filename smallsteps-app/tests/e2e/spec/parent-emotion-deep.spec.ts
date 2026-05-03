@@ -8,7 +8,7 @@ test.describe('情绪相关页面深度测试', () => {
   });
 
   test('情绪警报页面加载测试', async ({ page }) => {
-    await page.goto('/pages/parent/emotion-alert/index');
+    await page.goto('/#/pages/parent/emotion-alert/index');
     await page.waitForLoadState('networkidle');
 
     // 验证页面加载
@@ -27,7 +27,7 @@ test.describe('情绪相关页面深度测试', () => {
   });
 
   test('情绪警报页面 - Mark as Read 按钮点击', async ({ page }) => {
-    await page.goto('/pages/parent/emotion-alert/index');
+    await page.goto('/#/pages/parent/emotion-alert/index');
     await page.waitForLoadState('networkidle');
 
     const markReadBtn = page.locator('button:has-text("Mark as Read")');
@@ -40,7 +40,7 @@ test.describe('情绪相关页面深度测试', () => {
   });
 
   test('情绪详情页面加载测试', async ({ page }) => {
-    await page.goto('/pages/parent/emotion-detail/index');
+    await page.goto('/#/pages/parent/emotion-detail/index');
     await page.waitForLoadState('networkidle');
 
     // 验证页面加载
@@ -57,7 +57,7 @@ test.describe('情绪相关页面深度测试', () => {
   });
 
   test('情绪详情页面 - 音频播放器测试', async ({ page }) => {
-    await page.goto('/pages/parent/emotion-detail/index');
+    await page.goto('/#/pages/parent/emotion-detail/index');
     await page.waitForLoadState('networkidle');
 
     // 查找音频播放器组件
@@ -68,7 +68,7 @@ test.describe('情绪相关页面深度测试', () => {
   });
 
   test('情绪详情页面 - 查看更多按钮', async ({ page }) => {
-    await page.goto('/pages/parent/emotion-detail/index');
+    await page.goto('/#/pages/parent/emotion-detail/index');
     await page.waitForLoadState('networkidle');
 
     // 查找查看更多按钮
@@ -80,7 +80,7 @@ test.describe('情绪相关页面深度测试', () => {
   });
 
   test('情绪详情页面 - 底部操作按钮', async ({ page }) => {
-    await page.goto('/pages/parent/emotion-detail/index');
+    await page.goto('/#/pages/parent/emotion-detail/index');
     await page.waitForLoadState('networkidle');
 
     // 验证底部操作区
@@ -96,7 +96,7 @@ test.describe('情绪相关页面深度测试', () => {
   });
 
   test('情绪详情页面 - 录制语音按钮点击', async ({ page }) => {
-    await page.goto('/pages/parent/emotion-detail/index');
+    await page.goto('/#/pages/parent/emotion-detail/index');
     await page.waitForLoadState('networkidle');
 
     const voiceBtn = page.locator('.action-btn.voice');
@@ -108,7 +108,7 @@ test.describe('情绪相关页面深度测试', () => {
   });
 
   test('情绪详情页面 - AI 建议按钮点击', async ({ page }) => {
-    await page.goto('/pages/parent/emotion-detail/index');
+    await page.goto('/#/pages/parent/emotion-detail/index');
     await page.waitForLoadState('networkidle');
 
     const aiBtn = page.locator('.action-btn.ai');
@@ -120,7 +120,7 @@ test.describe('情绪相关页面深度测试', () => {
   });
 
   test('情绪急救包页面加载测试', async ({ page }) => {
-    await page.goto('/pages/parent/emotion-kit/index');
+    await page.goto('/#/pages/parent/emotion-kit/index');
     await page.waitForLoadState('networkidle');
 
     // 验证页面加载
@@ -131,7 +131,7 @@ test.describe('情绪相关页面深度测试', () => {
   });
 
   test('情绪急救包页面 - 急救方法列表', async ({ page }) => {
-    await page.goto('/pages/parent/emotion-kit/index');
+    await page.goto('/#/pages/parent/emotion-kit/index');
     await page.waitForLoadState('networkidle');
 
     // 等待数据加载
@@ -147,7 +147,7 @@ test.describe('情绪相关页面深度测试', () => {
   });
 
   test('情绪急救包页面 - 底部导航栏', async ({ page }) => {
-    await page.goto('/pages/parent/emotion-kit/index');
+    await page.goto('/#/pages/parent/emotion-kit/index');
     await page.waitForLoadState('networkidle');
 
     // 验证底部导航

@@ -6,7 +6,7 @@ test.describe('个人中心页面深度测试', () => {
   test.use({ storageState: 'playwright/.auth/parent.json' });
 
   test.beforeEach(async ({ page }) => {
-    await page.goto('/pages/parent/profile/index');
+    await page.goto('/#/pages/parent/profile/index');
     await page.waitForLoadState('networkidle');
   });
 

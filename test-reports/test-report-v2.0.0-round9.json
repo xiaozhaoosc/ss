@@ -1,6 +1,6 @@
 {
   "round": 9,
-  "date": "2026-04-01T16:37:23.525Z",
+  "date": "2026-05-03T03:36:20.969Z",
   "testCases": [
     {
       "id": "TC-LOGIN-001",
@@ -8,7 +8,7 @@
       "category": "登录",
       "page": "登录页",
       "status": "pass",
-      "duration": 1509
+      "duration": 1396
     },
     {
       "id": "TC-LOGIN-002",
@@ -16,7 +16,7 @@
       "category": "登录",
       "page": "登录页",
       "status": "pass",
-      "duration": 1000
+      "duration": 682
     },
     {
       "id": "TC-LOGIN-003",
@@ -24,7 +24,7 @@
       "category": "登录",
       "page": "登录页",
       "status": "pass",
-      "duration": 412
+      "duration": 699
     },
     {
       "id": "TC-LOGIN-004",
@@ -32,7 +32,7 @@
       "category": "登录",
       "page": "登录页",
       "status": "pass",
-      "duration": 611
+      "duration": 1084
     },
     {
       "id": "TC-LOGIN-005",
@@ -40,7 +40,7 @@
       "category": "登录",
       "page": "登录页",
       "status": "pass",
-      "duration": 1140
+      "duration": 536
     },
     {
       "id": "TC-LOGIN-006",
@@ -48,7 +48,7 @@
       "category": "登录",
       "page": "登录页",
       "status": "pass",
-      "duration": 817
+      "duration": 1147
     },
     {
       "id": "TC-LOGIN-007",
@@ -56,7 +56,7 @@
       "category": "登录",
       "page": "登录页",
       "status": "pass",
-      "duration": 584
+      "duration": 673
     },
     {
       "id": "TC-LOGIN-008",
@@ -64,7 +64,7 @@
       "category": "登录",
       "page": "登录页",
       "status": "pass",
-      "duration": 326
+      "duration": 1691
     },
     {
       "id": "TC-P-DASH-001",
@@ -72,7 +72,7 @@
       "category": "家长端",
       "page": "家长仪表盘",
       "status": "pass",
-      "duration": 1539
+      "duration": 1199
     },
     {
       "id": "TC-P-DASH-002",
@@ -80,7 +80,7 @@
       "category": "家长端",
       "page": "家长仪表盘",
       "status": "pass",
-      "duration": 1783
+      "duration": 708
     },
     {
       "id": "TC-P-DASH-003",
@@ -88,7 +88,7 @@
       "category": "家长端",
       "page": "家长仪表盘",
       "status": "pass",
-      "duration": 605
+      "duration": 1716
     },
     {
       "id": "TC-P-DASH-004",
@@ -96,7 +96,7 @@
       "category": "家长端",
       "page": "家长仪表盘",
       "status": "pass",
-      "duration": 1533
+      "duration": 852
     },
     {
       "id": "TC-P-DASH-005",
@@ -104,7 +104,7 @@
       "category": "家长端",
       "page": "家长仪表盘",
       "status": "pass",
-      "duration": 1357
+      "duration": 1302
     },
     {
       "id": "TC-P-DASH-006",
@@ -112,7 +112,7 @@
       "category": "家长端",
       "page": "家长仪表盘",
       "status": "pass",
-      "duration": 835
+      "duration": 390
     },
     {
       "id": "TC-P-TASK-001",
@@ -120,7 +120,7 @@
       "category": "家长端",
       "page": "任务创建",
       "status": "pass",
-      "duration": 308
+      "duration": 1667
     },
     {
       "id": "TC-P-TASK-002",
@@ -128,7 +128,7 @@
       "category": "家长端",
       "page": "任务创建",
       "status": "pass",
-      "duration": 467
+      "duration": 724
     },
     {
       "id": "TC-P-TASK-003",
@@ -136,7 +136,7 @@
       "category": "家长端",
       "page": "任务创建",
       "status": "pass",
-      "duration": 1290
+      "duration": 1445
     },
     {
       "id": "TC-P-REWARD-001",
@@ -144,7 +144,7 @@
       "category": "家长端",
       "page": "奖励配置",
       "status": "pass",
-      "duration": 488
+      "duration": 777
     },
     {
       "id": "TC-P-REWARD-002",
@@ -152,7 +152,7 @@
       "category": "家长端",
       "page": "奖励配置",
       "status": "pass",
-      "duration": 781
+      "duration": 494
     },
     {
       "id": "TC-P-REWARD-003",
@@ -160,7 +160,7 @@
       "category": "家长端",
       "page": "奖励配置",
       "status": "pass",
-      "duration": 492
+      "duration": 300
     },
     {
       "id": "TC-P-REWARD-004",
@@ -168,7 +168,7 @@
       "category": "家长端",
       "page": "奖励配置",
       "status": "pass",
-      "duration": 1520
+      "duration": 943
     },
     {
       "id": "TC-C-HOME-001",
@@ -176,7 +176,7 @@
       "category": "儿童端",
       "page": "儿童首页",
       "status": "pass",
-      "duration": 637
+      "duration": 454
     },
     {
       "id": "TC-C-HOME-002",
@@ -184,7 +184,7 @@
       "category": "儿童端",
       "page": "儿童首页",
       "status": "pass",
-      "duration": 1369
+      "duration": 1423
     },
     {
       "id": "TC-C-HOME-003",
@@ -192,7 +192,7 @@
       "category": "儿童端",
       "page": "儿童首页",
       "status": "pass",
-      "duration": 1127
+      "duration": 399
     },
     {
       "id": "TC-C-HOME-004",
@@ -200,7 +200,7 @@
       "category": "儿童端",
       "page": "儿童首页",
       "status": "pass",
-      "duration": 775
+      "duration": 1666
     },
     {
       "id": "TC-C-TASK-001",
@@ -208,7 +208,7 @@
       "category": "儿童端",
       "page": "任务执行",
       "status": "pass",
-      "duration": 1546
+      "duration": 1691
     },
     {
       "id": "TC-C-TASK-002",
@@ -216,7 +216,7 @@
       "category": "儿童端",
       "page": "任务执行",
       "status": "pass",
-      "duration": 704
+      "duration": 1342
     },
     {
       "id": "TC-C-TASK-003",
@@ -224,7 +224,7 @@
       "category": "儿童端",
       "page": "任务执行",
       "status": "pass",
-      "duration": 1168
+      "duration": 1775
     },
     {
       "id": "TC-C-SHOP-001",
@@ -232,7 +232,7 @@
       "category": "儿童端",
       "page": "奖励商店",
       "status": "pass",
-      "duration": 750
+      "duration": 989
     },
     {
       "id": "TC-C-SHOP-002",
@@ -240,7 +240,7 @@
       "category": "儿童端",
       "page": "奖励商店",
       "status": "pass",
-      "duration": 1765
+      "duration": 666
     },
     {
       "id": "TC-C-SHOP-003",
@@ -248,7 +248,7 @@
       "category": "儿童端",
       "page": "奖励商店",
       "status": "pass",
-      "duration": 1732
+      "duration": 1285
     },
     {
       "id": "TC-C-SHOP-004",
@@ -256,7 +256,7 @@
       "category": "儿童端",
       "page": "奖励商店",
       "status": "pass",
-      "duration": 777
+      "duration": 1381
     }
   ],
   "summary": {

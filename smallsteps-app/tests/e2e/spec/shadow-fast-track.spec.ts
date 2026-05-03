@@ -11,7 +11,7 @@ test.describe('影子观察者 - 快速通道测试', () => {
 
   test('儿童首页 hover-class 点击反馈应在 100ms 内响应', async ({ page }) => {
     // 确保导航到儿童首页
-    await page.goto('/pages/child/home/index');
+    await page.goto('/#/pages/child/home/index');
     await page.waitForLoadState('networkidle');
 
     // 等待页面元素加载
@@ -52,7 +52,7 @@ test.describe('影子观察者 - 快速通道测试', () => {
   });
 
   test('儿童首页 - 设置按钮 hover-class 反馈', async ({ page }) => {
-    await page.goto('/pages/child/home/index');
+    await page.goto('/#/pages/child/home/index');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
 
@@ -70,7 +70,7 @@ test.describe('影子观察者 - 快速通道测试', () => {
   });
 
   test('儿童首页 - 快速链接卡片 hover-class 反馈', async ({ page }) => {
-    await page.goto('/pages/child/home/index');
+    await page.goto('/#/pages/child/home/index');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
 
@@ -90,7 +90,7 @@ test.describe('影子观察者 - 快速通道测试', () => {
   });
 
   test('儿童首页 - 任务卡片 hover-class 反馈', async ({ page }) => {
-    await page.goto('/pages/child/home/index');
+    await page.goto('/#/pages/child/home/index');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
 
@@ -104,7 +104,7 @@ test.describe('影子观察者 - 快速通道测试', () => {
   });
 
   test('验证页面基本结构', async ({ page }) => {
-    await page.goto('/pages/child/home/index');
+    await page.goto('/#/pages/child/home/index');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
 

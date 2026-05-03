@@ -106,7 +106,7 @@
 </template>
 
 <script setup name="AiPrompt">
-import { listPrompt, getPrompt, delPrompt, addPrompt, updatePrompt } from "@/api/system/ai/prompt";
+import { listPrompt, getPrompt, delPrompt, addPrompt, updatePrompt } from "@/api/ai/prompt";
 
 const { proxy } = getCurrentInstance();
 

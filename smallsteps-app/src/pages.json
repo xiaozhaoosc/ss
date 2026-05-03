@@ -244,15 +244,34 @@
       }
     },
     {
+      "path": "pages/mine/setting/notification",
+      "style": {
+        "navigationBarTitleText": "通知设置"
+      }
+    },
+    {
       "path": "pages/mine/help/index",
       "style": {
         "navigationBarTitleText": "常见问题"
       }
     },
     {
+      "path": "pages/mine/help/ai-assistant",
+      "style": {
+        "navigationBarTitleText": "AI 情感助手",
+        "navigationStyle": "custom"
+      }
+    },
+    {
       "path": "pages/mine/about/index",
       "style": {
         "navigationBarTitleText": "关于我们"
+      }
+    },
+    {
+      "path": "pages/mine/about/privacy",
+      "style": {
+        "navigationBarTitleText": "隐私政策"
       }
     },
     {

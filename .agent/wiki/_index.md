@@ -3,11 +3,11 @@
 > **定位**: ADHD 儿童行为习惯辅助终端生态的“大脑”与决策库。
 
 ## 核心状态
-- **当前阶段**: 儿童管理（Child Management）功能与管理后台页面开发完成
+- **当前阶段**: 全链路 E2E 自动化测试覆盖完成，CI/CD 体系建立
 - **重点任务**: 
-  1. 优化 `smallsteps-app` 按钮交互延迟（影子观察发现）；
-  2. 扩展自动化测试至“奖励兑换审批流”；
-  3. 设计并实现 ADHD 任务模板库数据模型。
+  1. 将 GitHub Actions 接入主分支，实现自动化质量门禁；
+  2. 扩展 E2E 测试至“树洞语音交互”及“积分实时结算”；
+  3. 基于 `Shadow Observer` 数据在家长端实现情绪热力图。
 
 ## 快速入口
 - [[JOURNAL]] - 每日执行流水账与 [Morning_Briefing]。
@@ -31,6 +31,7 @@
 - APP家长2的账号/密码是：parent_zhang/admin123；
 - APP孩子1的账号/密码是：child_xiaoming/admin123；
 - APP孩子2的账号/密码是：child_xiaohong/admin123；
+- **CI/CD**: [[.github/workflows/e2e-tests]] (自动化测试流水线)
 
 ## 项目的运行配置与脚本：
 

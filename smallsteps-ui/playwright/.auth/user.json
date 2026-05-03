@@ -1,0 +1,46 @@
+{
+  "cookies": [],
+  "origins": [
+    {
+      "origin": "http://localhost:88",
+      "localStorage": [
+        {
+          "name": "size",
+          "value": "default"
+        },
+        {
+          "name": "layout-setting",
+          "value": "{\"topNav\":false,\"tagsView\":true,\"tagsIcon\":false,\"fixedHeader\":false,\"sidebarLogo\":true,\"dynamicTitle\":false,\"sideTheme\":\"theme-dark\",\"theme\":\"#409EFF\"}"
+        },
+        {
+          "name": "Admin-Token",
+          "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpblR5cGUiOiJsb2dpbiIsImxvZ2luSWQiOiJzeXNfdXNlcjoxIiwicm5TdHIiOiJVbHgxVmNkOFJOVjJKbWhHcEZrb296alJjeWVkVVdCViIsImNsaWVudGlkIjoiZTVjZDdlNDg5MWJmOTVkMWQxOTIwNmNlMjRhN2IzMmUiLCJ0ZW5hbnRJZCI6IjAwMDAwMCIsInVzZXJJZCI6MSwidXNlck5hbWUiOiJhZG1pbiIsImRlcHRJZCI6MjAwLCJkZXB0TmFtZSI6IlNtYWxsIFN0ZXBzIOWutuW6rSIsImRlcHRDYXRlZ29yeSI6IiJ9.qMEFO_1MbN5DYDudpP3LHpHxpETU0Qu9D76zQCqgRuU"
+        },
+        {
+          "name": "__vue-devtools-theme__",
+          "value": "auto"
+        },
+        {
+          "name": "__VUE_DEVTOOLS_NEXT_PLUGIN_SETTINGS__dev.esm.pinia__",
+          "value": "{\"logStoreChanges\":true}"
+        },
+        {
+          "name": "useDarkKey",
+          "value": "auto"
+        },
+        {
+          "name": "__vue-devtools-frame-state__",
+          "value": "{\"width\":80,\"height\":60,\"top\":0,\"left\":50,\"open\":false,\"route\":\"/\",\"position\":\"bottom\",\"isFirstVisit\":true,\"closeOnOutsideClick\":false,\"minimizePanelInactive\":5000,\"preferShowFloatingPanel\":true,\"reduceMotion\":false}"
+        },
+        {
+          "name": "sidebarStatus",
+          "value": "1"
+        },
+        {
+          "name": "language",
+          "value": "zh_CN"
+        }
+      ]
+    }
+  ]
+}

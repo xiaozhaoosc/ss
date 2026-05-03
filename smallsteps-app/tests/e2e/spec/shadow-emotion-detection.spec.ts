@@ -13,7 +13,7 @@ test.describe('情绪影子检测 (Shadow Emotion Detection) 测试', () => {
     });
 
     test('情绪警报页面 - 加载和显示', async ({ page }) => {
-      await page.goto('/pages/parent/emotion-alert/index');
+      await page.goto('/#/pages/parent/emotion-alert/index');
       await page.waitForLoadState('networkidle');
 
       // 验证页面加载
@@ -30,7 +30,7 @@ test.describe('情绪影子检测 (Shadow Emotion Detection) 测试', () => {
     });
 
     test('情绪警报页面 - 标记已读功能', async ({ page }) => {
-      await page.goto('/pages/parent/emotion-alert/index');
+      await page.goto('/#/pages/parent/emotion-alert/index');
       await page.waitForLoadState('networkidle');
 
       // 查找标记已读按钮
@@ -48,7 +48,7 @@ test.describe('情绪影子检测 (Shadow Emotion Detection) 测试', () => {
     });
 
     test('情绪急救包页面 - 急救方法列表', async ({ page }) => {
-      await page.goto('/pages/parent/emotion-kit/index');
+      await page.goto('/#/pages/parent/emotion-kit/index');
       await page.waitForLoadState('networkidle');
       await page.waitForTimeout(2000);
 
@@ -67,7 +67,7 @@ test.describe('情绪影子检测 (Shadow Emotion Detection) 测试', () => {
     });
 
     test('情绪急救包页面 - 添加按钮', async ({ page }) => {
-      await page.goto('/pages/parent/emotion-kit/index');
+      await page.goto('/#/pages/parent/emotion-kit/index');
       await page.waitForLoadState('networkidle');
 
       // 查找添加 FAB 按钮
@@ -86,7 +86,7 @@ test.describe('情绪影子检测 (Shadow Emotion Detection) 测试', () => {
     });
 
     test('情绪急救包页面 - 推送按钮', async ({ page }) => {
-      await page.goto('/pages/parent/emotion-kit/index');
+      await page.goto('/#/pages/parent/emotion-kit/index');
       await page.waitForLoadState('networkidle');
       await page.waitForTimeout(2000);
 
@@ -98,7 +98,7 @@ test.describe('情绪影子检测 (Shadow Emotion Detection) 测试', () => {
     });
 
     test('情绪详情页面 - 加载和显示', async ({ page }) => {
-      await page.goto('/pages/parent/emotion-detail/index');
+      await page.goto('/#/pages/parent/emotion-detail/index');
       await page.waitForLoadState('networkidle');
       await page.waitForTimeout(2000);
 
@@ -112,7 +112,7 @@ test.describe('情绪影子检测 (Shadow Emotion Detection) 测试', () => {
     });
 
     test('情绪详情页面 - 底部操作按钮', async ({ page }) => {
-      await page.goto('/pages/parent/emotion-detail/index');
+      await page.goto('/#/pages/parent/emotion-detail/index');
       await page.waitForLoadState('networkidle');
 
       // 验证家长回复区域
@@ -136,7 +136,7 @@ test.describe('情绪影子检测 (Shadow Emotion Detection) 测试', () => {
     });
 
     test('影子摘要上报 - API 请求验证', async ({ page }) => {
-      await page.goto('/pages/child/home/index');
+      await page.goto('/#/pages/child/home/index');
       await page.waitForLoadState('networkidle');
 
       // 捕获情绪提交 API 请求
@@ -160,7 +160,7 @@ test.describe('情绪影子检测 (Shadow Emotion Detection) 测试', () => {
     });
 
     test('躁动点击检测阈值验证', async ({ page }) => {
-      await page.goto('/pages/child/home/index');
+      await page.goto('/#/pages/child/home/index');
       await page.waitForLoadState('networkidle');
 
       const screenTapHandler = page.locator('.child-home-page');
@@ -207,7 +207,7 @@ test.describe('情绪影子检测 (Shadow Emotion Detection) 测试', () => {
     });
 
     test('儿童首页 - 机器人头像区域存在性', async ({ page }) => {
-      await page.goto('/pages/child/home/index');
+      await page.goto('/#/pages/child/home/index');
       await page.waitForLoadState('networkidle');
 
       // 验证机器人区域存在
@@ -224,7 +224,7 @@ test.describe('情绪影子检测 (Shadow Emotion Detection) 测试', () => {
     });
 
     test('儿童首页 - 情绪预警触发后 Toast 显示', async ({ page }) => {
-      await page.goto('/pages/child/home/index');
+      await page.goto('/#/pages/child/home/index');
       await page.waitForLoadState('networkidle');
 
       // 触发长按

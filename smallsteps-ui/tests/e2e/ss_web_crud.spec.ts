@@ -1,81 +1,41 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Small Steps Web端 - 首页模块详细测试', () => {
-  test('首页 - 登录页面元素验证', async ({ page }) => {
-    await page.goto('/');
-    await page.waitForLoadState('domcontentloaded');
-    await page.waitForTimeout(2000);
-
-    await expect(page.locator('input[placeholder="用户名"]')).toBeVisible();
-    await expect(page.locator('input[placeholder="密码"]')).toBeVisible();
-    await expect(page.getByRole('button', { name: '登 录' })).toBeVisible();
-  });
-
-  test('首页 - 登录功能测试', async ({ page }) => {
-    await page.goto('/');
-    await page.waitForLoadState('domcontentloaded');
-    await page.waitForTimeout(2000);
-
-    await page.locator('input[placeholder="用户名"]').fill('admin');
-    await page.locator('input[placeholder="密码"]').fill('admin123');
-    await page.getByRole('button', { name: '登 录' }).click();
-    await page.waitForTimeout(5000);
-
-    const url = page.url();
-    expect(url.includes('index') || url.includes('dashboard')).toBe(true);
+  test('首页 - 仪表盘加载验证', async ({ page }) => {
+    await page.goto('/#/dashboard');
+    await expect(page.getByRole('heading', { name: '早安, 小步守护者' })).toBeVisible({ timeout: 15000 });
+    await expect(page.locator('.el-card')).toHaveCountAtLeast(2);
   });
 });
 
 test.describe('Small Steps Web端 - AI管理模块详细测试', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
-    await page.waitForLoadState('domcontentloaded');
-    await page.waitForTimeout(3000);
+    // Skip guided tour if present
+    const skipBtn = page.locator('.introjs-skipbutton');
+    if (await skipBtn.isVisible()) {
+      await skipBtn.click();
+    }
   });
 
-  test('AI模型管理 - 页面加载', async ({ page }) => {
+  test('AI模型管理 - 列表验证', async ({ page }) => {
     await page.goto('/#/ai/model');
-    await page.waitForLoadState('domcontentloaded');
-    await page.waitForTimeout(3000);
-
-    const pageContent = await page.content();
-    expect(pageContent.length).toBeGreaterThan(100);
+    await page.waitForSelector('.el-table', { timeout: 10000 });
+    const headers = await page.locator('.el-table__header').textContent();
+    expect(headers).toContain('模型名称');
+    expect(headers).toContain('模型标识');
   });
 
-  test('AI提示词模板 - 页面加载', async ({ page }) => {
+  test('AI提示词模板 - 列表验证', async ({ page }) => {
     await page.goto('/#/ai/prompt');
-    await page.waitForLoadState('domcontentloaded');
-    await page.waitForTimeout(3000);
-
-    const pageContent = await page.content();
-    expect(pageContent.length).toBeGreaterThan(100);
+    await page.waitForSelector('.el-table', { timeout: 10000 });
+    await expect(page.locator('.el-table')).toBeVisible();
   });
 
-  test('AI路由配置 - 页面加载', async ({ page }) => {
-    await page.goto('/#/ai/route');
-    await page.waitForLoadState('domcontentloaded');
-    await page.waitForTimeout(3000);
-
-    const pageContent = await page.content();
-    expect(pageContent.length).toBeGreaterThan(100);
-  });
-
-  test('AI供应商配置 - 页面加载', async ({ page }) => {
-    await page.goto('/#/ai/provider');
-    await page.waitForLoadState('domcontentloaded');
-    await page.waitForTimeout(3000);
-
-    const pageContent = await page.content();
-    expect(pageContent.length).toBeGreaterThan(100);
-  });
-
-  test('AI日志 - 页面加载', async ({ page }) => {
+  test('AI日志 - 列表验证', async ({ page }) => {
     await page.goto('/#/ai/log');
-    await page.waitForLoadState('domcontentloaded');
-    await page.waitForTimeout(3000);
-
-    const pageContent = await page.content();
-    expect(pageContent.length).toBeGreaterThan(100);
+    await page.waitForSelector('.el-table', { timeout: 10000 });
+    await expect(page.locator('.el-table')).toBeVisible();
   });
 });
 

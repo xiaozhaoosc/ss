@@ -8,7 +8,7 @@ test.describe('影子观察者 - 行为检测系统测试', () => {
   });
 
   test('SOS 级长按 - 机器人头像 >2s 长按识别为情绪波动信号', async ({ page }) => {
-    await page.goto('/pages/child/home/index');
+    await page.goto('/#/pages/child/home/index');
     await page.waitForLoadState('networkidle');
 
     // 查找机器人头像区域
@@ -37,7 +37,7 @@ test.describe('影子观察者 - 行为检测系统测试', () => {
   });
 
   test('躁动点击识别 - 短时间非交互区密集点击检测', async ({ page }) => {
-    await page.goto('/pages/child/home/index');
+    await page.goto('/#/pages/child/home/index');
     await page.waitForLoadState('networkidle');
 
     // 屏幕点击处理函数应存在
@@ -62,7 +62,7 @@ test.describe('影子观察者 - 行为检测系统测试', () => {
 
   test('退行行为记录 - 频繁点击取消/重置任务的挫败行为', async ({ page }) => {
     // 此测试需要跳转到任务执行页面
-    await page.goto('/pages/child/task-execute/index');
+    await page.goto('/#/pages/child/task-execute/index');
     await page.waitForLoadState('networkidle');
 
     // 查找取消或重置按钮
@@ -89,7 +89,7 @@ test.describe('影子观察者 - 行为检测系统测试', () => {
   });
 
   test('影子摘要上报 - 异常行为脱敏上报', async ({ page }) => {
-    await page.goto('/pages/child/home/index');
+    await page.goto('/#/pages/child/home/index');
     await page.waitForLoadState('networkidle');
 
     // 触发一次异常长按

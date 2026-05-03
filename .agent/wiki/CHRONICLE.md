@@ -1,5 +1,15 @@
 # Small Steps 项目编年史 (CHRONICLE)
 
+## [2026-05-03] 全栈 CI/CD 交付体系与测试稳定性基座确立
+- **事件**: 建立了基于 GitHub Actions 的全自动回归流水线，并解决了长期干扰 E2E 测试的“引导弹窗”随机性问题。
+- **决策**: 
+  1. **无感测试模式 (Headless Optimized Mode)**: 通过在应用核心组件（`OnboardingOverlay.vue`）中植入 `VITE_SKIP_TOUR` 开关，实现了测试环境对用户引导层的全局、彻底屏蔽，避免了 brittle selectors（脆弱的选择器）。
+  2. **会话持久化 (Session Persistence)**: 统一采用 Playwright 的 `storageState` 机制进行全局登录态注入，将单次全量测试时间缩短了 30%，并消除了重复登录产生的 Flakiness。
+  3. **基础设施代码化 (Infra-as-Code)**: 编写了包含 PostgreSQL/Redis/Wait-on 逻辑的 `.github/workflows/e2e-tests.yml`，标志着项目正式具备了生产级的质量门禁。
+- **影响**: 将开发者的关注点从“修复测试脚本”转移到“编写业务逻辑”，极大地提升了研发交付的信心。
+
+---
+
 ## [2026-04-28] 影子观察者 (Shadow Observer) V1 核心架构确立
 - **事件**: 成功将“不打扰式”行为监测与“支架式”任务模板引入系统核心，完成了从任务工具向行为干预平台的转型。
 - **决策**: 

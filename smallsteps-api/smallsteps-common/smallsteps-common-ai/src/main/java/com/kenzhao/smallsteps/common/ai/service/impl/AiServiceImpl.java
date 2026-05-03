@@ -130,13 +130,20 @@ public class AiServiceImpl implements IAiService {
             // 2. 构建提示词
             Map<String, Object> params = new HashMap<>();
             params.put("userInput", userInput);
+            
+            String promptKey = "CHILD_TREEHOLE_CHAT";
+            if (userInput.startsWith("[家长模式]")) {
+                promptKey = "PARENT_ASSISTANT_CHAT";
+                params.put("userInput", userInput.replace("[家长模式]", "").trim());
+            }
+
             if (context != null) {
                 params.put("emotionState", context.getOrDefault("emotion", "平静"));
             } else {
                 params.put("emotionState", "平静");
             }
 
-            String prompt = getPrompt("CHILD_TREEHOLE_CHAT", params);
+            String prompt = getPrompt(promptKey, params);
             
             // 3. 调用大模型
             String response = smartAiClient.askAi(prompt, aiModel);
@@ -196,10 +203,18 @@ public class AiServiceImpl implements IAiService {
                    "  \"level\": 强度(1-5),\n" +
                    "  \"suggestion\": \"给家长的 3 条具体建议(100字以内)\"\n" +
                    "}";
-        } else if ("AI_CHAT".equalsIgnoreCase(promptKey) || "BUDDY_CHAT".equalsIgnoreCase(promptKey)) {
+        } else if ("AI_CHAT".equalsIgnoreCase(promptKey) || "BUDDY_CHAT".equalsIgnoreCase(promptKey) || "CHILD_TREEHOLE_CHAT".equalsIgnoreCase(promptKey)) {
             return "你是一个名为“小步”的AI伙伴，专门陪伴ADHD儿童。你说话语气活泼、温柔、富有鼓励性，多使用表情符号。\n" +
                    "孩子说：{userInput}\n" +
                    "请作为“小步”给孩子一个简短、积极的回应：";
+        } else if ("PARENT_ASSISTANT_CHAT".equalsIgnoreCase(promptKey)) {
+            return "你是一个资深的 ADHD 儿童教育专家和家长情绪导师。你现在正在与一位 ADHD 儿童的家长对话。\n" +
+                   "家长的困惑/心情：{userInput}\n" +
+                   "要求：\n" +
+                   "1. 语气专业、温暖、充满同理心，给家长力量和安慰。\n" +
+                   "2. 如果家长提到具体育儿问题，给出科学、可操作的 ADHD 干预建议。\n" +
+                   "3. 鼓励家长关注自己的心理健康。\n" +
+                   "请以良师益友的身份给予回应：";
         } else if ("HABIT_CHECKIN".equalsIgnoreCase(promptKey)) {
             return "孩子刚刚完成了习惯打卡：{habitName}。请作为一个温柔的AI伙伴，给他一个非常具体的、充满鼓励的反馈。要求：强调他的进步，使用活泼可爱的语气。";
         } else if ("PARENT_REPORT".equalsIgnoreCase(promptKey)) {

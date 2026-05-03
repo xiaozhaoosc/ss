@@ -39,15 +39,33 @@ export const constantRoutes = [
         },
         {
           path: 'ai/log',
-          component: () => import('@/views/system/ai/log/index.vue'),
+          component: () => import('@/views/ai/log/index.vue'),
           name: 'AiLog',
           meta: { title: 'AI日志', icon: 'log' }
         },
         {
           path: 'ai/model',
-          component: () => import('@/views/system/ai/model/index.vue'),
+          component: () => import('@/views/ai/model/index.vue'),
           name: 'AiModel',
           meta: { title: 'AI模型', icon: 'model' }
+        },
+        {
+          path: 'ai/prompt',
+          component: () => import('@/views/ai/prompt/index.vue'),
+          name: 'AiPrompt',
+          meta: { title: 'AI提示词', icon: 'edit' }
+        },
+        {
+          path: 'ai/route',
+          component: () => import('@/views/ai/route/index.vue'),
+          name: 'AiRoute',
+          meta: { title: 'AI路由', icon: 'guide' }
+        },
+        {
+          path: 'ai/provider',
+          component: () => import('@/views/ai/provider/index.vue'),
+          name: 'AiProvider',
+          meta: { title: 'AI供应商', icon: 'international' }
         }
       ]
     },

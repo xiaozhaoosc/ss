@@ -125,7 +125,8 @@ const confettiDots = Array.from({ length: 50 });
 
 onMounted(() => {
   const completed = localStorage.getItem('ss_onboarding_completed');
-  if (!completed) {
+  const skipTour = import.meta.env.VITE_SKIP_TOUR === 'true';
+  if (!completed && !skipTour) {
     visible.value = true;
     updateTarget();
   }

@@ -10,6 +10,16 @@
           @keyup.enter="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="供应商" prop="providerId">
+        <el-select v-model="queryParams.providerId" placeholder="选择供应商" clearable style="width: 200px">
+          <el-option
+            v-for="item in providerOptions"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="状态" prop="status">
         <el-select v-model="queryParams.status" placeholder="模型状态" clearable style="width: 200px">
           <el-option label="正常" value="0" />
@@ -110,6 +120,9 @@
         <el-form-item label="模型代码" prop="modelCode">
           <el-input v-model="form.modelCode" placeholder="如 deepseek-chat" />
         </el-form-item>
+        <el-form-item label="上下文" prop="contextWindow">
+          <el-input-number v-model="form.contextWindow" :min="1" :step="1024" style="width: 100%" />
+        </el-form-item>
         <el-form-item label="状态">
           <el-radio-group v-model="form.status">
             <el-radio label="0">正常</el-radio>
@@ -128,8 +141,8 @@
 </template>
 
 <script setup name="AiModel">
-import { listModel, getModel, delModel, addModel, updateModel } from "@/api/system/ai/model";
-import { listAllProvider } from "@/api/system/ai/provider";
+import { listModel, getModel, delModel, addModel, updateModel } from "@/api/ai/model";
+import { listAllProvider } from "@/api/ai/provider";
 
 const { proxy } = getCurrentInstance();
 
@@ -153,6 +166,7 @@ const data = reactive({
     pageNum: 1,
     pageSize: 10,
     name: undefined,
+    providerId: undefined,
     status: undefined
   },
   rules: {
@@ -180,6 +194,11 @@ function getProviderOptions() {
   });
 }
 
+function getProviderName(providerId) {
+  const provider = providerOptions.value.find(item => item.id === providerId);
+  return provider ? provider.name : '未知供应商';
+}
+
 function cancel() {
   open.value = false;
   reset();
@@ -191,6 +210,7 @@ function reset() {
     name: undefined,
     providerId: undefined,
     modelCode: undefined,
+    contextWindow: 4096,
     status: "0"
   };
   modelRef.value?.resetFields();
@@ -261,3 +281,4 @@ function handleDelete(row) {
 getList();
 getProviderOptions();
 </script>
+

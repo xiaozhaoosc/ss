@@ -23,8 +23,11 @@
 - [[ADR-011-Backend-Parameter-Mapping-Fix]] - 后端 Controller 儿童 ID 参数名兼容性修正 ADR
 - [[ADR-012-E2E-Testing-Modernization]] - E2E 自动化测试架构现代化 ADR
 - [[ADR-013-Onboarding-System-Design]] - ADHD 友好型新手引导系统设计 ADR
+- [[ADR/ADR-014-Parent-AI-Emotional-Assistant|ADR-014: 家长端 AI 情感助手集成方案]]
 
 ## 每日记录 (Journal)
+- [[journal/2026-05-03|2026-05-03: 家长端体验闭环与数据底座加固]]
+- [[2026-05-03]] (Project Awaken & E2E 稳定性总结)
 - [[2026-05-02]] (Wiki 初始化 & 4月末进度同步)
 - [[2026-04-30]] (自动化测试硬化 & UI 变量修复)
 - [[2026-04-29]] (新手引导系统 & 角色动态分发)
@@ -33,6 +36,7 @@
 - [[2026-04-26]] (Web 自动化测试与家长端洞察探索)
 - [[2026-04-25]] (V7 脚本交付 & 儿童端 403/500 报错彻底修复)
 - [[Parent-Profile-And-Family-Binding|2026-04-25]] (家长端全功能闭环：档案管理与智能绑定)
+- [[journal/2026-04-25-AI-Chat-Infrastructure-Debug|2026-04-25: AI 交互架构调试]]
 - [[2026-04-25-AI-Breakdown-Fix-and-UI-Optimization.md|2026-04-25 (Session A)]] (AI 链路修复 & Pretext 布局深度优化)
 - [[2026-04-25-AI-Chat-Infrastructure-Debug|2026-04-25 (Session B)]] (AI 聊天重构 & 基础设施深度调优)
 - [[2026-04-23.md|2026-04-23]] (AI 路由重构 & 动态 Prompt 闭环验证)
