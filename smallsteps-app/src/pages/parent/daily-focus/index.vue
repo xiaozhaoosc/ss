@@ -57,11 +57,11 @@
         </view>
         
         <view class="reward-grid">
-          <view v-for="reward in rewards" :key="reward.id" class="reward-card">
+          <view v-for="reward in rewards" :key="reward.rewardId" class="reward-card">
             <view class="reward-icon">{{ reward.icon || '🎁' }}</view>
             <text class="reward-name">{{ reward.name }}</text>
             <view class="reward-cost">
-              <text class="cost-val">{{ reward.starCost }}</text>
+              <text class="cost-val">{{ reward.pointsRequired }}</text>
               <text class="cost-unit">星星</text>
             </view>
           </view>
@@ -108,9 +108,8 @@ const loadData = async () => {
     const rewardRes: any = await listReward({ pageNum: 1, pageSize: 6 })
     rewards.value = rewardRes.rows || []
 
-    // 3. 获取余额 (从用户信息或专门 API)
-    // 这里假设 getTaskStatus 返回了余额，如果没有则模拟
-    starBalance.value = statusRes.data.starBalance || 150
+    // 3. 获取余额 (从任务状态接口获取真实的 starBalance)
+    starBalance.value = statusRes.data.starBalance || 0
   } catch (err) {
     console.error(err)
   }

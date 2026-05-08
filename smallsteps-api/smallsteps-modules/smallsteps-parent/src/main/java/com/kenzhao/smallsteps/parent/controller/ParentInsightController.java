@@ -76,6 +76,15 @@ public class ParentInsightController extends BaseController {
     public R<Map<String, Object>> getTaskStatus(@PathVariable Long childId) {
         if (!checkChildAccess(childId)) return R.fail("无权访问该儿童数据");
         Map<String, Object> result = parentTaskService.getTaskStatusByChildId(childId);
+        
+        // 加入积分余额
+        com.kenzhao.smallsteps.common.ss.domain.ChildScore score = scoreService.getChildScore(childId);
+        if (score != null) {
+            result.put("starBalance", score.getBalance());
+        } else {
+            result.put("starBalance", 0);
+        }
+        
         return R.ok(result);
     }
 

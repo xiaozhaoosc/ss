@@ -90,12 +90,12 @@
             <span class="font-bold text-lg">最新成就墙</span>
           </template>
           <div class="flex gap-4 overflow-x-auto py-2 scrollbar-none">
-            <div v-for="i in 5" :key="i" class="achievement-item shrink-0 p-4 bg-gray-50 rounded-[20px] w-[140px] text-center hover:bg-yellow-50 transition-colors cursor-pointer">
+            <div v-for="(achievement, index) in latestAchievements" :key="index" class="achievement-item shrink-0 p-4 bg-gray-50 rounded-[20px] w-[140px] text-center hover:bg-yellow-50 transition-colors cursor-pointer">
               <div class="w-16 h-16 mx-auto mb-3 bg-white rounded-full flex items-center justify-center shadow-sm">
-                 <img :src="`https://img.icons8.com/bubbles/100/medal-first-place.png`" class="w-10 h-10" />
+                 <img :src="achievementMedal" class="w-10 h-10" />
               </div>
-              <div class="font-bold text-sm truncate">专注小达人</div>
-              <div class="text-[10px] text-gray-400 mt-1">2024-03-22</div>
+              <div class="font-bold text-sm truncate">{{ achievement.name }}</div>
+              <div class="text-[10px] text-gray-400 mt-1">{{ achievement.date }}</div>
             </div>
           </div>
         </el-card>
@@ -124,6 +124,7 @@ import * as echarts from 'echarts';
 import { Collection, Timer, Sunny, Monitor, MagicStick } from '@element-plus/icons-vue';
 import { getShadowEmotionTrend } from '@/api/smallsteps/insight';
 import OnboardingOverlay from '@/components/SmallSteps/OnboardingOverlay.vue';
+import achievementMedal from '@/assets/images/achievement-medal.png';
 
 const { proxy } = getCurrentInstance() as any;
 const mainChartRef = ref();
@@ -147,6 +148,14 @@ const activeTasks = [
   { title: '晨间洗漱挑战', stage: '刷牙中', time: '10分钟前', type: 'primary', color: '#409EFF', hollow: false },
   { title: '数学口算练习', stage: '准备阶段', time: '正在开始', type: 'success', color: '#67C23A', hollow: true },
   { title: '自主整理书包', stage: '已待命', time: '预计 18:00', type: 'info', color: '#909399', hollow: true }
+];
+
+const latestAchievements = [
+  { name: '专注小达人', date: '2024-03-22' },
+  { name: '早起先锋', date: '2024-03-21' },
+  { name: '作业克星', date: '2024-03-20' },
+  { name: '情绪小天使', date: '2024-03-19' },
+  { name: '运动健将', date: '2024-03-18' }
 ];
 
 let mainChart: echarts.ECharts | null = null;

@@ -153,12 +153,22 @@ public class ChildAIController {
         }
 
         com.kenzhao.smallsteps.common.ss.domain.Child child = childService.selectChildById(childId);
+        if (child == null) {
+            throw new com.kenzhao.smallsteps.common.core.exception.ServiceException("未找到该儿童业务数据");
+        }
+        
         Long currentUserId = com.kenzhao.smallsteps.common.satoken.utils.LoginHelper.getUserId();
+        Long currentDeptId = com.kenzhao.smallsteps.common.satoken.utils.LoginHelper.getDeptId();
         
         // 允许访问的条件：
         // 1. 当前登录者就是该儿童本人 (child.id == currentUserId)
         // 2. 当前登录者是该儿童绑定的家长 (child.parentId == currentUserId)
-        if (child == null || (!child.getId().equals(currentUserId) && !child.getParentId().equals(currentUserId))) {
+        // 3. 当前登录者与该儿童处于同一家庭/部门 (child.createDept == currentDeptId)
+        boolean isSelf = child.getId().equals(currentUserId);
+        boolean isParent = child.getParentId() != null && child.getParentId().equals(currentUserId);
+        boolean isFamilyMember = child.getCreateDept() != null && child.getCreateDept().equals(currentDeptId);
+        
+        if (!isSelf && !isParent && !isFamilyMember) {
             throw new com.kenzhao.smallsteps.common.core.exception.ServiceException("无权访问该儿童数据");
         }
     }

@@ -13,6 +13,21 @@
       </view>
     </view>
 
+    <!-- 儿童切换选择器 -->
+    <view class="child-selector" v-if="familyChildren.length > 0">
+      <scroll-view scroll-x class="child-scroll">
+        <view v-for="child in familyChildren" :key="child.userId" 
+              class="child-item" :class="{ 'active': childId === child.userId }"
+              @click="switchChild(child.userId)">
+          <view class="avatar-wrapper">
+            <image class="child-avatar" :src="child.avatar || '/static/logo.png'" mode="aspectFill"></image>
+            <view class="active-dot" v-if="childId === child.userId"></view>
+          </view>
+          <text class="child-name">{{ child.nickName }}</text>
+        </view>
+      </scroll-view>
+    </view>
+
     <scroll-view class="content" scroll-y>
       <!-- 每周重点 -->
       <view class="section">
@@ -177,6 +192,7 @@ const childId = ref(null)
 
 const abilityData = ref([])
 const shadowTrendData = ref([])
+const familyChildren = ref([])
 
 // 情绪热力图相关
 const emotionData = ref([])
@@ -196,33 +212,33 @@ const navigateToDetails = () => {
   uni.navigateTo({ url: `/pages/parent/weekly-report/index?cid=${childId.value}` })
 }
 
+const switchChild = (id) => {
+  if (childId.value === id) return
+  childId.value = id
+  loadData(id)
+}
+
 const initChildIdAndLoad = async () => {
-  if (userStore.currentChildId) {
-    childId.value = userStore.currentChildId
-    loadData(childId.value)
-  } else {
-    try {
-      const res = await getFamilyMembers()
-      const members = res.data || []
-      // Find the first member that acts as a child (assumed roles logic or just filter out parents)
-      // Usually, kids might have userType = '3' or 3 or simply be the other ones in the family.
-      // If we don't know, we can just pick the first child in the list.
-      const children = members.filter(m => String(m.userType) === '3' || m.roles?.includes('child'))
-      if (children.length > 0) {
-        childId.value = children[0].userId
-        loadData(childId.value)
-      } else {
-        // Fallback to first member if no explicit child found, or just show error
-        if (members.length > 0) {
-          childId.value = members[0].userId
-          loadData(childId.value)
-        } else {
-          uni.showToast({ title: '当前家庭未绑定儿童', icon: 'none' })
-        }
-      }
-    } catch (err) {
-      console.error('Failed to get family members', err)
-      childId.value = 1 // fallback
+  try {
+    const res = await getFamilyMembers()
+    const members = res.data || []
+    // 过滤出儿童 (userType 为 '3' 或角色包含 'child')
+    familyChildren.value = members.filter(m => String(m.userType) === '3' || (m.roles && m.roles.includes('child')))
+    
+    if (userStore.currentChildId) {
+      childId.value = userStore.currentChildId
+      loadData(childId.value)
+    } else if (familyChildren.value.length > 0) {
+      childId.value = familyChildren.value[0].userId
+      loadData(childId.value)
+    } else {
+      uni.showToast({ title: '当前家庭未绑定儿童', icon: 'none' })
+    }
+  } catch (err) {
+    console.error('Failed to get family members', err)
+    // Fallback logic
+    if (userStore.currentChildId) {
+      childId.value = userStore.currentChildId
       loadData(childId.value)
     }
   }
@@ -431,6 +447,73 @@ const showShadowHint = () => {
     height: 64rpx;
     border-radius: 50%;
     background-color: #e5e7eb;
+  }
+}
+
+.child-selector {
+  background-color: #ffffff;
+  padding: 10rpx 0 20rpx;
+  border-bottom: 1rpx solid #f3f4f6;
+  
+  .child-scroll {
+    white-space: nowrap;
+    padding: 0 30rpx;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .child-item {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 40rpx;
+    transition: all 0.3s ease;
+    
+    .avatar-wrapper {
+      position: relative;
+      margin-bottom: 8rpx;
+    }
+    
+    .child-avatar {
+      width: 90rpx;
+      height: 90rpx;
+      border-radius: 50%;
+      border: 4rpx solid transparent;
+      background-color: #f3f4f6;
+      transition: all 0.3s ease;
+    }
+    
+    .active-dot {
+      position: absolute;
+      bottom: -4rpx;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 12rpx;
+      height: 12rpx;
+      background-color: #6b9bd1;
+      border-radius: 50%;
+      border: 2rpx solid #ffffff;
+    }
+    
+    .child-name {
+      font-size: 22rpx;
+      color: #9ca3af;
+      max-width: 120rpx;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    
+    &.active {
+      .child-avatar {
+        border-color: #6b9bd1;
+        transform: scale(1.05);
+      }
+      .child-name {
+        color: #6b9bd1;
+        font-weight: bold;
+      }
+    }
   }
 }
 
