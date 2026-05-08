@@ -1,187 +1,162 @@
 <template>
-  <view class="mine-container" :style="{height: `${windowHeight}px`}">
-    <!--顶部个人信息栏-->
-    <view class="header-section">
-      <view class="flex padding justify-between">
-        <view class="flex align-center">
-          <view v-if="!avatar" class="cu-avatar xl round bg-white">
-            <view class="iconfont icon-people text-gray icon"></view>
+  <view class="parent-center min-h-screen bg-[#f6f7f8] pb-10">
+    <!-- Header Section -->
+    <view class="header bg-white px-6 pt-12 pb-6 rounded-b-[40px] shadow-sm mb-6">
+      <view class="flex items-center justify-between mb-4">
+        <text class="text-xl font-bold text-gray-800">家长中心</text>
+        <view class="lang-selector px-3 py-1 bg-gray-100 rounded-full text-sm font-medium text-gray-600">CN</view>
+      </view>
+      
+      <view class="user-profile flex items-center justify-between py-4">
+        <view class="flex items-center gap-4">
+          <view class="avatar-wrapper relative">
+            <image 
+              v-if="avatar" 
+              :src="avatar" 
+              class="w-20 h-20 rounded-full border-4 border-blue-50 shadow-md"
+              mode="aspectFill"
+              @click="handleToAvatar"
+            />
+            <view v-else class="w-20 h-20 rounded-full bg-blue-100 flex items-center justify-center border-4 border-blue-50 shadow-md">
+              <text class="text-blue-500 font-bold text-2xl">{{ name ? name.substring(0,1) : '?' }}</text>
+            </view>
           </view>
-          <image v-if="avatar" @click="handleToAvatar" :src="avatar" class="cu-avatar xl round" mode="widthFix">
-          </image>
-          <view v-if="!name" @click="handleToLogin" class="login-tip">
-            点击登录
-          </view>
-          <view v-if="name" @click="handleToInfo" class="user-info">
-            <view class="u_title">
-              用户名：{{ name }}
+          <view class="info">
+            <text class="text-2xl font-bold text-gray-800">{{ name || '家长用户' }}</text>
+            <view class="flex items-center mt-1 text-gray-400 text-sm">
+              <text>陪伴成长的第 128 天</text>
             </view>
           </view>
         </view>
-        <view @click="handleToInfo" class="flex align-center">
-          <text>个人信息</text>
-          <view class="iconfont icon-right"></view>
+        <view class="actions flex gap-3">
+          <view class="icon-btn p-2 bg-gray-50 rounded-xl" @click="handleToQRCode">
+            <image src="https://img.icons8.com/material-outlined/24/9ca3af/qr-code.png" class="w-6 h-6" />
+          </view>
+          <view class="icon-btn p-2 bg-gray-50 rounded-xl" @click="handleToEditInfo">
+            <image src="https://img.icons8.com/material-outlined/24/9ca3af/edit--v1.png" class="w-6 h-6" />
+          </view>
         </view>
       </view>
     </view>
 
-    <view class="content-section">
-      <view class="mine-actions grid col-4 text-center">
-        <view class="action-item" @click="handleJiaoLiuQun">
-          <view class="iconfont icon-friendfill text-pink icon"></view>
-          <text class="text">交流群</text>
+    <!-- Settings Groups -->
+    <view class="px-5 space-y-6">
+      <!-- 通用设置 -->
+      <view class="settings-card bg-white rounded-[32px] overflow-hidden shadow-sm">
+        <view class="p-5 border-b border-gray-50">
+          <text class="text-sm font-bold text-gray-400 uppercase tracking-wider">通用设置</text>
         </view>
-        <view class="action-item" @click="handleBuilding">
-          <view class="iconfont icon-service text-blue icon"></view>
-          <text class="text">在线客服</text>
-        </view>
-        <view class="action-item" @click="handleBuilding">
-          <view class="iconfont icon-community text-mauve icon"></view>
-          <text class="text">反馈社区</text>
-        </view>
-        <view class="action-item" @click="handleBuilding">
-          <view class="iconfont icon-dianzan text-green icon"></view>
-          <text class="text">点赞我们</text>
-        </view>
-      </view>
-
-      <view class="menu-list">
-        <view class="list-cell list-cell-arrow" @click="handleToEditInfo">
-          <view class="menu-item-box">
-            <view class="iconfont icon-user menu-icon"></view>
-            <view>编辑资料</view>
+        
+        <view class="menu-list">
+          <view class="menu-item flex items-center justify-between p-5 active:bg-gray-50 transition-colors" @click="handleToNotification">
+            <view class="flex items-center gap-4">
+              <view class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center">
+                <image src="https://img.icons8.com/fluency/48/bell.png" class="w-6 h-6" />
+              </view>
+              <text class="text-lg font-medium text-gray-700">通知设置</text>
+            </view>
+            <image src="https://img.icons8.com/material-outlined/24/d1d5db/forward.png" class="w-5 h-5" />
           </view>
-        </view>
-        <view class="list-cell list-cell-arrow" @click="handleHelp">
-          <view class="menu-item-box">
-            <view class="iconfont icon-help menu-icon"></view>
-            <view>常见问题</view>
+          
+          <view class="menu-item flex items-center justify-between p-5 active:bg-gray-50 transition-colors" @click="handleToPrivacy">
+            <view class="flex items-center gap-4">
+              <view class="w-12 h-12 bg-purple-50 rounded-2xl flex items-center justify-center">
+                <image src="https://img.icons8.com/fluency/48/shield.png" class="w-6 h-6" />
+              </view>
+              <text class="text-lg font-medium text-gray-700">隐私政策</text>
+            </view>
+            <image src="https://img.icons8.com/material-outlined/24/d1d5db/forward.png" class="w-5 h-5" />
           </view>
-        </view>
-        <view class="list-cell list-cell-arrow" @click="handleAbout">
-          <view class="menu-item-box">
-            <view class="iconfont icon-aixin menu-icon"></view>
-            <view>关于我们</view>
-          </view>
-        </view>
-        <view class="list-cell list-cell-arrow" @click="handleToSetting">
-          <view class="menu-item-box">
-            <view class="iconfont icon-setting menu-icon"></view>
-            <view>应用设置</view>
+          
+          <view class="menu-item flex items-center justify-between p-5 active:bg-gray-50 transition-colors" @click="handleToSecurity">
+            <view class="flex items-center gap-4">
+              <view class="w-12 h-12 bg-green-50 rounded-2xl flex items-center justify-center">
+                <image src="https://img.icons8.com/fluency/48/lock.png" class="w-6 h-6" />
+              </view>
+              <text class="text-lg font-medium text-gray-700">账号安全</text>
+            </view>
+            <image src="https://img.icons8.com/material-outlined/24/d1d5db/forward.png" class="w-5 h-5" />
           </view>
         </view>
       </view>
 
+      <!-- 帮助与支持 -->
+      <view class="settings-card bg-white rounded-[32px] overflow-hidden shadow-sm">
+        <view class="menu-list">
+          <view class="menu-item flex items-center justify-between p-5 active:bg-gray-50 transition-colors" @click="handleToHelp">
+            <view class="flex items-center gap-4">
+              <view class="w-12 h-12 bg-orange-50 rounded-2xl flex items-center justify-center">
+                <image src="https://img.icons8.com/fluency/48/help.png" class="w-6 h-6" />
+              </view>
+              <text class="text-lg font-medium text-gray-700">帮助与反馈</text>
+            </view>
+            <image src="https://img.icons8.com/material-outlined/24/d1d5db/forward.png" class="w-5 h-5" />
+          </view>
+        </view>
+      </view>
+
+      <!-- Logout -->
+      <view class="mt-10 px-10">
+        <button 
+          class="w-full h-16 bg-white border-none rounded-[24px] text-red-500 font-bold text-lg shadow-sm active:bg-gray-50 active:scale-98 transition-all"
+          @click="handleLogout"
+        >
+          退出登录
+        </button>
+        <view class="text-center mt-6 text-gray-400 text-sm">
+          版本号 v2.4.0 (Small Steps)
+        </view>
+      </view>
     </view>
   </view>
 </template>
 
 <script setup>
-  import { useUserStore } from '@/store'
-  import { computed , getCurrentInstance } from "vue"
+import { useUserStore } from '@/store'
+import { computed, getCurrentInstance } from "vue"
 
-  const { proxy } = getCurrentInstance()
-  const name = useUserStore().name
-  const avatar = computed(() => useUserStore().avatar)
-  const windowHeight = computed(() => uni.getSystemInfoSync().windowHeight - 50)
+const { proxy } = getCurrentInstance()
+const userStore = useUserStore()
+const name = userStore.name
+const avatar = computed(() => userStore.avatar)
 
-  function handleToInfo() {
-    proxy.$tab.navigateTo('/pages/mine/info/index')
-  }
+const handleToNotification = () => proxy.$tab.navigateTo('/pages/mine/setting/notification')
+const handleToPrivacy = () => proxy.$tab.navigateTo('/pages/mine/setting/privacy')
+const handleToSecurity = () => proxy.$tab.navigateTo('/pages/mine/setting/security')
+const handleToHelp = () => proxy.$tab.navigateTo('/pages/mine/help/index')
+const handleToEditInfo = () => proxy.$tab.navigateTo('/pages/mine/info/edit')
+const handleToAvatar = () => proxy.$tab.navigateTo('/pages/mine/avatar/index')
 
-  function handleToEditInfo() {
-    proxy.$tab.navigateTo('/pages/mine/info/edit')
-  }
+const handleToQRCode = () => {
+  proxy.$modal.showToast('二维码功能建设中~')
+}
 
-  function handleToSetting() {
-    proxy.$tab.navigateTo('/pages/mine/setting/index')
-  }
-
-  function handleToLogin() {
-    proxy.$tab.reLaunch('/pages/login')
-  }
-
-  function handleToAvatar() {
-    proxy.$tab.navigateTo('/pages/mine/avatar/index')
-  }
-      
-  function handleHelp() {
-    proxy.$tab.navigateTo('/pages/mine/help/index')
-  }
-      
-  function handleAbout() {
-    proxy.$tab.navigateTo('/pages/mine/about/index')
-  }
-      
-  function handleJiaoLiuQun() {
-    proxy.$modal.showToast('QQ群：①133713780(满)、②146013835(满)、③189091635')
-  }
-      
-  function handleBuilding() {
-    proxy.$modal.showToast('模块建设中~')
-  }
+const handleLogout = () => {
+  proxy.$modal.confirm('确定要退出登录吗？').then(() => {
+    userStore.logout().then(() => {
+      proxy.$tab.reLaunch('/pages/login')
+    })
+  })
+}
 </script>
 
 <style lang="scss" scoped>
-  page {
-    background-color: #f5f6f7;
+.parent-center {
+  padding-top: env(safe-area-inset-top);
+}
+
+.settings-card {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+}
+
+.menu-item {
+  border-bottom: 1px solid #fcfcfc;
+  &:last-child {
+    border-bottom: none;
   }
+}
 
-  .mine-container {
-    width: 100%;
-    height: 100%;
-
-
-    .header-section {
-      padding: 15px 15px 45px 15px;
-      background-color: #3c96f3;
-      color: white;
-
-      .login-tip {
-        font-size: 18px;
-        margin-left: 10px;
-      }
-
-      .cu-avatar {
-        border: 2px solid #eaeaea;
-
-        .icon {
-          font-size: 40px;
-        }
-      }
-
-      .user-info {
-        margin-left: 15px;
-
-        .u_title {
-          font-size: 18px;
-          line-height: 30px;
-        }
-      }
-    }
-
-    .content-section {
-      position: relative;
-      top: -50px;
-
-      .mine-actions {
-        margin: 15px 15px;
-        padding: 20px 0px;
-        border-radius: 8px;
-        background-color: white;
-
-        .action-item {
-          .icon {
-            font-size: 28px;
-          }
-
-          .text {
-            display: block;
-            font-size: 13px;
-            margin: 8px 0px;
-          }
-        }
-      }
-    }
-  }
+button::after {
+  border: none;
+}
 </style>

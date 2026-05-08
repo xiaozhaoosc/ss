@@ -38,11 +38,30 @@ CREATE TABLE `sys_ai_model` (
 
 -- AI 路由策略表
 CREATE TABLE `sys_ai_route` (
-  `scene_key` varchar(50) NOT NULL COMMENT '业务场景',
-  `strategy` varchar(50) NOT NULL DEFAULT 'PRIORITY_LEVEL' COMMENT '路由策略',
+  `scene_key` varchar(100) NOT NULL COMMENT '场景KEY (如: TASK_BREAKDOWN)',
+  `strategy` varchar(50) NOT NULL COMMENT '路由策略 (PRIORITY_LEVEL, ROUND_ROBIN)',
   `default_model_id` bigint(20) DEFAULT NULL COMMENT '默认模型ID',
-  `config_json` json DEFAULT NULL COMMENT '扩展配置',
-  `update_by` bigint(20) DEFAULT NULL COMMENT '更新者',
-  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `config_json` text COMMENT '策略详细配置',
   PRIMARY KEY (`scene_key`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='AI路由策略表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='AI场景路由表';
+
+-- ----------------------------
+-- Table structure for sys_ai_usage
+-- ----------------------------
+CREATE TABLE `sys_ai_usage` (
+  `id` bigint(20) NOT NULL COMMENT '主键',
+  `model_id` bigint(20) DEFAULT NULL COMMENT '模型ID',
+  `child_id` bigint(20) DEFAULT NULL COMMENT '儿童ID',
+  `scene_key` varchar(100) DEFAULT NULL COMMENT '业务场景',
+  `input_tokens` bigint(20) DEFAULT NULL COMMENT '输入Token',
+  `output_tokens` bigint(20) DEFAULT NULL COMMENT '输出Token',
+  `total_tokens` bigint(20) DEFAULT NULL COMMENT '总Token',
+  `cost` decimal(16,10) DEFAULT NULL COMMENT '消耗金额',
+  `status` char(1) DEFAULT '0' COMMENT '状态 (0成功 1失败)',
+  `create_by` varchar(64) DEFAULT '' COMMENT '创建者',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_by` varchar(64) DEFAULT '' COMMENT '更新者',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `remark` varchar(500) DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='AI使用记录表';

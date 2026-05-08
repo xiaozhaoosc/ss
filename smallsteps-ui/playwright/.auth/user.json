@@ -14,7 +14,7 @@
         },
         {
           "name": "Admin-Token",
-          "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpblR5cGUiOiJsb2dpbiIsImxvZ2luSWQiOiJzeXNfdXNlcjoxIiwicm5TdHIiOiJVbHgxVmNkOFJOVjJKbWhHcEZrb296alJjeWVkVVdCViIsImNsaWVudGlkIjoiZTVjZDdlNDg5MWJmOTVkMWQxOTIwNmNlMjRhN2IzMmUiLCJ0ZW5hbnRJZCI6IjAwMDAwMCIsInVzZXJJZCI6MSwidXNlck5hbWUiOiJhZG1pbiIsImRlcHRJZCI6MjAwLCJkZXB0TmFtZSI6IlNtYWxsIFN0ZXBzIOWutuW6rSIsImRlcHRDYXRlZ29yeSI6IiJ9.qMEFO_1MbN5DYDudpP3LHpHxpETU0Qu9D76zQCqgRuU"
+          "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpblR5cGUiOiJsb2dpbiIsImxvZ2luSWQiOiJzeXNfdXNlcjoxIiwicm5TdHIiOiI1U053VTRFaTJiOE9hVUgzbXpTQWpsR29pTFpkSVJlbSIsImNsaWVudGlkIjoiZTVjZDdlNDg5MWJmOTVkMWQxOTIwNmNlMjRhN2IzMmUiLCJ0ZW5hbnRJZCI6IjAwMDAwMCIsInVzZXJJZCI6MSwidXNlck5hbWUiOiJhZG1pbiIsImRlcHRJZCI6MjAwLCJkZXB0TmFtZSI6IlNtYWxsIFN0ZXBzIOWutuW6rSIsImRlcHRDYXRlZ29yeSI6IiJ9.QKHGcXM68_ONwSs4v3uwhl9h-lxzMWP4cGcaqeSYd0E"
         },
         {
           "name": "__vue-devtools-theme__",

@@ -13,16 +13,18 @@ import org.springframework.web.client.RestTemplate;
 public class SmartAiClient {
     private final AiProviderMapper aiProviderMapper;
     private final RestTemplate restTemplate;
+    private final com.kenzhao.smallsteps.common.ai.service.IAiUsageService aiUsageService;
 
-    public SmartAiClient(AiProviderMapper aiProviderMapper) {
+    public SmartAiClient(AiProviderMapper aiProviderMapper, com.kenzhao.smallsteps.common.ai.service.IAiUsageService aiUsageService) {
         this.aiProviderMapper = aiProviderMapper;
+        this.aiUsageService = aiUsageService;
         org.springframework.http.client.SimpleClientHttpRequestFactory factory = new org.springframework.http.client.SimpleClientHttpRequestFactory();
         factory.setConnectTimeout(60000); // 60s
         factory.setReadTimeout(300000);   // 300s (5 min)
         this.restTemplate = new RestTemplate(factory);
     }
 
-    public String askAi(String prompt, AiModel model) {
+    public String askAi(String prompt, AiModel model, String sceneKey, Long childId) {
         AiProvider provider = aiProviderMapper.selectById(model.getProviderId());
         if (provider == null) {
             throw new RuntimeException("Provider not found for model: " + model.getName());
@@ -60,6 +62,19 @@ public class SmartAiClient {
             java.util.List<java.util.Map<String, Object>> choices = (java.util.List<java.util.Map<String, Object>>) responseMap.get("choices");
             if (choices != null && !choices.isEmpty()) {
                 java.util.Map<String, Object> message = (java.util.Map<String, Object>) choices.get(0).get("message");
+                
+                // 记录使用情况
+                try {
+                    java.util.Map<String, Object> usage = (java.util.Map<String, Object>) responseMap.get("usage");
+                    if (usage != null) {
+                        Long promptTokens = ((Number) usage.get("prompt_tokens")).longValue();
+                        Long completionTokens = ((Number) usage.get("completion_tokens")).longValue();
+                        aiUsageService.recordUsage(model.getId(), childId, sceneKey, promptTokens, completionTokens, model);
+                    }
+                } catch (Exception ex) {
+                    log.warn("Failed to parse or record AI usage: {}", ex.getMessage());
+                }
+
                 if (message != null) {
                     return (String) message.get("content");
                 }

@@ -23,7 +23,7 @@ export default defineConfig({
             scss: {
                 api: 'modern',
                 additionalData: '@import "@/uni.scss";',
-                silenceDeprecations: ['import-message', 'import', 'legacy-js-api']
+                silenceDeprecations: ['legacy-js-api']
             }
         }
     }

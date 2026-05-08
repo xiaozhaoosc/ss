@@ -65,7 +65,7 @@ public class AiServiceImpl implements IAiService {
             // 3. 调用大模型
             System.out.println(">>> [INFO] Calling AI for task breakdown: " + taskName + " using model: " + aiModel.getModelCode());
             log.info("Calling AI for task breakdown: {}, model: {}", taskName, aiModel.getModelCode());
-            String response = smartAiClient.askAi(prompt, aiModel);
+            String response = smartAiClient.askAi(prompt, aiModel, "TASK_BREAKDOWN", null);
             if (response == null || response.trim().isEmpty()) {
                 System.out.println(">>> [WARN] AI returned empty response, using mock data");
                 log.warn("AI returned empty response for task breakdown, using mock data");
@@ -107,7 +107,7 @@ public class AiServiceImpl implements IAiService {
             }
 
             // 3. 调用大模型
-            String response = smartAiClient.askAi(prompt, aiModel);
+            String response = smartAiClient.askAi(prompt, aiModel, "EMOTION_ANALYSIS", childId);
             if (response == null) {
                 log.warn("AI API call failed, using mock data");
                 return getMockEmotionAnalysis(childId, content);
@@ -146,7 +146,7 @@ public class AiServiceImpl implements IAiService {
             String prompt = getPrompt(promptKey, params);
             
             // 3. 调用大模型
-            String response = smartAiClient.askAi(prompt, aiModel);
+            String response = smartAiClient.askAi(prompt, aiModel, promptKey, childId);
             return response != null ? response : "我现在有点累了，稍后再陪你聊天好吗？✨";
         } catch (Exception e) {
             log.error("Error in AI chat", e);
@@ -390,7 +390,7 @@ public class AiServiceImpl implements IAiService {
             Map<String, Object> params = new HashMap<>();
             params.put("habitName", habitName);
             String prompt = getPrompt("HABIT_CHECKIN", params);
-            return smartAiClient.askAi(prompt, aiModel);
+            return smartAiClient.askAi(prompt, aiModel, "HABIT_CHECKIN", childId);
         } catch (Exception e) {
             log.error("Error in habit feedback", e);
             return "太棒了！你又进步了一点点！🌟";
@@ -404,7 +404,7 @@ public class AiServiceImpl implements IAiService {
             Map<String, Object> params = new HashMap<>();
             params.put("weeklyData", weeklyData);
             String prompt = getPrompt("PARENT_REPORT", params);
-            return smartAiClient.askAi(prompt, aiModel);
+            return smartAiClient.askAi(prompt, aiModel, "PARENT_REPORT", childId);
         } catch (Exception e) {
             log.error("Error in parent report", e);
             return "报告生成暂不可用，请联系管理员。";
@@ -420,7 +420,7 @@ public class AiServiceImpl implements IAiService {
             params.put("description", description);
             String prompt = getPrompt("VISION_ENCOURAGE", params);
             // 注意：Vision 模型通常需要特殊的 Payload，这里暂用文本描述模拟
-            return smartAiClient.askAi(prompt, aiModel);
+            return smartAiClient.askAi(prompt, aiModel, "VISION_ENCOURAGE", childId);
         } catch (Exception e) {
             log.error("Error in vision encourage", e);
             return "看到你的作品真是太开心了！继续加油哦！🎨";

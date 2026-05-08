@@ -49,3 +49,25 @@ CREATE TABLE IF NOT EXISTS sys_ai_route (
   update_time timestamp DEFAULT NULL
 );
 COMMENT ON TABLE sys_ai_route IS 'AI路由策略表';
+
+-- ----------------------------
+-- Table structure for sys_ai_usage
+-- ----------------------------
+CREATE TABLE IF NOT EXISTS sys_ai_usage (
+    id BIGINT PRIMARY KEY,
+    model_id BIGINT,
+    child_id BIGINT,
+    scene_key VARCHAR(100),
+    input_tokens BIGINT,
+    output_tokens BIGINT,
+    total_tokens BIGINT,
+    cost DECIMAL(16,10),
+    status CHAR(1) DEFAULT '0',
+    create_by VARCHAR(64) DEFAULT '',
+    create_time TIMESTAMP,
+    update_by VARCHAR(64) DEFAULT '',
+    update_time TIMESTAMP,
+    remark VARCHAR(500)
+);
+
+COMMENT ON TABLE sys_ai_usage IS 'AI使用记录表';
