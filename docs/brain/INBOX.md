@@ -85,3 +85,14 @@
 - **建议**: 
     - 统一组件内的暗黑模式实现范式，推荐使用 `.dark &` 或 CSS 变量。
     - 在 Wiki 中增加 [前端开发规范/暗黑模式篇]，明确禁止在 Scoped Style 中使用复杂的非标准深度选择器嵌套。
+
+## [2026-05-05] 观察发现
+
+### 1. 密钥管理脆弱性 (Secret Management Vulnerability)
+- **观察**: 在 `application-dev.yml` 中发现了 Gitee Client Secret 和 Snail-Job Token 的明文记录。
+- **风险**: 源码一旦泄露，第三方服务凭据将直接暴露。
+- **行动点**: 强制要求本地开发使用外部配置中心或 `System.getenv()` 注入。
+
+### 2. 硬件网络凭据硬编码
+- **观察**: `smallsteps-esp32/config.py` 中直接写入了 `WIFI_PASS`。
+- **建议**: 应引入 **SmartConfig** 或 **NFC 碰一碰** 配网方案，将 WiFi 凭据存入 ESP32 的 NVS (Non-volatile storage) 区域。

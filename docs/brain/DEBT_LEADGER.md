@@ -26,3 +26,6 @@
 | 2026-04-28 | `controller` | 后端请求参数名不一致 (`childId` vs `cid`)，导致前端/硬件端调用冲突 | 中 | 已修复(兼容模式) | [[ADR-011-Backend-Parameter-Mapping-Fix]] |
 | 2026-05-02 | `parent-insight` | 家长端雷达图 Mock 数据真实化 (需聚合 AI 与 Task 数据) | 高 | 已完成 | [[2026-05-02]] |
 | 2026-05-02 | `app-network` | AI 深度思考导致的长耗时响应超时 (75s+) | 高 | 已解决 | [[2026-05-02]] |
+| 2026-05-05 | `global-config` | 配置文件明文密码泄露风险 (MySQL/Redis/Snail-Job) | 紧急 | 待处理 | [[hardcoded_audit]] |
+| 2026-05-05 | `frontend-ui` | 全量 i18n 缺失 (300+ 处硬编码中文) | 中 | 待处理 | [[hardcoded_audit]] |
+| 2026-05-05 | `esp32` | 固件 WiFi 凭据硬编码风险 | 高 | 待处理 | [[hardcoded_audit]] |
