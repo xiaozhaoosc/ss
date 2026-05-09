@@ -49,7 +49,8 @@ public class InjectionMetaObjectHandler implements MetaObjectHandler {
                         // 填充创建人、更新人和创建部门信息
                         baseEntity.setCreateBy(userId);
                         baseEntity.setUpdateBy(userId);
-                        baseEntity.setCreateDept(ObjectUtils.notNull(baseEntity.getCreateDept(), loginUser.getDeptId()));
+                        Long deptId = ObjectUtil.isNotNull(loginUser.getDeptId()) ? loginUser.getDeptId() : DEFAULT_USER_ID;
+                        baseEntity.setCreateDept(ObjectUtils.notNull(baseEntity.getCreateDept(), deptId));
                     } else {
                         // 填充创建人、更新人和创建部门信息
                         baseEntity.setCreateBy(DEFAULT_USER_ID);

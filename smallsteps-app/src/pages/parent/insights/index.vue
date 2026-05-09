@@ -223,7 +223,7 @@ const initChildIdAndLoad = async () => {
     const res = await getFamilyMembers()
     const members = res.data || []
     // 过滤出儿童 (userType 为 '3' 或角色包含 'child')
-    familyChildren.value = members.filter(m => String(m.userType) === '3' || (m.roles && m.roles.includes('child')))
+    familyChildren.value = members.filter(m => String(m.userType) === '2' || (m.roles && m.roles.includes('child')))
     
     if (userStore.currentChildId) {
       childId.value = userStore.currentChildId

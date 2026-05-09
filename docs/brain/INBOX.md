@@ -96,3 +96,24 @@
 ### 2. 硬件网络凭据硬编码
 - **观察**: `smallsteps-esp32/config.py` 中直接写入了 `WIFI_PASS`。
 - **建议**: 应引入 **SmartConfig** 或 **NFC 碰一碰** 配网方案，将 WiFi 凭据存入 ESP32 的 NVS (Non-volatile storage) 区域。
+
+## [2026-05-08] 观察发现
+
+### 1. 知识蒸馏 (Knowledge Distillation) 与团队技能固化
+- **观察**: 在 [[同事skill]] 中讨论了如何提炼团队成员的隐性经验。这种“从人到 Skill”的转化是提升 AI Agent 专业度的核心路径。
+- **建议**: 
+    - 针对“ADHD 育儿干预”这一垂直领域，建立结构化的决策快照库。
+    - 探索将高水平的回复范式转化为 Few-shot 示例，注入 AI 情感助手的 Prompt。
+
+### 2. 后端驱动的数据真理 (Backend-Driven Data Truth)
+- **观察**: 前端硬编码 `150` 星星余额导致用户认知偏差。
+- **决定**: 确立了所有关键业务字段必须由后端实时提供的原则，前端应作为“无状态展示层”，避免逻辑 fallback。
+- **记录**: 见 [[ADR-015-Backend-Driven-Data-Truth]]（待创建）。
+
+### 3. AI 交互哲学：三段式响应范式 (Tri-Phase Response Paradigm)
+- **观察**: 传统的 AI 回复往往过于“建议导向”，容易引发 ADHD 家长的防御心理（感到被指责）。
+- **重构逻辑**: 针对 `PARENT_ASSISTANT_CHAT` 的 `AiServiceImpl.java` 实现了底层重构：
+    1. **情感校验 (Validation)**: 严禁直接给建议，先让家长感到“被看见”。
+    2. **去道德化重构 (Reframing)**: 将冲突从“态度问题”转向“生物学/执行功能障碍”。
+    3. **微小介入 (Micro-Action)**: 给出的建议必须是原子级的物理动作。
+- **意义**: 将 AI 从“管理工具”转变为家长的“情绪支点”与“认知外壳”。

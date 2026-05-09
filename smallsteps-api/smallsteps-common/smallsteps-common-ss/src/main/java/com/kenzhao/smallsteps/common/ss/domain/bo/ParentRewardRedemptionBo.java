@@ -29,4 +29,7 @@ public class ParentRewardRedemptionBo extends BaseEntity {
     /** 状态 (0:待审批 1:已批准 2:已拒绝) */
     private String status;
 
+    /** 拒绝理由 */
+    private String reason;
+
 }

@@ -53,7 +53,7 @@ test.describe('仪表盘报表自动化测试', () => {
     await expect(heatmapCanvas).toBeVisible();
 
     // 验证主图表
-    const mainChart = page.locator('div[ref="mainChartRef"]');
+    const mainChart = page.locator('.main-insight-chart');
     await expect(mainChart.locator('canvas').first()).toBeVisible();
     
     // 总计应有 3 个图表 canvas

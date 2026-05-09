@@ -64,9 +64,16 @@ public class ParentRewardController extends BaseController {
      * 拒绝兑换申请
      */
     @SaCheckPermission("parent:reward:edit")
-    @PostMapping("/redemption/reject/{redemptionId}")
-    public R<Void> reject(@PathVariable Long redemptionId) {
-        return toAjax(redemptionService.reject(redemptionId));
+    @PostMapping("/redemption/reject")
+    public R<Void> reject(@RequestBody com.kenzhao.smallsteps.common.ss.domain.bo.ParentRewardRedemptionBo bo) {
+        if (bo.getRedemptionId() == null) {
+            return R.fail("兑换ID不能为空");
+        }
+        if (org.springframework.util.StringUtils.hasText(bo.getReason())) {
+            return toAjax(redemptionService.reject(bo.getRedemptionId(), bo.getReason()));
+        } else {
+            return R.fail("拒绝理由不能为空");
+        }
     }
 
     /**

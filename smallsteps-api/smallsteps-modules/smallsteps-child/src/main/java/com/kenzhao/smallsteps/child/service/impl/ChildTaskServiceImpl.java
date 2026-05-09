@@ -121,10 +121,12 @@ public class ChildTaskServiceImpl implements IChildTaskService {
 
     @Override
     public List<ChildTaskVo> selectPendingTasksByChildId(Long childId) {
-        ChildTask query = new ChildTask();
-        query.setChildId(childId);
-        query.setStatus(ChildTask.STATUS_ONGOING);
-        return selectChildTaskList(query);
+        List<ChildTask> list = childTaskMapper.selectList(new LambdaQueryWrapper<ChildTask>()
+                .eq(ChildTask::getChildId, childId)
+                .and(w -> w.eq(ChildTask::getStatus, ChildTask.STATUS_ONGOING)
+                        .or().eq(ChildTask::getStatus, "0")) // 包含初始/待领取状态
+                .orderByDesc(ChildTask::getCreateTime));
+        return list.stream().map(this::toVo).collect(Collectors.toList());
     }
 
     @Override

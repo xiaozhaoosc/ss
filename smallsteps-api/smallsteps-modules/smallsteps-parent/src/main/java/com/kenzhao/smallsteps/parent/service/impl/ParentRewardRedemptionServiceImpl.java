@@ -28,6 +28,7 @@ public class ParentRewardRedemptionServiceImpl implements IParentRewardRedemptio
     private final ParentRewardRedemptionMapper baseMapper;
     private final ParentRewardMapper rewardMapper;
     private final IScoreService scoreService;
+    private final com.kenzhao.smallsteps.common.ss.utils.FeishuNotifyUtils feishuNotifyUtils;
 
     @Override
     public TableDataInfo<ParentRewardRedemptionVo> queryPageList(ParentRewardRedemptionBo bo, PageQuery pageQuery) {
@@ -70,12 +71,27 @@ public class ParentRewardRedemptionServiceImpl implements IParentRewardRedemptio
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Boolean reject(Long redemptionId) {
+    public Boolean reject(Long redemptionId, String reason) {
         ParentRewardRedemption redemption = baseMapper.selectById(redemptionId);
         if (redemption == null || !"0".equals(redemption.getStatus())) {
             return false;
         }
+        
+        // 1. 更新状态和理由
         redemption.setStatus("2");
-        return baseMapper.updateById(redemption) > 0;
+        redemption.setReason(reason);
+        boolean success = baseMapper.updateById(redemption) > 0;
+        
+        if (success) {
+            // 2. 发送飞书通知 (异步或简单同步)
+            ParentReward reward = rewardMapper.selectById(redemption.getRewardId());
+            String rewardName = reward != null ? reward.getName() : "未知奖励";
+            String title = "🎁 奖励兑换申请被拒绝";
+            String content = String.format("孩子申请兑换的 [%s] 被拒绝了。\n拒绝理由: %s", 
+                    rewardName, (reason != null && !reason.isEmpty()) ? reason : "未说明理由");
+            feishuNotifyUtils.sendTextMessage(title, content);
+        }
+        
+        return success;
     }
 }

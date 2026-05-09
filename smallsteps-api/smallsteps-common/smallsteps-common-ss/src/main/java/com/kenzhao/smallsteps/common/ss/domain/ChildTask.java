@@ -43,6 +43,7 @@ public class ChildTask extends BaseEntity {
     /**
      * 家庭ID (对应 sys_dept.dept_id)
      */
+    @TableField(exist = false)
     private Long deptId;
 
     /**

@@ -130,13 +130,19 @@ const handleApprove = async (id) => {
 
 const handleReject = async (id) => {
   uni.showModal({
-    title: '确认拒绝',
-    content: '确定要拒绝这次兑换申请吗？建议先和孩子沟通哦',
+    title: '拒绝兑换',
+    content: '请输入拒绝理由，我们将同步告知孩子',
+    editable: true,
+    placeholderText: '例如：星星数量还没达标哦',
     success: async (res) => {
       if (res.confirm) {
+        if (!res.content || !res.content.trim()) {
+          uni.showToast({ title: '拒绝理由不能为空', icon: 'none' })
+          return
+        }
         try {
-          await rejectRedemption(id)
-          uni.showToast({ title: '已拒绝', icon: 'none' })
+          await rejectRedemption(id, res.content.trim())
+          uni.showToast({ title: '已拒绝并通知孩子', icon: 'none' })
           loadData()
         } catch (e) {
           uni.showToast({ title: '操作失败', icon: 'none' })

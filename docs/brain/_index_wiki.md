@@ -7,6 +7,8 @@
 - [[DEBT_LEADGER]] - 技术债账本与风险追踪
 - [[System-Architecture]] - 全局架构视图
 - [[INBOX]] - 灵感与影子观察记录
+- [[skills/adhd_parenting_anchor_v1|Distilled Skill: ADHD 家长情感锚点 (v1)]]
+- [[skills/e2e_stability_architect_v1|Distilled Skill: E2E 稳定性架构师 (v1)]]
 
 ## 核心决策 (ADR)
 - [[ADR-001-Backend-Module-Restoration]] - 核心业务模块在 admin 入口中的强制挂载决策
@@ -24,8 +26,12 @@
 - [[ADR-012-E2E-Testing-Modernization]] - E2E 自动化测试架构现代化 ADR
 - [[ADR-013-Onboarding-System-Design]] - ADHD 友好型新手引导系统设计 ADR
 - [[ADR/ADR-014-Parent-AI-Emotional-Assistant|ADR-014: 家长端 AI 情感助手集成方案]]
+- [[ADR-015-Backend-Driven-Data-Truth|ADR-015: 后端驱动的实时数据同步策略]]
+- [[ADR-016-Dashboard-Analytics-Testing|ADR-016: 高保真仪表盘报表与自动化测试架构]]
+- [[ADR-017-Audit-Field-Compatibility-for-Child-Accounts|ADR-017: 儿童账号在多租户审计架构下的兼容性方案]]
 
 ## 每日记录 (Journal)
+- [[journal/2026-05-08|2026-05-08: 功能验证与知识蒸馏实战]]
 - [[journal/2026-05-06|2026-05-06: 环境解耦与安全加固]]
 - [[journal/2026-05-05|2026-05-05: 系统加固与硬编码审计报告]]
 - [[journal/2026-05-03|2026-05-03: 家长端体验闭环与数据底座加固]]

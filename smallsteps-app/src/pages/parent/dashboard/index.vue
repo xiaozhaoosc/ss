@@ -147,7 +147,7 @@ async function initChildIdAndLoad() {
     try {
       const res: any = await getFamilyMembers()
       const members = res.data || []
-      const children = members.filter((m: any) => String(m.userType) === '3' || m.roles?.includes('child'))
+      const children = members.filter((m: any) => String(m.userType) === '2' || m.roles?.includes('child'))
       if (children.length > 0) {
         childId.value = children[0].userId
         await loadData()

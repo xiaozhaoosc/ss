@@ -29,3 +29,5 @@
 | 2026-05-05 | `global-config` | 配置文件明文密码泄露风险 (MySQL/Redis/Snail-Job) | 紧急 | 待处理 | [[hardcoded_audit]] |
 | 2026-05-05 | `frontend-ui` | 全量 i18n 缺失 (300+ 处硬编码中文) | 中 | 待处理 | [[hardcoded_audit]] |
 | 2026-05-05 | `esp32` | 固件 WiFi 凭据硬编码风险 | 高 | 待处理 | [[hardcoded_audit]] |
+| 2026-05-08 | `mybatis-handler` | `BaseEntity` 审计字段自动注入在儿童账号 (`deptId` 为空) 下会抛出 401 | 高 | 已规避 | [[2026-05-08]] |
+| 2026-05-08 | `database` | `ss_task_log` 存量数据 `status='0'` 导致儿童端任务不可见 | 中 | 已修复 | [[2026-05-08]] |

@@ -28,5 +28,5 @@ public interface IParentRewardRedemptionService {
     /**
      * 拒绝兑换
      */
-    Boolean reject(Long redemptionId);
+    Boolean reject(Long redemptionId, String reason);
 }

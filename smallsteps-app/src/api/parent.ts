@@ -90,10 +90,11 @@ export function approveRedemption(redemptionId: number) {
 }
 
 // 拒绝奖励兑换
-export function rejectRedemption(redemptionId: number) {
+export function rejectRedemption(redemptionId: number, reason: string) {
   return request({
-    url: `/parent/reward/redemption/reject/${redemptionId}`,
-    method: 'post'
+    url: '/parent/reward/redemption/reject',
+    method: 'post',
+    data: { redemptionId, reason }
   })
 }
 // 删除任务执行记录

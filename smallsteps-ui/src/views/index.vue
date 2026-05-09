@@ -114,7 +114,7 @@
               </el-radio-group>
             </div>
           </template>
-          <div ref="mainChartRef" style="height: 400px"></div>
+          <div ref="mainChartRef" class="main-insight-chart" style="height: 400px"></div>
         </el-card>
 
         <!-- Achievement Wall -->

@@ -177,10 +177,16 @@ const handleAction = () => {
 
 const handleComplete = async () => {
   uni.vibrateShort()
-  if (!taskId.value) return
+  if (!taskId.value) {
+    uni.showToast({ title: '任务信息缺失', icon: 'none' })
+    return
+  }
   
-  const childId = userStore.id
-  if (!childId) return 
+  const childId = userStore.userId || userStore.id
+  if (!childId) {
+    uni.showToast({ title: '登录信息失效，请重新登录', icon: 'none' })
+    return 
+  }
   isLoading.value = true
   
   try {
@@ -197,15 +203,21 @@ const handleComplete = async () => {
     }
 
     uni.showLoading({ title: '同步状态中...' })
-    await completeTask(taskId.value, childId, proofUrl)
+    console.log(`[Task] Completing task: taskId=${taskId.value}, childId=${childId}`)
+    const res = await completeTask(taskId.value, Number(childId), proofUrl)
     uni.hideLoading()
     
-    // Show the "WOW" Reward Overlay
-    isRewardVisible.value = true
+    // Check if back-end actually updated the record
+    // In RuoYi, a successful response doesn't always mean the business logic succeeded (e.g. update count = 0)
+    if (res.code === 200) {
+      isRewardVisible.value = true
+    } else {
+      uni.showToast({ title: res.msg || '任务完成失败', icon: 'none' })
+    }
   } catch (e) {
-    console.error(e)
+    console.error('[Task Error]', e)
     uni.hideLoading()
-    uni.showToast({ title: '同步失败，请检查网络', icon: 'none' })
+    uni.showToast({ title: '同步失败，请重试', icon: 'none' })
   } finally {
     isLoading.value = false
   }
