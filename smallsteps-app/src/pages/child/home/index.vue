@@ -145,12 +145,13 @@ const loadPendingTasks = () => {
     pendingTasks.value = res.data || []
     if (pendingTasks.value.length > 0) {
       const task = pendingTasks.value[0]
+      const def = task.taskDefinition || {}
       currentMission.value = {
         taskId: task.taskId,
-        title: task.taskName || task.title,
-        subtitle: task.description || '加油完成任务！',
-        icon: task.icon || 'star', // Default icon
-        points: task.rewardStars || task.rewardPoints || 5
+        title: task.taskName || task.title || def.title || '新任务',
+        subtitle: task.description || def.description || '加油完成任务！',
+        icon: task.icon || def.icon || 'star', // Default icon
+        points: task.rewardStars || task.rewardPoints || def.rewardPoints || 5
       }
     } else {
       currentMission.value = null

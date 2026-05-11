@@ -77,7 +77,7 @@ async function loadData() {
         id: item.rewardId,
         name: item.name,
         price: item.pointsRequired,
-        image: item.icon || 'https://lh3.googleusercontent.com/aida-public/AB6AXuDSeDZTqWI4hzDXiu2J5oxyebHDY7h3QJHfakeAN_DSXnLSNkLAhuxQ4i3EFA3sYEODFAfwVurGxyc-Vtyb0KsKUsq3VBs395mQXw--DFZl4Kh5S-vH4faPsNJmf130ABfPSfWXqFDI4jBunAVzhcIeXZhBzHXrKxk5SFJoqfWcaG5goJU-GDCauwNndD8ZGLQJbWbxcZ6A0yIFaOL8GZKjXq-4hiDjKlnMz1XANJsiV_hJ3Js1CP0wIT-YYbZzKacO4qusjpgjKq0',
+        image: item.icon ? (item.icon.startsWith('http') ? item.icon : (import.meta.env.VITE_APP_BASE_API + item.icon)) : 'https://img.icons8.com/fluency/96/gift.png',
         bgClass: 'bg-blue-50' // Random or fixed color
       }))
     }

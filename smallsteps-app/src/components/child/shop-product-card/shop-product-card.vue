@@ -1,7 +1,8 @@
 <template>
   <view class="product-card" hover-class="card-hover" @click="handleCardClick">
     <view class="image-box" :class="bgClass">
-      <image class="product-img" :src="image" mode="aspectFit" />
+      <text v-if="isEmoji" class="emoji-icon">{{ image }}</text>
+      <image v-else class="product-img" :src="image" mode="aspectFit" />
       <view class="price-tag">
         <text class="material-symbols-outlined star-icon">star</text>
         <text class="price-val">{{ price }}</text>
@@ -35,6 +36,12 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['redeem'])
+
+const isEmoji = computed(() => {
+  if (!props.image) return false
+  // Basic emoji check: non-ascii or common emoji range
+  return /^[\uD800-\uDBFF][\uDC00-\uDFFF]|[\u2600-\u27ff]/.test(props.image) || props.image.length <= 2
+})
 
 const disabled = computed(() => props.userStars < props.price)
 const diff = computed(() => props.price - props.userStars)
@@ -90,6 +97,15 @@ const handleCardClick = () => {
 .product-img {
   width: 100%;
   height: 100%;
+}
+
+.emoji-icon {
+  font-size: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
 }
 
 .price-tag {
