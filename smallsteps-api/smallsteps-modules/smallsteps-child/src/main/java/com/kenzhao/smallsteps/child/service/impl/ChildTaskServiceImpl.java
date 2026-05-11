@@ -1,6 +1,8 @@
 package com.kenzhao.smallsteps.child.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.kenzhao.smallsteps.common.ss.domain.ParentTask;
+import com.kenzhao.smallsteps.common.ss.domain.vo.ParentTaskVo;
 import com.kenzhao.smallsteps.task.mapper.ChildTaskMapper;
 import com.kenzhao.smallsteps.child.service.IChildTaskService;
 import com.kenzhao.smallsteps.common.ss.domain.ChildTask;
@@ -21,6 +23,7 @@ public class ChildTaskServiceImpl implements IChildTaskService {
 
     private final ChildTaskMapper childTaskMapper;
     private final IParentTaskService parentTaskService;
+    private final com.kenzhao.smallsteps.child.service.IScoreService scoreService;
 
     @Override
     public List<ChildTaskVo> selectChildTaskList(ChildTask childTask) {
@@ -39,7 +42,7 @@ public class ChildTaskServiceImpl implements IChildTaskService {
         vo.setProof(childTask.getProof());
         vo.setCreateTime(childTask.getCreateTime());
         vo.setEndTime(childTask.getEndTime());
-        
+
         // Populate task definition
         if (childTask.getTaskId() != null) {
             vo.setTaskDefinition(parentTaskService.queryById(childTask.getTaskId()));
@@ -92,13 +95,23 @@ public class ChildTaskServiceImpl implements IChildTaskService {
         queryWrapper.eq(ChildTask::getTaskId, taskId)
                 .eq(ChildTask::getChildId, childId)
                 .eq(ChildTask::getStatus, ChildTask.STATUS_ONGOING);
-        
+
         ChildTask taskLog = childTaskMapper.selectOne(queryWrapper);
         if (taskLog != null) {
-            taskLog.setStatus(ChildTask.STATUS_FINISHED);
+            // ADHD Logic: Instant Gratification - Provide stars immediately upon completion
+            taskLog.setStatus(ChildTask.STATUS_LIGHT_UP);
             taskLog.setEndTime(new java.util.Date());
             taskLog.setProof(proof);
-            return childTaskMapper.updateById(taskLog);
+            int rows = childTaskMapper.updateById(taskLog);
+
+            if (rows > 0) {
+                // Add points/stars to child balance
+                ParentTaskVo taskDef = parentTaskService.queryById(taskId);
+                int points = (taskDef != null && taskDef.getRewardPoints() != null) ? taskDef.getRewardPoints() : 10;
+                String taskTitle = (taskDef != null) ? taskDef.getTitle() : "专注任务";
+                scoreService.addPoints(childId, points, taskId, "完成任务: " + taskTitle);
+            }
+            return rows;
         }
         return 0;
     }
@@ -109,7 +122,7 @@ public class ChildTaskServiceImpl implements IChildTaskService {
         queryWrapper.eq(ChildTask::getTaskId, taskId)
                 .eq(ChildTask::getChildId, childId)
                 .eq(ChildTask::getStatus, ChildTask.STATUS_ONGOING);
-        
+
         ChildTask taskLog = childTaskMapper.selectOne(queryWrapper);
         if (taskLog != null) {
             taskLog.setStatus(ChildTask.STATUS_FAILED);

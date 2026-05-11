@@ -23,6 +23,7 @@ public class ChildTaskController extends BaseController {
     private final IChildTaskService childTaskService;
     private final ISsTaskLogService taskLogService;
     private final com.kenzhao.smallsteps.child.service.IChildService childService;
+    private final com.kenzhao.smallsteps.child.service.IScoreService scoreService;
 
     /**
      * 查询儿童任务执行列表
@@ -59,11 +60,9 @@ public class ChildTaskController extends BaseController {
      * [ADHD] 完成任务 (直接完成)
      */
     @PostMapping("/complete")
-    public R<Void> completeTask(@RequestParam("taskId") Long taskId, 
-                                @RequestParam("childId") Long childId,
-                                @RequestParam(value = "proof", required = false) String proof) {
-        validateChildAccess(childId);
-        return toAjax(childTaskService.completeTask(taskId, childId, proof));
+    public R<Void> completeTask(@RequestBody ChildTask childTask) {
+        validateChildAccess(childTask.getChildId());
+        return toAjax(childTaskService.completeTask(childTask.getTaskId(), childTask.getChildId(), childTask.getProof()));
     }
 
     /**
@@ -113,6 +112,15 @@ public class ChildTaskController extends BaseController {
     public R<Void> add(@RequestBody ChildTask childTask) {
         validateChildAccess(childTask.getChildId());
         return toAjax(childTaskService.insertChildTask(childTask));
+    }
+
+    /**
+     * 获取儿童积分
+     */
+    @GetMapping("/score/{childId}")
+    public R<com.kenzhao.smallsteps.common.ss.domain.ChildScore> getScore(@PathVariable Long childId) {
+        validateChildAccess(childId);
+        return R.ok(scoreService.getChildScore(childId));
     }
 
     /**

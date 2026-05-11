@@ -95,34 +95,23 @@ public class ScoreServiceImpl implements IScoreService {
 
     @Override
     public TableDataInfo<Map<String, Object>> getScoreHistory(Long userId, PageQuery pageQuery) {
-        // 模拟积分历史数据
-        List<Map<String, Object>> history = new ArrayList<>();
+        LambdaQueryWrapper<ScoreHistory> lqw = new LambdaQueryWrapper<>();
+        lqw.eq(ScoreHistory::getUserId, userId)
+           .orderByDesc(ScoreHistory::getCreateTime);
         
-        // 模拟数据
-        Map<String, Object> item1 = new HashMap<>();
-        item1.put("id", 1);
-        item1.put("points", 10);
-        item1.put("type", "增加");
-        item1.put("reason", "完成任务: 完成作业");
-        item1.put("createTime", "2026-03-31 10:00:00");
-        history.add(item1);
+        List<ScoreHistory> list = scoreHistoryMapper.selectList(lqw);
+        List<Map<String, Object>> result = new ArrayList<>();
         
-        Map<String, Object> item2 = new HashMap<>();
-        item2.put("id", 2);
-        item2.put("points", 5);
-        item2.put("type", "增加");
-        item2.put("reason", "完成任务: 整理房间");
-        item2.put("createTime", "2026-03-30 15:30:00");
-        history.add(item2);
+        for (ScoreHistory history : list) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("id", history.getId());
+            map.put("points", history.getAmount());
+            map.put("type", "1".equals(history.getType()) ? "增加" : "扣除");
+            map.put("reason", history.getReason());
+            map.put("createTime", history.getCreateTime());
+            result.add(map);
+        }
         
-        Map<String, Object> item3 = new HashMap<>();
-        item3.put("id", 3);
-        item3.put("points", 20);
-        item3.put("type", "扣除");
-        item3.put("reason", "兑换: 玩具车");
-        item3.put("createTime", "2026-03-29 14:00:00");
-        history.add(item3);
-        
-        return TableDataInfo.build(history);
+        return TableDataInfo.build(result);
     }
 }

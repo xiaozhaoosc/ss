@@ -358,10 +358,9 @@ onLoad(() => {
 
 .main-content {
   flex: 1;
+  height: 0; /* 必须设置高度为0或具体值，flex: 1 才能在 scroll-view 中正确生效 */
   position: relative;
   z-index: 10;
-  display: flex;
-  flex-direction: column;
   padding: 0 16px;
 }
 
@@ -488,7 +487,7 @@ onLoad(() => {
 }
 
 .spacer {
-  height: 120px;
+  height: 160px; /* 增加留白高度，确保底栏不遮挡任务按钮 */
 }
 
 @keyframes float {

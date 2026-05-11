@@ -77,7 +77,14 @@ async function loadData() {
         id: item.rewardId,
         name: item.name,
         price: item.pointsRequired,
-        image: item.icon ? (item.icon.startsWith('http') ? item.icon : (import.meta.env.VITE_APP_BASE_API + item.icon)) : 'https://img.icons8.com/fluency/96/gift.png',
+        image: item.icon ? (
+          item.icon.startsWith('http') ? item.icon : 
+          (item.icon.startsWith('/') ? 
+            ((import.meta.env.VITE_APP_BASE_API || '').endsWith('/') ? 
+              (import.meta.env.VITE_APP_BASE_API + item.icon.slice(1)) : 
+              (import.meta.env.VITE_APP_BASE_API + item.icon)
+            ) : item.icon)
+        ) : 'https://img.icons8.com/fluency/96/gift.png',
         bgClass: 'bg-blue-50' // Random or fixed color
       }))
     }
