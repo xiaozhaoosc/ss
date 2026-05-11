@@ -27,8 +27,8 @@ test.describe('奖励兑换全链路验证', () => {
     console.log('当前打卡天数/状态:', balanceText);
     
     // 5. 导航到奖励商店
-    // 点击底部导航栏的“Shop”图标
-    const shopNav = page.locator('text=Shop');
+    // 点击底部导航栏的“百宝箱”图标
+    const shopNav = page.locator('text=百宝箱');
     await expect(shopNav).toBeVisible();
     await shopNav.click();
     

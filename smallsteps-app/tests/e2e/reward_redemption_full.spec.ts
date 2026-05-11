@@ -25,7 +25,10 @@ test.describe('奖励兑换全链路审批流', () => {
 
     // 导航到奖励商店
     console.log('Step 2: Navigating to Reward Shop...');
-    await childPage.goto('/#/pages/child/reward-shop/index');
+    // 点击底部导航栏的“百宝箱”图标
+    const shopNav = childPage.locator('text=百宝箱');
+    await expect(shopNav).toBeVisible({ timeout: 10000 });
+    await shopNav.click();
     await expect(childPage.locator('.product-card')).toBeVisible({ timeout: 15000 });
 
     // 查找可兑换的奖励 (星星足够的)
@@ -37,7 +40,7 @@ test.describe('奖励兑换全链路审批流', () => {
        console.log('Redeem button is disabled. Stars might be insufficient.');
     }
 
-    const rewardName = await childPage.locator('.product-name').first().textContent();
+    const rewardName = await childPage.locator('.name').first().textContent();
     console.log(`Redeeming reward: ${rewardName}`);
     
     await redeemBtn.click();
@@ -66,7 +69,7 @@ test.describe('奖励兑换全链路审批流', () => {
     console.log('Navigated to Reward Config');
 
     // 寻找待处理请求
-    const requestCard = childPage.locator('.request-card').first();
+    const requestCard = childPage.locator('.pending-request-card').first();
     await expect(requestCard).toBeVisible({ timeout: 15000 });
     
     const reqText = await requestCard.textContent();

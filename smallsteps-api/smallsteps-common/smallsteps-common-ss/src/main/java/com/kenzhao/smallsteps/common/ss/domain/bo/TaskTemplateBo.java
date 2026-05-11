@@ -1,6 +1,8 @@
 package com.kenzhao.smallsteps.common.ss.domain.bo;
 
 import com.kenzhao.smallsteps.common.mybatis.core.domain.BaseEntity;
+import com.kenzhao.smallsteps.common.ss.domain.TaskTemplate;
+import io.github.linpeilie.annotations.AutoMapper;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -14,6 +16,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
+@AutoMapper(target = TaskTemplate.class)
 public class TaskTemplateBo extends BaseEntity {
 
     private Long templateId;

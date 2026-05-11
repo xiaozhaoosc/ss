@@ -123,7 +123,7 @@ const actionHint = computed(() => {
 
 onLoad((options) => {
   if (options.taskId) {
-    taskId.value = parseInt(options.taskId)
+    taskId.value = options.taskId
     loadTaskInfo()
   }
 })
@@ -204,7 +204,7 @@ const handleComplete = async () => {
 
     uni.showLoading({ title: '同步状态中...' })
     console.log(`[Task] Completing task: taskId=${taskId.value}, childId=${childId}`)
-    const res = await completeTask(taskId.value, Number(childId), proofUrl)
+    const res = await completeTask(taskId.value, childId, proofUrl)
     uni.hideLoading()
     
     // Check if back-end actually updated the record

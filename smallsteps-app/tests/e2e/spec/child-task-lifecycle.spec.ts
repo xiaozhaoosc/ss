@@ -32,11 +32,8 @@ test.describe('Child Task Lifecycle Tests', () => {
     await homePage.clickMission(0);
     await expect(page).toHaveURL(/.*task-execute/, { timeout: 10000 });
 
-    // 2. Start task
-    await executePage.startTask();
-    
-    // 3. Complete task
-    await executePage.completeTask();
+    // 2. Start and Complete task (handle multiple steps)
+    await executePage.completeTaskUntilFinished();
     
     // 4. Collect reward (wait for overlay)
     await executePage.collectReward();

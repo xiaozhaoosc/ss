@@ -51,5 +51,5 @@
 </script>
 
 <style lang="scss">
-  @import '@/static/scss/index.scss';
+  @use '@/static/scss/index.scss';
 </style>

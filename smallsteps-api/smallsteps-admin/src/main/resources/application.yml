@@ -1,7 +1,7 @@
 # 开发环境配置
 server:
   # 服务器的HTTP端口，默认为8080
-  port: 8081
+  port: 8098
   servlet:
     # 应用的访问路径
     context-path: /ssapi
@@ -9,7 +9,7 @@ server:
   undertow:
     # HTTP post内容的最大大小。当值为-1时，默认值为大小是无限的
     max-http-post-size: -1
-    # 以下的配置会影响buffer,这些buffer会用于服务器连接 of the IO操作,有点类似netty的池化内存管理
+    # 以下的配置会影响buffer,这些buffer会用于服务器连接的IO操作,有点类似netty的池化内存管理
     # 每块buffer的空间大小,越小的空间被利用越充分
     buffer-size: 512
     # 是否分配的直接内存
@@ -35,7 +35,7 @@ captcha:
 # 日志配置
 logging:
   level:
-    com.kenzhao.smallsteps: @logging.level@
+    com.kenzhao.smallsteps: info
     org.springframework: warn
     org.mybatis.spring.mapper: debug
     org.apache.fury: warn
@@ -69,7 +69,7 @@ spring:
     # 国际化资源文件路径
     basename: i18n/messages
   profiles:
-    active: @profiles.active@
+    active: prod
   # 文件上传
   servlet:
     multipart:
@@ -133,14 +133,9 @@ tenant:
     - sys_role_menu
     - sys_user_post
     - sys_user_role
+    - sys_client
     - sys_oss_config
     - flow_spel
-    - ss_score_history
-    - ss_parent_task
-    - ss_parent_reward
-    - ss_parent_contract
-    - ss_child_score
-    - sys_client
 
 # MyBatisPlus配置
 # https://baomidou.com/config/
@@ -193,7 +188,7 @@ springdoc:
     enabled: true
   info:
     # 标题
-    title: '标题：Small Steps (小步) 管理系统_接口文档'
+    title: '标题：SmallSteps多租户管理系统_接口文档'
     # 描述
     description: '描述：用于管理集团旗下公司的人员信息,具体包括XXX,XXX模块...'
     # 版本
@@ -215,10 +210,6 @@ springdoc:
       packages-to-scan: com.kenzhao.smallsteps.generator
     - group: 5.工作流模块
       packages-to-scan: com.kenzhao.smallsteps.workflow
-    - group: 6.家长端模块
-      packages-to-scan: com.kenzhao.smallsteps.parent
-    - group: 7.学生端模块
-      packages-to-scan: com.kenzhao.smallsteps.child
 
 # 防止XSS攻击
 xss:
@@ -273,37 +264,3 @@ warm-flow:
   node-tooltip: true
   # 默认Authorization，如果有多个token，用逗号分隔
   token-name: ${sa-token.token-name},clientid
-
---- # AI 配置
-ai:
-  vllm:
-    baseUrl: http://192.168.1.9:8002/v1
-    apiKey: ken2zhao589612
-    api: openai-completions
-    models:
-      - id: qwen3.5-9b-q8_0
-        name: qwen3.5-9b-q8_0
-        reasoning: false
-        input:
-          - text
-          - image
-        cost:
-          input: 0
-          output: 0
-          cacheRead: 0
-          cacheWrite: 0
-        contextWindow: 24576
-        maxTokens: 8192
-      - id: gemma-4-26b
-        name: gemma-4-26b
-        reasoning: false
-        input:
-          - text
-          - image
-        cost:
-          input: 0
-          output: 0
-          cacheRead: 0
-          cacheWrite: 0
-        contextWindow: 24576
-        maxTokens: 8192

@@ -1,8 +1,8 @@
 // tailwind
-@import "./tailwind.css";
+@use "./tailwind.css";
 // global
-@import "./global.scss";
+@use "./global.scss";
 // color-ui
-@import "@/static/scss/colorui.css";
+@use "@/static/scss/colorui.css";
 // iconfont
-@import "@/static/font/iconfont.css";
+@use "@/static/font/iconfont.css";

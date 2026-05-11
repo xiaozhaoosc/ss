@@ -1,5 +1,14 @@
 # Small Steps 项目日志 (JOURNAL)
 
+## [2026-05-11]
+### [Task_Reflection]
+| 成果 | 说明 |
+| :--- | :--- |
+| 修复上传 404 | 新增 `CommonController` 提供 `/common/upload` 接口，解决儿童端上传任务凭证失败的问题。 |
+| 权限对齐 | 允许所有已登录用户（包括儿童角色）调用通用上传接口，绕过严格的 `system:oss:upload` 权限。 |
+
+---
+
 ## [2026-05-03] E2E 交付体系全自动化与 CI/CD 落地
 ### [Project_Reflection]
 | 任务 | 状态 | 成果 |

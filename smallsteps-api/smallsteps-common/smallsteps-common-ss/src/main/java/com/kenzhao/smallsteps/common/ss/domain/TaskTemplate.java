@@ -25,7 +25,7 @@ public class TaskTemplate extends BaseEntity {
      * 模板ID
      */
     @TableId(value = "template_id")
-    private Long template_id;
+    private Long templateId;
 
     /**
      * 任务标题

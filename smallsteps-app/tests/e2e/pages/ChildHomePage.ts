@@ -11,10 +11,10 @@ export class ChildHomePage {
   constructor(page: Page) {
     this.page = page;
     this.starBalance = page.locator('.streak-val');
-    this.shopTab = page.locator('text=Shop');
-    this.timeMachineTab = page.locator('text=Time');
+    this.shopTab = page.locator('text=百宝箱');
+    this.timeMachineTab = page.locator('text=时光机');
     this.treeholeTab = page.locator('text=点我聊天吧！');
-    this.missionCards = page.locator('.mission-card');
+    this.missionCards = page.locator('.mission-item');
   }
 
   async goto() {

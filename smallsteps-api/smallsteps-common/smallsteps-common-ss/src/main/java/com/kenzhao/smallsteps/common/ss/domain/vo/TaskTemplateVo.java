@@ -1,5 +1,7 @@
 package com.kenzhao.smallsteps.common.ss.domain.vo;
 
+import com.kenzhao.smallsteps.common.ss.domain.TaskTemplate;
+import io.github.linpeilie.annotations.AutoMapper;
 import lombok.Data;
 import java.io.Serializable;
 import java.util.List;
@@ -11,6 +13,7 @@ import java.util.List;
  * @date 2026-04-14
  */
 @Data
+@AutoMapper(target = TaskTemplate.class)
 public class TaskTemplateVo implements Serializable {
 
     private static final long serialVersionUID = 1L;

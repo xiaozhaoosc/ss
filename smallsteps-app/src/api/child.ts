@@ -4,8 +4,8 @@ import config from '@/config'
 export const getBaseUrl = () => config.baseUrl
 
 export interface ChildTask {
-    taskId?: number
-    childId?: number
+    taskId?: number | string
+    childId?: number | string
     taskName?: string
     description?: string
     status?: string
@@ -44,7 +44,7 @@ export function listChildTask(childTask: ChildTask) {
     })
 }
 
-export function getChildTask(taskId: number) {
+export function getChildTask(taskId: number | string) {
     return request({
         url: '/child/task/info/' + taskId,
         method: 'GET'
@@ -67,14 +67,14 @@ export function updateChildTask(data: ChildTask) {
     })
 }
 
-export function deleteChildTask(taskId: number) {
+export function deleteChildTask(taskId: number | string) {
     return request({
         url: '/child/task/remove/' + taskId,
         method: 'DELETE'
     })
 }
 
-export function deleteChildTaskBatch(taskIds: number[]) {
+export function deleteChildTaskBatch(taskIds: (number | string)[]) {
     return request({
         url: '/child/task/remove/batch',
         method: 'DELETE',
@@ -82,7 +82,7 @@ export function deleteChildTaskBatch(taskIds: number[]) {
     })
 }
 
-export function startTask(taskId: number, childId: number) {
+export function startTask(taskId: number | string, childId: number | string) {
     return request({
         url: '/child/task/start',
         method: 'POST',
@@ -90,7 +90,7 @@ export function startTask(taskId: number, childId: number) {
     })
 }
 
-export function completeTask(taskId: number, childId: number, proof?: string) {
+export function completeTask(taskId: number | string, childId: number | string, proof?: string) {
     return request({
         url: '/child/task/complete',
         method: 'POST',
@@ -98,7 +98,7 @@ export function completeTask(taskId: number, childId: number, proof?: string) {
     })
 }
 
-export function failTask(taskId: number, childId: number) {
+export function failTask(taskId: number | string, childId: number | string) {
     return request({
         url: '/child/task/fail',
         method: 'POST',
@@ -106,14 +106,14 @@ export function failTask(taskId: number, childId: number) {
     })
 }
 
-export function getPendingTasks(childId: number) {
+export function getPendingTasks(childId: number | string) {
     return request({
         url: '/child/task/pending/' + childId,
         method: 'GET'
     })
 }
 
-export function getCurrentTask(childId: number) {
+export function getCurrentTask(childId: number | string) {
     return request({
         url: '/child/task/current/' + childId,
         method: 'GET'

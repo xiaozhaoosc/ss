@@ -1,5 +1,15 @@
 # 项目编年史 (CHRONICLE)
 
+## 2026-05-11: 生产环境配置硬化与全栈 API 对齐
+- **API 路径标准化**：统一了 `smallsteps-app` (Mobile) 和 `smallsteps-ui` (Web) 的生产环境 API 前缀为 `/prod-api/`，并通过 `.env.production` 实现了配置持久化。
+- **容器间通信修复**：修正了 Nginx 代理配置中遗留的 `backend-core` 主机名，将其与 `docker-compose.yml` 中的 `api` 服务名对齐。
+- **监控组件解耦**：针对生产环境下由于 Admin Server 未部署导致的 `ConnectException` 日志污染，将 `spring-boot-admin-client` 和 `snail-job` 设为默认关闭，并支持通过环境变量动态开启。
+- **环境鲁棒性增强**：通过 `${VAR:default}` 语法确立了“配置容错”范式，解决了容器化环境下 `localhost` 回环连接无效的问题。
+
+## 2026-05-11: Sass 构建架构现代化与警告清零
+- **Sass 3.0 迁移**：攻克了 `smallsteps-app` 中由于 `@import` 弃用导致的构建警告，全量迁移至现代的 `@use` API。
+- **全局变量注入优化**：通过在 `vite.config.js` 中引入 `uni` 命名空间，解决了多文件 Sass 模块间的变量冲突（Collision），实现了 H5 端 100% 绿色构建。
+
 ## 2026-05-08: 后端驱动的数据一致性加固与多子女洞察闭环
 - **数据一致性修复**：攻克了星星余额显示不一致的顽疾，确立了“后端驱动数据真理”的原则，消除了前端硬编码 Fallback 带来的误导。
 - **多子女洞察体验**：在“家长洞察”页面实现了水平滑动切换组件，并重构了 `ChildAIController` 权限链，使其基于 `DeptId` 兼容家庭多成员访问。

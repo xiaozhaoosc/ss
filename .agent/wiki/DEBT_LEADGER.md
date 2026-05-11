@@ -1,4 +1,7 @@
-# Technical Debt Ledger (技术债账本)
+# 技术债账本 (Technical Debt Ledger)
+
+## 1. 权限风险
+- [OSS-01] `/common/upload` 接口跳过了 `system:oss:upload` 权限校验，仅通过 `@SaCheckLogin` 鉴权。这是为了兼容儿童端（Child Role）上传任务凭证，但若未来该接口被滥用可能导致 OSS 资源被非预期填充。建议后期根据角色细化存储桶策略。
 
 | 日期 | 模块 | 问题描述 | 优先级 | 影响 |
 | :--- | :--- | :--- | :--- | :--- |

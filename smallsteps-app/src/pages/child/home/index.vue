@@ -127,7 +127,7 @@ async function loadData() {
     if (!childId) return
 
     // 2. Get Streak
-    getStreak(Number(childId)).then((res: any) => {
+    getStreak(childId).then((res: any) => {
       streak.value = res.data || 0
     })
 
@@ -141,7 +141,7 @@ async function loadData() {
 const loadPendingTasks = () => {
   const childId = userStore.id
   if (!childId) return
-  getPendingTasks(Number(childId)).then((res: any) => {
+  getPendingTasks(childId).then((res: any) => {
     pendingTasks.value = res.data || []
     if (pendingTasks.value.length > 0) {
       const task = pendingTasks.value[0]
@@ -204,7 +204,7 @@ const handleRobotLongPress = async () => {
     const childId = userStore.id
     if (childId) {
       await submitEmotion({
-        childId: Number(childId),
+        childId: childId,
         moodLevel: 2, // 2: Low/Sad/Frustrated
         moodType: 'frustrated',
         description: '[影子观察] 检测到异常长按机器人，可能存在情绪波动或操作困难。'
