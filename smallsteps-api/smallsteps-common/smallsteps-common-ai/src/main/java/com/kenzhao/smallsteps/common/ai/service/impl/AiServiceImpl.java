@@ -7,6 +7,7 @@ import com.kenzhao.smallsteps.common.ai.domain.AiPrompt;
 import com.kenzhao.smallsteps.common.ai.mapper.AiPromptMapper;
 import com.kenzhao.smallsteps.common.ai.service.IAiRouterService;
 import com.kenzhao.smallsteps.common.ai.service.IAiService;
+import com.kenzhao.smallsteps.common.ai.service.ISysAiKnowledgeService;
 import com.kenzhao.smallsteps.common.core.exception.ServiceException;
 import com.kenzhao.smallsteps.common.json.utils.JsonUtils;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ public class AiServiceImpl implements IAiService {
     private final IAiRouterService aiRouterService;
     private final SmartAiClient smartAiClient;
     private final AiPromptMapper aiPromptMapper;
+    private final ISysAiKnowledgeService sysAiKnowledgeService;
 
     @Override
     public List<Map<String, String>> taskBreakdown(String taskName, String taskDesc, int childAge) {
@@ -106,6 +108,16 @@ public class AiServiceImpl implements IAiService {
                     "}", content);
             }
 
+            // 知识库隐式增强
+            try {
+                List<String> kbResults = sysAiKnowledgeService.hybridSearch(content, 3);
+                if (!kbResults.isEmpty()) {
+                    prompt += "\n\n【系统参考知识库】：\n" + String.join("\n", kbResults);
+                }
+            } catch (Exception e) {
+                log.error("Failed to append knowledge base context", e);
+            }
+
             // 3. 调用大模型
             String response = smartAiClient.askAi(prompt, aiModel, "EMOTION_ANALYSIS", childId);
             if (response == null) {
@@ -144,6 +156,16 @@ public class AiServiceImpl implements IAiService {
             }
 
             String prompt = getPrompt(promptKey, params);
+            
+            // 知识库隐式增强
+            try {
+                List<String> kbResults = sysAiKnowledgeService.hybridSearch(userInput, 3);
+                if (!kbResults.isEmpty()) {
+                    prompt += "\n\n【系统参考知识库】：\n" + String.join("\n", kbResults);
+                }
+            } catch (Exception e) {
+                log.error("Failed to append knowledge base context", e);
+            }
             
             // 3. 调用大模型
             String response = smartAiClient.askAi(prompt, aiModel, promptKey, childId);
