@@ -60,3 +60,7 @@ build/
 sdkconfig
 sdkconfig.old
 managed_components/
+
+# === Worktrees ===
+.worktrees/
+
