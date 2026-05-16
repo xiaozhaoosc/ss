@@ -1,10 +1,15 @@
 package com.kenzhao.smallsteps.common.ai.service.impl;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.kenzhao.smallsteps.common.ai.domain.SysAiKnowledge;
 import com.kenzhao.smallsteps.common.ai.mapper.SysAiKnowledgeMapper;
 import com.kenzhao.smallsteps.common.ai.service.ISysAiKnowledgeService;
+import com.kenzhao.smallsteps.common.mybatis.core.page.PageQuery;
+import com.kenzhao.smallsteps.common.mybatis.core.page.TableDataInfo;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 
@@ -28,6 +33,18 @@ public class SysAiKnowledgeServiceImpl extends ServiceImpl<SysAiKnowledgeMapper,
         @Override public List<String> similaritySearch(String query, int topK) { return new ArrayList<>(); }
     };
     
+    @Override
+    public TableDataInfo<SysAiKnowledge> queryPageList(SysAiKnowledge bo, PageQuery pageQuery) {
+        LambdaQueryWrapper<SysAiKnowledge> lqw = Wrappers.lambdaQuery();
+        if (bo != null) {
+            lqw.like(ObjectUtil.isNotEmpty(bo.getTitle()), SysAiKnowledge::getTitle, bo.getTitle());
+            lqw.like(ObjectUtil.isNotEmpty(bo.getKeywords()), SysAiKnowledge::getKeywords, bo.getKeywords());
+            lqw.eq(ObjectUtil.isNotEmpty(bo.getStatus()), SysAiKnowledge::getStatus, bo.getStatus());
+        }
+        Page<SysAiKnowledge> result = baseMapper.selectVoPage(pageQuery.build(), lqw, SysAiKnowledge.class);
+        return TableDataInfo.build(result);
+    }
+
     @Override
     public void syncToVectorStore(Long id) {
         SysAiKnowledge knowledge = getById(id);

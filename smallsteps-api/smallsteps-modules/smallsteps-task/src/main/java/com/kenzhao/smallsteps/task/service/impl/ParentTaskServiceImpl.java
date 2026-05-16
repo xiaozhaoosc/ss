@@ -115,26 +115,44 @@ public class ParentTaskServiceImpl implements IParentTaskService {
     public Map<String, Object> getTaskStatusByChildId(Long childId) {
         Map<String, Object> result = new HashMap<>();
 
-        // 总任务数 (当前指派的任务 - 这里的逻辑可能需要根据业务调整，目前暂用 ParentTask 数量)
-        // 修正：应根据 ss_task_log 中今日的任务总数来计算
         java.util.Date today = cn.hutool.core.date.DateUtil.beginOfDay(new java.util.Date());
+        java.util.Date nextDay = cn.hutool.core.date.DateUtil.beginOfDay(cn.hutool.core.date.DateUtil.offsetDay(today, 1));
         
-        Long totalTasks = childTaskMapper.selectCount(new LambdaQueryWrapper<ChildTask>()
+        LambdaQueryWrapper<ChildTask> lqw = new LambdaQueryWrapper<ChildTask>()
             .eq(ChildTask::getChildId, childId)
-            .ge(ChildTask::getTargetDate, today)
-            .lt(ChildTask::getTargetDate, cn.hutool.core.date.DateUtil.endOfDay(today)));
+            .and(w -> w.and(ww -> ww.ge(ChildTask::getTargetDate, today).lt(ChildTask::getTargetDate, nextDay))
+                .or(ww -> ww.ge(ChildTask::getEndTime, today).lt(ChildTask::getEndTime, nextDay)));
+            
+        List<ChildTask> todayLogs = childTaskMapper.selectList(lqw);
+        
+        long totalTasks = todayLogs.size();
+        long completedTasks = todayLogs.stream()
+            .filter(t -> ChildTask.STATUS_FINISHED.equals(t.getStatus()) || ChildTask.STATUS_LIGHT_UP.equals(t.getStatus()))
+            .count();
 
-        // 今日完成任务数 (状态为已完成 2 或已点亮 3)
-        Long completedTasks = childTaskMapper.selectCount(new LambdaQueryWrapper<ChildTask>()
-            .eq(ChildTask::getChildId, childId)
-            .in(ChildTask::getStatus, "2", "3")
-            .ge(ChildTask::getTargetDate, today)
-            .lt(ChildTask::getTargetDate, cn.hutool.core.date.DateUtil.endOfDay(today)));
+        // 转换为 VO 以便前端显示任务标题等
+        List<Map<String, Object>> todayTasksList = new ArrayList<>();
+        for (ChildTask log : todayLogs) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("id", log.getId());
+            map.put("status", log.getStatus());
+            
+            ParentTask taskDef = parentTaskMapper.selectById(log.getTaskId());
+            if (taskDef != null) {
+                map.put("title", taskDef.getTitle());
+                map.put("icon", taskDef.getIcon());
+                map.put("starReward", taskDef.getRewardPoints());
+            } else {
+                map.put("title", "未知任务");
+            }
+            todayTasksList.add(map);
+        }
 
         result.put("totalTasks", totalTasks);
         result.put("completedTasks", completedTasks);
         result.put("pendingTasks", Math.max(0, totalTasks - completedTasks));
         result.put("completionRate", totalTasks > 0 ? (int)(completedTasks * 100 / totalTasks) : 0);
+        result.put("todayTasks", todayTasksList);
 
         return result;
     }

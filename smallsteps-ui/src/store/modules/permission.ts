@@ -148,7 +148,7 @@ export const usePermissionStore = defineStore('permission', () => {
 // 动态路由遍历，验证是否具备权限
 export const filterDynamicRoutes = (routes: RouteRecordRaw[]) => {
   const res: RouteRecordRaw[] = [];
-  routes.forEach((route) => {
+  routes.forEach((route: any) => {
     if (route.permissions) {
       if (auth.hasPermiOr(route.permissions)) {
         res.push(route);
@@ -157,6 +157,8 @@ export const filterDynamicRoutes = (routes: RouteRecordRaw[]) => {
       if (auth.hasRoleOr(route.roles)) {
         res.push(route);
       }
+    } else {
+      res.push(route);
     }
   });
   return res;

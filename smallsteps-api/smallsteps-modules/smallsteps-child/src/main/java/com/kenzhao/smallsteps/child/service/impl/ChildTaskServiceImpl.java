@@ -86,6 +86,7 @@ public class ChildTaskServiceImpl implements IChildTaskService {
         task.setChildId(childId);
         task.setStatus(ChildTask.STATUS_ONGOING);
         task.setStartTime(new java.util.Date());
+        task.setTargetDate(new java.util.Date()); // 确保今日任务统计能包含此任务
         return childTaskMapper.insert(task);
     }
 
@@ -102,6 +103,9 @@ public class ChildTaskServiceImpl implements IChildTaskService {
             taskLog.setStatus(ChildTask.STATUS_LIGHT_UP);
             taskLog.setEndTime(new java.util.Date());
             taskLog.setProof(proof);
+            if (taskLog.getTargetDate() == null) {
+                taskLog.setTargetDate(new java.util.Date());
+            }
             int rows = childTaskMapper.updateById(taskLog);
 
             if (rows > 0) {
