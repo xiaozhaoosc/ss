@@ -49,10 +49,18 @@ public class TableDataInfo<T> implements Serializable {
      * @param total 总记录数
      */
     public TableDataInfo(List<T> list, long total) {
-        this.rows = list;
+        this.rows = list != null ? list : CollUtil.newArrayList();
         this.total = total;
         this.code = HttpStatus.HTTP_OK;
         this.msg = "查询成功";
+    }
+
+    public void setRows(List<T> rows) {
+        this.rows = rows != null ? rows : CollUtil.newArrayList();
+    }
+
+    public List<T> getRows() {
+        return rows != null ? rows : CollUtil.newArrayList();
     }
 
     /**
@@ -62,8 +70,8 @@ public class TableDataInfo<T> implements Serializable {
         TableDataInfo<T> rspData = new TableDataInfo<>();
         rspData.setCode(HttpStatus.HTTP_OK);
         rspData.setMsg("查询成功");
-        rspData.setRows(page.getRecords());
-        rspData.setTotal(page.getTotal());
+        rspData.setRows(page != null && page.getRecords() != null ? page.getRecords() : CollUtil.newArrayList());
+        rspData.setTotal(page != null ? page.getTotal() : 0);
         return rspData;
     }
 
@@ -74,8 +82,8 @@ public class TableDataInfo<T> implements Serializable {
         TableDataInfo<T> rspData = new TableDataInfo<>();
         rspData.setCode(HttpStatus.HTTP_OK);
         rspData.setMsg("查询成功");
-        rspData.setRows(list);
-        rspData.setTotal(list.size());
+        rspData.setRows(list != null ? list : CollUtil.newArrayList());
+        rspData.setTotal(list != null ? list.size() : 0);
         return rspData;
     }
 
@@ -86,6 +94,7 @@ public class TableDataInfo<T> implements Serializable {
         TableDataInfo<T> rspData = new TableDataInfo<>();
         rspData.setCode(HttpStatus.HTTP_OK);
         rspData.setMsg("查询成功");
+        rspData.setRows(CollUtil.newArrayList());
         return rspData;
     }
 

@@ -176,8 +176,12 @@ const { queryParams, form, rules } = toRefs(data);
 function getList() {
   loading.value = true;
   listKnowledge(queryParams.value).then(response => {
-    knowledgeList.value = response.rows;
-    total.value = response.total;
+    knowledgeList.value = response.rows || [];
+    total.value = response.total || 0;
+    loading.value = false;
+  }).catch(() => {
+    knowledgeList.value = [];
+    total.value = 0;
     loading.value = false;
   });
 }
