@@ -59,7 +59,7 @@
               :key="child.userId"
               class="child-item"
               :class="{ 'active': selectedChildId === child.userId }"
-              @click="selectedChildId = child.userId"
+              @click="handleSelectChild(child.userId)"
             >
               <view class="avatar-wrapper">
                 <image 
@@ -189,13 +189,24 @@ onMounted(async () => {
       }
 
       if (children.value.length > 0) {
-        selectedChildId.value = children.value[0].userId
+        // 优先使用 store 中已选择的孩子
+        if (userStore.currentChildId && children.value.some((c: any) => c.userId === userStore.currentChildId)) {
+          selectedChildId.value = userStore.currentChildId
+        } else {
+          selectedChildId.value = children.value[0].userId
+          userStore.setCurrentChildId(selectedChildId.value)
+        }
       }
     }
   } catch (error) {
     console.error('Fetch family members failed:', error)
   }
 })
+
+const handleSelectChild = (id: number) => {
+  selectedChildId.value = id
+  userStore.setCurrentChildId(id)
+}
 
 const handleAddChild = () => {
   uni.navigateTo({

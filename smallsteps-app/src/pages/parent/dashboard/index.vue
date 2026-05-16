@@ -150,10 +150,12 @@ async function initChildIdAndLoad() {
       const children = members.filter((m: any) => String(m.userType) === '2' || m.roles?.includes('child'))
       if (children.length > 0) {
         childId.value = children[0].userId
+        userStore.setCurrentChildId(childId.value)
         await loadData()
       } else {
         if (members.length > 0) {
           childId.value = members[0].userId
+          userStore.setCurrentChildId(childId.value)
           await loadData()
         } else {
           uni.showToast({ title: '未绑定儿童', icon: 'none' })
@@ -162,6 +164,7 @@ async function initChildIdAndLoad() {
     } catch (err) {
       console.error('Failed to get family members', err)
       childId.value = 1
+      userStore.setCurrentChildId(childId.value)
       await loadData()
     }
   }

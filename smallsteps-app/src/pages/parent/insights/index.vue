@@ -215,6 +215,7 @@ const navigateToDetails = () => {
 const switchChild = (id) => {
   if (childId.value === id) return
   childId.value = id
+  userStore.setCurrentChildId(id)
   loadData(id)
 }
 

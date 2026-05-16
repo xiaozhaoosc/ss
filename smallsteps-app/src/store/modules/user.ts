@@ -10,6 +10,7 @@ interface UserState {
   clientId: string | null
   role: 'parent' | 'child'
   balance: number
+  currentChildId: number | null
 }
 
 export const useUserStore = defineStore('user', {
@@ -18,7 +19,8 @@ export const useUserStore = defineStore('user', {
     token: null,
     clientId: null,
     role: 'parent',
-    balance: 0
+    balance: 0,
+    currentChildId: null
   }),
 
   getters: {
@@ -47,6 +49,15 @@ export const useUserStore = defineStore('user', {
     updateRole(role: 'parent' | 'child') {
       this.role = role
       uni.setStorageSync('role', role)
+    },
+
+    setCurrentChildId(id: number | null) {
+      this.currentChildId = id
+      if (id) {
+        uni.setStorageSync('currentChildId', id)
+      } else {
+        uni.removeStorageSync('currentChildId')
+      }
     },
 
     login(loginData: any) {
@@ -107,6 +118,9 @@ export const useUserStore = defineStore('user', {
       if (token) this.token = token
       if (clientId) this.clientId = clientId
       if (role) this.role = role as 'parent' | 'child'
+      
+      const currentChildId = uni.getStorageSync('currentChildId')
+      if (currentChildId) this.currentChildId = Number(currentChildId)
     },
 
     async fetchBalance() {
