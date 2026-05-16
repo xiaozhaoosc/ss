@@ -5,7 +5,7 @@
 
 -- 1. 添加“知识库管理”菜单 (作为 AI管理 4000 的子菜单)
 INSERT INTO sys_menu (menu_id, menu_name, parent_id, order_num, path, component, query_param, is_frame, is_cache, menu_type, visible, status, perms, icon, create_dept, create_by, create_time, update_by, update_time, remark)
-VALUES (4006, '知识库管理', 4000, 4, 'knowledge', 'system/ai/knowledge/index', '', '1', '0', 'C', '0', '0', 'ai:knowledge:list', 'education', 103, 1, NOW(), NULL, NULL, 'AI知识库管理菜单')
+VALUES (4006, '知识库管理', 4000, 4, 'knowledge', 'ai/knowledge/index', '', '1', '0', 'C', '0', '0', 'ai:knowledge:list', 'education', 103, 1, NOW(), NULL, NULL, 'AI知识库管理菜单')
 ON CONFLICT (menu_id) DO UPDATE SET menu_name = EXCLUDED.menu_name, path = EXCLUDED.path, component = EXCLUDED.component, perms = EXCLUDED.perms, update_time = NOW();
 
 -- 2. 添加相关按钮权限
