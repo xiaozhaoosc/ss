@@ -2,6 +2,7 @@ package com.kenzhao.smallsteps.system.controller.system;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.kenzhao.smallsteps.common.ai.domain.SysAiKnowledge;
+import com.kenzhao.smallsteps.common.ai.domain.vo.SysAiKnowledgeVo;
 import com.kenzhao.smallsteps.common.ai.service.ISysAiKnowledgeService;
 import com.kenzhao.smallsteps.common.core.domain.R;
 import com.kenzhao.smallsteps.common.mybatis.core.page.PageQuery;
@@ -30,7 +31,7 @@ public class AiKnowledgeController extends BaseController {
      */
     @SaCheckPermission("ai:knowledge:list")
     @GetMapping("/list")
-    public TableDataInfo<SysAiKnowledge> list(SysAiKnowledge bo, PageQuery pageQuery) {
+    public TableDataInfo<SysAiKnowledgeVo> list(SysAiKnowledge bo, PageQuery pageQuery) {
         return aiKnowledgeService.queryPageList(bo, pageQuery);
     }
     
@@ -39,8 +40,8 @@ public class AiKnowledgeController extends BaseController {
      */
     @SaCheckPermission("ai:knowledge:query")
     @GetMapping(value = {"/", "/{id}"})
-    public R<SysAiKnowledge> getInfo(@PathVariable(value = "id", required = false) Long id) {
-        return R.ok(aiKnowledgeService.getById(id));
+    public R<SysAiKnowledgeVo> getInfo(@PathVariable(value = "id", required = false) Long id) {
+        return R.ok(aiKnowledgeService.queryById(id));
     }
     
     /**

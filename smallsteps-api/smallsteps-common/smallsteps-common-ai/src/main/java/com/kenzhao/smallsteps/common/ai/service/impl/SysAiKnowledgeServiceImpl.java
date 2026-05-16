@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.kenzhao.smallsteps.common.ai.domain.SysAiKnowledge;
+import com.kenzhao.smallsteps.common.ai.domain.vo.SysAiKnowledgeVo;
 import com.kenzhao.smallsteps.common.ai.mapper.SysAiKnowledgeMapper;
 import com.kenzhao.smallsteps.common.ai.service.ISysAiKnowledgeService;
 import com.kenzhao.smallsteps.common.mybatis.core.page.PageQuery;
@@ -34,15 +35,20 @@ public class SysAiKnowledgeServiceImpl extends ServiceImpl<SysAiKnowledgeMapper,
     };
     
     @Override
-    public TableDataInfo<SysAiKnowledge> queryPageList(SysAiKnowledge bo, PageQuery pageQuery) {
+    public TableDataInfo<SysAiKnowledgeVo> queryPageList(SysAiKnowledge bo, PageQuery pageQuery) {
         LambdaQueryWrapper<SysAiKnowledge> lqw = Wrappers.lambdaQuery();
         if (bo != null) {
             lqw.like(ObjectUtil.isNotEmpty(bo.getTitle()), SysAiKnowledge::getTitle, bo.getTitle());
             lqw.like(ObjectUtil.isNotEmpty(bo.getKeywords()), SysAiKnowledge::getKeywords, bo.getKeywords());
             lqw.eq(ObjectUtil.isNotEmpty(bo.getStatus()), SysAiKnowledge::getStatus, bo.getStatus());
         }
-        Page<SysAiKnowledge> result = baseMapper.selectVoPage(pageQuery.build(), lqw, SysAiKnowledge.class);
+        Page<SysAiKnowledgeVo> result = baseMapper.selectVoPage(pageQuery.build(), lqw, SysAiKnowledgeVo.class);
         return TableDataInfo.build(result);
+    }
+
+    @Override
+    public SysAiKnowledgeVo queryById(Long id) {
+        return baseMapper.selectVoById(id, SysAiKnowledgeVo.class);
     }
 
     @Override
