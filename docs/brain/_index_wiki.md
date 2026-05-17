@@ -30,8 +30,12 @@
 - [[ADR-016-Dashboard-Analytics-Testing|ADR-016: 高保真仪表盘报表与自动化测试架构]]
 - [[ADR-017-Audit-Field-Compatibility-for-Child-Accounts|ADR-017: 儿童账号在多租户审计架构下的兼容性方案]]
 - [[ADR/ADR-018-TableDataInfo-Null-Safety-Defense|ADR-018: 分页数据封装层 (TableDataInfo) 与前端表格源的双向空安全治理]]
+- [[ADR/ADR-019-AI-Knowledge-Base-Hybrid-Retrieval|ADR-019: AI 知识库管理与混合检索 (Hybrid Retrieval) 架构设计]]
 
 ## 每日记录 (Journal)
+- [[journal/2026-05-17|2026-05-17: AI 知识库混合检索系统架构与双向空安全防御]]
+- [[journal/2026-05-16|2026-05-16: AI 知识库管理视图重构与全栈异常治理]]
+- [[journal/2026-05-11|2026-05-11: 生产环境配置硬化与 Sass 3.0 构建升级]]
 - [[journal/2026-05-08|2026-05-08: 功能验证与知识蒸馏实战]]
 - [[journal/2026-05-06|2026-05-06: 环境解耦与安全加固]]
 - [[journal/2026-05-05|2026-05-05: 系统加固与硬编码审计报告]]

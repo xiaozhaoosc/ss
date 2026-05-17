@@ -1,5 +1,25 @@
 # Small Steps 项目日志 (JOURNAL)
 
+## [2026-05-17] AI 知识库管理与混合检索 (Hybrid Retrieval) 全栈落地
+### [Project_Reflection]
+| 成果 | 说明 |
+| :--- | :--- |
+| 数据模型与接口 | 新增 `sys_ai_knowledge` 表及 `AiKnowledgeController`，支持多模态文本与向量切块入库。 |
+| 混合检索架构 | 实现 PG 关键词匹配与 `SimpleVectorStore` 向量检索双路合并，提供情绪分析高置信度上下文。 |
+| 视图组件重构 | 创建 `src/views/ai/knowledge/index.vue` 全中文标准界面，实现流畅的前后端交互与一键向量同步。 |
+| 空安全防御机制 | 创建 `SysAiKnowledgeVo` 并通过 `@AutoMapper` 解决 MapStruct 转换异常，配合双向空集合兜底 (`[]`) 杜绝崩溃。 |
+
+---
+
+## [2026-05-16] 动态路由映射修复与空安全加固
+### [Project_Reflection]
+| 成果 | 说明 |
+| :--- | :--- |
+| 动态路由补全 | 在 `router/index.ts` 与 `permission.ts` 中补充 `/user/profile` 等本地动态路由，解决刷新 404 问题。 |
+| 表格源防御 | 修复 `knowledge/index.vue` 接收 `null` 导致表格渲染崩溃的缺陷，在 `TableDataInfo` 中实施强力空集合保护。 |
+
+---
+
 ## [2026-05-11]
 ### [Task_Reflection]
 | 成果 | 说明 |
