@@ -1,5 +1,9 @@
 # 项目编年史 (CHRONICLE)
 
+## 2026-05-17: AI 知识库管理功能重构与全栈异常防御治理
+- **前后端双向空安全防御**：针对动态编译时缺少 MapStruct VO 转换类导致底层返回 `null` 的极端情况，在后端基类 `TableDataInfo` 和前端 `knowledge/index.vue` 实施了严格的空集合防御（短路求值与默认实例化 `[]`），彻底杜绝了 Element Plus 表格崩溃及“数据保存失败”的假象。
+- **AI 知识库 CRUD 全栈贯通**：完成了 AI 知识库界面的全中文 RuoYi 规范 CRUD 对接与向量库同步状态流构建，并发布了架构决策记录 [[ADR/ADR-018-TableDataInfo-Null-Safety-Defense|ADR-018]]。
+
 ## 2026-05-11: 生产环境配置硬化与全栈 API 对齐
 - **API 路径标准化**：统一了 `smallsteps-app` (Mobile) 和 `smallsteps-ui` (Web) 的生产环境 API 前缀为 `/prod-api/`，并通过 `.env.production` 实现了配置持久化。
 - **容器间通信修复**：修正了 Nginx 代理配置中遗留的 `backend-core` 主机名，将其与 `docker-compose.yml` 中的 `api` 服务名对齐。

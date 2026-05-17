@@ -31,3 +31,4 @@
 | 2026-05-05 | `esp32` | 固件 WiFi 凭据硬编码风险 | 高 | 待处理 | [[hardcoded_audit]] |
 | 2026-05-08 | `mybatis-handler` | `BaseEntity` 审计字段自动注入在儿童账号 (`deptId` 为空) 下会抛出 401 | 高 | 已规避 | [[2026-05-08]] |
 | 2026-05-08 | `database` | `ss_task_log` 存量数据 `status='0'` 导致儿童端任务不可见 | 中 | 已修复 | [[2026-05-08]] |
+| 2026-05-17 | `mapstruct-page` | 缺少 VO 转换器时 `TableDataInfo` 返回 `"rows": null` 导致前端崩溃 | 高 | 已彻底治理 | [[ADR/ADR-018-TableDataInfo-Null-Safety-Defense|ADR-018]] |

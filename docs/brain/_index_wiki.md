@@ -29,6 +29,7 @@
 - [[ADR-015-Backend-Driven-Data-Truth|ADR-015: 后端驱动的实时数据同步策略]]
 - [[ADR-016-Dashboard-Analytics-Testing|ADR-016: 高保真仪表盘报表与自动化测试架构]]
 - [[ADR-017-Audit-Field-Compatibility-for-Child-Accounts|ADR-017: 儿童账号在多租户审计架构下的兼容性方案]]
+- [[ADR/ADR-018-TableDataInfo-Null-Safety-Defense|ADR-018: 分页数据封装层 (TableDataInfo) 与前端表格源的双向空安全治理]]
 
 ## 每日记录 (Journal)
 - [[journal/2026-05-08|2026-05-08: 功能验证与知识蒸馏实战]]
