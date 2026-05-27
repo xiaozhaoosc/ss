@@ -2,7 +2,11 @@
   "permissions": {
     "allow": [
       "mcp__memory__create_entities",
-      "mcp__memory__add_observations"
+      "mcp__memory__add_observations",
+      "Bash(docker exec *)",
+      "Bash(systemctl status *)",
+      "Bash(pg_isready)",
+      "Bash(pg_lsclusters)"
     ]
   }
 }
