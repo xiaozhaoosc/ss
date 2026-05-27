@@ -12,14 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import cn.dev33.satoken.annotation.SaCheckLogin;
-
 /**
  * 通用请求处理
  *
  * @author 赵轩
  */
-@SaCheckLogin
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/common")

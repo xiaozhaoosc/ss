@@ -16,7 +16,7 @@ COMMENT ON COLUMN ss_parent_task.light_effect IS '灯光效果代码';
 COMMENT ON COLUMN ss_parent_task.audio_effect IS '音频索引代码';
 COMMENT ON COLUMN ss_parent_task.deadline IS '截止时间';
 COMMENT ON COLUMN ss_parent_task.create_dept IS '创建部门';
-
+/common/upload 接口401，这个是公共接口不需要权限验证
 -- 为其他继承 BaseEntity 的表添加 create_dept 字段
 ALTER TABLE ss_parent_reward ADD COLUMN IF NOT EXISTS create_dept int8 DEFAULT NULL;
 COMMENT ON COLUMN ss_parent_reward.create_dept IS '创建部门';
