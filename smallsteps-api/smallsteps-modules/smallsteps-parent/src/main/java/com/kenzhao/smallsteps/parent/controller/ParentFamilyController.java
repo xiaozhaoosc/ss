@@ -42,6 +42,12 @@ public class ParentFamilyController extends BaseController {
             return R.fail("当前用户未关联家庭");
         }
         List<SysUserVo> list = userService.selectUserListByDept(deptId);
+        if (list != null) {
+            list = list.stream()
+                .filter(u -> !com.kenzhao.smallsteps.common.core.enums.UserStatus.DISABLE.getCode().equals(u.getStatus()))
+                .filter(u -> !"admin".equals(u.getUserName()))
+                .collect(java.util.stream.Collectors.toList());
+        }
         return R.ok(list);
     }
 
