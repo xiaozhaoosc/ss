@@ -53,6 +53,9 @@ import java.util.Map;
 @Service
 public class SysOssServiceImpl implements ISysOssService, OssService {
 
+    @org.springframework.beans.factory.annotation.Value("${ruoyi.profile:D:/smallsteps/uploadPath}")
+    private String profilePath;
+
     private final SysOssMapper baseMapper;
 
     /**
@@ -179,8 +182,15 @@ public class SysOssServiceImpl implements ISysOssService, OssService {
         }
         FileUtils.setAttachmentResponseHeader(response, sysOss.getOriginalName());
         response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE + "; charset=UTF-8");
-        OssClient storage = OssFactory.instance(sysOss.getService());
-        storage.download(sysOss.getFileName(), response.getOutputStream(), response::setContentLengthLong);
+        
+        File file = new File(profilePath + "/" + sysOss.getFileName());
+        if (!file.exists()) {
+            throw new ServiceException("文件物理不存在!");
+        }
+        response.setContentLengthLong(file.length());
+        try (java.io.FileInputStream fis = new java.io.FileInputStream(file)) {
+            cn.hutool.core.io.IoUtil.copy(fis, response.getOutputStream());
+        }
     }
 
     /**
@@ -197,18 +207,30 @@ public class SysOssServiceImpl implements ISysOssService, OssService {
         }
         String originalfileName = file.getOriginalFilename();
         String suffix = StringUtils.substring(originalfileName, originalfileName.lastIndexOf("."), originalfileName.length());
-        OssClient storage = OssFactory.instance();
-        UploadResult uploadResult;
-        try {
-            uploadResult = storage.uploadSuffix(file.getBytes(), suffix, file.getContentType());
-        } catch (IOException e) {
-            throw new ServiceException(e.getMessage());
+        
+        String fileName = cn.hutool.core.util.IdUtil.fastSimpleUUID() + suffix;
+        String datePath = com.kenzhao.smallsteps.common.core.utils.DateUtils.datePath();
+        String relativePath = "/" + datePath + "/" + fileName;
+        File desc = new File(profilePath + relativePath);
+        if (!desc.getParentFile().exists()) {
+            desc.getParentFile().mkdirs();
         }
+        try {
+            file.transferTo(desc);
+        } catch (Exception e) {
+            throw new ServiceException("上传文件失败", e);
+        }
+
         SysOssExt ext1 = new SysOssExt();
         ext1.setFileSize(file.getSize());
         ext1.setContentType(file.getContentType());
-        // 保存文件信息
-        return buildResultEntity(originalfileName, suffix, storage.getConfigKey(), uploadResult, ext1);
+        
+        UploadResult uploadResult = UploadResult.builder()
+                .url("/profile/upload" + relativePath)
+                .filename(datePath + "/" + fileName)
+                .build();
+                
+        return buildResultEntity(originalfileName, suffix, "local", uploadResult, ext1);
     }
 
     /**
@@ -224,13 +246,30 @@ public class SysOssServiceImpl implements ISysOssService, OssService {
         }
         String originalfileName = file.getName();
         String suffix = StringUtils.substring(originalfileName, originalfileName.lastIndexOf("."), originalfileName.length());
-        OssClient storage = OssFactory.instance();
+        
+        String fileName = cn.hutool.core.util.IdUtil.fastSimpleUUID() + suffix;
+        String datePath = com.kenzhao.smallsteps.common.core.utils.DateUtils.datePath();
+        String relativePath = "/" + datePath + "/" + fileName;
+        File desc = new File(profilePath + relativePath);
+        if (!desc.getParentFile().exists()) {
+            desc.getParentFile().mkdirs();
+        }
+        try {
+            cn.hutool.core.io.FileUtil.copy(file, desc, true);
+        } catch (Exception e) {
+            throw new ServiceException("上传文件失败", e);
+        }
+        
         long length = file.length();
-        UploadResult uploadResult = storage.uploadSuffix(file, suffix);
         SysOssExt ext1 = new SysOssExt();
         ext1.setFileSize(length);
-        // 保存文件信息
-        return buildResultEntity(originalfileName, suffix, storage.getConfigKey(), uploadResult, ext1);
+        
+        UploadResult uploadResult = UploadResult.builder()
+                .url("/profile/upload" + relativePath)
+                .filename(datePath + "/" + fileName)
+                .build();
+                
+        return buildResultEntity(originalfileName, suffix, "local", uploadResult, ext1);
     }
 
     @NotNull
@@ -261,8 +300,10 @@ public class SysOssServiceImpl implements ISysOssService, OssService {
         }
         List<SysOss> list = baseMapper.selectByIds(ids);
         for (SysOss sysOss : list) {
-            OssClient storage = OssFactory.instance(sysOss.getService());
-            storage.delete(sysOss.getUrl());
+            File file = new File(profilePath + "/" + sysOss.getFileName());
+            if (file.exists()) {
+                file.delete();
+            }
         }
         return baseMapper.deleteByIds(ids) > 0;
     }
@@ -274,11 +315,7 @@ public class SysOssServiceImpl implements ISysOssService, OssService {
      * @return oss 匹配Url的OSS对象
      */
     private SysOssVo matchingUrl(SysOssVo oss) {
-        OssClient storage = OssFactory.instance(oss.getService());
-        // 仅修改桶类型为 private 的URL，临时URL时长为120s
-        if (AccessPolicyType.PRIVATE == storage.getAccessPolicy()) {
-            oss.setUrl(storage.createPresignedGetUrl(oss.getFileName(), Duration.ofSeconds(120)));
-        }
+        // 本地环境直接返回路径
         return oss;
     }
 }

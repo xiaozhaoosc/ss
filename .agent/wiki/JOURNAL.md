@@ -1,5 +1,14 @@
 # Small Steps 项目日志 (JOURNAL)
 
+## [2026-05-27] OSS 异步上传阻塞与超时缺陷修复
+### [Project_Reflection]
+| 成果 | 说明 |
+| :--- | :--- |
+| 异步死锁消除 | 将 `OssClient.java` 中基于 `BlockingInputStreamAsyncRequestBody` 的分块流上传重构为基于内存字节数组的一次性 `AsyncRequestBody.fromBytes(bytes)` 上传，彻底解决了 Undertow 单线程/工作线程阻塞导致 AWS S3/CRT 客户端 120 秒订阅超时的 P0 级 Bug。 |
+| 兼容性加固 | 保持 `upload` 原有方法签名完全不变，无缝向下兼容 `MultipartFile.getBytes()` 及 `ByteArrayInputStream` 等所有的文件与流上传调用源，确保系统完全稳定。 |
+
+---
+
 ## [2026-05-17] AI 知识库管理与混合检索 (Hybrid Retrieval) 全栈落地
 ### [Project_Reflection]
 | 成果 | 说明 |

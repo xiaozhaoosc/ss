@@ -266,3 +266,8 @@ justauth:
       client-id: 10**********6
       client-secret: 1f7d08**********5b7**********29e
       redirect-uri: ${justauth.address}/social-callback?source=gitea
+
+--- # RuoYi 本地配置
+ruoyi:
+  # 本地文件上传路径配置 (Windows 环境示例)
+  profile: D:/smallsteps/uploadPath

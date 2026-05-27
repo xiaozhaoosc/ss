@@ -43,8 +43,14 @@ public class ResourcesConfig implements WebMvcConfigurer {
         });
     }
 
+    @org.springframework.beans.factory.annotation.Value("${ruoyi.profile:D:/smallsteps/uploadPath}")
+    private String profilePath;
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        /** 本地文件上传路径映射 */
+        registry.addResourceHandler("/profile/**")
+                .addResourceLocations("file:" + profilePath + "/");
     }
 
     /**
