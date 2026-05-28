@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 项目概览
 
-**Small Steps (小步)** 是一款面向ADHD儿童的行为习惯辅助系统，采用"物理伴侣 + 游戏化激励"模式。系统包含三个核心子系统：硬件终端、移动端App、管理后台。
+**Small Steps (小步)** 是一款面向 ADHD 儿童的行为习惯辅助系统，采用"物理伴侣 + 游戏化激励"模式。系统包含三个核心子系统：硬件终端、移动端 App、管理后台。
 
 **核心理念**：Cognitive Ease & Emotional Warmth（认知极简与情感温润）
 
@@ -45,7 +45,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ### smallsteps-app (UniApp X 移动端)
 
 ```bash
-# H5开发模式 (端口 9090，代理 /ssapi -> localhost:8081/ssapi)
+# H5开发模式 (端口 9090，代理 /ssapi -> localhost:8098/ssapi)
 npm run dev:h5
 
 # 构建H5
@@ -54,7 +54,7 @@ npm run build:h5
 # 构建微信小程序
 npm run build:mp-weixin
 
-# 运行测试
+# 运行单元测试
 npm run test
 
 # E2E测试（Playwright，需要先启动 dev:h5）
@@ -84,13 +84,13 @@ npm run lint:eslint:fix
 npm run prettier
 ```
 
-### smallsteps-api (Spring Boot后端)
+### smallsteps-api (Spring Boot 后端)
 
 ```bash
 # 进入API目录
 cd smallsteps-api
 
-# 使用Maven运行（默认dev环境，端口8081，context-path /ssapi）
+# 使用Maven运行（默认dev环境，端口8098，context-path /ssapi）
 mvn spring-boot:run -pl smallsteps-admin
 
 # 编译打包
@@ -106,11 +106,11 @@ mvn install -DskipTests
 **启动类位置**：`smallsteps-api/smallsteps-admin/src/main/java/com/kenzhao/smallsteps/admin/`
 
 **配置文件**：
-- `application.yml` - 主配置（端口8081，context-path `/ssapi`）
-- `application-dev.yml` - 开发环境（PostgreSQL + Redis连接）
-- `application-prod.yml` - 生产环境
+- `application.yml` - 主配置（端口8098，context-path `/ssapi`）
+- `application-dev.yml` - 开发环境（PostgreSQL + Redis 连接）
+- `application-prod.yml` - 生产环境（Docker 部署时端口覆盖为8080）
 
-**API地址**：`http://localhost:8081/ssapi`
+**API地址**：`http://localhost:8098/ssapi`（开发环境）
 
 ### smallsteps-esp32 (硬件终端)
 
@@ -120,9 +120,6 @@ cd smallsteps-esp32
 
 # 使用Thonny或VS Code MicroPython运行
 # 主入口: main.py
-
-# 查看硬件文档
-# docs/esp32/
 ```
 
 ---
@@ -133,7 +130,7 @@ cd smallsteps-esp32
 
 ```
 smallsteps-api/
-├── smallsteps-admin/        # 管理后台启动模块（包含主应用）
+├── smallsteps-admin/         # 管理后台启动模块（包含主应用）
 ├── smallsteps-common/        # 公共模块
 │   ├── smallsteps-common-ss/ # Small Steps 核心领域模型
 │   │   └── domain/           # ParentTask, ChildTask, Child, ChildScore, ParentReward 等
@@ -278,14 +275,14 @@ smallsteps-api/
 docker-compose up -d
 
 # 服务包含：
-# - postgres (端口 18432)
+# - postgres (端口 15432)
 # - redis (端口 6379)
-# - backend-core (端口 8081)
-# - frontend-ui (端口 8080)
-# - frontend-app (端口 8082)
+# - backend-core (端口 8080)
+# - frontend-ui (端口 80)
+# - frontend-app (端口 81)
 ```
 
-环境变量：`DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASS`, `REDIS_HOST`, `REDIS_PORT`, `REDIS_PASS`
+环境变量配置在 `.env` 文件中，包含 `POSTGRES_USER`、`POSTGRES_PASSWORD`、`POSTGRES_DB`、`REDIS_PASSWORD` 等。
 
 ---
 
@@ -309,7 +306,7 @@ docker-compose up -d
 - App状态管理：`smallsteps-app/src/store/modules/`（user, task, config, dict）
 - App路由配置：`smallsteps-app/src/pages.json`
 - UI主入口：`smallsteps-ui/src/main.ts`
-- UI Vite配置：`smallsteps-ui/vite.config.ts`（代理 `/dev-api` -> `localhost:8081/ssapi`）
+- UI Vite配置：`smallsteps-ui/vite.config.ts`（代理 `/dev-api` -> `localhost:8098/ssapi`）
 - ESP32主程序：`smallsteps-esp32/main.py`
 - 数据库脚本：`docs/sqls/`
 - 设计文档：`smallsteps-app/README.md`

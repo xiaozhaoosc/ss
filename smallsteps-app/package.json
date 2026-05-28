@@ -16,7 +16,9 @@
         "test:e2e:ui": "playwright test --ui",
         "test:e2e:report": "playwright show-report",
         "lint": "eslint --ext .js,.vue src",
-        "test:round": "node tests/scripts/run-test-round.js"
+        "test:round": "node tests/scripts/run-test-round.js",
+        "test:prd": "npx playwright test --config=tests/e2e-prd/playwright.config.ts",
+        "test:prd:api": "npx playwright test --config=tests/e2e-prd/playwright.config.ts --project=api"
     },
     "dependencies": {
         "@chenglou/pretext": "^0.0.5",
