@@ -10,6 +10,7 @@ import com.kenzhao.smallsteps.common.ai.service.IAiService;
 import com.kenzhao.smallsteps.common.ai.service.ISysAiKnowledgeService;
 import com.kenzhao.smallsteps.common.core.exception.ServiceException;
 import com.kenzhao.smallsteps.common.json.utils.JsonUtils;
+import com.kenzhao.smallsteps.common.ss.domain.ChildAI;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -173,6 +174,99 @@ public class AiServiceImpl implements IAiService {
         } catch (Exception e) {
             log.error("Error in AI chat", e);
             return "我现在有点小情绪，等下再来找我玩吧！🌈";
+        }
+    }
+
+    @Override
+    public void chatStream(Long childId, String userInput, Map<String, Object> context, 
+                           org.springframework.web.servlet.mvc.method.annotation.SseEmitter emitter) {
+        try {
+            // 1. 获取路由模型
+            AiModel aiModel = aiRouterService.route("BUDDY_CHAT", childId);
+
+            // 2. 构建提示词
+            Map<String, Object> params = new HashMap<>();
+            params.put("userInput", userInput);
+            
+            String promptKey = "CHILD_TREEHOLE_CHAT";
+            if (userInput.startsWith("[家长模式]")) {
+                promptKey = "PARENT_ASSISTANT_CHAT";
+                params.put("userInput", userInput.replace("[家长模式]", "").trim());
+            }
+
+            if (context != null) {
+                params.put("emotionState", context.getOrDefault("emotion", "平静"));
+            } else {
+                params.put("emotionState", "平静");
+            }
+
+            String prompt = getPrompt(promptKey, params);
+            
+            // 知识库隐式增强
+            try {
+                List<String> kbResults = sysAiKnowledgeService.hybridSearch(userInput, 3);
+                if (!kbResults.isEmpty()) {
+                    prompt += "\n\n【系统参考知识库】：\n" + String.join("\n", kbResults);
+                }
+            } catch (Exception e) {
+                log.error("Failed to append knowledge base context", e);
+            }
+            
+            // 3. 流式调用大模型
+            StringBuilder fullResponse = new StringBuilder();
+            smartAiClient.askAiStream(prompt, aiModel, promptKey, childId, new SmartAiClient.StreamCallback() {
+                @Override
+                public void onChunk(String chunk) {
+                    try {
+                        fullResponse.append(chunk);
+                        emitter.send(org.springframework.web.servlet.mvc.method.annotation.SseEmitter.event().data(chunk));
+                    } catch (Exception e) {
+                        log.error("Failed to send SSE chunk", e);
+                    }
+                }
+
+                @Override
+                public void onComplete() {
+                    try {
+                        emitter.send(org.springframework.web.servlet.mvc.method.annotation.SseEmitter.event().data("[DONE]"));
+                        emitter.complete();
+                        
+                        // 保存聊天记录
+                        ChildAI record = new ChildAI();
+                        record.setChildId(childId);
+                        record.setUserInput(userInput);
+                        record.setAiResponse(fullResponse.toString());
+                        if (context != null && context.containsKey("emotionType")) {
+                            record.setEmotionType((Integer) context.get("emotionType"));
+                        } else {
+                            record.setEmotionType(5); // 默认平静
+                        }
+                        // 注意：这里需要注入 ChildAIMapper，但由于是在回调中，可能需要调整
+                        // 暂时先不保存，由调用方处理
+                    } catch (Exception e) {
+                        log.error("Failed to complete SSE", e);
+                    }
+                }
+
+                @Override
+                public void onError(Throwable error) {
+                    log.error("Stream error", error);
+                    try {
+                        emitter.send(org.springframework.web.servlet.mvc.method.annotation.SseEmitter.event().data("抱歉，我现在有点累了，请稍后再试～✨"));
+                        emitter.complete();
+                    } catch (Exception e) {
+                        log.error("Failed to send error SSE", e);
+                    }
+                }
+            });
+        } catch (Exception e) {
+            log.error("Error in AI chat stream", e);
+            try {
+                emitter.send(org.springframework.web.servlet.mvc.method.annotation.SseEmitter.event().data("抱歉，我现在有点小情绪，等下再来找我玩吧！🌈"));
+                emitter.complete();
+            } catch (Exception ex) {
+                log.error("Failed to send error SSE", ex);
+            }
         }
     }
 

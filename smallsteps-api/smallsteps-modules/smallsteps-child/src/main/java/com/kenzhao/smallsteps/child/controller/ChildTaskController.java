@@ -60,9 +60,15 @@ public class ChildTaskController extends BaseController {
      * [ADHD] 完成任务 (直接完成)
      */
     @PostMapping("/complete")
-    public R<Void> completeTask(@RequestBody ChildTask childTask) {
-        validateChildAccess(childTask.getChildId());
-        return toAjax(childTaskService.completeTask(childTask.getTaskId(), childTask.getChildId(), childTask.getProof()));
+    public R<Void> completeTask(@RequestBody(required = false) ChildTask childTask,
+                                @RequestParam(value = "taskId", required = false) Long taskId,
+                                @RequestParam(value = "childId", required = false) Long childId,
+                                @RequestParam(value = "proof", required = false) String proof) {
+        Long finalTaskId = childTask != null ? childTask.getTaskId() : taskId;
+        Long finalChildId = childTask != null ? childTask.getChildId() : childId;
+        String finalProof = childTask != null ? childTask.getProof() : proof;
+        validateChildAccess(finalChildId);
+        return toAjax(childTaskService.completeTask(finalTaskId, finalChildId, finalProof));
     }
 
     /**

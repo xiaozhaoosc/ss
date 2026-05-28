@@ -35,6 +35,16 @@ public interface IAiService {
     String chat(Long childId, String userInput, Map<String, Object> context);
 
     /**
+     * AI 流式聊天（通过 SseEmitter 逐字返回）
+     * @param childId 儿童ID
+     * @param userInput 用户输入
+     * @param context 额外上下文
+     * @param emitter SSE 发射器
+     */
+    void chatStream(Long childId, String userInput, Map<String, Object> context, 
+                    org.springframework.web.servlet.mvc.method.annotation.SseEmitter emitter);
+
+    /**
      * 生成习惯打卡后的鼓励反馈
      * @param childId 儿童ID
      * @param habitName 习惯名称

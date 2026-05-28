@@ -94,7 +94,7 @@ export function completeTask(taskId: number | string, childId: number | string, 
     return request({
         url: '/child/task/complete',
         method: 'POST',
-        params: { taskId, childId, proof }
+        data: { taskId, childId, proof }
     })
 }
 

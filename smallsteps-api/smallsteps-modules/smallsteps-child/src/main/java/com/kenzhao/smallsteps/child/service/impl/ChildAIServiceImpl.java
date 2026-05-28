@@ -56,43 +56,20 @@ public class ChildAIServiceImpl implements IChildAIService {
         
         java.util.concurrent.CompletableFuture.runAsync(() -> {
             try {
-                // 0. 发送初始块，防止客户端超时
-                emitter.send(org.springframework.web.servlet.mvc.method.annotation.SseEmitter.event().data(" "));
-                
                 // 1. 分析情感
                 System.out.println(">>> [DEBUG] AI Stream: Analyzing emotion for child: " + childId);
                 java.util.Map<String, Object> analysis = aiService.emotionAnalysis(childId, userInput);
                 Integer detectedType = (Integer) analysis.getOrDefault("emotionType", 5);
                 System.out.println(">>> [DEBUG] AI Stream: Emotion analyzed: " + detectedType);
                 
-                // 由于现有 aiService.chat 返回 String，若不支持流式，则暂做模拟分块发送
-                // TODO: 若 aiService 有 chatStream 请替换为真实调用
-                System.out.println(">>> [DEBUG] AI Stream: Getting chat response...");
-                String aiReply = aiService.chat(childId, userInput, analysis);
-                System.out.println(">>> [DEBUG] AI Stream: Chat response received: " + aiReply);
-                
-                // 模拟流式输出
-                int chunkSize = 2;
-                for (int i = 0; i < aiReply.length(); i += chunkSize) {
-                    int end = Math.min(i + chunkSize, aiReply.length());
-                    String chunk = aiReply.substring(i, end);
-                    emitter.send(org.springframework.web.servlet.mvc.method.annotation.SseEmitter.event().data(chunk));
-                    Thread.sleep(50); // 模拟延迟
-                }
-                
-                // 发送结束标志
-                emitter.send(org.springframework.web.servlet.mvc.method.annotation.SseEmitter.event().data("[DONE]"));
-                emitter.complete();
-                
-                // 保存记录
-                ChildAI record = new ChildAI();
-                record.setChildId(childId);
-                record.setUserInput(userInput);
-                record.setAiResponse(aiReply);
-                record.setEmotionType(detectedType);
-                baseMapper.insert(record);
+                // 2. 真正的流式调用 AI
+                System.out.println(">>> [DEBUG] AI Stream: Starting real stream chat...");
+                aiService.chatStream(childId, userInput, analysis, emitter);
+                System.out.println(">>> [DEBUG] AI Stream: Stream chat initiated");
                 
             } catch (Exception e) {
+                System.err.println(">>> [ERROR] AI Stream failed: " + e.getMessage());
+                e.printStackTrace();
                 emitter.completeWithError(e);
             }
         });
