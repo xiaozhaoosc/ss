@@ -165,10 +165,23 @@ public class SmartAiClient {
                             java.util.List<java.util.Map<String, Object>> choices = (java.util.List<java.util.Map<String, Object>>) chunk.get("choices");
                             if (choices != null && !choices.isEmpty()) {
                                 java.util.Map<String, Object> delta = (java.util.Map<String, Object>) choices.get(0).get("delta");
-                                if (delta != null && delta.containsKey("content")) {
-                                    String content = (String) delta.get("content");
-                                    fullResponse.append(content);
-                                    callback.onChunk(content);  // 回调通知前端
+                                if (delta != null) {
+                                    // 处理思考/推理内容 (reasoning_content)
+                                    if (delta.containsKey("reasoning_content")) {
+                                        String reasoning = (String) delta.get("reasoning_content");
+                                        if (reasoning != null && !reasoning.isEmpty()) {
+                                            // 将思考内容包装为 <think> 标签发送给前端
+                                            callback.onChunk("<think>" + reasoning + "</think>");
+                                        }
+                                    }
+                                    // 处理正式回复内容
+                                    if (delta.containsKey("content")) {
+                                        String content = (String) delta.get("content");
+                                        if (content != null && !content.isEmpty()) {
+                                            fullResponse.append(content);
+                                            callback.onChunk(content);
+                                        }
+                                    }
                                 }
                             }
                         } catch (Exception e) {

@@ -6,7 +6,10 @@
       "Bash(docker exec *)",
       "Bash(systemctl status *)",
       "Bash(pg_isready)",
-      "Bash(pg_lsclusters)"
+      "Bash(pg_lsclusters)",
+      "WebFetch(domain:docs.bigmodel.cn)",
+      "Bash(xargs cat)",
+      "Bash(xargs ls -la)"
     ]
   }
 }
