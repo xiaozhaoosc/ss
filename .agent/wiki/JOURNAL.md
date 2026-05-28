@@ -1,5 +1,17 @@
 # Small Steps 项目日志 (JOURNAL)
 
+## [2026-05-28] 孤立页面全激活与个人设置/账号安全模块 Vanilla CSS 零依赖重构
+### [Project_Reflection]
+| 成果 | 说明 |
+| :--- | :--- |
+| **方案 B 一键创建接口** | 后端实现 `POST /parent/family/create-child`，支持 `@Transactional` 事务内完成账号绑定与属性初始化，彻底连通 Parent-Child 闭环。 |
+| **5 大核心页面全线打通** | 家长端（亲子契约、情绪急救包、设备配置）与儿童端（成就勋章榜、个性捏脸）等 5 个高感知度功能在路由与页面中 100% 激活连通。 |
+| **Mine 模块无依赖重构** | 对 `edit.vue` 与 `pwd/index.vue` 进行 100% 原生表单 + 纯 JS 校验重构，彻底扫清了缺失 `@dcloudio/uni-ui` 导致的 H5 运行时组件解析报错。 |
+| **高颜值交互与动画反馈** | 设计了极具心理学抚慰的👦与👧多色渐变卡片、微弹簧触觉按钮反馈，提供 WOW 级视觉效果。 |
+| **全编译路径零报错验证** | 运行并顺利通过了 `smallsteps-app` 生产环境下 `npm run build:h5` 的静态打包，没有发生任何模板或构建警告。 |
+
+---
+
 ## [2026-05-17] AI 知识库管理与混合检索 (Hybrid Retrieval) 全栈落地
 ### [Project_Reflection]
 | 成果 | 说明 |

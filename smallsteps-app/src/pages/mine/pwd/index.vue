@@ -7,22 +7,46 @@
       <view class="section">
         <text class="section-title">修改密码</text>
         <view class="form-card">
-          <uni-forms ref="form" :model="user" :rules="rules" labelWidth="0">
-            <view class="input-group">
-              <text class="input-label">当前密码</text>
-              <uni-easyinput type="password" v-model="user.oldPassword" :inputBorder="false" placeholder="请输入旧密码" />
-            </view>
-            <view class="divider"></view>
-            <view class="input-group">
-              <text class="input-label">新密码</text>
-              <uni-easyinput type="password" v-model="user.newPassword" :inputBorder="false" placeholder="6-20位字符" />
-            </view>
-            <view class="divider"></view>
-            <view class="input-group">
-              <text class="input-label">确认新密码</text>
-              <uni-easyinput type="password" v-model="user.confirmPassword" :inputBorder="false" placeholder="请再次输入新密码" />
-            </view>
-          </uni-forms>
+          <view class="input-group" :class="{ 'has-error': errors.oldPassword }">
+            <text class="input-label">当前密码</text>
+            <input 
+              type="password" 
+              v-model="user.oldPassword" 
+              placeholder="请输入旧密码" 
+              class="native-input"
+              placeholder-style="color: #9ca3af"
+            />
+            <text v-if="errors.oldPassword" class="error-msg">{{ errors.oldPassword }}</text>
+          </view>
+          
+          <view class="divider"></view>
+          
+          <view class="input-group" :class="{ 'has-error': errors.newPassword }">
+            <text class="input-label">新密码</text>
+            <input 
+              type="password" 
+              v-model="user.newPassword" 
+              placeholder="6-20位字符" 
+              class="native-input"
+              placeholder-style="color: #9ca3af"
+            />
+            <text v-if="errors.newPassword" class="error-msg">{{ errors.newPassword }}</text>
+          </view>
+          
+          <view class="divider"></view>
+          
+          <view class="input-group" :class="{ 'has-error': errors.confirmPassword }">
+            <text class="input-label">确认新密码</text>
+            <input 
+              type="password" 
+              v-model="user.confirmPassword" 
+              placeholder="请再次输入新密码" 
+              class="native-input"
+              placeholder-style="color: #9ca3af"
+            />
+            <text v-if="errors.confirmPassword" class="error-msg">{{ errors.confirmPassword }}</text>
+          </view>
+          
           <button class="submit-btn" @click="submit">更新密码</button>
         </view>
       </view>
@@ -59,35 +83,54 @@ const user = reactive({
   confirmPassword: ''
 })
 
-const rules = {
-  oldPassword: {
-    rules: [{ required: true, errorMessage: '请输入旧密码' }]
-  },
-  newPassword: {
-    rules: [
-      { required: true, errorMessage: '请输入新密码' },
-      { minLength: 6, maxLength: 20, errorMessage: '长度在 6 到 20 个字符' }
-    ]
-  },
-  confirmPassword: {
-    rules: [
-      { required: true, errorMessage: '请确认新密码' },
-      {
-        validateFunction: (rule, value, data) => user.newPassword === value,
-        errorMessage: '两次输入的密码不一致'
-      }
-    ]
+const errors = ref({
+  oldPassword: '',
+  newPassword: '',
+  confirmPassword: ''
+})
+
+function validate() {
+  let isValid = true
+  errors.value = { oldPassword: '', newPassword: '', confirmPassword: '' }
+
+  if (!user.oldPassword) {
+    errors.value.oldPassword = '请输入旧密码'
+    isValid = false
   }
+
+  if (!user.newPassword) {
+    errors.value.newPassword = '请输入新密码'
+    isValid = false
+  } else if (user.newPassword.length < 6 || user.newPassword.length > 20) {
+    errors.value.newPassword = '长度在 6 到 20 个字符'
+    isValid = false
+  }
+
+  if (!user.confirmPassword) {
+    errors.value.confirmPassword = '请确认新密码'
+    isValid = false
+  } else if (user.newPassword !== user.confirmPassword) {
+    errors.value.confirmPassword = '两次输入的密码不一致'
+    isValid = false
+  }
+
+  return isValid
 }
 
 function submit() {
-  proxy.$refs.form.validate().then(() => {
-    updateUserPwd(user.oldPassword, user.newPassword).then(() => {
-      proxy.$modal.msgSuccess("修改成功")
-      setTimeout(() => uni.navigateBack(), 1500)
-    })
+  if (!validate()) {
+    const firstError = Object.values(errors.value).find(msg => msg !== "")
+    if (firstError) {
+      proxy.$modal.msgError(firstError)
+    }
+    return
+  }
+
+  updateUserPwd(user.oldPassword, user.newPassword).then(() => {
+    proxy.$modal.msgSuccess("修改成功")
+    setTimeout(() => uni.navigateBack(), 1500)
   }).catch(err => {
-    console.log('表单校验失败', err)
+    console.log('密码修改失败', err)
   })
 }
 
@@ -114,7 +157,7 @@ function handleDeleteAccount() {
 
 .main-content {
   padding: 16px;
-  padding-top: 60px;
+  padding-top: 76px;
 }
 
 .section {
@@ -127,7 +170,7 @@ function handleDeleteAccount() {
   color: #9ca3af;
   margin-bottom: 12px;
   margin-left: 4px;
-  &.danger { color: #f87171; }
+  &.danger { color: #ef4444; }
 }
 
 .form-card {
@@ -138,13 +181,30 @@ function handleDeleteAccount() {
 }
 
 .input-group {
-  padding: 8px 0;
+  padding: 12px 0;
+  display: flex;
+  flex-direction: column;
   
   .input-label {
-    font-size: 12px;
-    color: #6b7280;
-    margin-bottom: 4px;
-    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #4b5563;
+    margin-bottom: 8px;
+  }
+
+  .native-input {
+    height: 40px;
+    font-size: 15px;
+    color: #1f2937;
+    padding: 0 4px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  &.has-error {
+    .native-input {
+      color: #ef4444;
+    }
   }
 }
 
@@ -152,6 +212,13 @@ function handleDeleteAccount() {
   height: 1px;
   background-color: #f3f4f6;
   margin: 4px 0;
+}
+
+.error-msg {
+  font-size: 12px;
+  color: #ef4444;
+  margin-top: 4px;
+  padding-left: 4px;
 }
 
 .submit-btn {
@@ -165,6 +232,14 @@ function handleDeleteAccount() {
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 4px 12px rgba(108, 155, 210, 0.2);
+  transition: all 0.2s ease;
+  
+  &:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 6px rgba(108, 155, 210, 0.1);
+  }
+  
   &::after { border: none; }
 }
 
@@ -178,6 +253,7 @@ function handleDeleteAccount() {
   align-items: center;
   justify-content: space-between;
   padding: 16px;
+  transition: background-color 0.2s ease;
   
   &:active { background-color: #fff1f2; }
 }
@@ -193,10 +269,11 @@ function handleDeleteAccount() {
     display: flex;
     flex-direction: column;
     
-    .title { font-size: 16px; font-weight: 500; color: #111827; }
+    .title { font-size: 16px; font-weight: 500; color: #1f2937; }
     .desc { font-size: 12px; color: #9ca3af; }
   }
 }
 
 .arrow { color: #d1d5db; }
 </style>
+
