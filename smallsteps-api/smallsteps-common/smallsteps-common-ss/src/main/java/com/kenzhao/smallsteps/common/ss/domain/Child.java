@@ -2,6 +2,8 @@ package com.kenzhao.smallsteps.common.ss.domain;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.kenzhao.smallsteps.common.mybatis.core.domain.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,11 +33,13 @@ public class Child extends BaseEntity {
      * ID
      */
     @TableId(value = "id")
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
 
     /**
      * 关联家长用户ID (sys_user.user_id)
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long parentId;
 
     /**

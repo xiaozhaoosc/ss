@@ -1,5 +1,7 @@
 package com.kenzhao.smallsteps.system.domain.vo;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kenzhao.smallsteps.common.sensitive.annotation.Sensitive;
@@ -31,6 +33,7 @@ public class SysUserVo implements Serializable {
     /**
      * 用户ID
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long userId;
 
     /**
@@ -41,6 +44,7 @@ public class SysUserVo implements Serializable {
     /**
      * 部门ID
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long deptId;
 
     /**

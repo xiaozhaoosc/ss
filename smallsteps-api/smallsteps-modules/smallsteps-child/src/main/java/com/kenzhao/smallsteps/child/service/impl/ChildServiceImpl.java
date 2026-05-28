@@ -30,7 +30,14 @@ public class ChildServiceImpl implements IChildService {
 
     @Override
     public List<Child> selectChildList(Child child) {
-        Long parentId = child.getParentId() != null ? child.getParentId() : LoginHelper.getUserId();
+        Long loginUserId = LoginHelper.getUserId();
+        Long parentId = child.getParentId();
+        // 如果是普通已登录用户（非超级管理员），强制使用当前登录的真实用户 ID 作为 parentId
+        if (loginUserId != null && !LoginHelper.isSuperAdmin(loginUserId)) {
+            parentId = loginUserId;
+        } else if (parentId == null) {
+            parentId = loginUserId;
+        }
         return baseMapper.selectList(new LambdaQueryWrapper<Child>()
             .eq(Child::getParentId, parentId)
             .like(child.getNickname() != null, Child::getNickname, child.getNickname())
