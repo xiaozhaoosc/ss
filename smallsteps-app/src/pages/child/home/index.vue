@@ -7,7 +7,7 @@
     <!-- Header: Stats Bar -->
     <view class="header-bar">
       <!-- Streak Counter -->
-      <view class="streak-badge">
+      <view class="streak-badge" hover-class="badge-hover" @click="navigateToAchievements">
         <view class="fire-circle">
           <text class="material-symbols-outlined fire-icon">local_fire_department</text>
         </view>
@@ -17,9 +17,9 @@
         </view>
       </view>
       
-      <!-- Settings (Hidden) -->
-      <view class="settings-btn" hover-class="btn-hover" @click="handleSettings">
-        <text class="material-symbols-outlined">settings</text>
+      <!-- Avatar Editor -->
+      <view class="settings-btn" hover-class="btn-hover" @click="navigateToAvatarEditor">
+        <text class="material-symbols-outlined">face</text>
       </view>
       
       <!-- Star Jar -->
@@ -165,6 +165,16 @@ const handleSettings = () => {
   uni.vibrateShort()
   // Easter egg or parent gate could go here
   uni.showToast({ title: 'Parent Zone', icon: 'none' })
+}
+
+const navigateToAchievements = () => {
+  uni.vibrateShort()
+  uni.navigateTo({ url: '/pages/child/achievements/index' })
+}
+
+const navigateToAvatarEditor = () => {
+  uni.vibrateShort()
+  uni.navigateTo({ url: '/pages/child/avatar-editor/index' })
 }
 
 const handleMissionComplete = () => {

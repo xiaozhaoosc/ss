@@ -150,6 +150,9 @@ const children = ref([])
 const loading = ref(false)
 
 const settings = ref([
+  { title: '亲子契约手册', icon: 'description', colorClass: 'blue', url: '/pages/parent/contract/index' },
+  { title: '情绪急救包', icon: 'medical_services', colorClass: 'rose', url: '/pages/parent/emotion-kit/index' },
+  { title: '硬件玩偶设备', icon: 'smart_toy', colorClass: 'orange', url: '/pages/parent/device-config/index' },
   { title: '通知设置', icon: 'notifications', colorClass: 'blue', url: '/pages/mine/setting/notification' },
   { title: '隐私政策', icon: 'shield', colorClass: 'purple', url: '/pages/mine/about/privacy' },
   { title: '账号安全', icon: 'lock', colorClass: 'emerald', url: '/pages/mine/pwd/index' }
@@ -582,6 +585,7 @@ onMounted(() => {
   &.purple { background-color: #f3e8ff; color: #a855f7; }
   &.emerald { background-color: #d1fae5; color: #10b981; }
   &.orange { background-color: #ffedd5; color: #f97316; }
+  &.rose { background-color: #ffe4e6; color: #f43f5e; }
   
   .material-symbols-outlined { font-size: 18px; }
 }

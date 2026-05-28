@@ -79,8 +79,8 @@ restart_docker() {
     log_success "${PROJECT_NAME} 部署完成！"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo "📊 服务访问地址："
-    echo "   • 管理后台: http://${SERVER_HOST}:80"
-    echo "   • 移动端:   http://${SERVER_HOST}:81"
+    echo "   • 管理后台: http://${SERVER_HOST}:8043/webadminss/#"
+    echo "   • 移动端:   http://${SERVER_HOST}:8043/#"
     echo "   • API:      http://${SERVER_HOST}:8080/ssapi"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 }
