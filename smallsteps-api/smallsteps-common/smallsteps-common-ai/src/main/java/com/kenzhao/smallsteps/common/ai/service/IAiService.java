@@ -42,7 +42,8 @@ public interface IAiService {
      * @param emitter SSE 发射器
      */
     void chatStream(Long childId, String userInput, Map<String, Object> context, 
-                    org.springframework.web.servlet.mvc.method.annotation.SseEmitter emitter);
+                    org.springframework.web.servlet.mvc.method.annotation.SseEmitter emitter,
+                    java.util.function.Consumer<String> onComplete);
 
     /**
      * 生成习惯打卡后的鼓励反馈

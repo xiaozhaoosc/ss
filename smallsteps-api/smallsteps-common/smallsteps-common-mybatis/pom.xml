@@ -47,6 +47,13 @@
             <groupId>p6spy</groupId>
             <artifactId>p6spy</artifactId>
         </dependency>
+
+        <!-- PostgreSQL JDBC 驱动 (provided: 运行时由 smallsteps-admin 提供) -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
 </project>

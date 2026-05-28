@@ -51,6 +51,17 @@ public class AiServiceImpl implements IAiService {
             params.put("childAge", childAge);
 
             String prompt = getPrompt("TASK_BREAKDOWN", params);
+            
+            // 知识库隐式增强
+            try {
+                List<String> kbResults = sysAiKnowledgeService.hybridSearch("ADHD儿童 " + taskName + " 任务拆解策略", 3);
+                if (!kbResults.isEmpty()) {
+                    prompt += "\n\n【专家干预策略库】：\n" + String.join("\n", kbResults);
+                }
+            } catch (Exception e) {
+                log.error("Failed to append knowledge base context", e);
+            }
+
             if (prompt == null) {
                 log.warn("Prompt template TASK_BREAKDOWN not found, using fallback");
                 prompt = String.format(
@@ -179,7 +190,8 @@ public class AiServiceImpl implements IAiService {
 
     @Override
     public void chatStream(Long childId, String userInput, Map<String, Object> context, 
-                           org.springframework.web.servlet.mvc.method.annotation.SseEmitter emitter) {
+                           org.springframework.web.servlet.mvc.method.annotation.SseEmitter emitter,
+                           java.util.function.Consumer<String> onComplete) {
         try {
             // 1. 获取路由模型
             AiModel aiModel = aiRouterService.route("BUDDY_CHAT", childId);
@@ -231,18 +243,9 @@ public class AiServiceImpl implements IAiService {
                         emitter.send(org.springframework.web.servlet.mvc.method.annotation.SseEmitter.event().data("[DONE]"));
                         emitter.complete();
                         
-                        // 保存聊天记录
-                        ChildAI record = new ChildAI();
-                        record.setChildId(childId);
-                        record.setUserInput(userInput);
-                        record.setAiResponse(fullResponse.toString());
-                        if (context != null && context.containsKey("emotionType")) {
-                            record.setEmotionType((Integer) context.get("emotionType"));
-                        } else {
-                            record.setEmotionType(5); // 默认平静
+                        if (onComplete != null) {
+                            onComplete.accept(fullResponse.toString());
                         }
-                        // 注意：这里需要注入 ChildAIMapper，但由于是在回调中，可能需要调整
-                        // 暂时先不保存，由调用方处理
                     } catch (Exception e) {
                         log.error("Failed to complete SSE", e);
                     }
@@ -309,7 +312,17 @@ public class AiServiceImpl implements IAiService {
     private String getFallbackPrompt(String promptKey) {
         log.warn("Using fallback hardcoded prompt for key: {}", promptKey);
         if ("TASK_BREAKDOWN".equalsIgnoreCase(promptKey)) {
-            return "你是一位 ADHD 儿童辅助专家。请将任务 \"{taskName}\" ({taskDesc}) 拆解为适合 {childAge} 岁孩子执行的、颗粒度极小的步骤。请以 JSON 格式返回：[{\"stepName\": \"步骤标题\", \"stepDesc\": \"详细的操作描述\"}]";
+            return "你是一位专注于 ADHD 儿童执行功能障碍（Executive Dysfunction）的行为干预专家。\n" +
+                   "当前目标：将任务【{taskName}】({taskDesc}) 拆解为适合 {childAge} 岁 ADHD 儿童的微小动作序列。\n" +
+                   "\n" +
+                   "【最高拆解准则】\n" +
+                   "1. 动作化而非目标化：步骤必须是具体的物理动作（例：好->'打开红色文具盒拿起铅笔'，坏->'准备学习用品'）。\n" +
+                   "2. 极低起步阻力：第一步的完成耗时必须在 5 秒以内，用于启动多巴胺。\n" +
+                   "3. 去道德化与趣味化：语言要像游戏中的NPC派发任务，不带说教感。\n" +
+                   "\n" +
+                   "请结合下方的【专家干预策略库】(如果有)，输出不多于 5 步的拆解。\n" +
+                   "请严格按照 JSON 格式返回：\n" +
+                   "[\n  {\"stepName\": \"游戏化步骤名(如: 召唤铅笔卫士)\", \"stepDesc\": \"具体的物理动作描述\"}\n]";
         } else if ("EMOTION_ANALYSIS".equalsIgnoreCase(promptKey)) {
             return "你是一位资深的儿童心理学专家，专注于 ADHD （多动症）儿童的行为干预。请分析以下孩子的表现，并给家长提供建议。\n" +
                    "孩子表现：{content}\n" +

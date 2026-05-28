@@ -9,7 +9,8 @@
       "Bash(pg_lsclusters)",
       "WebFetch(domain:docs.bigmodel.cn)",
       "Bash(xargs cat)",
-      "Bash(xargs ls -la)"
+      "Bash(xargs ls -la)",
+      "Bash(grep *)"
     ]
   }
 }

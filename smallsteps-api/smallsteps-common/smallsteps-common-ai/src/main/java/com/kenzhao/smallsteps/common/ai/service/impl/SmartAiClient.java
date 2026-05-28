@@ -51,9 +51,10 @@ public class SmartAiClient {
                 java.util.Map.of("role", "user", "content", prompt)
             ));
             body.put("temperature", 0.7);
+            body.put("thinking", java.util.Map.of("type", "disabled"));
 
             org.springframework.http.HttpEntity<java.util.Map<String, Object>> entity = new org.springframework.http.HttpEntity<>(body, headers);
-            
+
             String responseStr = restTemplate.postForObject(url, entity, String.class);
             log.debug("AI Raw Response: {}", responseStr);
             
@@ -123,6 +124,7 @@ public class SmartAiClient {
             ));
             body.put("temperature", 0.7);
             body.put("stream", true);  // 关键：启用流式响应
+            body.put("thinking", java.util.Map.of("type", "disabled"));
 
             org.springframework.http.HttpEntity<java.util.Map<String, Object>> entity = new org.springframework.http.HttpEntity<>(body, headers);
             

@@ -26,6 +26,7 @@ public class ScoreServiceImpl implements IScoreService {
     private final ChildScoreMapper childScoreMapper;
     private final ScoreHistoryMapper scoreHistoryMapper;
     private final com.kenzhao.smallsteps.child.service.IChildAchievementService childAchievementService;
+    private final com.kenzhao.smallsteps.child.mapper.ChildAchievementMapper childAchievementMapper;
 
     @Override
     public ChildScore getChildScore(Long userId) {
@@ -46,12 +47,12 @@ public class ScoreServiceImpl implements IScoreService {
     public boolean addPoints(Long userId, int points, Long taskId, String reason) {
         // 获取当前积分
         ChildScore childScore = getChildScore(userId);
-        
+
         // 更新积分
         childScore.setBalance(childScore.getBalance() + points);
         childScore.setTotalEarned(childScore.getTotalEarned() + points);
         childScoreMapper.updateById(childScore);
-        
+
         // 记录积分历史
         ScoreHistory scoreHistory = new ScoreHistory();
         scoreHistory.setUserId(userId);
@@ -61,10 +62,35 @@ public class ScoreServiceImpl implements IScoreService {
         scoreHistory.setReason(reason);
         scoreHistoryMapper.insert(scoreHistory);
 
+        // 同步更新成就表中的星星数量
+        syncStarsToAchievement(userId, points);
+
         // 异步或直接触发勋章检查
         childAchievementService.checkAndUnlockBadges(userId);
-        
+
         return true;
+    }
+
+    /**
+     * 同步星星到成就表
+     */
+    private void syncStarsToAchievement(Long childId, int points) {
+        com.kenzhao.smallsteps.common.ss.domain.ChildAchievement stars = childAchievementMapper.selectOne(
+            new com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<com.kenzhao.smallsteps.common.ss.domain.ChildAchievement>()
+                .eq(com.kenzhao.smallsteps.common.ss.domain.ChildAchievement::getChildId, childId)
+                .eq(com.kenzhao.smallsteps.common.ss.domain.ChildAchievement::getType, "STAR"));
+
+        if (stars == null) {
+            stars = new com.kenzhao.smallsteps.common.ss.domain.ChildAchievement();
+            stars.setChildId(childId);
+            stars.setType("STAR");
+            stars.setName("我的星星");
+            stars.setCount(points);
+            childAchievementMapper.insert(stars);
+        } else {
+            stars.setCount(stars.getCount() + points);
+            childAchievementMapper.updateById(stars);
+        }
     }
 
     @Override

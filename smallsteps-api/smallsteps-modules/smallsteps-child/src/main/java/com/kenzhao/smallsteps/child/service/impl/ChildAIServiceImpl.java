@@ -54,19 +54,41 @@ public class ChildAIServiceImpl implements IChildAIService {
     public org.springframework.web.servlet.mvc.method.annotation.SseEmitter chatWithAIStream(Long childId, String userInput, Integer emotionType) {
         org.springframework.web.servlet.mvc.method.annotation.SseEmitter emitter = new org.springframework.web.servlet.mvc.method.annotation.SseEmitter(300000L); // 5分钟超时
         
+        // 1. 异步执行情绪分析，不阻塞流响应
+        java.util.concurrent.CompletableFuture<java.util.Map<String, Object>> emotionFuture = 
+            java.util.concurrent.CompletableFuture.supplyAsync(() -> {
+                return aiService.emotionAnalysis(childId, userInput);
+            });
+
+        // 2. 立即启动流式对话
         java.util.concurrent.CompletableFuture.runAsync(() -> {
             try {
-                // 1. 分析情感
-                System.out.println(">>> [DEBUG] AI Stream: Analyzing emotion for child: " + childId);
-                java.util.Map<String, Object> analysis = aiService.emotionAnalysis(childId, userInput);
-                Integer detectedType = (Integer) analysis.getOrDefault("emotionType", 5);
-                System.out.println(">>> [DEBUG] AI Stream: Emotion analyzed: " + detectedType);
+                // 上下文默认给平静，避免等待情绪分析
+                java.util.Map<String, Object> defaultContext = new java.util.HashMap<>();
+                defaultContext.put("emotion", "平静");
+                defaultContext.put("emotionType", 5);
                 
-                // 2. 真正的流式调用 AI
-                System.out.println(">>> [DEBUG] AI Stream: Starting real stream chat...");
-                aiService.chatStream(childId, userInput, analysis, emitter);
-                System.out.println(">>> [DEBUG] AI Stream: Stream chat initiated");
-                
+                aiService.chatStream(childId, userInput, defaultContext, emitter, (fullReply) -> {
+                    // 回调：流输出完成后，等待情绪分析结果并落库保存
+                    emotionFuture.thenAccept(analysis -> {
+                        Integer detectedType = (Integer) analysis.getOrDefault("emotionType", 5);
+                        ChildAI record = new ChildAI();
+                        record.setChildId(childId);
+                        record.setUserInput(userInput);
+                        record.setAiResponse(fullReply);
+                        record.setEmotionType(detectedType);
+                        baseMapper.insert(record);
+                    }).exceptionally(e -> {
+                        // 情绪分析如果失败，也保存记录
+                        ChildAI record = new ChildAI();
+                        record.setChildId(childId);
+                        record.setUserInput(userInput);
+                        record.setAiResponse(fullReply);
+                        record.setEmotionType(5);
+                        baseMapper.insert(record);
+                        return null;
+                    });
+                });
             } catch (Exception e) {
                 System.err.println(">>> [ERROR] AI Stream failed: " + e.getMessage());
                 e.printStackTrace();
@@ -79,19 +101,31 @@ public class ChildAIServiceImpl implements IChildAIService {
 
     @Override
     public String chatWithAI(Long childId, String userInput, Integer emotionType) {
-        // 1. 分析情感 (如果传入的 emotionType 为空，则调用 AI 服务分析)
-        java.util.Map<String, Object> analysis = aiService.emotionAnalysis(childId, userInput);
-        Integer detectedType = (Integer) analysis.getOrDefault("emotionType", 5);
+        // 1. 异步执行情感分析
+        java.util.concurrent.CompletableFuture<java.util.Map<String, Object>> emotionFuture = 
+            java.util.concurrent.CompletableFuture.supplyAsync(() -> aiService.emotionAnalysis(childId, userInput));
+
+        // 2. 默认上下文并发调用聊天服务
+        java.util.Map<String, Object> defaultContext = new java.util.HashMap<>();
+        defaultContext.put("emotion", "平静");
+        defaultContext.put("emotionType", 5);
+
+        String aiReply = aiService.chat(childId, userInput, defaultContext);
         
-        // 2. 调用 AI 聊天服务生成回复
-        String aiReply = aiService.chat(childId, userInput, analysis);
-        
-        // 3. 保存记录
+        // 3. 阻塞等待情感分析最多5秒
+        try {
+            java.util.Map<String, Object> analysis = emotionFuture.get(5, java.util.concurrent.TimeUnit.SECONDS);
+            emotionType = (Integer) analysis.getOrDefault("emotionType", 5);
+        } catch (Exception e) {
+            emotionType = 5;
+        }
+
+        // 4. 保存记录
         ChildAI record = new ChildAI();
         record.setChildId(childId);
         record.setUserInput(userInput);
         record.setAiResponse(aiReply);
-        record.setEmotionType(detectedType);
+        record.setEmotionType(emotionType);
         baseMapper.insert(record);
         
         return aiReply;
