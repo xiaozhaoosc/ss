@@ -1,7 +1,7 @@
 <template>
   <view class="container">
     <view class="example">
-      <uni-forms ref="form" :model="user" labelWidth="80px">
+      <uni-forms ref="form" :model="user" :rules="rules" labelWidth="80px">
         <uni-forms-item label="用户昵称" name="nickName">
           <uni-easyinput v-model="user.nickName" placeholder="请输入昵称" />
         </uni-forms-item>
@@ -24,7 +24,6 @@
   import { getUserProfile } from "@/api/system/user"
   import { updateUserProfile } from "@/api/system/user"
   import { ref , getCurrentInstance } from "vue"
-  import { onReady } from  "@dcloudio/uni-app"
 
   const { proxy } = getCurrentInstance()
   const user = ref({
@@ -80,10 +79,6 @@
       })
     })
   }
-
-  onReady(() => {
-    proxy.$refs.form.setRules(rules.value)
-  })
 
   getUser()
 </script>

@@ -7,7 +7,7 @@
       <view class="section">
         <text class="section-title">修改密码</text>
         <view class="form-card">
-          <uni-forms ref="form" :model="user" labelWidth="0">
+          <uni-forms ref="form" :model="user" :rules="rules" labelWidth="0">
             <view class="input-group">
               <text class="input-label">当前密码</text>
               <uni-easyinput type="password" v-model="user.oldPassword" :inputBorder="false" placeholder="请输入旧密码" />
@@ -50,7 +50,6 @@
 <script setup>
 import { updateUserPwd } from "@/api/system/user"
 import { ref, reactive, getCurrentInstance } from "vue"
-import { onReady } from "@dcloudio/uni-app"
 import TopBar from '@/components/common/top-bar/top-bar.vue'
 
 const { proxy } = getCurrentInstance()
@@ -80,10 +79,6 @@ const rules = {
     ]
   }
 }
-
-onReady(() => {
-  proxy.$refs.form.setRules(rules)
-})
 
 function submit() {
   proxy.$refs.form.validate().then(() => {
