@@ -180,6 +180,15 @@ public interface ISysUserService {
     int updateUserStatus(Long userId, String status);
 
     /**
+     * 直接更新用户的部门ID（绕过数据权限和角色处理）
+     *
+     * @param userId 用户ID
+     * @param deptId 部门ID
+     * @return 结果
+     */
+    int updateUserDeptId(Long userId, Long deptId);
+
+    /**
      * 修改用户基本信息
      *
      * @param user 用户信息

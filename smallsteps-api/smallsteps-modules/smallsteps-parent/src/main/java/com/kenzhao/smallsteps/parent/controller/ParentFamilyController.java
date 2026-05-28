@@ -68,12 +68,8 @@ public class ParentFamilyController extends BaseController {
             return R.fail("未找到该儿童账号");
         }
 
-        // 修改儿童的所属部门
-        SysUserBo updateChild = new SysUserBo();
-        updateChild.setUserId(child.getUserId());
-        updateChild.setDeptId(deptId);
-        
-        return toAjax(userService.updateUser(updateChild));
+        // 修改儿童的所属部门，直接更新 dept_id 绕过数据权限和角色处理
+        return toAjax(userService.updateUserDeptId(child.getUserId(), deptId));
     }
 
     /**
