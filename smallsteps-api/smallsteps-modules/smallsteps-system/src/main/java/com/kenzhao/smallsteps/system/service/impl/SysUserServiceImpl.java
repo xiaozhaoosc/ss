@@ -444,20 +444,7 @@ public class SysUserServiceImpl implements ISysUserService, UserService {
                 .eq(SysUser::getUserId, userId));
     }
 
-    /**
-     * 直接更新用户的部门ID（绕过数据权限和角色处理）
-     *
-     * @param userId 用户ID
-     * @param deptId 部门ID
-     * @return 结果
-     */
-    @Override
-    public int updateUserDeptId(Long userId, Long deptId) {
-        return baseMapper.update(null,
-            new LambdaUpdateWrapper<SysUser>()
-                .set(SysUser::getDeptId, deptId)
-                .eq(SysUser::getUserId, userId));
-    }
+
 
     /**
      * 修改用户基本信息

@@ -17,16 +17,16 @@
 ### ss_parent_emotion_kit (家长端情绪急救包表)
 | 字段名 | 类型 | 描述 |
 | :--- | :--- | :--- |
-| id | bigint | 主键 ID |
-| scenario | varchar | 适用情绪场景 |
-| strategies | text | 心理辅导策略 |
-| status | char(1) | 状态 (0正常 1停用) |
-| del_flag | char(1) | 删除标志 (0代表存在 2代表删除) |
+| kit_id | bigint | 急救包主键 ID |
+| child_id | bigint | 关联的孩子 ID |
+| kit_name | varchar | 急救包名称 (对应场景描述 scenario) |
+| emotion_type | int | 情绪类型 (1-开心, 2-难过, 3-愤怒, 4-焦虑, 5-平静) |
+| content | text | 辅导策略内容 (对应策略 strategies) |
+| status | int | 启用状态 (0-禁用, 1-启用) |
 | create_by | varchar | 创建者 |
 | create_time | timestamp | 创建时间 |
 | update_by | varchar | 更新者 |
 | update_time | timestamp | 更新时间 |
-| remark | varchar | 备注 |
 
 ## 2. ADHD 任务模板 (Task Templates)
 

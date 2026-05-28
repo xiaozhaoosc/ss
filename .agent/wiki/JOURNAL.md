@@ -9,6 +9,7 @@
 | **Mine 模块无依赖重构** | 对 `edit.vue` 与 `pwd/index.vue` 进行 100% 原生表单 + 纯 JS 校验重构，彻底扫清了缺失 `@dcloudio/uni-ui` 导致的 H5 运行时组件解析报错。 |
 | **高颜值交互与动画反馈** | 设计了极具心理学抚慰的👦与👧多色渐变卡片、微弹簧触觉按钮反馈，提供 WOW 级视觉效果。 |
 | **全编译路径零报错验证** | 运行并顺利通过了 `smallsteps-app` 生产环境下 `npm run build:h5` 的静态打包，没有发生任何模板或构建警告。 |
+| **情绪急救包不一致漏洞修复** | 深度诊断并修复 `ParentEmotionKitMapper.xml` 里的所有表名，统一为标准的 `ss_parent_emotion_kit`，并重写交付 100% 对齐 Java 实体与前端属性的自增 DDL 脚本，消除了 `kit_id` 不存在的 500 崩溃，并在全局 Maven compile 构建测试中 100% 通过。 |
 
 ---
 

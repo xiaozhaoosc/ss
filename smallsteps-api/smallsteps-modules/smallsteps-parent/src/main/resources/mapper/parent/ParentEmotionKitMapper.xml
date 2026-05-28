@@ -17,7 +17,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectParentEmotionKitVo">
-        select kit_id, child_id, kit_name, emotion_type, content, status, create_by, create_time, update_by, update_time from parent_emotion_kit
+        select kit_id, child_id, kit_name, emotion_type, content, status, create_by, create_time, update_by, update_time from ss_parent_emotion_kit
     </sql>
 
     <select id="selectParentEmotionKitList" parameterType="com.kenzhao.smallsteps.common.ss.domain.ParentEmotionKit" resultMap="ParentEmotionKitResult">
@@ -37,7 +37,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <insert id="insertParentEmotionKit" parameterType="com.kenzhao.smallsteps.common.ss.domain.ParentEmotionKit" useGeneratedKeys="true" keyProperty="kitId">
-        insert into parent_emotion_kit
+        insert into ss_parent_emotion_kit
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="childId != null">child_id,</if>
             <if test="kitName != null">kit_name,</if>
@@ -63,7 +63,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </insert>
 
     <update id="updateParentEmotionKit" parameterType="com.kenzhao.smallsteps.common.ss.domain.ParentEmotionKit">
-        update parent_emotion_kit
+        update ss_parent_emotion_kit
         <set>
             <if test="childId != null">child_id = #{childId},</if>
             <if test="kitName != null">kit_name = #{kitName},</if>
@@ -77,11 +77,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteParentEmotionKitByKitId" parameterType="Long">
-        delete from parent_emotion_kit where kit_id = #{kitId}
+        delete from ss_parent_emotion_kit where kit_id = #{kitId}
     </delete>
 
     <delete id="deleteParentEmotionKitByKitIds" parameterType="Long[]">
-        delete from parent_emotion_kit where kit_id in
+        delete from ss_parent_emotion_kit where kit_id in
         <foreach item="kitId" collection="array" open="(" separator="," close=")">
             #{kitId}
         </foreach>
