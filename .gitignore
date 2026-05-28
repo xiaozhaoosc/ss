@@ -20,6 +20,9 @@ build/
 .pnpm-debug.log*
 stats.json
 
+＊.dist.7z
+dist.7z
+
 # === 依赖与构建输出 (Java/Maven) ===
 target/
 *.class
