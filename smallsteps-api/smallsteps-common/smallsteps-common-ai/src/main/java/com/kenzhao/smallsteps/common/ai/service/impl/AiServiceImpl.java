@@ -169,14 +169,17 @@ public class AiServiceImpl implements IAiService {
 
             String prompt = getPrompt(promptKey, params);
             
-            // 知识库隐式增强
+            // 知识库隐式增强 (增加 500ms 异步超时保护，保障会话极速响应)
             try {
-                List<String> kbResults = sysAiKnowledgeService.hybridSearch(userInput, 3);
-                if (!kbResults.isEmpty()) {
+                List<String> kbResults = java.util.concurrent.CompletableFuture.supplyAsync(() -> 
+                    sysAiKnowledgeService.hybridSearch(userInput, 3)
+                ).get(500, java.util.concurrent.TimeUnit.MILLISECONDS);
+                
+                if (kbResults != null && !kbResults.isEmpty()) {
                     prompt += "\n\n【系统参考知识库】：\n" + String.join("\n", kbResults);
                 }
             } catch (Exception e) {
-                log.error("Failed to append knowledge base context", e);
+                log.warn("Knowledge base hybridSearch bypassed or timed out: {}", e.getMessage());
             }
             
             // 3. 调用大模型
@@ -214,14 +217,17 @@ public class AiServiceImpl implements IAiService {
 
             String prompt = getPrompt(promptKey, params);
             
-            // 知识库隐式增强
+            // 知识库隐式增强 (增加 500ms 异步超时保护，保障流式极速响应)
             try {
-                List<String> kbResults = sysAiKnowledgeService.hybridSearch(userInput, 3);
-                if (!kbResults.isEmpty()) {
+                List<String> kbResults = java.util.concurrent.CompletableFuture.supplyAsync(() -> 
+                    sysAiKnowledgeService.hybridSearch(userInput, 3)
+                ).get(500, java.util.concurrent.TimeUnit.MILLISECONDS);
+                
+                if (kbResults != null && !kbResults.isEmpty()) {
                     prompt += "\n\n【系统参考知识库】：\n" + String.join("\n", kbResults);
                 }
             } catch (Exception e) {
-                log.error("Failed to append knowledge base context", e);
+                log.warn("Knowledge base hybridSearch bypassed or timed out: {}", e.getMessage());
             }
             
             // 3. 流式调用大模型

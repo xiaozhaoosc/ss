@@ -5,7 +5,10 @@
     <view class="content" v-if="!loading">
       <!-- Header Info -->
       <view class="header-info">
-        <text class="title">创建新档案</text>
+        <view class="header-title-row">
+          <text class="title">创建新档案</text>
+          <text class="bind-link" @click="handleToBind">绑定已有账号</text>
+        </view>
         <text class="subtitle">为您的孩子创建一个专属账号</text>
       </view>
 
@@ -206,6 +209,10 @@ const handleCreate = async () => {
     creating.value = false
   }
 }
+
+const handleToBind = () => {
+  uni.navigateTo({ url: '/pages/parent/family/bind' })
+}
 </script>
 
 <style lang="scss" scoped>
@@ -222,12 +229,24 @@ const handleCreate = async () => {
 .header-info {
   margin-bottom: 32px;
   
+  .header-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 8px;
+  }
+  
   .title {
-    display: block;
     font-size: 24px;
     font-weight: 700;
     color: #111827;
-    margin-bottom: 8px;
+  }
+  
+  .bind-link {
+    font-size: 14px;
+    color: #6C9BD2;
+    font-weight: 600;
+    text-decoration: underline;
   }
   
   .subtitle {

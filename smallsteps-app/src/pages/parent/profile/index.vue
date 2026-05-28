@@ -197,7 +197,7 @@ const getChildDesc = (child) => {
 }
 
 const handleAddChild = () => {
-  uni.navigateTo({ url: '/pages/parent/family/bind' })
+  uni.navigateTo({ url: '/pages/parent/family/create' })
 }
 
 const handleEditChild = (child) => {
