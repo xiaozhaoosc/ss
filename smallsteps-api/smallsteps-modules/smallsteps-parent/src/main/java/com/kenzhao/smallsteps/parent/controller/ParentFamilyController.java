@@ -29,6 +29,7 @@ import java.util.List;
 public class ParentFamilyController extends BaseController {
 
     private final ISysUserService userService;
+    private final com.kenzhao.smallsteps.child.service.IChildService childService;
 
     /**
      * 获取家庭成员列表
@@ -78,5 +79,79 @@ public class ParentFamilyController extends BaseController {
     @lombok.Data
     public static class ChildBindDTO {
         private String userName;
+    }
+
+    /**
+     * 一键创建儿童账户并自动绑定到当前家庭
+     */
+    @Operation(summary = "创建并绑定儿童账号", description = "在当前家庭下直接为儿童创建登录账号及游戏化档案记录（方案 B 闭环）")
+    @PostMapping("/create-child")
+    @org.springframework.transaction.annotation.Transactional(rollbackFor = Exception.class)
+    public R<Void> createAndBindChild(@Validated @RequestBody ChildCreateDTO createDTO) {
+        Long deptId = LoginHelper.getDeptId();
+        if (deptId == null) {
+            return R.fail("家长尚未归属任何家庭，请先联系管理员创建家庭。");
+        }
+
+        // 1. 校验儿童登录用户名是否已被占用
+        SysUserVo existingUser = userService.selectUserByUserName(createDTO.getUserName());
+        if (existingUser != null) {
+            return R.fail("该登录用户名已被占用");
+        }
+
+        // 2. 创建儿童 SysUser 账号记录
+        SysUserBo childUserBo = new SysUserBo();
+        childUserBo.setUserName(createDTO.getUserName());
+        childUserBo.setNickName(createDTO.getNickname());
+        childUserBo.setPassword(cn.hutool.crypto.digest.BCrypt.hashpw(createDTO.getPassword()));
+        childUserBo.setUserType(com.kenzhao.smallsteps.common.core.enums.UserType.CHILD.getUserType()); // "2"
+        childUserBo.setDeptId(deptId); // 直接设为家长的部门（家庭）ID
+        
+        // 赋予儿童角色 ID，默认使用 11L (即儿童角色)
+        childUserBo.setRoleId(11L); 
+        
+        int rows = userService.insertUser(childUserBo);
+        if (rows < 1 || childUserBo.getUserId() == null) {
+            throw new com.kenzhao.smallsteps.common.core.exception.ServiceException("创建儿童登录账号失败");
+        }
+
+        // 3. 创建儿童在 ss_child 中的游戏化档案记录
+        com.kenzhao.smallsteps.common.ss.domain.Child childProfile = new com.kenzhao.smallsteps.common.ss.domain.Child();
+        childProfile.setId(childUserBo.getUserId()); // 主键 ID 与账号的 user_id 严格一致
+        childProfile.setParentId(LoginHelper.getUserId()); // 绑定当前家长的 user_id 为 parentId
+        childProfile.setNickname(createDTO.getNickname());
+        childProfile.setGender(createDTO.getGender());
+        childProfile.setBirthday(createDTO.getBirthday());
+        childProfile.setAvatarUrl("/avatar/boy1.png"); // 默认头像
+        childProfile.setLevel(1);
+        childProfile.setStarBalance(0);
+        childProfile.setTotalStars(0);
+
+        int profileRows = childService.insertChild(childProfile);
+        if (profileRows < 1) {
+            throw new com.kenzhao.smallsteps.common.core.exception.ServiceException("创建儿童游戏化档案失败");
+        }
+
+        return R.ok();
+    }
+
+    /**
+     * 儿童账号创建 DTO
+     */
+    @lombok.Data
+    public static class ChildCreateDTO {
+        @jakarta.validation.constraints.NotBlank(message = "登录用户名不能为空")
+        private String userName;
+
+        @jakarta.validation.constraints.NotBlank(message = "初始密码不能为空")
+        private String password;
+
+        @jakarta.validation.constraints.NotBlank(message = "儿童昵称不能为空")
+        private String nickname;
+
+        private String gender; // 性别 (0男 1女 2未知)
+        
+        @com.fasterxml.jackson.annotation.JsonFormat(pattern = "yyyy-MM-dd")
+        private java.util.Date birthday;
     }
 }
