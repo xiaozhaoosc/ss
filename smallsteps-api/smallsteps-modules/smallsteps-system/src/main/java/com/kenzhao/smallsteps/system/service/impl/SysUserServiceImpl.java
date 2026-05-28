@@ -186,6 +186,14 @@ public class SysUserServiceImpl implements ISysUserService, UserService {
         return user;
     }
 
+    @Override
+    public int updateUserDeptId(Long userId, Long deptId) {
+        return baseMapper.update(null,
+            new com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper<SysUser>()
+                .set(SysUser::getDeptId, deptId)
+                .eq(SysUser::getUserId, userId));
+    }
+
     /**
      * 通过用户ID串查询用户
      *

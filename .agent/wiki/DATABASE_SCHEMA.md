@@ -14,6 +14,20 @@
 | record_time | timestamp | 记录发生时间 |
 | create_time | timestamp | 创建时间 |
 
+### ss_parent_emotion_kit (家长端情绪急救包表)
+| 字段名 | 类型 | 描述 |
+| :--- | :--- | :--- |
+| id | bigint | 主键 ID |
+| scenario | varchar | 适用情绪场景 |
+| strategies | text | 心理辅导策略 |
+| status | char(1) | 状态 (0正常 1停用) |
+| del_flag | char(1) | 删除标志 (0代表存在 2代表删除) |
+| create_by | varchar | 创建者 |
+| create_time | timestamp | 创建时间 |
+| update_by | varchar | 更新者 |
+| update_time | timestamp | 更新时间 |
+| remark | varchar | 备注 |
+
 ## 2. ADHD 任务模板 (Task Templates)
 
 ### ss_task_template (任务模板表)

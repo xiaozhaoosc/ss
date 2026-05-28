@@ -76,6 +76,11 @@ public interface ISysUserService {
     SysUserVo selectUserById(Long userId);
 
     /**
+     * 轻量级更新用户所属家庭(部门)ID，绕过全量数据权限与角色处理
+     */
+    int updateUserDeptId(Long userId, Long deptId);
+
+    /**
      * 通过用户ID串查询用户
      *
      * @param userIds 用户ID串

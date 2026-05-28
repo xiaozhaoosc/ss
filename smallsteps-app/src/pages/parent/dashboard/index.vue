@@ -141,7 +141,16 @@ const childId = ref<number | null>(null)
 
 async function initChildIdAndLoad() {
   if (userStore.currentChildId) {
-    childId.value = userStore.currentChildId
+    // 额外防卫性校验，以防本地缓存了家长的 ID
+    if (String(userStore.currentChildId) === String(userStore.userId)) {
+      userStore.setCurrentChildId(null)
+      childId.value = null
+    } else {
+      childId.value = userStore.currentChildId
+    }
+  }
+
+  if (childId.value) {
     await loadData()
   } else {
     try {
@@ -153,19 +162,14 @@ async function initChildIdAndLoad() {
         userStore.setCurrentChildId(childId.value)
         await loadData()
       } else {
-        if (members.length > 0) {
-          childId.value = members[0].userId
-          userStore.setCurrentChildId(childId.value)
-          await loadData()
-        } else {
-          uni.showToast({ title: '未绑定儿童', icon: 'none' })
-        }
+        userStore.setCurrentChildId(null)
+        childId.value = null
+        uni.showToast({ title: '当前家庭未绑定儿童，请在个人中心创建或绑定儿童档案', icon: 'none', duration: 3000 })
       }
     } catch (err) {
       console.error('Failed to get family members', err)
-      childId.value = 1
-      userStore.setCurrentChildId(childId.value)
-      await loadData()
+      userStore.setCurrentChildId(null)
+      childId.value = null
     }
   }
 }
