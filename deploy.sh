@@ -81,7 +81,7 @@ restart_docker() {
     echo "📊 服务访问地址："
     echo "   • 管理后台: http://${SERVER_HOST}:8043/webadminss/#"
     echo "   • 移动端:   http://${SERVER_HOST}:8043/#"
-    echo "   • API:      http://${SERVER_HOST}:8080/ssapi"
+    echo "   • API:      http://${SERVER_HOST}:8081/ssapi"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 }
 
