@@ -94,14 +94,14 @@ public class ParentFamilyController extends BaseController {
         }
 
         // 1. 校验儿童登录用户名是否已被占用
-        SysUserVo existingUser = userService.selectUserByUserName(createDTO.getUserName());
+        SysUserVo existingUser = userService.selectUserByUserName(createDTO.getUsername());
         if (existingUser != null) {
             return R.fail("该登录用户名已被占用");
         }
 
         // 2. 创建儿童 SysUser 账号记录
         SysUserBo childUserBo = new SysUserBo();
-        childUserBo.setUserName(createDTO.getUserName());
+        childUserBo.setUserName(createDTO.getUsername());
         childUserBo.setNickName(createDTO.getNickname());
         childUserBo.setPassword(cn.hutool.crypto.digest.BCrypt.hashpw(createDTO.getPassword()));
         childUserBo.setUserType(com.kenzhao.smallsteps.common.core.enums.UserType.CHILD.getUserType()); // "2"
@@ -141,7 +141,7 @@ public class ParentFamilyController extends BaseController {
     @lombok.Data
     public static class ChildCreateDTO {
         @jakarta.validation.constraints.NotBlank(message = "登录用户名不能为空")
-        private String userName;
+        private String username;
 
         @jakarta.validation.constraints.NotBlank(message = "初始密码不能为空")
         private String password;

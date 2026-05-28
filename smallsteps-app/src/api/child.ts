@@ -265,7 +265,7 @@ export function updateChild(data: any) {
 // 家长创建孩子账号
 export function createChild(data: any) {
     return request({
-        url: '/parent/child/create',
+        url: '/parent/family/create-child',
         method: 'post',
         data: data
     })
