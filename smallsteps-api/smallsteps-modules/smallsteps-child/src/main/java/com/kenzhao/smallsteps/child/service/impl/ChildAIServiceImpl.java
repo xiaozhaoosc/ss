@@ -54,6 +54,13 @@ public class ChildAIServiceImpl implements IChildAIService {
     public org.springframework.web.servlet.mvc.method.annotation.SseEmitter chatWithAIStream(Long childId, String userInput, Integer emotionType) {
         org.springframework.web.servlet.mvc.method.annotation.SseEmitter emitter = new org.springframework.web.servlet.mvc.method.annotation.SseEmitter(300000L); // 5分钟超时
         
+        // 0. 立即下发首个字节（空格），让 HTTP 状态码 200 和头部立刻返回给前端建立连接，避免 Pending
+        try {
+            emitter.send(org.springframework.web.servlet.mvc.method.annotation.SseEmitter.event().data(" "));
+        } catch (Exception e) {
+            System.err.println(">>> [WARNING] SSE Pre-warming handshake failed: " + e.getMessage());
+        }
+        
         // 1. 异步执行情绪分析，不阻塞流响应
         java.util.concurrent.CompletableFuture<java.util.Map<String, Object>> emotionFuture = 
             java.util.concurrent.CompletableFuture.supplyAsync(() -> {
