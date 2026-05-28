@@ -223,9 +223,14 @@ const initChildIdAndLoad = async () => {
   try {
     const res = await getFamilyMembers()
     const members = res.data || []
-    // 过滤出儿童 (userType 为 '3' 或角色包含 'child')
+    // 过滤出儿童 (userType 为 '2' 或角色包含 'child')
     familyChildren.value = members.filter(m => String(m.userType) === '2' || (m.roles && m.roles.includes('child')))
     
+    // 防御性拦截：若缓存的 currentChildId 与家长自己的 userId 一致，强制清空
+    if (userStore.currentChildId && String(userStore.currentChildId) === String(userStore.userId)) {
+      userStore.setCurrentChildId(null)
+    }
+
     if (userStore.currentChildId) {
       childId.value = userStore.currentChildId
       loadData(childId.value)
@@ -238,7 +243,7 @@ const initChildIdAndLoad = async () => {
   } catch (err) {
     console.error('Failed to get family members', err)
     // Fallback logic
-    if (userStore.currentChildId) {
+    if (userStore.currentChildId && String(userStore.currentChildId) !== String(userStore.userId)) {
       childId.value = userStore.currentChildId
       loadData(childId.value)
     }
