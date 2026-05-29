@@ -86,6 +86,7 @@ public class ScoreServiceImpl implements IScoreService {
             stars.setType("STAR");
             stars.setName("我的星星");
             stars.setCount(points);
+            stars.setAchievementId(cn.hutool.core.util.IdUtil.getSnowflakeNextId());
             childAchievementMapper.insert(stars);
         } else {
             stars.setCount(stars.getCount() + points);
@@ -107,6 +108,9 @@ public class ScoreServiceImpl implements IScoreService {
         childScore.setBalance(childScore.getBalance() - points);
         childScoreMapper.updateById(childScore);
         
+        // 同步扣除成就表中的星星数量
+        syncDeductStarsToAchievement(userId, points);
+        
         // 记录积分历史
         ScoreHistory scoreHistory = new ScoreHistory();
         scoreHistory.setUserId(userId);
@@ -117,6 +121,22 @@ public class ScoreServiceImpl implements IScoreService {
         scoreHistoryMapper.insert(scoreHistory);
         
         return true;
+    }
+
+    /**
+     * 同步扣减成就表中的星星数量
+     */
+    private void syncDeductStarsToAchievement(Long childId, int points) {
+        com.kenzhao.smallsteps.common.ss.domain.ChildAchievement stars = childAchievementMapper.selectOne(
+            new com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<com.kenzhao.smallsteps.common.ss.domain.ChildAchievement>()
+                .eq(com.kenzhao.smallsteps.common.ss.domain.ChildAchievement::getChildId, childId)
+                .eq(com.kenzhao.smallsteps.common.ss.domain.ChildAchievement::getType, "STAR"));
+
+        if (stars != null) {
+            int newCount = stars.getCount() - points;
+            stars.setCount(Math.max(0, newCount));
+            childAchievementMapper.updateById(stars);
+        }
     }
 
     @Override

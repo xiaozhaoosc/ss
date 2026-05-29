@@ -10,7 +10,16 @@
       @click="handleNavClick(item)"
     >
       <view class="icon-wrapper">
-        <text class="icon">{{ item.icon }}</text>
+        <template v-if="item.icon.startsWith('/') || item.icon.startsWith('static/')">
+          <image 
+            class="icon-img" 
+            :src="currentPath === item.path ? item.activeIcon : item.icon" 
+            mode="aspectFit"
+          ></image>
+        </template>
+        <template v-else>
+          <text class="icon">{{ item.icon }}</text>
+        </template>
         <view v-if="item.badge" class="badge">{{ item.badge }}</view>
       </view>
       <text class="label">{{ item.label }}</text>
@@ -49,10 +58,31 @@ const currentPath = computed(() => {
 const navItems = computed(() => {
   if (props.mode === 'parent') {
     return [
-      { path: '/pages/parent/dashboard/index', icon: '🏠', label: '首页' },
-      { path: '/pages/parent/task-creator/index', icon: '📝', label: '任务' },
-      { path: '/pages/parent/insights/index', icon: '📊', label: '洞察' },
-      { path: '/pages/parent/profile/index', icon: '👤', label: '我的', badge: null }
+      { 
+        path: '/pages/parent/dashboard/index', 
+        icon: '/static/images/tabbar/home.png', 
+        activeIcon: '/static/images/tabbar/home_.png',
+        label: '首页' 
+      },
+      { 
+        path: '/pages/parent/task-creator/index', 
+        icon: '/static/images/tabbar/work.png', 
+        activeIcon: '/static/images/tabbar/work_.png',
+        label: '任务' 
+      },
+      { 
+        path: '/pages/parent/insights/index', 
+        icon: '/static/images/tabbar/setting.png', 
+        activeIcon: '/static/images/tabbar/setting_.png',
+        label: '洞察' 
+      },
+      { 
+        path: '/pages/parent/profile/index', 
+        icon: '/static/images/tabbar/mine.png', 
+        activeIcon: '/static/images/tabbar/mine_.png',
+        label: '我的', 
+        badge: null 
+      }
     ]
   } else {
     return [
@@ -147,6 +177,13 @@ const handleNavClick = (item) => {
 
 .icon {
   font-size: 24px;
+  transition: transform 0.3s ease;
+}
+
+.icon-img {
+  width: 24px;
+  height: 24px;
+  display: block;
   transition: transform 0.3s ease;
 }
 

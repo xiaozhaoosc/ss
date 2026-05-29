@@ -7,6 +7,7 @@
 - [[DEBT_LEADGER]] - 技术债账本与风险追踪
 - [[System-Architecture]] - 全局架构视图
 - [[INBOX]] - 灵感与影子观察记录
+- [[How-AI-Agent-Saves-Your-Token]] - 💡 AI 助手是如何帮你省钱省 Token 的？（小白科普）
 - [[skills/adhd_parenting_anchor_v1|Distilled Skill: ADHD 家长情感锚点 (v1)]]
 - [[skills/e2e_stability_architect_v1|Distilled Skill: E2E 稳定性架构师 (v1)]]
 
@@ -33,6 +34,10 @@
 - [[ADR/ADR-019-AI-Knowledge-Base-Hybrid-Retrieval|ADR-019: AI 知识库管理与混合检索 (Hybrid Retrieval) 架构设计]]
 - [[ADR-020-Unified-Snowflake-Id-Stringification|ADR-020: 全系统雪花长 ID 统一字符串化最小化架构方案]]
 - [[ADR-021-Template-Task-Child-Assignment-Fix|ADR-021: ADHD 模板任务指派下发一致性加固]]
+- [[ADR-022-Database-Achievement-Id-Constraint-Fix|ADR-022: 儿童成就表 achievement_id 非空约束崩溃加固]]
+- [[ADR-023-Custom-Tabbar-Icon-Optimization|ADR-023: H5 底部自定义导航图标高保真重构与防碎治理]]
+- [[ADR-024-Reward-Redemption-Reject-And-Name-Filling|ADR-024: 奖励审批拒绝端点兼容性与具体名称关联填充治理]]
+- [[ADR-025-Score-And-Achievement-Sync-Unification|ADR-025: 儿童星星余额双数据源物理与逻辑强一致性加固]]
 
 
 ## 每日记录 (Journal)

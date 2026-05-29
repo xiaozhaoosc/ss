@@ -36,6 +36,21 @@ public class ParentRewardRedemptionServiceImpl implements IParentRewardRedemptio
         lqw.eq(bo.getUserId() != null, ParentRewardRedemption::getUserId, bo.getUserId());
         lqw.eq(bo.getStatus() != null, ParentRewardRedemption::getStatus, bo.getStatus());
         Page<ParentRewardRedemptionVo> result = baseMapper.selectVoPage(pageQuery.build(), lqw);
+        
+        // 关联查询填充 rewardName 字段，保障前端今日焦点和兑换历史能够显示真实的奖品名称而非硬编码的“奖品”
+        if (result.getRecords() != null && !result.getRecords().isEmpty()) {
+            for (ParentRewardRedemptionVo vo : result.getRecords()) {
+                if (vo.getRewardId() != null) {
+                    ParentReward reward = rewardMapper.selectById(vo.getRewardId());
+                    if (reward != null) {
+                        vo.setRewardName(reward.getName());
+                    } else {
+                        vo.setRewardName("未知奖励");
+                    }
+                }
+            }
+        }
+        
         return TableDataInfo.build(result);
     }
 

@@ -18,6 +18,7 @@ import java.util.List;
 public class ChildAchievementServiceImpl implements IChildAchievementService {
 
     private final ChildAchievementMapper baseMapper;
+    private final com.kenzhao.smallsteps.child.mapper.ChildScoreMapper scoreMapper;
 
     @Override
     public List<ChildAchievement> selectChildAchievementList(ChildAchievement childAchievement) {
@@ -34,6 +35,9 @@ public class ChildAchievementServiceImpl implements IChildAchievementService {
 
     @Override
     public int insertChildAchievement(ChildAchievement childAchievement) {
+        if (childAchievement.getAchievementId() == null) {
+            childAchievement.setAchievementId(cn.hutool.core.util.IdUtil.getSnowflakeNextId());
+        }
         return baseMapper.insert(childAchievement);
     }
 
@@ -73,6 +77,7 @@ public class ChildAchievementServiceImpl implements IChildAchievementService {
             achievement.setType(type);
             achievement.setName(name);
             achievement.setCount(amount);
+            achievement.setAchievementId(cn.hutool.core.util.IdUtil.getSnowflakeNextId());
             return baseMapper.insert(achievement);
         } else {
             achievement.setCount(achievement.getCount() + amount);
@@ -109,10 +114,10 @@ public class ChildAchievementServiceImpl implements IChildAchievementService {
 
     @Override
     public Integer selectTotalStarsByChildId(Long childId) {
-        ChildAchievement stars = baseMapper.selectOne(new LambdaQueryWrapper<ChildAchievement>()
-            .eq(ChildAchievement::getChildId, childId)
-            .eq(ChildAchievement::getType, "STAR"));
-        return stars != null ? stars.getCount() : 0;
+        com.kenzhao.smallsteps.common.ss.domain.ChildScore score = scoreMapper.selectOne(
+            new com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<com.kenzhao.smallsteps.common.ss.domain.ChildScore>()
+                .eq(com.kenzhao.smallsteps.common.ss.domain.ChildScore::getUserId, childId));
+        return score != null ? score.getBalance() : 0;
     }
 
     @Override
@@ -159,6 +164,7 @@ public class ChildAchievementServiceImpl implements IChildAchievementService {
             badge.setRemark(remark);
             badge.setIcon(icon);
             badge.setCount(1);
+            badge.setAchievementId(cn.hutool.core.util.IdUtil.getSnowflakeNextId());
             baseMapper.insert(badge);
         }
     }
