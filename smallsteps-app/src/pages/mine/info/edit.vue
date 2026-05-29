@@ -84,7 +84,9 @@
   import { updateUserProfile } from "@/api/system/user"
   import { ref, getCurrentInstance } from "vue"
   import TopBar from '@/components/common/top-bar/top-bar.vue'
+  import { useUserStore } from "@/store/modules/user"
 
+  const userStore = useUserStore()
   const { proxy } = getCurrentInstance()
   const user = ref({
     nickName: "",
@@ -147,6 +149,7 @@
 
     updateUserProfile(user.value).then(response => {
       proxy.$modal.msgSuccess("修改成功")
+      userStore.getUserInfo() // 重新加载全局个人用户信息以同步头像及昵称
       setTimeout(() => {
         uni.navigateBack()
       }, 1500)

@@ -33,13 +33,11 @@ public class Child extends BaseEntity {
      * ID
      */
     @TableId(value = "id")
-    @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
 
     /**
      * 关联家长用户ID (sys_user.user_id)
      */
-    @JsonSerialize(using = ToStringSerializer.class)
     private Long parentId;
 
     /**

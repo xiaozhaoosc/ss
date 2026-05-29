@@ -33,7 +33,6 @@ public class SysUserVo implements Serializable {
     /**
      * 用户ID
      */
-    @JsonSerialize(using = ToStringSerializer.class)
     private Long userId;
 
     /**
@@ -44,7 +43,6 @@ public class SysUserVo implements Serializable {
     /**
      * 部门ID
      */
-    @JsonSerialize(using = ToStringSerializer.class)
     private Long deptId;
 
     /**

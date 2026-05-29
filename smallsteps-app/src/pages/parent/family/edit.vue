@@ -96,6 +96,8 @@ import { ref, onMounted } from 'vue'
 import TopBar from '@/components/common/top-bar/top-bar.vue'
 import { getChild, updateChild } from '@/api/child'
 
+import upload from '@/utils/upload'
+
 const id = ref('')
 const loading = ref(true)
 const saving = ref(false)
@@ -133,13 +135,26 @@ const handleDateChange = (e) => {
 const handleChangeAvatar = () => {
   uni.chooseImage({
     count: 1,
-    success: (res) => {
-      // 模拟上传逻辑
-      uni.showLoading({ title: '正在上传...' })
-      setTimeout(() => {
-        form.value.avatarUrl = res.tempFilePaths[0]
+    success: async (res) => {
+      uni.showLoading({ title: '正在上传头像...' })
+      try {
+        const uploadRes = await upload({
+          url: '/common/upload',
+          filePath: res.tempFilePaths[0],
+          name: 'file'
+        })
+        if (uploadRes && uploadRes.url) {
+          form.value.avatarUrl = uploadRes.url
+          uni.showToast({ title: '上传成功', icon: 'success' })
+        } else {
+          uni.showToast({ title: '上传失败', icon: 'none' })
+        }
+      } catch (e) {
+        console.error('Upload avatar failed:', e)
+        uni.showToast({ title: '上传失败', icon: 'none' })
+      } finally {
         uni.hideLoading()
-      }, 1000)
+      }
     }
   })
 }

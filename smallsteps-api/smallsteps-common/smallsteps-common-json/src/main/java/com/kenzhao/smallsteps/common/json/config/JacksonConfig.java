@@ -48,6 +48,10 @@ public class JacksonConfig {
     public Jackson2ObjectMapperBuilderCustomizer customizer() {
         return builder -> {
             builder.timeZone(TimeZone.getDefault());
+            builder.serializerByType(Long.class, BigNumberSerializer.INSTANCE);
+            builder.serializerByType(Long.TYPE, BigNumberSerializer.INSTANCE);
+            builder.serializerByType(BigInteger.class, BigNumberSerializer.INSTANCE);
+            builder.serializerByType(BigDecimal.class, ToStringSerializer.instance);
             log.info("初始化 jackson 配置");
         };
     }
