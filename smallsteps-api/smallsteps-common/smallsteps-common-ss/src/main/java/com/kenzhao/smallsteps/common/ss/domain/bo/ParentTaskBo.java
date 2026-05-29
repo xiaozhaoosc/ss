@@ -100,4 +100,14 @@ public class ParentTaskBo extends BaseEntity {
      */
     private Long childId;
 
+    /**
+     * 任务步骤列表
+     */
+    private java.util.List<com.kenzhao.smallsteps.common.ss.domain.vo.TaskStepTemplateVo> steps;
+
+    /**
+     * 是否存为模板 (0否 1是)
+     */
+    private Integer isTemplate;
+
 }

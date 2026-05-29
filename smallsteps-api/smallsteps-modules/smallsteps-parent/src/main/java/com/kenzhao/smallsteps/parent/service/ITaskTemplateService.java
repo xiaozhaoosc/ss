@@ -31,4 +31,9 @@ public interface ITaskTemplateService {
      * @return 成功生成的父任务ID
      */
     Long importTemplate(Long templateId, Long childId, Long userId, Long deptId);
+
+    /**
+     * 将自定义任务及步骤保存为模板
+     */
+    void saveAsTemplate(com.kenzhao.smallsteps.common.ss.domain.bo.ParentTaskBo bo);
 }

@@ -120,4 +120,42 @@ public class TaskTemplateServiceImpl implements ITaskTemplateService {
 
         return mainTaskId;
     }
+
+    @Override
+    @org.springframework.transaction.annotation.Transactional(rollbackFor = Exception.class)
+    public void saveAsTemplate(com.kenzhao.smallsteps.common.ss.domain.bo.ParentTaskBo bo) {
+        if (bo == null) return;
+
+        // 1. 保存为模板主信息
+        TaskTemplate template = new TaskTemplate();
+        template.setTitle(bo.getTitle());
+        template.setDescription(bo.getDescription());
+        template.setIcon(bo.getIcon() != null ? bo.getIcon() : "📝");
+        template.setCategory("daily"); // 手动保存的默认为日常分类
+        template.setDefaultDifficulty(bo.getDifficulty() != null ? bo.getDifficulty() : 1);
+        template.setDefaultPromptLevel(bo.getPromptLevel() != null ? bo.getPromptLevel() : 1);
+        template.setLightEffect(bo.getLightEffect());
+        template.setAudioEffect(bo.getAudioEffect());
+        template.setStatus("0"); // 正常
+        template.setDelFlag("0");
+
+        baseMapper.insert(template);
+        Long templateId = template.getTemplateId();
+
+        // 2. 保存模板步骤
+        if (bo.getSteps() != null && !bo.getSteps().isEmpty()) {
+            int order = 1;
+            for (com.kenzhao.smallsteps.common.ss.domain.vo.TaskStepTemplateVo step : bo.getSteps()) {
+                TaskStepTemplate stepTemplate = new TaskStepTemplate();
+                stepTemplate.setTemplateId(templateId);
+                stepTemplate.setStepOrder(order++);
+                stepTemplate.setContent(step.getContent());
+                stepTemplate.setVisualHint(step.getVisualHint());
+                stepTemplate.setAudioHint(step.getAudioHint());
+                stepTemplate.setExpectedDuration(step.getExpectedDuration() != null ? step.getExpectedDuration() : 120);
+
+                stepTemplateMapper.insert(stepTemplate);
+            }
+        }
+    }
 }

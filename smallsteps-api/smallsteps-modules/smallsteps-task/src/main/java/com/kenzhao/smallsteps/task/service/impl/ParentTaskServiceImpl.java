@@ -74,6 +74,29 @@ public class ParentTaskServiceImpl implements IParentTaskService {
         if (success) {
             bo.setTaskId(parentTask.getTaskId());
             
+            // 如果指定了任务步骤列表，级联保存为子任务步骤 (ParentTask)
+            if (bo.getSteps() != null && !bo.getSteps().isEmpty()) {
+                int order = 1;
+                for (com.kenzhao.smallsteps.common.ss.domain.vo.TaskStepTemplateVo step : bo.getSteps()) {
+                    ParentTask subTask = new ParentTask();
+                    subTask.setParentId(parentTask.getTaskId());
+                    subTask.setTitle(step.getContent() != null ? step.getContent() : "步骤 " + order);
+                    subTask.setDescription(step.getVisualHint());
+                    subTask.setDeptId(parentTask.getDeptId() != null ? parentTask.getDeptId() : LoginHelper.getDeptId());
+                    subTask.setUserId(parentTask.getUserId() != null ? parentTask.getUserId() : LoginHelper.getUserId());
+                    subTask.setStatus(ParentTask.STATUS_ONGOING);
+                    subTask.setDifficulty(parentTask.getDifficulty() != null ? parentTask.getDifficulty() : 1);
+                    subTask.setPromptLevel(parentTask.getPromptLevel() != null ? parentTask.getPromptLevel() : 1);
+                    subTask.setRewardPoints(step.getExpectedDuration() != null ? step.getExpectedDuration() : 120);
+                    subTask.setAudioEffect(step.getAudioHint());
+                    subTask.setDelFlag("0");
+                    
+                    parentTaskMapper.insert(subTask);
+                    log.info("[Task] Saved custom subtask step: {} for parent task: {}", subTask.getTitle(), parentTask.getTaskId());
+                    order++;
+                }
+            }
+
             // 如果指定了儿童，自动创建执行任务 (ChildTask)
             if (bo.getChildId() != null) {
                 ChildTask childTask = new ChildTask();
@@ -306,7 +329,9 @@ public class ParentTaskServiceImpl implements IParentTaskService {
                 List<TaskStepTemplateVo> steps = new ArrayList<>();
                 for (ParentTask sub : subTasks) {
                     TaskStepTemplateVo step = new TaskStepTemplateVo();
+                    step.setStepId(sub.getTaskId());
                     step.setContent(sub.getTitle());
+                    step.setVisualHint(sub.getDescription());
                     step.setExpectedDuration(sub.getRewardPoints());
                     step.setAudioHint(sub.getAudioEffect());
                     steps.add(step);
