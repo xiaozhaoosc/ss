@@ -11,8 +11,7 @@ LIB_DIR="/home/ken4zhao/.hermes/home/lib"
 
 VNC_PORT=5900
 WEB_PORT=8462
-DISPLAY_NUM=:0
-AUTH_FILE="/var/run/lightdm/root/:0"
+DISPLAY_NUM=:10  # 虚拟显示器（测试用）
 
 export LD_LIBRARY_PATH="$LIB_DIR:$LD_LIBRARY_PATH"
 
@@ -23,7 +22,6 @@ start_vnc() {
     echo "  → x11vnc (display $DISPLAY_NUM)"
     $X11VNC_BIN \
         -display $DISPLAY_NUM \
-        -auth $AUTH_FILE \
         -forever \
         -shared \
         -noxdamage \

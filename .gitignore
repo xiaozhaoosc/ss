@@ -67,3 +67,11 @@ managed_components/
 # === Worktrees ===
 .worktrees/
 
+# === Test Results & Reports (Playwright/Allure) ===
+**/test-results/
+**/playwright-report/
+**/allure-results/
+**/allure-report/
+**/recordings/
+**/blob-report/
+
