@@ -31,8 +31,11 @@
 - [[ADR-017-Audit-Field-Compatibility-for-Child-Accounts|ADR-017: 儿童账号在多租户审计架构下的兼容性方案]]
 - [[ADR/ADR-018-TableDataInfo-Null-Safety-Defense|ADR-018: 分页数据封装层 (TableDataInfo) 与前端表格源的双向空安全治理]]
 - [[ADR/ADR-019-AI-Knowledge-Base-Hybrid-Retrieval|ADR-019: AI 知识库管理与混合检索 (Hybrid Retrieval) 架构设计]]
+- [[ADR-020-Unified-Snowflake-Id-Stringification|ADR-020: 全系统雪花长 ID 统一字符串化最小化架构方案]]
+
 
 ## 每日记录 (Journal)
+- [[journal/2026-05-29|2026-05-29: 全系统长 ID 统一无损字符串化与家长中心 Bug 最终治理]]
 - [[journal/2026-05-17|2026-05-17: AI 知识库混合检索系统架构与双向空安全防御]]
 - [[journal/2026-05-16|2026-05-16: AI 知识库管理视图重构与全栈异常治理]]
 - [[journal/2026-05-11|2026-05-11: 生产环境配置硬化与 Sass 3.0 构建升级]]

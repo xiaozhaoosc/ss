@@ -48,3 +48,23 @@
 | step_order | int | 步骤顺序 |
 | content | varchar | 步骤内容 (动作描述) |
 | visual_hint | varchar | 视觉提示图片 URL/图标 |
+
+## 3. 帮助与反馈 (System Feedback)
+
+### ss_system_feedback (系统反馈表)
+| 字段名 | 类型 | 描述 |
+| :--- | :--- | :--- |
+| id | bigint | 主键 ID |
+| user_id | bigint | 提交反馈的用户 ID |
+| content | text | 反馈具体文本内容 |
+| pics | text | 反馈图片路径，多图以逗号分隔 |
+| contact | varchar | 用户填写的联系方式 |
+| status | int | 处理状态 (0-未处理, 1-已处理) |
+| handler_id | bigint | 处理管理员的用户 ID |
+| remark | varchar | 处理备注信息 |
+| handle_time | timestamp | 处理完成时间 |
+| create_by | varchar | 创建者 |
+| create_time | timestamp | 反馈创建时间 |
+| update_by | varchar | 更新者 |
+| update_time | timestamp | 状态更新时间 |
+

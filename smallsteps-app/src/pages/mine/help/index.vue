@@ -50,9 +50,17 @@
             placeholder-style="color: #9ca3af"
           />
           <view class="image-picker">
-            <view class="add-img-btn" @click="handleUploadImage">
+            <!-- 已上传图片预览列表 -->
+            <view v-for="(img, idx) in feedbackImages" :key="idx" class="image-item animate-fade-in">
+              <image :src="img" mode="aspectFill" class="picked-img" />
+              <view class="delete-btn" @click="handleDeleteImage(idx)">
+                <text class="material-symbols-outlined delete-icon">close</text>
+              </view>
+            </view>
+            <!-- 上传图片触发框 -->
+            <view v-if="feedbackImages.length < 4" class="add-img-btn" hover-class="btn-hover" @click="handleUploadImage">
               <text class="material-symbols-outlined">add_a_photo</text>
-              <text class="add-text">添加图片</text>
+              <text class="add-text">添加图片 ({{ feedbackImages.length }}/4)</text>
             </view>
           </view>
           <button class="submit-btn" :disabled="feedbackContent.length < 10" @click="handleSubmitFeedback">提交反馈</button>
@@ -67,8 +75,11 @@
 <script setup>
 import { ref } from 'vue'
 import TopBar from '@/components/common/top-bar/top-bar.vue'
+import upload from '@/utils/upload'
+import { addFeedback } from '@/api/system/feedback'
 
 const feedbackContent = ref('')
+const feedbackImages = ref([])
 
 const faqList = ref([
   {
@@ -102,17 +113,55 @@ function handleShowDetail(item) {
 }
 
 function handleUploadImage() {
-  uni.showToast({ title: '演示环境暂不支持图片上传', icon: 'none' })
+  uni.chooseImage({
+    count: 4 - feedbackImages.value.length,
+    sizeType: ['compressed'],
+    success: async (res) => {
+      uni.showLoading({ title: '正在上传图片...' })
+      try {
+        const filePaths = res.tempFilePaths
+        for (const path of filePaths) {
+          const uploadRes = await upload({
+            url: '/common/upload',
+            filePath: path,
+            name: 'file'
+          })
+          if (uploadRes && uploadRes.url) {
+            feedbackImages.value.push(uploadRes.url)
+          }
+        }
+        uni.showToast({ title: '上传成功', icon: 'success' })
+      } catch (e) {
+        console.error('Upload feedback image failed:', e)
+        uni.showToast({ title: '图片上传失败', icon: 'none' })
+      } finally {
+        uni.hideLoading()
+      }
+    }
+  })
+}
+
+function handleDeleteImage(index) {
+  feedbackImages.value.splice(index, 1)
+  uni.showToast({ title: '已移除照片', icon: 'none' })
 }
 
 function handleSubmitFeedback() {
-  uni.showLoading({ title: '提交中...' })
-  setTimeout(() => {
+  uni.showLoading({ title: '提交反馈中...' })
+  
+  addFeedback({
+    content: feedbackContent.value,
+    imgUrls: feedbackImages.value.join(',')
+  }).then(() => {
     uni.hideLoading()
-    uni.showToast({ title: '反馈已收到，我们会尽快处理！' })
+    uni.showToast({ title: '反馈已收到，我们会尽快处理！', icon: 'success' })
     feedbackContent.value = ''
+    feedbackImages.value = []
     setTimeout(() => uni.navigateBack(), 1500)
-  }, 1000)
+  }).catch(err => {
+    uni.hideLoading()
+    console.error('Submit feedback failed:', err)
+  })
 }
 </script>
 
@@ -124,8 +173,7 @@ function handleSubmitFeedback() {
 
 .main-content {
   padding: 16px;
-  padding-top: 60px;
-  height: calc(100vh - 60px);
+  padding-top: 76px;
 }
 
 .section {
@@ -270,6 +318,46 @@ function handleSubmitFeedback() {
   margin-bottom: 16px;
 }
 
+.image-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.image-item {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+
+  .picked-img {
+    width: 100%;
+    height: 100%;
+  }
+
+  .delete-btn {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 20px;
+    height: 20px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(2px);
+
+    .delete-icon {
+      font-size: 12px;
+      color: #ffffff;
+    }
+  }
+}
+
 .add-img-btn {
   width: 80px;
   height: 80px;
@@ -281,9 +369,14 @@ function handleSubmitFeedback() {
   align-items: center;
   justify-content: center;
   color: #9ca3af;
+  transition: all 0.2s ease;
   
   .material-symbols-outlined { font-size: 24px; }
-  .add-text { font-size: 10px; margin-top: 4px; }
+  .add-text { font-size: 10px; margin-top: 4px; text-align: center; }
+  
+  &:active {
+    background-color: #f3f4f6;
+  }
 }
 
 .submit-btn {
@@ -297,9 +390,26 @@ function handleSubmitFeedback() {
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 4px 12px rgba(108, 155, 210, 0.2);
+  transition: all 0.2s ease;
+  
+  &:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 6px rgba(108, 155, 210, 0.1);
+  }
+  
   &::after { border: none; }
-  &[disabled] { opacity: 0.5; background: #9ca3af; }
+  &[disabled] { opacity: 0.5; background: #9ca3af; box-shadow: none; }
 }
 
-.spacer { height: 100px; }
+.spacer { height: 60px; }
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
 </style>
