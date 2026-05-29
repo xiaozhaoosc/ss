@@ -32,6 +32,7 @@
 - [[ADR/ADR-018-TableDataInfo-Null-Safety-Defense|ADR-018: 分页数据封装层 (TableDataInfo) 与前端表格源的双向空安全治理]]
 - [[ADR/ADR-019-AI-Knowledge-Base-Hybrid-Retrieval|ADR-019: AI 知识库管理与混合检索 (Hybrid Retrieval) 架构设计]]
 - [[ADR-020-Unified-Snowflake-Id-Stringification|ADR-020: 全系统雪花长 ID 统一字符串化最小化架构方案]]
+- [[ADR-021-Template-Task-Child-Assignment-Fix|ADR-021: ADHD 模板任务指派下发一致性加固]]
 
 
 ## 每日记录 (Journal)

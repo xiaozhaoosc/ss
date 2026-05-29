@@ -5,9 +5,11 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.kenzhao.smallsteps.task.mapper.ParentTaskMapper;
+import com.kenzhao.smallsteps.task.mapper.ChildTaskMapper;
 import com.kenzhao.smallsteps.common.mybatis.core.page.PageQuery;
 import com.kenzhao.smallsteps.common.mybatis.core.page.TableDataInfo;
 import com.kenzhao.smallsteps.common.ss.domain.ParentTask;
+import com.kenzhao.smallsteps.common.ss.domain.ChildTask;
 import com.kenzhao.smallsteps.common.ss.domain.TaskStepTemplate;
 import com.kenzhao.smallsteps.common.ss.domain.TaskTemplate;
 import com.kenzhao.smallsteps.common.ss.domain.bo.TaskTemplateBo;
@@ -32,6 +34,7 @@ public class TaskTemplateServiceImpl implements ITaskTemplateService {
     private final TaskTemplateMapper baseMapper;
     private final TaskStepTemplateMapper stepTemplateMapper;
     private final ParentTaskMapper parentTaskMapper;
+    private final ChildTaskMapper childTaskMapper;
 
     @Override
     public TableDataInfo<TaskTemplateVo> queryPageList(TaskTemplateBo bo, PageQuery pageQuery) {
@@ -81,6 +84,20 @@ public class TaskTemplateServiceImpl implements ITaskTemplateService {
 
         parentTaskMapper.insert(parentTask);
         Long mainTaskId = parentTask.getTaskId();
+
+        // 1.5. 自动创建给儿童的指派执行任务 (ChildTask)
+        if (childId != null) {
+            ChildTask childTask = new ChildTask();
+            childTask.setTaskId(mainTaskId);
+            childTask.setChildId(childId);
+            childTask.setDeptId(deptId);
+            childTask.setStatus("0"); // Ongoing / 进行中
+            childTask.setDelFlag("0");
+            childTask.setTargetDate(new java.util.Date());
+            childTaskMapper.insert(childTask);
+            org.slf4j.LoggerFactory.getLogger(TaskTemplateServiceImpl.class)
+                .info("[Task] Assigned imported template task {} to child {}", mainTaskId, childId);
+        }
 
         // 2. 创建子任务（拆解步骤）
         List<TaskStepTemplate> steps = stepTemplateMapper.selectList(new LambdaQueryWrapper<TaskStepTemplate>()

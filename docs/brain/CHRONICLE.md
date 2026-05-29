@@ -3,6 +3,7 @@
 ## 2026-05-29: 全系统雪花长 ID 统一字符串化拦截方案与家长中心 Bug 最终治理
 - **全系统长 ID 统一无损字符串化**：针对 19 位雪花算法 Long ID 在前端（APP / Web）中因 JS 浮点精度限制而被强制截断为 `...1300` 造成的死锁性 Bug，在 `smallsteps-common-json` 模块的 `JacksonConfig` 最底座中将 `BigNumberSerializer` 显式且坚固地注入 `Jackson2ObjectMapperBuilderCustomizer` 构建器。所有雪花长整型在出参时自动转化为 String，入参时自动无缝反序列化，以 0 业务代码侵入的最小化方案实现了前后端 100% 透明兼容，并发布了架构决策记录 [[ADR-020-Unified-Snowflake-Id-Stringification]]。
 - **家长中心儿童档案及雷达图回归**：废除了 `SysUserVo.java` 和 `Child.java` 实体上手写的手工序列化注解；在 `ChildServiceImpl.java` 服务层对 `selectChildList` 注入防卫逻辑，强制普通已登录家长的 `parentId` 为真实当前登录用户，彻底攻克了“创建儿童后列表显示为空”与雷达能力多维图 `500 无权访问` 的隐患。
+- **ADHD 任务模板自动分发机制修复**：针对从标准模板导入任务时，任务在儿童端今日视图中神秘消失的严重 Bug，深入定位并攻克了后端 `importTemplate` 业务层没有往 `ChildTask` 执行关系表中插入关联记录的系统级设计遗漏，实现了单事务强一致性自动分发指派，并发布了 [[ADR-021-Template-Task-Child-Assignment-Fix]]。
 
 ## 2026-05-17: AI 知识库管理功能重构与全栈异常防御治理
 - **前后端双向空安全防御**：针对动态编译时缺少 MapStruct VO 转换类导致底层返回 `null` 的极端情况，在后端基类 `TableDataInfo` 和前端 `knowledge/index.vue` 实施了严格的空集合防御（短路求值与默认实例化 `[]`），彻底杜绝了 Element Plus 表格崩溃及“数据保存失败”的假象。
