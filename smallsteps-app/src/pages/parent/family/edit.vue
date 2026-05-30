@@ -8,7 +8,7 @@
         <view class="avatar-wrapper">
           <image 
             class="avatar" 
-            :src="form.avatarUrl || 'https://lh3.googleusercontent.com/aida-public/AB6AXuAJ1cciJ4i8VZa4i84tUg3c73WgpXsHDPWFJTFC1HCyoJaWAw63sCD6sYtGoggTmCxZPkFLdgXZ0jMVUEjuhNaybs-1a06VWI-j7Tv_k-GcxylNpE1U9cjTL6ICQBnyg02gLWhSCCy1SnHe6psYMG-13HPVdTV9vR6odzmSIWG_6kD9m5MrzeKyalS3Ewhx_px4_a3iAVFvHE4SYxL6Z13ZA7UVC9fVC7U29WKKz0G9msv4O4zW9MUm2t6NZ6FOtcNY4-8SHhP3MgM'" 
+            :src="getAvatarUrl(form.avatarUrl)" 
             mode="aspectFill" 
           />
           <view class="camera-btn">
@@ -95,6 +95,7 @@
 import { ref, onMounted } from 'vue'
 import TopBar from '@/components/common/top-bar/top-bar.vue'
 import { getChild, updateChild } from '@/api/child'
+import { getAvatarUrl } from '@/utils/common'
 
 import upload from '@/utils/upload'
 

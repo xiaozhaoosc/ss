@@ -20,7 +20,7 @@
               class="child-item" :class="{ 'active': childId === child.userId }"
               @click="switchChild(child.userId)">
           <view class="avatar-wrapper">
-            <image v-if="child.avatar" class="child-avatar" :src="child.avatar" mode="aspectFill"></image>
+            <image v-if="child.avatar" class="child-avatar" :src="getAvatarUrl(child.avatar)" mode="aspectFill"></image>
             <view v-else class="letter-avatar" :style="{ background: getAvatarColor(child.nickName) }">
               <text class="letter-text">{{ (child.nickName || '?').charAt(0) }}</text>
             </view>
@@ -189,6 +189,7 @@ import BottomNav from '@/components/common/bottom-nav/bottom-nav.vue'
 import { listChildAchievement, getAbilityRadar, getEmotionTrend, getShadowEmotionTrend } from '@/api/child'
 import { getFamilyChildren } from '@/api/family'
 import { useUserStore } from '@/store/modules/user'
+import { getAvatarUrl } from '@/utils/common'
 
 const userStore = useUserStore()
 const childId = ref(null)

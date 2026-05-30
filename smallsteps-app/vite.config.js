@@ -12,7 +12,7 @@ export default defineConfig({
         host: '0.0.0.0',
         proxy: {
             '/ssapi': {
-                target: 'http://localhost:8081/ssapi',
+                target: 'http://localhost:8098/ssapi',
                 changeOrigin: true,
                 rewrite: (path) => path.replace(/^\/ssapi/, '')
             }

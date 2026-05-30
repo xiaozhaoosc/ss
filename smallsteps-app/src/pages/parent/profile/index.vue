@@ -35,7 +35,7 @@
         <view class="user-card">
           <view class="user-info-box" @click="handleToInfo">
             <view class="avatar-wrapper">
-              <image v-if="userStore.userInfo?.user?.avatar" class="avatar" :src="userStore.userInfo.user.avatar" mode="aspectFill" />
+              <image v-if="userStore.userInfo?.user?.avatar" class="avatar" :src="getAvatarUrl(userStore.userInfo.user.avatar)" mode="aspectFill" />
               <view v-else class="letter-avatar-lg" :style="{ background: getAvatarColor(userStore.userInfo?.user?.nickName) }">
                 <text class="letter-text-lg">{{ (userStore.userInfo?.user?.nickName || '?').charAt(0) }}</text>
               </view>
@@ -46,10 +46,10 @@
           </view>
           <view class="user-actions">
             <view class="icon-btn" @click="handleShowMyQr">
-              <text class="material-symbols-outlined">qr_code_2</text>
+              <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
             </view>
             <view class="icon-btn" @click="handleToEditInfo">
-              <text class="material-symbols-outlined">edit</text>
+              <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="w-[18px] h-[18px]"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
             </view>
           </view>
         </view>
@@ -60,7 +60,7 @@
         <view class="section-header">
           <text class="section-title">孩子档案</text>
           <button class="add-btn" @click="handleAddChild">
-            <text class="material-symbols-outlined icon">add</text>
+            <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 mr-0.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
             <text>添加</text>
           </button>
         </view>
@@ -71,7 +71,7 @@
 
         <view v-for="child in children" :key="child.id" class="child-card">
           <view class="avatar-box">
-            <image v-if="child.avatarUrl" class="avatar" :src="child.avatarUrl" mode="aspectFill" />
+            <image v-if="child.avatarUrl" class="avatar" :src="getAvatarUrl(child.avatarUrl)" mode="aspectFill" />
             <view v-else class="letter-avatar-lg" :style="{ background: getAvatarColor(child.nickname) }">
               <text class="letter-text-lg">{{ (child.nickname || '?').charAt(0) }}</text>
             </view>
@@ -82,10 +82,10 @@
           </view>
           <view class="actions">
             <view class="icon-btn" @click="handleShowQr(child)">
-              <text class="material-symbols-outlined">qr_code_2</text>
+              <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
             </view>
             <view class="icon-btn primary" @click="handleEditChild(child)">
-              <text class="material-symbols-outlined">edit</text>
+              <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="w-[18px] h-[18px]"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
             </view>
           </view>
         </view>
@@ -98,11 +98,24 @@
           <view v-for="item in settings" :key="item.title" class="setting-row" @click="handleSettingClick(item)">
             <view class="row-left">
               <view class="icon-box" :class="item.colorClass">
-                <text class="material-symbols-outlined">{{ item.icon }}</text>
+                <!-- Inline SVG based on icon name -->
+                <svg v-if="item.icon === 'description'" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                
+                <svg v-else-if="item.icon === 'medical_services'" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+                
+                <svg v-else-if="item.icon === 'smart_toy'" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="15" x2="23" y2="15"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="15" x2="4" y2="15"></line></svg>
+                
+                <svg v-else-if="item.icon === 'notifications'" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                
+                <svg v-else-if="item.icon === 'shield'" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                
+                <svg v-else-if="item.icon === 'lock'" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                
+                <svg v-else viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
               </view>
               <text class="row-title">{{ item.title }}</text>
             </view>
-            <text class="material-symbols-outlined arrow">chevron_right</text>
+            <svg viewBox="0 0 24 24" width="18" height="18" stroke="#d1d5db" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="w-[18px] h-[18px]"><polyline points="9 18 15 12 9 6"></polyline></svg>
           </view>
         </view>
       </view>
@@ -113,11 +126,11 @@
           <view class="setting-row" @click="handleSettingClick({title: '帮助与反馈'})">
             <view class="row-left">
               <view class="icon-box orange">
-                <text class="material-symbols-outlined">help</text>
+                <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
               </view>
               <text class="row-title">帮助与反馈</text>
             </view>
-            <text class="material-symbols-outlined arrow">chevron_right</text>
+            <svg viewBox="0 0 24 24" width="18" height="18" stroke="#d1d5db" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="w-[18px] h-[18px]"><polyline points="9 18 15 12 9 6"></polyline></svg>
           </view>
         </view>
       </view>
@@ -148,6 +161,7 @@ import TopBar from '@/components/common/top-bar/top-bar.vue'
 import BottomNav from '@/components/common/bottom-nav/bottom-nav.vue'
 import { useUserStore } from '@/store/modules/user'
 import { listChildren } from '@/api/child'
+import { getAvatarUrl } from '@/utils/common'
 
 const userStore = useUserStore()
 

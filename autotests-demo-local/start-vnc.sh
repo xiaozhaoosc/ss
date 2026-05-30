@@ -44,8 +44,7 @@ start_vnc() {
     echo ""
     echo "✅ VNC 已启动"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo "🌐 http://192.168.50.160:$WEB_PORT/vnc_lite.html"
-    echo "🌐 http://10.8.0.3:$WEB_PORT/vnc_lite.html"
+    echo "🌐 http://localhost:$WEB_PORT/vnc_lite.html"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 }
 

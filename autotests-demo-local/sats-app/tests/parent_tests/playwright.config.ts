@@ -13,7 +13,7 @@ export default defineConfig({
     ['list'],
   ],
   use: {
-    baseURL: 'http://10.8.0.1:8043',
+    baseURL: 'http://localhost:8043',
     headless: process.env.DISPLAY_MODE !== 'headed',
     trace: 'retain-on-failure',
     screenshot: 'on',
