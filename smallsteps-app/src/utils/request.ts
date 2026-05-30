@@ -41,6 +41,15 @@ const request = (options: any): Promise<any> => {
 
         // 4. 处理 GET 参数序列化
         let url = (options.baseUrl || baseUrl) + options.url
+        
+        // 移除多余的连续斜杠（如 /prod-api//system/... -> /prod-api/system/...），保留协议部分的双斜杠
+        if (url.includes('://')) {
+            const protocolIndex = url.indexOf('://') + 3
+            url = url.substring(0, protocolIndex) + url.substring(protocolIndex).replace(/\/+/g, '/')
+        } else {
+            url = url.replace(/\/+/g, '/')
+        }
+
         if (options.params) {
             url += (url.indexOf('?') === -1 ? '?' : '&') + tansParams(options.params)
             url = url.slice(0, -1)

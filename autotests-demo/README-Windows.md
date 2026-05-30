@@ -16,8 +16,12 @@ cd autotests-demo
 
 ### 2. 安装依赖（首次运行）
 ```cmd
-cd sats-ui && npm install && cd ..
-cd sats-app && npm install && cd ..
+cd sats-ui
+npm install 
+cd ..
+cd sats-app 
+npm install 
+cd ..
 npx playwright install chromium
 ```
 

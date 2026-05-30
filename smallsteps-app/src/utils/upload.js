@@ -26,7 +26,15 @@ export default function upload(config) {
   return new Promise((resolve, reject) => {
     uni.uploadFile({
       timeout: config.timeout || timeout,
-      url: baseUrl + config.url,
+      url: (() => {
+        let uploadUrl = baseUrl + config.url;
+        if (uploadUrl.includes('://')) {
+          const protocolIndex = uploadUrl.indexOf('://') + 3;
+          return uploadUrl.substring(0, protocolIndex) + uploadUrl.substring(protocolIndex).replace(/\/+/g, '/');
+        } else {
+          return uploadUrl.replace(/\/+/g, '/');
+        }
+      })(),
       filePath: config.filePath,
       name: config.name || 'file',
       header: config.header,

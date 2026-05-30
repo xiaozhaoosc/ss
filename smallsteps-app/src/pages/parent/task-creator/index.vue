@@ -63,7 +63,7 @@
             >
               <view class="avatar-wrapper">
                 <image 
-                  :src="child.avatar || '/static/images/default-avatar.png'" 
+                  :src="getAvatarUrl(child.avatar)" 
                   class="child-avatar"
                   mode="aspectFill"
                 />
@@ -182,6 +182,7 @@ import { taskBreakdown } from '@/api/ai'
 import { addTask } from '@/api/task'
 import { getFamilyMembers } from '@/api/family'
 import { useUserStore } from '@/store/modules/user'
+import { getAvatarUrl } from '@/utils/common'
 
 const userStore = useUserStore()
 
