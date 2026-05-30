@@ -54,6 +54,7 @@
       <view class="mission-section">
         <mission-card 
           v-if="currentMission"
+          :key="`${currentMission.taskId}-${missionVersion}`"
           :title="currentMission.title"
           :subtitle="currentMission.subtitle"
           :icon="currentMission.icon"
@@ -119,6 +120,8 @@ const greetingText = computed(() => {
 
 const currentMission = ref<any>(null)
 const pendingTasks = ref<any[]>([])
+// 每次拉取任务后递增，配合 :key 强制销毁重建 mission-card，彻底重置内部 isCompleted 状态
+const missionVersion = ref(0)
 
 async function loadData() {
   try {
@@ -164,6 +167,8 @@ const loadPendingTasks = () => {
     } else {
       currentMission.value = null
     }
+    // 每次数据刷新都强制 mission-card 重建，避免返回后按钮停留在 isCompleted 状态
+    missionVersion.value++
   }).catch((err: any) => {
     console.error('Failed to load pending tasks:', err)
   })

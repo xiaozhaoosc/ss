@@ -111,6 +111,13 @@
       }
     },
     {
+      "path": "pages/child/star-history/index",
+      "style": {
+        "navigationStyle": "custom",
+        "backgroundColor": "#FFFBF0"
+      }
+    },
+    {
       "path": "pages/parent/profile/index",
       "style": {
         "navigationBarTitleText": "家长中心",

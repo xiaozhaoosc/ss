@@ -2,7 +2,7 @@
 import { ref, computed } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
 import ChildBottomNav from '@/components/child/child-bottom-nav/child-bottom-nav.vue'
-import { listChildAchievement } from '@/api/child'
+import { listChildAchievement, getTotalStars, getTotalCourageFragments } from '@/api/child'
 import { useUserStore } from '@/store/modules/user'
 
 const userStore = useUserStore()
@@ -34,21 +34,50 @@ const loadData = async () => {
   const childId = userStore.id
   if (!childId) return
   try {
-    const res = await listChildAchievement(childId)
-    const list = res.data || res.rows || []
+    // 1. 获取已解锁勋章
+    listChildAchievement(childId).then(res => {
+      const list = res.data || res.rows || []
+      unlockedBadges.value = list.filter(item => item.type === 'BADGE').map(item => item.name)
+    }).catch(err => {
+      console.error('Failed to load badges:', err)
+    })
     
-    // 过滤出勋章
-    unlockedBadges.value = list.filter(item => item.type === 'BADGE').map(item => item.name)
+    // 2. 独立、精准获取星星总数 (做强兼容数据解析)
+    getTotalStars(childId).then(res => {
+      if (res.code === 200 || res.code === '200') {
+        let starsVal = 0
+        if (res.data !== undefined) {
+          if (typeof res.data === 'number') {
+            starsVal = res.data
+          } else if (typeof res.data === 'object' && res.data !== null) {
+            starsVal = res.data.totalStars !== undefined ? res.data.totalStars : (res.data.count !== undefined ? res.data.count : (res.data.balance !== undefined ? res.data.balance : 0))
+          }
+        }
+        stats.value.stars = starsVal
+      }
+    }).catch(err => {
+      console.error('Failed to load stars count:', err)
+    })
     
-    // 获取星星和碎片统计 (也可以从 list 中过滤)
-    const starItem = list.find(item => item.type === 'STAR')
-    const fragmentItem = list.find(item => item.type === 'FRAGMENT')
-    
-    stats.value.stars = starItem ? starItem.count : 0
-    stats.value.fragments = fragmentItem ? fragmentItem.count : 0
+    // 3. 独立、精准获取勇气碎片数 (做强兼容数据解析)
+    getTotalCourageFragments(childId).then(res => {
+      if (res.code === 200 || res.code === '200') {
+        let fragmentsVal = 0
+        if (res.data !== undefined) {
+          if (typeof res.data === 'number') {
+            fragmentsVal = res.data
+          } else if (typeof res.data === 'object' && res.data !== null) {
+            fragmentsVal = res.data.totalCourageFragments !== undefined ? res.data.totalCourageFragments : (res.data.count !== undefined ? res.data.count : 0)
+          }
+        }
+        stats.value.fragments = fragmentsVal
+      }
+    }).catch(err => {
+      console.error('Failed to load fragments count:', err)
+    })
     
   } catch (err) {
-    console.error('Failed to load achievements:', err)
+    console.error('Failed to dispatch load achievements requests:', err)
   }
 }
 
