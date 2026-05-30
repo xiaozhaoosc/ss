@@ -19,21 +19,32 @@ export class TaskExecutePage {
   }
 
   /** 逐步完成任务步骤 */
-  async completeSteps(stepCount: number) {
+  async completeSteps(stepCount: number = 10) {
     for (let i = 0; i < stepCount; i++) {
-      const stepBtn = this.page.locator('button:has-text("完成"), button:has-text("下一步"), button:has-text("Next"), [class*="step"], [class*="complete"]').first();
+      const stepBtn = this.page.locator('button:has-text("下一步"), button:has-text("Next")');
       if (await stepBtn.isVisible()) {
         await stepBtn.click();
-        await this.page.waitForTimeout(500);
+        await this.page.waitForTimeout(800);
+      } else {
+        break;
       }
     }
   }
 
   /** 最终完成任务 */
   async finishTask() {
-    const finishBtn = this.page.locator('button:has-text("完成任务"), button:has-text("Finish"), button:has-text("提交")');
+    const finishBtn = this.page.locator('button:has-text("我完成了！"), button:has-text("完成任务"), button:has-text("Finish"), button:has-text("提交")');
     if (await finishBtn.isVisible()) {
       await finishBtn.click();
+      await this.page.waitForTimeout(2000);
+    }
+  }
+
+  /** 领取奖励 */
+  async collectReward() {
+    const collectBtn = this.page.locator('button:has-text("领取奖励"), button:has-text("Collect"), .collect-btn');
+    if (await collectBtn.isVisible()) {
+      await collectBtn.click();
       await this.page.waitForTimeout(1000);
     }
   }

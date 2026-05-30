@@ -62,21 +62,30 @@ test.describe('Small Steps H5 移动端完整流程', () => {
     const taskCard = page.locator('[class*="task"], [class*="card"], .uni-list-item').first();
     if (await taskCard.isVisible()) {
       await taskCard.click();
-      await page.waitForTimeout(1000);
+      await page.waitForTimeout(1500);
 
       // 截图：任务执行页面
       await page.screenshot({ path: 'test-results/child-task-execute.png' });
 
-      // 尝试点击开始/完成按钮
-      const actionBtns = page.locator('button:has-text("开始"), button:has-text("完成"), button:has-text("下一步"), [class*="start"], [class*="complete"]');
-      if (await actionBtns.first().isVisible()) {
-        await actionBtns.first().click();
-        await page.waitForTimeout(1000);
-        await page.screenshot({ path: 'test-results/child-task-action.png' });
-      }
+      const executePage = new TaskExecutePage(page);
+      
+      // 开始任务
+      await executePage.startTask();
+      
+      // 完成所有子步骤
+      await executePage.completeSteps(10);
+      
+      // 提交并完成任务
+      await executePage.finishTask();
+      await page.screenshot({ path: 'test-results/child-task-completed.png' });
+
+      // 领取奖励并返回
+      await executePage.collectReward();
+      await page.waitForTimeout(1000);
+      await page.screenshot({ path: 'test-results/child-task-reward-collected.png' });
     }
 
-    console.log('✅ Step 3: 任务执行流程验证');
+    console.log('✅ Step 3: 任务执行流程与奖励领取完整验证通过');
   });
 
   test('Step 4: 防误触设计验证', async ({ page }) => {
