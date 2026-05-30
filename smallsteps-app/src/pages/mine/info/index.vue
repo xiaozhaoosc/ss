@@ -40,29 +40,12 @@
           </view>
           <text class="item-value">{{ user.email || '暂无' }}</text>
         </view>
-        
-        <view class="info-item">
-          <view class="item-left">
-            <text class="material-symbols-outlined icon">badge</text>
-            <text class="item-label">岗位</text>
-          </view>
-          <text class="item-value">{{ postGroup || '暂无' }}</text>
-        </view>
-        
         <view class="info-item">
           <view class="item-left">
             <text class="material-symbols-outlined icon">manage_accounts</text>
             <text class="item-label">角色</text>
           </view>
           <text class="item-value">{{ roleGroup || '暂无' }}</text>
-        </view>
-        
-        <view class="info-item">
-          <view class="item-left">
-            <text class="material-symbols-outlined icon">calendar_today</text>
-            <text class="item-label">创建日期</text>
-          </view>
-          <text class="item-value">{{ formatDate(user.createTime) }}</text>
         </view>
       </view>
 
@@ -96,9 +79,9 @@
 
   function getUser() {
     getUserProfile().then(response => {
-      user.value = response.data
-      roleGroup.value = response.roleGroup
-      postGroup.value = response.postGroup
+      user.value = response.data.user
+      roleGroup.value = response.data.roleGroup
+      postGroup.value = response.data.postGroup
     }).catch(err => {
       console.error("加载用户信息失败:", err)
     })

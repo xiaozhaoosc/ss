@@ -4,7 +4,7 @@ export class TaskPage {
   constructor(private page: Page) {}
 
   async goto() {
-    await this.page.goto('/webadminss/#/smallsteps/task');
+    await this.page.goto('/#/smallsteps/task');
     await this.page.waitForLoadState('domcontentloaded');
     await this.page.waitForTimeout(1000);
   }

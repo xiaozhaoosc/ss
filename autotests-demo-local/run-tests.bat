@@ -32,13 +32,13 @@ node --version
 if not exist "%DEMO_DIR%\sats-ui\node_modules\@playwright" (
     echo.
     echo Installing dependencies...
-    cd /d "%DEMO_DIR%\sats-ui" && npm install
-    cd /d "%DEMO_DIR%\sats-app" && npm install
+    cd /d "%DEMO_DIR%\sats-ui" && call npm install
+    cd /d "%DEMO_DIR%\sats-app" && call npm install
 )
 
 :: Install Playwright browsers if needed
 cd /d "%DEMO_DIR%\sats-ui"
-npx playwright install chromium 2>nul
+call npx playwright install chromium 2>nul
 
 echo.
 echo Mode: %DISPLAY_MODE%
@@ -88,8 +88,8 @@ echo ========== %TEST_NAME% ==========
 cd /d "%TEST_DIR%"
 
 if "%DISPLAY_MODE%"=="headless" (
-    npx playwright test --reporter=list --headed=false
+    call npx playwright test --reporter=list
 ) else (
-    npx playwright test --reporter=list
+    call npx playwright test --reporter=list --headed
 )
 goto :eof

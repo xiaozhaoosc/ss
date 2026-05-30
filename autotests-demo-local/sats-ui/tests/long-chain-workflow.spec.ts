@@ -27,12 +27,12 @@ test.describe('SATS Full-Cycle Workflow: Device to Parent UI', () => {
     }
 
     // Step 4: 家长在 UI 查看
-    await page.goto('/webadminss/');
+    await page.goto('/');
     await page.fill('input[placeholder="用户名"]', 'admin');
     await page.fill('input[placeholder="密码"]', 'admin123');
     await page.locator('.el-button--primary').click();
 
-    await page.goto('/webadminss/#/parent/task');
+    await page.goto('/#/parent/task');
     console.log('Step 4: Parent UI verified status and rewards.');
   });
 });

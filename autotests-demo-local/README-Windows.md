@@ -72,15 +72,14 @@ run-tests.bat app
 
 | 服务 | 地址 |
 |------|------|
-| API 网关 | http://localhost:8043 |
-| 管理后台 | http://localhost:8043/webadminss/#/ |
-| 移动端 | http://localhost:8043/#/ |
-| API | http://localhost:8081/ssapi |
+| 管理后台 | http://localhost:88/#/ |
+| 移动端 (H5) | http://localhost:9090/#/ |
+| 后端 API | http://localhost:8081/ssapi |
 
 ## 常见问题
 
 ### Q: 测试超时？
-A: 检查网络是否能访问 localhost:8043。
+A: 检查网络是否能访问 localhost:88 或 localhost:9090。
 
 ### Q: 浏览器没装？
 A: 运行 `npx playwright install chromium`，Playwright 会自动下载 bundled Chromium。

@@ -4,7 +4,7 @@ export class ChildPage {
   constructor(private page: Page) {}
 
   async goto() {
-    await this.page.goto('/webadminss/#/smallsteps/child');
+    await this.page.goto('/#/smallsteps/child');
     await this.page.waitForLoadState('domcontentloaded');
     await this.page.waitForTimeout(1000);
   }

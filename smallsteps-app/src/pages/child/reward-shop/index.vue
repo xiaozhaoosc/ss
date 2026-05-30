@@ -64,7 +64,7 @@ import { useUserStore } from '@/store/modules/user'
 const avatarUrl = computed(() => {
   const avatar = userStore.userInfo?.user?.avatar
   if (avatar) return avatar.startsWith('http') ? avatar : import.meta.env.VITE_APP_BASE_API + avatar
-  return '/static/images/avatar/robot_default.png'
+  return '/static/images/unnamed.png'
 })
 
 const isDarkMode = ref(false)
