@@ -15,34 +15,29 @@ export async function loginAsParent(page: Page) {
   const loginBtn = page.locator('button, [role="button"], [class*="btn"]').filter({ hasText: /登\s*录/ }).first();
   await loginBtn.click();
 
-  await page.waitForTimeout(3000);
-  await page.waitForLoadState('domcontentloaded');
+  // 等待首页加载完成
+  await page.waitForTimeout(4000);
 }
 
 /** 切换到指定 Tab — 通过点击 tab 文字元素 */
 export async function switchTab(page: Page, tabName: '首页' | '任务' | '洞察' | '我的') {
-  // 找到 tab 栏中的文字标签并点击（取最后一个匹配，避免页面内容中的同名文字）
   const tabEls = page.locator(`text=${tabName}`);
   const count = await tabEls.count();
-  // 从后往前找，tab 栏的文字通常在页面底部
   for (let i = count - 1; i >= 0; i--) {
     const el = tabEls.nth(i);
     const box = await el.boundingBox();
     if (box && box.y > 700) {
-      // 点击元素中心
       await el.click({ force: true });
-      await page.waitForTimeout(2000);
-      await page.waitForLoadState('domcontentloaded');
+      await page.waitForTimeout(3000);
       return;
     }
   }
-  // fallback: 坐标点击
+  // fallback: 坐标点击（y=794 是实际 tab 栏位置）
   const viewport = page.viewportSize() || { width: 375, height: 812 };
   const tabPositions = { '首页': 0.125, '任务': 0.375, '洞察': 0.625, '我的': 0.875 };
   const x = Math.round(viewport.width * tabPositions[tabName]);
-  const y = Math.round(viewport.height * 0.978);
-  await page.mouse.click(x, y);
-  await page.waitForTimeout(2000);
+  await page.mouse.click(x, 794);
+  await page.waitForTimeout(3000);
 }
 
 /** 截图并返回路径 */
