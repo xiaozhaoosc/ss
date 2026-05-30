@@ -96,13 +96,9 @@ import { ref, onMounted } from 'vue'
 import TopBar from '@/components/common/top-bar/top-bar.vue'
 import { getChild, updateChild } from '@/api/child'
 import { getAvatarUrl } from '@/utils/common'
+import { getFamilyChildren } from '@/api/family'
 
 import upload from '@/utils/upload'
-
-const getAvatarUrl = (url) => {
-  if (!url) return ''
-  return url.startsWith('http') ? url : import.meta.env.VITE_APP_BASE_API + url
-}
 
 const id = ref('')
 const loading = ref(true)
@@ -174,6 +170,11 @@ const handleSave = async () => {
   try {
     const res = await updateChild(form.value)
     if (res.code === 200 || res.code === '200') {
+      try {
+        await getFamilyChildren()
+      } catch (err) {
+        console.error('Failed to refresh family children:', err)
+      }
       uni.showToast({ title: '保存成功', icon: 'success' })
       setTimeout(() => {
         uni.navigateBack()

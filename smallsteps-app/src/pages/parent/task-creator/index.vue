@@ -180,7 +180,7 @@ import TaskStep from '@/components/parent/task-step/task-step.vue'
 import BottomNav from '@/components/common/bottom-nav/bottom-nav.vue'
 import { taskBreakdown } from '@/api/ai'
 import { addTask } from '@/api/task'
-import { getFamilyMembers } from '@/api/family'
+import { getFamilyChildren } from '@/api/family'
 import { useUserStore } from '@/store/modules/user'
 import { getAvatarUrl } from '@/utils/common'
 
@@ -204,17 +204,11 @@ const selectedChildId = ref<number | null>(null)
 
 onMounted(async () => {
   try {
-    const res: any = await getFamilyMembers()
+    // 使用 getFamilyChildren，该接口会联查 ss_child 表，
+    // 确保昵称(nickName)和头像(avatar)与家长中心档案完全一致
+    const res: any = await getFamilyChildren()
     if (res.code === 200 && res.data) {
-      // 过滤出角色为儿童的成员
-      children.value = res.data.filter((m: any) => 
-        m.roles && m.roles.some((r: any) => r.roleKey === 'child' || r.roleName === '儿童')
-      )
-      
-      // 如果没有专门的儿童角色，则显示所有非家长成员（简化逻辑）
-      if (children.value.length === 0) {
-        children.value = res.data.filter((m: any) => m.userId !== userStore.userId)
-      }
+      children.value = res.data
 
       if (children.value.length > 0) {
         // 优先使用 store 中已选择的孩子
@@ -227,7 +221,7 @@ onMounted(async () => {
       }
     }
   } catch (error) {
-    console.error('Fetch family members failed:', error)
+    console.error('Fetch family children failed:', error)
   }
 })
 

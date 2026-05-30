@@ -1,5 +1,9 @@
 # 项目编年史 (CHRONICLE)
 
+## 2026-05-30: 自动化测试本地化架构落地与批处理“劫持控制权”黑天鹅事件自愈
+- **自动化测试本地化架构迁移**：将 `autotests-demo-local` 测试套件彻底剥离 Staging 外部 IP（`10.8.0.1` 等），重构端口与路由以完美适配本地实际开发运行环境：App 路由迁移至本地开发端口 **`9090`**，管理后台 UI 的端口与路由由 `8043/webadminss` 整体重构至本地开发端口 **`88`** 与根路由（`/`）。全量清洗了 9 个测试 Spec 和 4 个 UI 页面对象中的上下文前缀，在 headed 有头模式下 19 项 UI 自动化测试用例（包括硬件设备与 UI 联动的 `long-chain-workflow`，已重配直连本地 `8098/ssapi` 真实后端服务）和 81 项移动端用例全量回归成功。
+- **批处理命令转接经典陷阱修复**：诊断并修复了 Windows 批处理 `run-tests.bat` 中由于未前置 `call` 命令，导致执行 `npm/npx`（即外部批处理包装）时当前脚本控制权直接被“劫持”并随之退出、进而造成测试进程没有任何动作即夭折的经典底层 Bug。补充 `call` 后，彻底恢复了测试流程的顺畅执行与环境自检，并修正了 Playwright 不合法的 `--headed=false` 命令行选项。
+
 ## 2026-05-29: 全系统雪花长 ID 统一字符串化拦截方案与家长中心 Bug 最终治理
 - **全系统长 ID 统一无损字符串化**：针对 19 位雪花算法 Long ID 在前端（APP / Web）中因 JS 浮点精度限制而被强制截断为 `...1300` 造成的死锁性 Bug，在 `smallsteps-common-json` 模块的 `JacksonConfig` 最底座中将 `BigNumberSerializer` 显式且坚固地注入 `Jackson2ObjectMapperBuilderCustomizer` 构建器。所有雪花长整型在出参时自动转化为 String，入参时自动无缝反序列化，以 0 业务代码侵入的最小化方案实现了前后端 100% 透明兼容，并发布了架构决策记录 [[ADR-020-Unified-Snowflake-Id-Stringification]]。
 - **家长中心儿童档案及雷达图回归**：废除了 `SysUserVo.java` 和 `Child.java` 实体上手写的手工序列化注解；在 `ChildServiceImpl.java` 服务层对 `selectChildList` 注入防卫逻辑，强制普通已登录家长的 `parentId` 为真实当前登录用户，彻底攻克了“创建儿童后列表显示为空”与雷达能力多维图 `500 无权访问` 的隐患。

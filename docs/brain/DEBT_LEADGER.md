@@ -32,3 +32,6 @@
 | 2026-05-08 | `mybatis-handler` | `BaseEntity` 审计字段自动注入在儿童账号 (`deptId` 为空) 下会抛出 401 | 高 | 已规避 | [[2026-05-08]] |
 | 2026-05-08 | `database` | `ss_task_log` 存量数据 `status='0'` 导致儿童端任务不可见 | 中 | 已修复 | [[2026-05-08]] |
 | 2026-05-17 | `mapstruct-page` | 缺少 VO 转换器时 `TableDataInfo` 返回 `"rows": null` 导致前端崩溃 | 高 | 已彻底治理 | [[ADR/ADR-018-TableDataInfo-Null-Safety-Defense|ADR-018]] |
+| 2026-05-30 | `app-child` | 儿童端角色装扮图片 (`lh3.googleusercontent.com`) 强依赖境外域名，国内测试大概率超时失败 | 高 | 🔴 待优化：需本地化装扮切图 | [[2026-05-30]] |
+| 2026-05-30 | `api-upload` | `/common/upload` 跳过 `system:oss:upload` 权限，仅 Sa-Token 鉴权，存在资源滥用潜在风险 | 中 | 🔴 待治理 | [[2026-05-30]] |
+

@@ -95,15 +95,22 @@ public class ParentFamilyController extends BaseController {
             .map(u -> {
                 java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
                 map.put("userId", u.getUserId());
-                map.put("nickName", u.getNickName());
                 map.put("userName", u.getUserName());
                 map.put("sex", u.getSex());
                 map.put("userType", u.getUserType());
-                // 关联 ss_child 获取头像
+                // 关联 ss_child 获取头像和昵称（档案中保存的最新值）
                 com.kenzhao.smallsteps.common.ss.domain.Child child = childService.selectChildById(u.getUserId());
-                if (child != null && child.getAvatarUrl() != null && !child.getAvatarUrl().isEmpty()) {
-                    map.put("avatar", child.getAvatarUrl());
+                if (child != null) {
+                    // 优先使用 ss_child 中的昵称（家长在档案中修改的）
+                    String nickname = (child.getNickname() != null && !child.getNickname().isEmpty())
+                        ? child.getNickname() : u.getNickName();
+                    map.put("nickName", nickname);
+                    // 优先使用 ss_child 中的头像
+                    String avatar = (child.getAvatarUrl() != null && !child.getAvatarUrl().isEmpty())
+                        ? child.getAvatarUrl() : u.getAvatar();
+                    map.put("avatar", avatar);
                 } else {
+                    map.put("nickName", u.getNickName());
                     map.put("avatar", u.getAvatar());
                 }
                 return map;

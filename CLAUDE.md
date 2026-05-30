@@ -313,3 +313,11 @@ docker-compose up -d
 - 核心领域模型：`smallsteps-api/smallsteps-common/smallsteps-common-ss/src/main/java/com/kenzhao/smallsteps/common/ss/domain/`
 - AI服务接口：`smallsteps-api/smallsteps-common/smallsteps-common-ai/src/main/java/com/kenzhao/smallsteps/common/ai/service/IAiService.java`
 - Docker配置：`docker-compose.yml`（根目录）
+
+---
+
+## 飞书/Lark 知识库对接指令 (Lark CLI System Instructions)
+
+### 📌 知识库空间默认公开性规约
+* **核心规约**：后续在使用 `lark-cli` 或者是通过飞书 OpenAPI 接口创建新的 Wiki 知识库空间（`wiki spaces`）时，**在没有用户特意说明的情况下，默认创建的知识空间可见性必须强制设为全组织可见的“公开 (public)”空间**（即 `visibility: "public"`），而严禁默认创建私有（`private`）空间，以实现小步项目知识库的无缝沉淀和全员协作。
+

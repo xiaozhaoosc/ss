@@ -43,8 +43,8 @@
             <text class="task-name">{{ task.title }}</text>
             <text class="task-reward">+{{ task.starReward }} 星星</text>
           </view>
-          <view class="task-status" :class="{ 'done': task.status === '1' }">
-            {{ task.status === '1' ? '已完成' : '未完成' }}
+          <view class="task-status" :class="{ 'done': task.status === '2' || task.status === '3' }">
+            {{ (task.status === '2' || task.status === '3') ? '已完成' : '未完成' }}
           </view>
         </view>
       </view>

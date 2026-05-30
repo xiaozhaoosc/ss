@@ -3,7 +3,7 @@ set -e
 
 # ========== Small Steps 项目配置 ==========
 PROJECT_NAME="Small Steps"
-PROJECT_ROOT="/home/ken4zhao/Documents/office/jushuang1/github/ss"
+PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SERVER_HOST="10.8.0.1"
 SERVER_USER="ken3zhao"
 SERVER_SSH_PORT="2216"
@@ -89,7 +89,7 @@ restart_docker() {
 deploy_api() {
     log_info "📦 [1/2] 打包后端 API..."
     cd ${PROJECT_ROOT}/smallsteps-api
-    mvn clean package -DskipTests -q
+    mvn package -DskipTests -q
     
     log_info "📦 [2/2] 压缩并上传后端 JAR..."
     # 压缩 JAR（压缩率约 10-15%）

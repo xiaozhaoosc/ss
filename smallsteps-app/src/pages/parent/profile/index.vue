@@ -156,11 +156,13 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
+import { onShow } from '@dcloudio/uni-app'
 import TopBar from '@/components/common/top-bar/top-bar.vue'
 import BottomNav from '@/components/common/bottom-nav/bottom-nav.vue'
 import { useUserStore } from '@/store/modules/user'
 import { listChildren } from '@/api/child'
+import { getFamilyChildren } from '@/api/family'
 import { getAvatarUrl } from '@/utils/common'
 
 const userStore = useUserStore()
@@ -184,6 +186,13 @@ const fetchChildren = async () => {
   
   loading.value = true
   try {
+    // 档案可能修改，所以调用 parent/family/children 接口同步刷新后端/其他相关状态
+    try {
+      await getFamilyChildren()
+    } catch (err) {
+      console.warn('Failed to refresh family children:', err)
+    }
+
     const res = await listChildren({ 
       parentId: userStore.userInfo.user.userId 
     })
@@ -285,8 +294,22 @@ const handleLogout = () => {
   })
 }
 
-onMounted(() => {
-  fetchChildren()
+// 监听用户信息变化，确保在页面刷新（Pinia store 异步恢复期间）时也能成功加载儿童档案列表
+watch(
+  () => userStore.userInfo?.user?.userId,
+  (newUserId) => {
+    if (newUserId) {
+      fetchChildren()
+    }
+  },
+  { immediate: true }
+)
+
+onShow(() => {
+  // 仅在已有登录用户ID时才执行加载，避免Pinia尚未加载完毕时调用导致提前退出
+  if (userStore.userInfo?.user?.userId) {
+    fetchChildren()
+  }
 })
 </script>
 

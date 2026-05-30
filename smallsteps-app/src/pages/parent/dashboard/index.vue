@@ -121,9 +121,14 @@ import { listReward } from '@/api/reward'
 
 // User info
 const userStore = useUserStore()
-const userAvatar = ref('https://lh3.googleusercontent.com/aida-public/AB6AXuBXSaBUjkmzRo1U3JyO-es_moeOQg_OvUxIvbH0ROD2h5i3fJBnVg38LUIDigs7AdcXWRqhOZxpc1Q0CCxrokZ9tm_6QYGs88bUR--C-6E5k2kxM1xrC-Qc0P_pHpYsHksNowi3cROSk01tNRc69_TAGf7XTIDVeJO5aWaoWURVxTh90LTxk3yIQ2nIbd_0CbqBt6dtKXVYLtYKujugHTIrITJN6LFKhy5LwJxXrmN-3Jp-am186GV7mkFQAJNC1_DM8KNyeajRDH4')
-// const userName = computed(() => userStore.userInfo?.user?.nickName || '家长')
-const userName = ref('家长') // Default
+const userAvatar = computed(() => {
+  const avatar = userStore.userInfo?.user?.avatar
+  if (avatar) {
+    return avatar.startsWith('http') ? avatar : (import.meta.env.VITE_APP_BASE_API || '/ssapi') + avatar
+  }
+  return '/static/images/unnamed.png' // 本地默认头像
+})
+const userName = computed(() => userStore.userInfo?.user?.nickName || userStore.userInfo?.user?.userName || '家长')
 const unreadCount = ref(0)
 const showNotifications = ref(false)
 const isDarkMode = ref(false)
