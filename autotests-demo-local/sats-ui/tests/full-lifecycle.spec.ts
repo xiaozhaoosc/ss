@@ -135,7 +135,7 @@ test.describe('Small Steps 完整业务流程 (Full Lifecycle)', () => {
     await loginPage.login('ken2zhao', 'Aa123456');
 
     // 进入奖励管理
-    await page.goto('/webadminss/#/smallsteps/reward');
+    await page.goto('/#/smallsteps/reward');
     await page.waitForLoadState('domcontentloaded');
     await page.waitForTimeout(1000);
 
@@ -149,7 +149,7 @@ test.describe('Small Steps 完整业务流程 (Full Lifecycle)', () => {
     await loginPage.login('ken2zhao', 'Aa123456');
 
     // 进入儿童管理
-    await page.goto('/webadminss/#/smallsteps/child');
+    await page.goto('/#/smallsteps/child');
     await page.waitForLoadState('domcontentloaded');
     await page.waitForTimeout(1000);
 

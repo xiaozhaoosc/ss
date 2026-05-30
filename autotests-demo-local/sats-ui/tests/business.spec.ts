@@ -5,7 +5,7 @@ test.describe('Reward System Management', () => {
   test.beforeEach(async ({ page }) => {
     const loginPage = new LoginPage(page);
     await loginPage.login('admin', 'admin123');
-    await page.goto('/webadminss/#/smallsteps/reward');
+    await page.goto('/#/smallsteps/reward');
     await page.waitForTimeout(2000);
   });
 
@@ -31,7 +31,7 @@ test.describe('AI Task Decomposition UI', () => {
   test('should show AI breakdown result in task creation', async ({ page }) => {
     const loginPage = new LoginPage(page);
     await loginPage.login('admin', 'admin123');
-    await page.goto('/webadminss/#/parent/task');
+    await page.goto('/#/parent/task');
     const aiBtn = page.locator('button:has-text("AI"), button:has-text("智能拆解")');
     if (await aiBtn.isVisible()) {
       await aiBtn.click();

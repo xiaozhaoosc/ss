@@ -59,13 +59,13 @@ export function tansParams(params) {
 */
 export function getAvatarUrl(avatar) {
   if (!avatar) {
-    return '/static/images/avatar/robot_default.png'
+    return '/static/images/unnamed.png'
   }
   
-  // 过滤非当前源的 blob，防止加载跨域本地资源报错
+  // 过滤非当前源 of blob，防止加载跨域本地资源报错
   if (avatar.startsWith('blob:')) {
     if (typeof window !== 'undefined' && !avatar.startsWith(`blob:${window.location.origin}`)) {
-      return '/static/images/avatar/robot_default.png'
+      return '/static/images/unnamed.png'
     }
     return avatar
   }

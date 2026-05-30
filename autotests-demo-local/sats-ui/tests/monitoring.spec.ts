@@ -8,14 +8,14 @@ test.describe('Children Achievement UI', () => {
   });
 
   test('should display achievement stats for a child', async ({ page }) => {
-    await page.goto('/webadminss/#/mysteps/achievement');
+    await page.goto('/#/mysteps/achievement');
     await page.waitForTimeout(2000);
     const content = page.locator('.el-table, .el-card, [class*="achievement"], [class*="star"], [class*="badge"]');
     await expect(content.first()).toBeVisible({ timeout: 10000 });
   });
 
   test('should allow rewarding stars via UI', async ({ page }) => {
-    await page.goto('/webadminss/#/child/achievement');
+    await page.goto('/#/child/achievement');
     await page.waitForTimeout(2000);
     const rewardBtn = page.locator('button:has-text("奖励"), button:has-text("发放星星"), button:has-text("发放")');
     if (await rewardBtn.isVisible()) {
@@ -35,7 +35,7 @@ test.describe('Device Monitoring UI', () => {
   });
 
   test('should show device list and online status', async ({ page }) => {
-    await page.goto('/webadminss/#/smallsteps/device');
+    await page.goto('/#/smallsteps/device');
     await page.waitForTimeout(2000);
     const content = page.locator('.el-table, table, .el-card, [class*="device"]');
     await expect(content.first()).toBeVisible({ timeout: 10000 });
