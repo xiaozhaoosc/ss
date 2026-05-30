@@ -22,7 +22,7 @@
     //#ifdef H5
     uni.hideTabBar({
       fail: () => {}
-    }).catch(() => {})
+    })
     //#endif
 
     // 检查用户登录状态

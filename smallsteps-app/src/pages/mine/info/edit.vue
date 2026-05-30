@@ -103,7 +103,7 @@
 
   function getUser() {
     getUserProfile().then(response => {
-      user.value = response.data
+      user.value = response.data.user
     })
   }
 
