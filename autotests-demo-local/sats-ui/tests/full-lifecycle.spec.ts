@@ -27,7 +27,10 @@ function getRandomTask() {
 
 test.describe('Small Steps 完整业务流程 (Full Lifecycle)', () => {
   const testTask = getRandomTask();
-  console.log(`🎲 随机选中任务: "${testTask.title}" (难度:${testTask.difficulty}, 积分:${testTask.rewardPoints})`);
+  // 动态生成包含时间戳的唯一任务标题，防止防重名逻辑直接跳过创建步骤
+  const timeSuffix = new Date().toTimeString().slice(0, 5).replace(':', '');
+  const taskTitle = `${testTask.title}_${timeSuffix}`;
+  console.log(`🎲 随机选中任务: "${taskTitle}" (难度:${testTask.difficulty}, 积分:${testTask.rewardPoints})`);
 
   test('Step 1: 家长登录 → 家长模式 Dashboard', async ({ page }) => {
     // 登录
@@ -64,10 +67,10 @@ test.describe('Small Steps 完整业务流程 (Full Lifecycle)', () => {
     await taskPage.goto();
 
     // 搜索框验证：确保没有重名任务
-    await taskPage.searchTask(testTask.title);
-    const existingTask = page.locator(`text=${testTask.title}`);
+    await taskPage.searchTask(taskTitle);
+    const existingTask = page.locator(`text=${taskTitle}`);
     if (await existingTask.isVisible()) {
-      console.log(`⚠️ 任务 "${testTask.title}" 已存在，跳过创建`);
+      console.log(`⚠️ 任务 "${taskTitle}" 已存在，跳过创建`);
       return;
     }
 
@@ -80,7 +83,7 @@ test.describe('Small Steps 完整业务流程 (Full Lifecycle)', () => {
 
     // 填写任务信息
     await taskPage.fillTaskForm({
-      title: testTask.title,
+      title: taskTitle,
       description: testTask.description,
       difficulty: testTask.difficulty,
       rewardPoints: testTask.rewardPoints,
@@ -99,12 +102,12 @@ test.describe('Small Steps 完整业务流程 (Full Lifecycle)', () => {
     await expect(page.locator('.el-dialog')).toBeHidden({ timeout: 5000 });
 
     // 验证任务出现在列表中
-    await taskPage.searchTask(testTask.title);
-    await taskPage.expectTaskVisible(testTask.title);
+    await taskPage.searchTask(taskTitle);
+    await taskPage.expectTaskVisible(taskTitle);
 
     // 截图：任务列表
     await page.screenshot({ path: 'test-results/step2-task-created.png' });
-    console.log(`✅ Step 2: 任务 "${testTask.title}" 创建成功`);
+    console.log(`✅ Step 2: 任务 "${taskTitle}" 创建成功`);
   });
 
   test('Step 3: 任务状态流转 → 列表展示', async ({ page }) => {
