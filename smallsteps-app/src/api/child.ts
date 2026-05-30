@@ -184,7 +184,7 @@ export function getTotalStars(childId: number) {
 
 export function getTotalCourageFragments(childId: number) {
     return request({
-        url: '/child/achievement/courage/' + childId,
+        url: '/child/achievement/fragments/' + childId,
         method: 'GET'
     })
 }

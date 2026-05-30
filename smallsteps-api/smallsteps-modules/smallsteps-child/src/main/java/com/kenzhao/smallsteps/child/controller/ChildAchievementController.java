@@ -143,7 +143,7 @@ public class ChildAchievementController {
     /**
      * 查询儿童勇气碎片总数
      */
-    @GetMapping("/fragments/{childId}")
+    @GetMapping({"/fragments/{childId}", "/courage/{childId}"})
     public R<Integer> totalCourageFragments(@PathVariable("childId") Long childId) {
         validateChildAccess(childId);
         Integer totalFragments = childAchievementService.selectTotalCourageFragmentsByChildId(childId);
