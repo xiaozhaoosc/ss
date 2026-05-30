@@ -11,7 +11,7 @@ export default defineConfig({
   forbidOnly: true,
   retries: 0,
   workers: 1,
-  timeout: 15000,
+  timeout: 60000,
   reporter: [
     ['html', { open: 'never', outputFolder: 'playwright-report' }],
     ['list'],

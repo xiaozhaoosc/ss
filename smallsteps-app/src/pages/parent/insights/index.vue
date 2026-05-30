@@ -16,11 +16,14 @@
     <!-- 儿童切换选择器 -->
     <view class="child-selector" v-if="familyChildren.length > 0">
       <scroll-view scroll-x class="child-scroll">
-        <view v-for="child in familyChildren" :key="child.userId" 
+        <view v-for="child in familyChildren" :key="child.userId"
               class="child-item" :class="{ 'active': childId === child.userId }"
               @click="switchChild(child.userId)">
           <view class="avatar-wrapper">
-            <image class="child-avatar" :src="child.avatar || '/static/logo.png'" mode="aspectFill"></image>
+            <image v-if="child.avatar" class="child-avatar" :src="child.avatar" mode="aspectFill"></image>
+            <view v-else class="letter-avatar" :style="{ background: getAvatarColor(child.nickName) }">
+              <text class="letter-text">{{ (child.nickName || '?').charAt(0) }}</text>
+            </view>
             <view class="active-dot" v-if="childId === child.userId"></view>
           </view>
           <text class="child-name">{{ child.nickName }}</text>
@@ -184,7 +187,7 @@ import { ref } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
 import BottomNav from '@/components/common/bottom-nav/bottom-nav.vue'
 import { listChildAchievement, getAbilityRadar, getEmotionTrend, getShadowEmotionTrend } from '@/api/child'
-import { getFamilyMembers } from '@/api/family'
+import { getFamilyChildren } from '@/api/family'
 import { useUserStore } from '@/store/modules/user'
 
 const userStore = useUserStore()
@@ -219,13 +222,21 @@ const switchChild = (id) => {
   loadData(id)
 }
 
+// 根据名字生成头像背景色
+const getAvatarColor = (name) => {
+  const colors = ['#6C9BD2', '#8CD0A1', '#F5D76E', '#E88D67', '#A78BFA', '#F472B6', '#34D399', '#FBBF24']
+  let hash = 0
+  for (let i = 0; i < (name || '').length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash)
+  }
+  return colors[Math.abs(hash) % colors.length]
+}
+
 const initChildIdAndLoad = async () => {
   try {
-    const res = await getFamilyMembers()
-    const members = res.data || []
-    // 过滤出儿童 (userType 为 '2' 或角色包含 'child')
-    familyChildren.value = members.filter(m => String(m.userType) === '2' || (m.roles && m.roles.includes('child')))
-    
+    const res = await getFamilyChildren()
+    familyChildren.value = res.data || []
+
     // 防御性拦截：若缓存的 currentChildId 与家长自己的 userId 一致，强制清空
     if (userStore.currentChildId && String(userStore.currentChildId) === String(userStore.userId)) {
       userStore.setCurrentChildId(null)
@@ -488,6 +499,23 @@ const showShadowHint = () => {
       background-color: #f3f4f6;
       transition: all 0.3s ease;
     }
+
+    .letter-avatar {
+      width: 90rpx;
+      height: 90rpx;
+      border-radius: 50%;
+      border: 4rpx solid transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .letter-text {
+      font-size: 36rpx;
+      font-weight: 600;
+      color: #ffffff;
+    }
     
     .active-dot {
       position: absolute;
@@ -511,7 +539,7 @@ const showShadowHint = () => {
     }
     
     &.active {
-      .child-avatar {
+      .child-avatar, .letter-avatar {
         border-color: #6b9bd1;
         transform: scale(1.05);
       }

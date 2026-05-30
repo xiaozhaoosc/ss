@@ -143,6 +143,33 @@
 
     <!-- 底部导航 (固定在底部，不随内容滚动) -->
     <bottom-nav mode="parent" />
+
+    <!-- Edit Step Modal -->
+    <view class="modal-mask" v-if="isEditModalVisible" @tap.self="closeEditModal">
+      <view class="modal-container">
+        <view class="modal-header">
+          <text class="modal-title">编辑任务步骤</text>
+          <text class="material-symbols-outlined close-icon" @tap="closeEditModal">close</text>
+        </view>
+        
+        <view class="modal-body">
+          <view class="form-item">
+            <text class="form-label">步骤名称</text>
+            <input type="text" v-model="editingStep.title" class="form-input" placeholder="输入步骤名称，如：翻开课本到第10页" />
+          </view>
+          
+          <view class="form-item">
+            <text class="form-label">具体引导描述</text>
+            <textarea v-model="editingStep.description" class="form-textarea" placeholder="输入具体引导描述，如：找到语文书，平放在桌子上并翻开" />
+          </view>
+        </view>
+        
+        <view class="modal-footer">
+          <button class="modal-btn cancel" @tap="closeEditModal">取消</button>
+          <button class="modal-btn confirm" @tap="saveEditStep">保存</button>
+        </view>
+      </view>
+    </view>
   </view>
 </template>
 
@@ -255,11 +282,42 @@ const handleAddStep = () => {
   steps.value.push({ title: '新步骤', description: '请具体描述这个步骤' })
 }
 
-const handleEditStep = (index) => {
-  uni.showToast({ title: `编辑步骤 ${index + 1}`, icon: 'none' })
+// Edit Step Modal States
+const isEditModalVisible = ref(false)
+const editingIndex = ref<number>(-1)
+const editingStep = ref({ title: '', description: '' })
+
+const handleEditStep = (index: number) => {
+  editingIndex.value = index
+  editingStep.value = { 
+    title: steps.value[index].title, 
+    description: steps.value[index].description || '' 
+  }
+  isEditModalVisible.value = true
 }
 
-const handleDeleteStep = (index) => {
+const closeEditModal = () => {
+  isEditModalVisible.value = false
+  editingIndex.value = -1
+}
+
+const saveEditStep = () => {
+  if (!editingStep.value.title.trim()) {
+    uni.showToast({ title: '步骤名称不能为空', icon: 'none' })
+    return
+  }
+  
+  if (editingIndex.value > -1) {
+    steps.value[editingIndex.value] = {
+      title: editingStep.value.title,
+      description: editingStep.value.description
+    }
+  }
+  closeEditModal()
+  uni.showToast({ title: '已保存步骤', icon: 'success' })
+}
+
+const handleDeleteStep = (index: number) => {
   steps.value.splice(index, 1)
 }
 
@@ -286,7 +344,15 @@ const handleSubmit = () => {
     icon: 'task',
     difficulty: 1,
     rewardPoints: 10,
-    status: '0'
+    status: '0',
+    cycleType: isRepeat.value ? 1 : 0,
+    isTemplate: isTemplate.value ? 1 : 0,
+    steps: steps.value.map((s, i) => ({
+      stepOrder: i + 1,
+      content: s.title,
+      visualHint: s.description,
+      expectedDuration: 120
+    }))
   }
   
   addTask(newTask).then(() => {
@@ -725,5 +791,170 @@ const handleSubmit = () => {
 
 .no-scrollbar::-webkit-scrollbar {
   display: none;
+}
+
+/* Modal Mask */
+.modal-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  transition: all 0.3s ease;
+}
+
+/* Modal Container */
+.modal-container {
+  width: 88%;
+  max-width: 380px;
+  background: #ffffff;
+  border-radius: 28px;
+  padding: 24px;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  animation: modalBounce 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1) forwards;
+
+  :deep(.dark) & {
+    background: #1e293b;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}
+
+@keyframes modalBounce {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: #1e293b;
+
+  :deep(.dark) & {
+    color: #f1f5f9;
+  }
+}
+
+.close-icon {
+  font-size: 22px;
+  color: #94a3b8;
+  cursor: pointer;
+  
+  &:active {
+    transform: scale(0.9);
+  }
+}
+
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #64748b;
+
+  :deep(.dark) & {
+    color: #94a3b8;
+  }
+}
+
+.form-input {
+  height: 48px;
+  background: #f8fafc;
+  border: 1.5px solid rgba(108, 155, 210, 0.1);
+  border-radius: 14px;
+  padding: 0 16px;
+  font-size: 14px;
+  color: #1e293b;
+
+  :deep(.dark) & {
+    background: rgba(15, 23, 42, 0.4);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: #f1f5f9;
+  }
+}
+
+.form-textarea {
+  height: 90px;
+  background: #f8fafc;
+  border: 1.5px solid rgba(108, 155, 210, 0.1);
+  border-radius: 14px;
+  padding: 12px 16px;
+  font-size: 14px;
+  color: #1e293b;
+
+  :deep(.dark) & {
+    background: rgba(15, 23, 42, 0.4);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: #f1f5f9;
+  }
+}
+
+.modal-footer {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.modal-btn {
+  flex: 1;
+  height: 48px;
+  border-radius: 16px;
+  font-size: 15px;
+  font-weight: 750;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  &::after { border: none; }
+  
+  &:active {
+    transform: scale(0.97);
+  }
+  
+  &.cancel {
+    background: #f1f5f9;
+    color: #475569;
+
+    :deep(.dark) & {
+      background: rgba(255, 255, 255, 0.05);
+      color: #94a3b8;
+    }
+  }
+  
+  &.confirm {
+    background: #6C9BD2;
+    color: #ffffff;
+    box-shadow: 0 6px 20px rgba(108, 155, 210, 0.3);
+  }
 }
 </style>

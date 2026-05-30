@@ -1,0 +1,82 @@
+[
+  {
+    "title": "整理书桌并收拾文具",
+    "description": "把书桌上的书本叠整齐，文具放回笔袋，垃圾扔进垃圾桶",
+    "difficulty": 2,
+    "rewardPoints": 15,
+    "promptLevel": 3,
+    "steps": ["把书本叠放到桌角", "铅笔橡皮放回笔袋", "垃圾扔进垃圾桶", "擦干净桌面"]
+  },
+  {
+    "title": "阅读绘本20分钟",
+    "description": "选一本喜欢的绘本，安静地阅读20分钟",
+    "difficulty": 1,
+    "rewardPoints": 10,
+    "promptLevel": 1,
+    "steps": ["从书架选一本绘本", "坐到阅读角", "安静翻阅每一页", "读完放回书架"]
+  },
+  {
+    "title": "练习写字一页",
+    "description": "在练习本上工整地写一页汉字或拼音",
+    "difficulty": 2,
+    "rewardPoints": 15,
+    "promptLevel": 3,
+    "steps": ["拿出练习本和铅笔", "翻到空白页", "一笔一划工整书写", "写完检查是否整洁"]
+  },
+  {
+    "title": "做10道口算题",
+    "description": "完成10道两位数加减法口算题",
+    "difficulty": 2,
+    "rewardPoints": 20,
+    "promptLevel": 3,
+    "steps": ["翻开口算本", "读题并心算", "写下答案", "全部做完后检查一遍"]
+  },
+  {
+    "title": "帮忙摆碗筷",
+    "description": "吃饭前帮忙把碗筷摆到餐桌上",
+    "difficulty": 1,
+    "rewardPoints": 10,
+    "promptLevel": 1,
+    "steps": ["打开碗柜取出碗", "拿出筷子", "摆到每个人的位置", "叫大家来吃饭"]
+  },
+  {
+    "title": "浇花并观察植物",
+    "description": "给阳台上的花浇水，观察植物的变化",
+    "difficulty": 1,
+    "rewardPoints": 10,
+    "promptLevel": 1,
+    "steps": ["拿起小水壶", "接适量的水", "给每盆花浇适量水", "观察叶子和花朵的变化"]
+  },
+  {
+    "title": "背诵一首古诗",
+    "description": "选择一首唐诗，反复朗读直到能背诵",
+    "difficulty": 3,
+    "rewardPoints": 25,
+    "promptLevel": 5,
+    "steps": ["选一首古诗", "大声朗读三遍", "试着不看书背诵", "完整背诵给家长听"]
+  },
+  {
+    "title": "收拾玩具到收纳箱",
+    "description": "把散落在地上的玩具分类放回收纳箱",
+    "difficulty": 1,
+    "rewardPoints": 10,
+    "promptLevel": 1,
+    "steps": ["捡起地上的玩具", "按类型分类", "放回对应的收纳箱", "确认地面干净"]
+  },
+  {
+    "title": "跳绳100下",
+    "description": "在空地上连续跳绳100下",
+    "difficulty": 2,
+    "rewardPoints": 15,
+    "promptLevel": 3,
+    "steps": ["拿起跳绳走到空地", "做简单热身", "开始跳绳计数", "达到100下后休息"]
+  },
+  {
+    "title": "自己穿衣服和系鞋带",
+    "description": "独立完成穿衣和系鞋带",
+    "difficulty": 2,
+    "rewardPoints": 15,
+    "promptLevel": 3,
+    "steps": ["选好今天要穿的衣服", "按顺序穿好", "穿鞋并系好鞋带", "检查是否穿戴整齐"]
+  }
+]

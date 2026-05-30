@@ -22,6 +22,11 @@
         <text class="material-symbols-outlined">face</text>
       </view>
       
+      <!-- Parent Gate -->
+      <view class="settings-btn parent-gate-btn" hover-class="btn-hover" @click="handleSettings">
+        <text class="material-symbols-outlined">settings</text>
+      </view>
+      
       <!-- Star Jar -->
       <trophy-jar :count="userStore.balance" />
     </view>
@@ -101,7 +106,7 @@ const childName = computed(() => userStore.userInfo?.user?.nickName || 'Star Her
 const avatarUrl = computed(() => {
   const avatar = userStore.userInfo?.user?.avatar
   if (avatar) return avatar.startsWith('http') ? avatar : import.meta.env.VITE_APP_BASE_API + avatar
-  return 'https://lh3.googleusercontent.com/aida-public/AB6AXuAA0RmcSQACImzUoE9woyc6-iyIeWXkvAw4lxZnIr9f-HJd8UDiHGwhHva02eLf1l--Q5SMauQxBc1YriECXhMtDDCPrO4m9Ab_7FvJ0xhktITS2cOnh7snQbeQSqNH7003z1j2AZfQatNbPTCZn4SczwbadodstvQLdfrwsStdm6WYruauaA2fXZWL-lKaGVKEEFmLni1Pz7ZUP0OkMVZom1KOsZ4vhRSI6-Ph-P2B25ItChVNt_BamCyGzq0fOcy_u6ce0eEdOPQ'
+  return '/static/images/avatar/robot_default.png'
 })
 
 const greetingText = computed(() => {
@@ -163,8 +168,48 @@ const loadPendingTasks = () => {
 
 const handleSettings = () => {
   uni.vibrateShort()
-  // Easter egg or parent gate could go here
-  uni.showToast({ title: 'Parent Zone', icon: 'none' })
+  // Generate a random multiplication question to implement "Parent Gate"
+  const num1 = Math.floor(Math.random() * 8) + 2 // 2 to 9
+  const num2 = Math.floor(Math.random() * 8) + 2 // 2 to 9
+  const correctAnswer = num1 * num2
+
+  uni.showModal({
+    title: '家长之门 🛡️',
+    placeholderText: `请输入 ${num1} × ${num2} 的计算答案`,
+    editable: true,
+    success: (res) => {
+      if (res.confirm) {
+        const userAnswer = parseInt(res.content || '')
+        if (userAnswer === correctAnswer) {
+          uni.showActionSheet({
+            itemList: ['切回家长模式', '退出当前登录', '留在儿童首页'],
+            success: (actionRes) => {
+              if (actionRes.tapIndex === 0) {
+                // Switch role back to parent, and re-launch dashboard
+                userStore.updateRole('parent')
+                uni.reLaunch({
+                  url: '/pages/parent/dashboard/index'
+                })
+              } else if (actionRes.tapIndex === 1) {
+                // Perform complete logout
+                userStore.logOut().then(() => {
+                  uni.reLaunch({
+                    url: '/pages/login/index'
+                  })
+                })
+              }
+            }
+          })
+        } else {
+          uni.vibrateLong()
+          uni.showToast({
+            title: '验证失败，留在儿童首页',
+            icon: 'none'
+          })
+        }
+      }
+    }
+  })
 }
 
 const navigateToAchievements = () => {

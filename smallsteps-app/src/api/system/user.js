@@ -10,7 +10,8 @@ export function updateUserPwd(oldPassword, newPassword) {
   return request({
     url: '/system/user/profile/updatePwd',
     method: 'put',
-    data: data
+    data: data,
+    encrypt: true
   })
 }
 

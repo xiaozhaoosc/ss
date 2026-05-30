@@ -53,6 +53,66 @@ public class ParentFamilyController extends BaseController {
     }
 
     /**
+     * 查询家庭的家长列表
+     * 仅返回 userType 为 sys_user 的家长用户
+     */
+    @Operation(summary = "查询家庭家长列表", description = "返回当前家庭中的所有家长")
+    @GetMapping("/parents")
+    public R<List<SysUserVo>> getFamilyParents() {
+        Long deptId = LoginHelper.getDeptId();
+        if (deptId == null) {
+            return R.fail("当前用户未关联家庭");
+        }
+        List<SysUserVo> list = userService.selectUserListByDept(deptId);
+        if (list != null) {
+            list = list.stream()
+                .filter(u -> !com.kenzhao.smallsteps.common.core.enums.UserStatus.DISABLE.getCode().equals(u.getStatus()))
+                .filter(u -> !"admin".equals(u.getUserName()))
+                .filter(u -> !com.kenzhao.smallsteps.common.core.enums.UserType.CHILD.getUserType().equals(u.getUserType()))
+                .collect(java.util.stream.Collectors.toList());
+        }
+        return R.ok(list);
+    }
+
+    /**
+     * 查询家庭的儿童列表
+     * 仅返回 userType 为 2 的儿童用户，并关联 ss_child 表获取头像等信息
+     */
+    @Operation(summary = "查询家庭儿童列表", description = "返回当前家庭中的所有儿童及其档案信息")
+    @GetMapping("/children")
+    public R<List<java.util.Map<String, Object>>> getFamilyChildren() {
+        Long deptId = LoginHelper.getDeptId();
+        if (deptId == null) {
+            return R.fail("当前用户未关联家庭");
+        }
+        List<SysUserVo> list = userService.selectUserListByDept(deptId);
+        if (list == null) {
+            return R.ok(java.util.Collections.emptyList());
+        }
+        List<java.util.Map<String, Object>> children = list.stream()
+            .filter(u -> com.kenzhao.smallsteps.common.core.enums.UserType.CHILD.getUserType().equals(u.getUserType()))
+            .filter(u -> !com.kenzhao.smallsteps.common.core.enums.UserStatus.DISABLE.getCode().equals(u.getStatus()))
+            .map(u -> {
+                java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+                map.put("userId", u.getUserId());
+                map.put("nickName", u.getNickName());
+                map.put("userName", u.getUserName());
+                map.put("sex", u.getSex());
+                map.put("userType", u.getUserType());
+                // 关联 ss_child 获取头像
+                com.kenzhao.smallsteps.common.ss.domain.Child child = childService.selectChildById(u.getUserId());
+                if (child != null && child.getAvatarUrl() != null && !child.getAvatarUrl().isEmpty()) {
+                    map.put("avatar", child.getAvatarUrl());
+                } else {
+                    map.put("avatar", u.getAvatar());
+                }
+                return map;
+            })
+            .collect(java.util.stream.Collectors.toList());
+        return R.ok(children);
+    }
+
+    /**
      * 绑定儿童到当前家庭
      * 逻辑：通过用户名或手机号查找到该儿童账号，将其 dept_id 修改为当前家长的 dept_id
      */

@@ -37,7 +37,11 @@
             <groupId>com.kenzhao.smallsteps</groupId>
             <artifactId>smallsteps-child</artifactId>
         </dependency>
-        
+        <dependency>
+            <groupId>com.kenzhao.smallsteps</groupId>
+            <artifactId>smallsteps-task</artifactId>
+            <version>${revision}</version>
+        </dependency>
     </dependencies>
 
 </project>

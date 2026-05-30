@@ -8,6 +8,22 @@ export function getFamilyMembers() {
   })
 }
 
+// 查询家庭家长列表
+export function getFamilyParents() {
+  return request({
+    url: '/parent/family/parents',
+    method: 'get'
+  })
+}
+
+// 查询家庭儿童列表
+export function getFamilyChildren() {
+  return request({
+    url: '/parent/family/children',
+    method: 'get'
+  })
+}
+
 // 绑定儿童
 export function bindChild(data: { userName: string }) {
   return request({

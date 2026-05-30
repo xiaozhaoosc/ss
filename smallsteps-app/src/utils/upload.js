@@ -1,6 +1,6 @@
 import { useUserStore } from '@/store'
 import config from '@/config'
-import { getToken } from '@/utils/auth'
+import { getToken, getClientId } from '@/utils/auth'
 import errorCode from '@/utils/errorCode'
 import { toast, showConfirm, tansParams } from '@/utils/common'
 
@@ -14,6 +14,9 @@ export default function upload(config) {
   if (getToken() && !isToken) {
     config.header['Authorization'] = 'Bearer ' + getToken()
   }
+  // 注入 clientid
+  const userStore = useUserStore()
+  config.header['clientid'] = getClientId() || userStore.clientId || import.meta.env.VITE_APP_CLIENT_ID || 'e5cd7e4891bf95d1d19206ce24a7b32e'
   // get请求映射params参数
   if (config.params) {
     let url = config.url + '?' + tansParams(config.params)

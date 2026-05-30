@@ -7,7 +7,7 @@
           <text class="material-symbols-outlined icon">arrow_back_ios_new</text>
         </button>
         <view class="avatar-circle">
-          <image class="avatar-img" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBosOUr9r5tFVkKydl99KrHW9TFrfF3x_G5Kl0i75sVteQHA1GHPx8GNOPJkXvcYRGUUDjZz2aZO0XHwwREWgDTqkxa128ip9BARUNGe7BgM6tr31xSWJNxtZjHAT-C-lV6ILltscjfiSWRnwz567xQvUb-jLwEPyqRpPwXCXlQWj4_8J-bTUMqfAHIg55tp7WKOpWdV749Rt96IwAM1_EtV7V5UOWe9yBG6erW6j1AX-9jaV8f-SLOByg0S6U_UWaPD45NwnWhZ6w" mode="aspectFill" />
+          <image class="avatar-img" :src="avatarUrl" mode="aspectFill" />
         </view>
       </view>
       
@@ -54,12 +54,18 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { onLoad, onShow } from '@dcloudio/uni-app'
 import ShopProductCard from '@/components/child/shop-product-card/shop-product-card.vue'
 import ChildBottomNav from '@/components/child/child-bottom-nav/child-bottom-nav.vue'
 import { listReward, redeemReward } from '@/api/reward'
 import { useUserStore } from '@/store/modules/user'
+
+const avatarUrl = computed(() => {
+  const avatar = userStore.userInfo?.user?.avatar
+  if (avatar) return avatar.startsWith('http') ? avatar : import.meta.env.VITE_APP_BASE_API + avatar
+  return '/static/images/avatar/robot_default.png'
+})
 
 const isDarkMode = ref(false)
 const userStore = useUserStore()

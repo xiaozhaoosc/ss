@@ -1,0 +1,35 @@
+import { defineConfig, devices } from '@playwright/test';
+
+export default defineConfig({
+  testDir: './',
+  testMatch: '**/*.test.ts',
+  fullyParallel: false,
+  forbidOnly: true,
+  retries: 0,
+  workers: 1,
+  timeout: 45000,
+  reporter: [
+    ['html', { open: 'never', outputFolder: '../playwright-report-parent' }],
+    ['list'],
+  ],
+  use: {
+    baseURL: 'http://10.8.0.1:8043',
+    headless: process.env.DISPLAY_MODE !== 'headed',
+    trace: 'retain-on-failure',
+    screenshot: 'on',
+    video: 'off',
+    viewport: { width: 375, height: 812 },
+    actionTimeout: 5000,
+    navigationTimeout: 15000,
+    ...(process.platform === 'linux' ? { channel: 'chrome' } : {}),
+  },
+  projects: [
+    {
+      name: 'mobile-chrome',
+      use: {
+        ...devices['Pixel 5'],
+        ...(process.platform === 'linux' ? { channel: 'chrome' } : {}),
+      },
+    },
+  ],
+});

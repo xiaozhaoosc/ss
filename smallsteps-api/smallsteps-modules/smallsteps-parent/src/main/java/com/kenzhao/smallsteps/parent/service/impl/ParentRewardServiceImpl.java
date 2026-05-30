@@ -96,7 +96,15 @@ public class ParentRewardServiceImpl implements IParentRewardService {
      * 保存前的数据校验
      */
     private void validEntityBeforeSave(ParentReward entity) {
-        // TODO 做一些数据校验,如唯一约束
+        if (entity.getUserId() != null && StringUtils.isNotBlank(entity.getName())) {
+            LambdaQueryWrapper<ParentReward> lqw = Wrappers.lambdaQuery();
+            lqw.eq(ParentReward::getUserId, entity.getUserId())
+               .eq(ParentReward::getName, entity.getName())
+               .ne(entity.getRewardId() != null, ParentReward::getRewardId, entity.getRewardId());
+            if (baseMapper.exists(lqw)) {
+                throw new com.kenzhao.smallsteps.common.core.exception.ServiceException("该奖励名称已存在，请勿重复创建");
+            }
+        }
     }
 
     /**

@@ -77,6 +77,11 @@ public class Child extends BaseEntity {
     private Integer level;
 
     /**
+     * 备注 (孩子状况/备注)
+     */
+    private String remark;
+
+    /**
      * 删除标志 (0代表存在 2代表删除)
      */
     @TableLogic

@@ -35,7 +35,10 @@
         <view class="user-card">
           <view class="user-info-box" @click="handleToInfo">
             <view class="avatar-wrapper">
-              <image class="avatar" :src="userStore.userInfo?.user?.avatar || 'https://lh3.googleusercontent.com/aida-public/AB6AXuAJ1cciJ4i8VZa4i84tUg3c73WgpXsHDPWFJTFC1HCyoJaWAw63sCD6sYtGoggTmCxZPkFLdgXZ0jMVUEjuhNaybs-1a06VWI-j7Tv_k-GcxylNpE1U9cjTL6ICQBnyg02gLWhSCCy1SnHe6psYMG-13HPVdTV9vR6odzmSIWG_6kD9m5MrzeKyalS3Ewhx_px4_a3iAVFvHE4SYxL6Z13ZA7UVC9fVC7U29WKKz0G9msv4O4zW9MUm2t6NZ6FOtcNY4-8SHhP3MgM'" mode="aspectFill" />
+              <image v-if="userStore.userInfo?.user?.avatar" class="avatar" :src="userStore.userInfo.user.avatar" mode="aspectFill" />
+              <view v-else class="letter-avatar-lg" :style="{ background: getAvatarColor(userStore.userInfo?.user?.nickName) }">
+                <text class="letter-text-lg">{{ (userStore.userInfo?.user?.nickName || '?').charAt(0) }}</text>
+              </view>
             </view>
             <view class="name-box">
               <text class="user-name">{{ userStore.userInfo?.user?.nickName || '小红' }}</text>
@@ -68,7 +71,10 @@
 
         <view v-for="child in children" :key="child.id" class="child-card">
           <view class="avatar-box">
-            <image class="avatar" :src="child.avatarUrl || 'https://lh3.googleusercontent.com/aida-public/AB6AXuAJ1cciJ4i8VZa4i84tUg3c73WgpXsHDPWFJTFC1HCyoJaWAw63sCD6sYtGoggTmCxZPkFLdgXZ0jMVUEjuhNaybs-1a06VWI-j7Tv_k-GcxylNpE1U9cjTL6ICQBnyg02gLWhSCCy1SnHe6psYMG-13HPVdTV9vR6odzmSIWG_6kD9m5MrzeKyalS3Ewhx_px4_a3iAVFvHE4SYxL6Z13ZA7UVC9fVC7U29WKKz0G9msv4O4zW9MUm2t6NZ6FOtcNY4-8SHhP3MgM'" mode="aspectFill" />
+            <image v-if="child.avatarUrl" class="avatar" :src="child.avatarUrl" mode="aspectFill" />
+            <view v-else class="letter-avatar-lg" :style="{ background: getAvatarColor(child.nickname) }">
+              <text class="letter-text-lg">{{ (child.nickname || '?').charAt(0) }}</text>
+            </view>
           </view>
           <view class="info">
             <text class="name">{{ child.nickname }}</text>
@@ -188,6 +194,16 @@ const calculateAge = (birthday) => {
     age--
   }
   return age > 0 ? `${age}岁` : '1岁以下'
+}
+
+// 根据名字生成头像背景色
+const getAvatarColor = (name) => {
+  const colors = ['#6C9BD2', '#8CD0A1', '#F5D76E', '#E88D67', '#A78BFA', '#F472B6', '#34D399', '#FBBF24']
+  let hash = 0
+  for (let i = 0; i < (name || '').length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash)
+  }
+  return colors[Math.abs(hash) % colors.length]
 }
 
 // 格式化描述 (年龄 + 备注)
@@ -505,6 +521,21 @@ onMounted(() => {
 .avatar {
   width: 100%;
   height: 100%;
+}
+
+.letter-avatar-lg {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+}
+
+.letter-text-lg {
+  font-size: 28px;
+  font-weight: 600;
+  color: #ffffff;
 }
 
 .child-card .info {

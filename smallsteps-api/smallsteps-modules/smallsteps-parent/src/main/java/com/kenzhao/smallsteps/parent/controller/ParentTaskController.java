@@ -38,6 +38,7 @@ public class ParentTaskController extends BaseController {
     private final IParentTaskService parentTaskService;
     private final IScoreService scoreService;
     private final ISsTaskLogService taskLogService;
+    private final com.kenzhao.smallsteps.parent.service.ITaskTemplateService taskTemplateService;
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ParentTaskController.class);
 
     /**
@@ -83,6 +84,15 @@ public class ParentTaskController extends BaseController {
             bo.setUserId(com.kenzhao.smallsteps.common.satoken.utils.LoginHelper.getUserId());
         }
         boolean success = parentTaskService.insertByBo(bo);
+        
+        if (success && bo.getIsTemplate() != null && bo.getIsTemplate() == 1) {
+            try {
+                taskTemplateService.saveAsTemplate(bo);
+                log.info("[Template] Custom task successfully saved as template in ParentTaskController");
+            } catch (Exception e) {
+                log.error("[Template Error] Failed to save custom task as template in ParentTaskController", e);
+            }
+        }
         
         // 使用 error 级别确保在 sys-error.log 中可见，简化 ID 匹配
         log.error("[Shadow-Debug] ParentTaskController.add called. userId: {}, success: {}", bo.getUserId(), success);

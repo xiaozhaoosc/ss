@@ -32,7 +32,7 @@
         @click="handleAction"
       >
         <image 
-          src="https://lh3.googleusercontent.com/aida-public/AB6AXuAA0RmcSQACImzUoE9woyc6-iyIeWXkvAw4lxZnIr9f-HJd8UDiHGwhHva02eLf1l--Q5SMauQxBc1YriECXhMtDDCPrO4m9Ab_7FvJ0xhktITS2cOnh7snQbeQSqNH7003z1j2AZfQatNbPTCZn4SczwbadodstvQLdfrwsStdm6WYruauaA2fXZWL-lKaGVKEEFmLni1Pz7ZUP0OkMVZom1KOsZ4vhRSI6-Ph-P2B25ItChVNt_BamCyGzq0fOcy_u6ce0eEdOPQ" 
+          src="/static/images/avatar/robot_default.png" 
           class="mascot-img"
         />
       </view>
