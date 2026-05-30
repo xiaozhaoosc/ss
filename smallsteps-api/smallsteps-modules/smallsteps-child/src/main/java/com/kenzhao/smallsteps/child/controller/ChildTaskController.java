@@ -130,6 +130,17 @@ public class ChildTaskController extends BaseController {
     }
 
     /**
+     * 获取儿童积分流水（分页）
+     */
+    @GetMapping("/score/history/{childId}")
+    public com.kenzhao.smallsteps.common.mybatis.core.page.TableDataInfo<java.util.Map<String, Object>> getScoreHistory(
+            @PathVariable Long childId,
+            com.kenzhao.smallsteps.common.mybatis.core.page.PageQuery pageQuery) {
+        validateChildAccess(childId);
+        return scoreService.getScoreHistory(childId, pageQuery);
+    }
+
+    /**
      * 删除任务记录
      */
     @DeleteMapping("/remove/{id}")

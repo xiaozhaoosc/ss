@@ -18,7 +18,7 @@
         </view>
         
         <!-- Gamified Balance Badge -->
-        <view class="balance-badge">
+        <view class="balance-badge" hover-class="badge-hover" @click="navigateToStarHistory">
           <view class="star-circle bounce">
             <text class="material-symbols-outlined star-icon">star</text>
           </view>
@@ -111,6 +111,10 @@ const handleBack = () => {
   uni.navigateBack()
 }
 
+const navigateToStarHistory = () => {
+  uni.navigateTo({ url: '/pages/child/star-history/index' })
+}
+
 const handleRedeem = (prod) => {
   if (!userStore.userInfo?.user?.userId) {
      uni.showToast({ title: '用户未登录', icon: 'error' })
@@ -118,7 +122,7 @@ const handleRedeem = (prod) => {
   }
   uni.showModal({
     title: '确认兑换',
-    content: `要花费 ${prod.price} 颗星兑换“${prod.name}”吗？`,
+    content: `要花费 ${prod.price} 颗星兑换"${prod.name}"吗？`,
     success: (res) => {
       if (res.confirm) {
         if (userStore.balance >= prod.price) {
@@ -128,9 +132,11 @@ const handleRedeem = (prod) => {
               userId: userStore.userInfo.user.userId 
            }).then(() => {
                uni.hideLoading()
-               uni.showToast({ title: '兑换成功！', icon: 'success' })
-               // Refresh balance
+               uni.showToast({ title: '兑换成功，待家长审批', icon: 'success' })
+               // 刷新余额
                userStore.fetchBalance()
+               // 刷新商品列表（避免重复兑换）
+               loadData()
            }).catch(() => {
                uni.hideLoading()
            })
@@ -234,6 +240,12 @@ const handleRedeem = (prod) => {
   border-radius: 999px;
   box-shadow: 0 8px 24px -4px rgba(139, 208, 161, 0.2);
   border: 1px solid rgba(140, 208, 161, 0.1);
+  transition: transform 0.15s ease;
+}
+
+.badge-hover {
+  transform: scale(0.93);
+  opacity: 0.85;
 }
 
 .star-circle {

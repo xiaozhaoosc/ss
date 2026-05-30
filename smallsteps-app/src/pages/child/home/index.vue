@@ -28,7 +28,7 @@
       </view>
       
       <!-- Star Jar -->
-      <trophy-jar :count="userStore.balance" />
+      <trophy-jar :count="userStore.balance" @click="navigateToStarHistory" />
     </view>
 
     <scroll-view scroll-y class="main-content no-scrollbar">
@@ -136,7 +136,10 @@ async function loadData() {
       streak.value = res.data || 0
     })
 
-    // 3. Get Task (First active task)
+    // 3. Get balance
+    userStore.fetchBalance()
+
+    // 4. Get Task (First active task)
     loadPendingTasks()
   } catch (e) {
     console.error(e)
@@ -214,6 +217,10 @@ const navigateToAchievements = () => {
 const navigateToAvatarEditor = () => {
   uni.vibrateShort()
   uni.navigateTo({ url: '/pages/child/avatar-editor/index' })
+}
+
+const navigateToStarHistory = () => {
+  uni.navigateTo({ url: '/pages/child/star-history/index' })
 }
 
 const handleMissionComplete = () => {
@@ -312,7 +319,14 @@ onLoad(() => {
   })
   
   loadData()
-  userStore.fetchBalance()
+})
+
+// 每次展示页面（包括从任务执行页返回）刷新任务状态和星星积分
+onShow(() => {
+  if (userStore.id) {
+    loadPendingTasks()
+    userStore.fetchBalance()
+  }
 })
 </script>
 

@@ -44,6 +44,14 @@
       <text class="instr-text">当屏幕变绿时，以最快速度点击小步！看看你的反应有多快？🚀</text>
     </view>
 
+    <!-- History Trigger Button -->
+    <view class="history-btn-wrapper">
+      <view class="history-trigger-btn glass-morphism" @click="toggleHistoryModal">
+        <text class="material-symbols-outlined trophy-icon">trophy</text>
+        <text class="btn-text">查看历史最佳 10 次</text>
+      </view>
+    </view>
+
     <!-- Exit Ritual Modal -->
     <view v-if="showExitRitual" class="ritual-overlay">
       <view class="ritual-card scale-up">
@@ -53,11 +61,58 @@
         <view class="exit-btn" @click="confirmExit">盖好被子，休息吧</view>
       </view>
     </view>
+
+    <!-- Glassmorphic History Top 10 Modal -->
+    <view v-if="showHistoryModal" class="history-overlay" @click.self="toggleHistoryModal">
+      <view class="history-modal glass-morphism scale-up">
+        <view class="modal-header">
+          <text class="trophy-badge">🏆</text>
+          <text class="modal-title">历史最佳 Top 10</text>
+          <view class="clear-btn" @click="clearHistoryScores" v-if="historyScores.length > 0">
+            <text class="material-symbols-outlined">delete</text>
+          </view>
+        </view>
+
+        <view class="scores-container">
+          <view v-if="historyScores.length === 0" class="empty-state">
+            <text class="empty-emoji">🏃💨</text>
+            <text class="empty-text">还没有挑战成绩哦~</text>
+            <text class="empty-subtext">快去点击小步测试你的反应速度吧！</text>
+          </view>
+          
+          <scroll-view v-else scroll-y class="scores-scroll">
+            <view 
+              v-for="(item, index) in historyScores" 
+              :key="index" 
+              class="score-item"
+              :class="'rank-' + (index + 1)"
+            >
+              <view class="rank-badge">
+                <text v-if="index === 0" class="medal">🏆</text>
+                <text v-else-if="index === 1" class="medal">🥈</text>
+                <text v-else-if="index === 2" class="medal">🥉</text>
+                <text v-else class="rank-number">{{ index + 1 }}</text>
+              </view>
+              
+              <view class="score-info">
+                <text class="score-val">{{ item.score }} <text class="ms-unit">ms</text></text>
+                <text class="score-time">{{ formatTimestamp(item.timestamp) }}</text>
+              </view>
+            </view>
+          </scroll-view>
+        </view>
+
+        <view class="close-modal-btn" @click="toggleHistoryModal">知道了</view>
+      </view>
+    </view>
   </view>
 </template>
 
 <script setup lang="ts">
 import { ref, onUnmounted } from 'vue'
+import { useUserStore } from '@/store/modules/user'
+
+const userStore = useUserStore()
 
 const gameState = ref('idle') // idle, waiting, go, result
 const timeLeft = ref(300) // 5 minutes
@@ -65,6 +120,12 @@ const energyPercent = ref(100)
 const isFlashing = ref(false)
 const lastScore = ref(0)
 const showExitRitual = ref(false)
+
+// New state for score tracking & history最佳展示
+const bestScoreThisRound = ref(Infinity) // 本轮挑战的最好成绩 (反应毫秒数越低越好)
+const showHistoryModal = ref(false)
+const historyScores = ref<{ score: number; timestamp: number }[]>([])
+let hasSaved = false
 
 let timerInterval: any = null
 let gameTimeout: any = null
@@ -106,7 +167,14 @@ const handleAction = () => {
   } else if (gameState.value === 'go') {
     // Success!
     const endTime = Date.now()
-    lastScore.value = endTime - startTime
+    const duration = endTime - startTime
+    lastScore.value = duration
+    
+    // 记录本次挑战最好的成绩 (反应时间越短越好)
+    if (duration < bestScoreThisRound.value) {
+      bestScoreThisRound.value = duration
+    }
+    
     gameState.value = 'result'
     isFlashing.value = false
     uni.vibrateShort()
@@ -135,27 +203,117 @@ const handleGameOver = () => {
   uni.vibrateLong()
 }
 
+// 离开时记录本次挑战最好成绩的持久化函数
+const saveBestScore = () => {
+  if (hasSaved) return
+  if (bestScoreThisRound.value === Infinity || bestScoreThisRound.value <= 0) return
+  
+  const key = `energy_game_scores_${userStore.id || 'guest'}`
+  let list: { score: number; timestamp: number }[] = []
+  try {
+    const existing = uni.getStorageSync(key)
+    if (existing) {
+      list = JSON.parse(existing)
+    }
+  } catch (e) {
+    console.error('Failed to read score history', e)
+  }
+  
+  list.push({
+    score: bestScoreThisRound.value,
+    timestamp: Date.now()
+  })
+  
+  try {
+    uni.setStorageSync(key, JSON.stringify(list))
+    hasSaved = true
+    console.log('Saved best score of this round successfully:', bestScoreThisRound.value)
+  } catch (e) {
+    console.error('Failed to persist best score', e)
+  }
+}
+
+// 查看历史最佳10次成绩逻辑
+const loadHistoryScores = () => {
+  const key = `energy_game_scores_${userStore.id || 'guest'}`
+  try {
+    const existing = uni.getStorageSync(key)
+    if (existing) {
+      const list = JSON.parse(existing) as { score: number; timestamp: number }[]
+      // 升序排列（微秒越小说明反应越快越好），取前 10 次
+      historyScores.value = list.sort((a, b) => a.score - b.score).slice(0, 10)
+    } else {
+      historyScores.value = []
+    }
+  } catch (e) {
+    console.error('Failed to load history scores', e)
+    historyScores.value = []
+  }
+}
+
+const toggleHistoryModal = () => {
+  if (!showHistoryModal.value) {
+    loadHistoryScores()
+  }
+  showHistoryModal.value = !showHistoryModal.value
+}
+
+const clearHistoryScores = () => {
+  uni.showModal({
+    title: '确定要清空成绩吗？',
+    content: '清空后你的所有历史挑战记录都会被安全擦除哦。',
+    confirmColor: '#ef4444',
+    success: (res) => {
+      if (res.confirm) {
+        const key = `energy_game_scores_${userStore.id || 'guest'}`
+        try {
+          uni.removeStorageSync(key)
+          historyScores.value = []
+          uni.showToast({ title: '记录已安全擦除', icon: 'success' })
+        } catch (e) {
+          console.error('Failed to clear scores', e)
+        }
+      }
+    }
+  })
+}
+
+const formatTimestamp = (ts: number) => {
+  const date = new Date(ts)
+  const m = date.getMonth() + 1
+  const d = date.getDate()
+  const h = date.getHours()
+  const min = date.getMinutes()
+  return `${m < 10 ? '0' + m : m}-${d < 10 ? '0' + d : d} ${h < 10 ? '0' + h : h}:${min < 10 ? '0' + min : min}`
+}
+
 const handleBack = () => {
   if (gameState.value !== 'idle') {
     uni.showModal({
       title: '要离开吗？',
       content: '挑战还没结束，现在离开能量就不会满格哦',
       success: (res) => {
-        if (res.confirm) uni.navigateBack()
+        if (res.confirm) {
+          saveBestScore()
+          uni.navigateBack()
+        }
       }
     })
   } else {
+    saveBestScore()
     uni.navigateBack()
   }
 }
 
 const confirmExit = () => {
+  saveBestScore()
   uni.navigateBack()
 }
 
 onUnmounted(() => {
   clearInterval(timerInterval)
   clearTimeout(gameTimeout)
+  saveBestScore() // 最终防漏兜底
 })
 </script>
 
@@ -336,5 +494,264 @@ onUnmounted(() => {
 
 .scale-up {
   animation: scaleUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.history-btn-wrapper {
+  margin: 0 30px 20px 30px;
+  display: flex;
+  justify-content: center;
+}
+
+.history-trigger-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 24px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 10px 25px rgba(6, 95, 70, 0.08);
+  border: 2px solid white;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 100%;
+  cursor: pointer;
+
+  &:active {
+    transform: scale(0.97);
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 5px 15px rgba(6, 95, 70, 0.05);
+  }
+
+  .trophy-icon {
+    font-size: 22px;
+    color: #D97706;
+  }
+
+  .btn-text {
+    font-size: 15px;
+    font-weight: 800;
+    color: #065F46;
+  }
+}
+
+.history-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(6, 95, 70, 0.3);
+  backdrop-filter: blur(10px);
+  z-index: 150;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.history-modal {
+  width: 100%;
+  max-width: 360px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 3px solid white;
+  border-radius: 30px;
+  padding: 28px;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 20px;
+  position: relative;
+
+  .trophy-badge {
+    font-size: 26px;
+    margin-right: 8px;
+  }
+
+  .modal-title {
+    font-size: 20px;
+    font-weight: 900;
+    color: #065F46;
+    flex: 1;
+  }
+
+  .clear-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(239, 68, 68, 0.1);
+    color: #EF4444;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    cursor: pointer;
+
+    &:active {
+      transform: scale(0.9);
+      background: rgba(239, 68, 68, 0.2);
+    }
+  }
+}
+
+.scores-container {
+  width: 100%;
+  height: 280px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+  .empty-emoji {
+    font-size: 48px;
+    margin-bottom: 16px;
+    animation: float 3s infinite ease-in-out;
+  }
+
+  .empty-text {
+    font-size: 16px;
+    font-weight: 800;
+    color: #374151;
+    margin-bottom: 6px;
+  }
+
+  .empty-subtext {
+    font-size: 12px;
+    color: #6B7280;
+    font-weight: 600;
+    padding: 0 20px;
+  }
+}
+
+.scores-scroll {
+  width: 100%;
+  height: 100%;
+}
+
+.score-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.6);
+  margin-bottom: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 4px 10px rgba(6, 95, 70, 0.02);
+  transition: all 0.2s;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  &.rank-1 {
+    background: linear-gradient(135deg, rgba(254, 243, 199, 0.8) 0%, rgba(252, 211, 77, 0.3) 100%);
+    border-color: rgba(251, 191, 36, 0.3);
+  }
+  &.rank-2 {
+    background: linear-gradient(135deg, rgba(243, 244, 246, 0.8) 0%, rgba(209, 213, 219, 0.4) 100%);
+    border-color: rgba(156, 163, 175, 0.2);
+  }
+  &.rank-3 {
+    background: linear-gradient(135deg, rgba(255, 237, 213, 0.8) 0%, rgba(253, 186, 116, 0.4) 100%);
+    border-color: rgba(249, 115, 22, 0.2);
+  }
+}
+
+.rank-badge {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+
+  .medal {
+    font-size: 22px;
+  }
+
+  .rank-number {
+    width: 24px;
+    height: 24px;
+    background: rgba(6, 95, 70, 0.1);
+    color: #065F46;
+    font-size: 12px;
+    font-weight: 800;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.score-info {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .score-val {
+    font-size: 18px;
+    font-weight: 900;
+    color: #111827;
+
+    .rank-1 & { color: #92400e; }
+    .rank-2 & { color: #374151; }
+    .rank-3 & { color: #c2410c; }
+
+    .ms-unit {
+      font-size: 11px;
+      font-weight: 700;
+      color: #6B7280;
+      margin-left: 2px;
+    }
+  }
+
+  .score-time {
+    font-size: 11px;
+    font-weight: 700;
+    color: #9CA3AF;
+  }
+}
+
+.close-modal-btn {
+  width: 100%;
+  height: 52px;
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 18px;
+  font-weight: 800;
+  font-size: 16px;
+  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.25);
+  transition: all 0.2s;
+  cursor: pointer;
+
+  &:active {
+    transform: scale(0.98);
+    box-shadow: 0 4px 10px rgba(16, 185, 129, 0.15);
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes scaleUp {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
 }
 </style>

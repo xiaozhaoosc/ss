@@ -290,6 +290,7 @@ onMounted(() => {
 
 .chat-scroll {
   flex: 1;
+  height: 0; /* 关键：约束高度，使 scroll-view 内部可以滚动 */
   padding: 16px;
   z-index: 10;
 }

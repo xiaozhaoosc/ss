@@ -279,3 +279,20 @@ export function submitEmotion(data: { childId: number, moodLevel: number, moodTy
         data: data
     })
 }
+
+// 删除儿童信息
+export function deleteChild(id: string | number) {
+    return request({
+        url: '/ss/child/' + id,
+        method: 'delete'
+    })
+}
+
+// 获取儿童积分流水（分页）
+export function getScoreHistory(childId: string | number, params: { pageNum: number, pageSize: number }) {
+    return request({
+        url: `/child/task/score/history/${childId}`,
+        method: 'GET',
+        params
+    })
+}

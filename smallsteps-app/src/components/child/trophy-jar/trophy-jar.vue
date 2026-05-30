@@ -1,5 +1,5 @@
 <template>
-  <view class="trophy-jar" :class="{ 'shake': isAnimating }">
+  <view class="trophy-jar" :class="{ 'shake': isAnimating }" hover-class="jar-hover" @click="handleClick">
     <view class="text-box">
       <text class="label">STARS</text>
       <text class="count">{{ count }}</text>
@@ -19,6 +19,8 @@ const props = defineProps({
   count: { type: Number, default: 0 }
 })
 
+const emit = defineEmits(['click'])
+
 const isAnimating = ref(false)
 
 watch(() => props.count, (newVal, oldVal) => {
@@ -29,6 +31,11 @@ watch(() => props.count, (newVal, oldVal) => {
     }, 500)
   }
 })
+
+function handleClick() {
+  uni.vibrateShort()
+  emit('click')
+}
 </script>
 
 <style lang="scss" scoped>
@@ -43,10 +50,16 @@ watch(() => props.count, (newVal, oldVal) => {
   border-radius: 999px;
   border: 2px solid #ffffff;
   box-shadow: 0 4px 0 rgba(0,0,0,0.05);
+  transition: transform 0.15s ease;
   
   &.shake {
     animation: wiggle 0.5s ease-in-out;
   }
+}
+
+.jar-hover {
+  transform: scale(0.94);
+  opacity: 0.85;
 }
 
 .text-box {

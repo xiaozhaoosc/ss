@@ -94,7 +94,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import TopBar from '@/components/common/top-bar/top-bar.vue'
-import { getChild, updateChild } from '@/api/child'
+import { getChild, updateChild, deleteChild } from '@/api/child'
 import { getAvatarUrl } from '@/utils/common'
 import { getFamilyChildren } from '@/api/family'
 
@@ -196,9 +196,30 @@ const handleDelete = () => {
     title: '危险操作',
     content: '确定要删除此档案吗？此操作不可恢复。',
     confirmColor: '#ef4444',
-    success: (res) => {
+    success: async (res) => {
       if (res.confirm) {
-        uni.showToast({ title: '演示环境，暂不支持删除', icon: 'none' })
+        uni.showLoading({ title: '正在删除档案...' })
+        try {
+          const deleteRes = await deleteChild(id.value)
+          if (deleteRes.code === 200 || deleteRes.code === '200') {
+            try {
+              await getFamilyChildren()
+            } catch (err) {
+              console.error('Failed to refresh family children:', err)
+            }
+            uni.showToast({ title: '删除成功', icon: 'success' })
+            setTimeout(() => {
+              uni.navigateBack()
+            }, 1500)
+          } else {
+            uni.showToast({ title: deleteRes.msg || '删除失败', icon: 'none' })
+          }
+        } catch (e) {
+          console.error('Delete child failed:', e)
+          uni.showToast({ title: e.msg || e.message || '删除失败', icon: 'none' })
+        } finally {
+          uni.hideLoading()
+        }
       }
     }
   })
