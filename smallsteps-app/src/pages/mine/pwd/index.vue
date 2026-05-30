@@ -127,10 +127,20 @@ function submit() {
   }
 
   updateUserPwd(user.oldPassword, user.newPassword).then(() => {
-    proxy.$modal.msgSuccess("修改成功")
+    if (proxy && proxy.$modal) {
+      proxy.$modal.msgSuccess("修改成功")
+    } else {
+      uni.showToast({ title: '修改成功', icon: 'success' })
+    }
     setTimeout(() => uni.navigateBack(), 1500)
   }).catch(err => {
     console.log('密码修改失败', err)
+    const errMsg = typeof err === 'string' ? err : (err && err.msg ? err.msg : "修改失败，请重试")
+    if (proxy && proxy.$modal) {
+      proxy.$modal.msgError(errMsg)
+    } else {
+      uni.showToast({ title: errMsg, icon: 'error' })
+    }
   })
 }
 

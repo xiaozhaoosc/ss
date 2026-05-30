@@ -103,12 +103,19 @@ export const useUserStore = defineStore('user', {
     },
 
     logOut() {
-      this.userInfo = null
-      this.token = null
-      this.clientId = null
-      removeToken()
-      removeClientId()
-      uni.removeStorageSync('role')
+      return new Promise<void>((resolve) => {
+        this.userInfo = null
+        this.token = null
+        this.clientId = null
+        removeToken()
+        removeClientId()
+        uni.removeStorageSync('role')
+        resolve()
+      })
+    },
+
+    logout() {
+      return this.logOut();
     },
 
     restoreFromStorage() {

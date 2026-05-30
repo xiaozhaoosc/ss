@@ -37,10 +37,13 @@ const app = new Vue({
 app.$mount()
 // #endif
 
+import { install } from './plugins'
+
 // #ifdef VUE3
 export function createApp() {
   const app = createSSRApp(App)
   app.use(pinia)
+  app.use(install)
   return {
     app
   }

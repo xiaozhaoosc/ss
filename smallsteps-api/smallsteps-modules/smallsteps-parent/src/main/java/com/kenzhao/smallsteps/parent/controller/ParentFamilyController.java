@@ -105,10 +105,13 @@ public class ParentFamilyController extends BaseController {
                     String nickname = (child.getNickname() != null && !child.getNickname().isEmpty())
                         ? child.getNickname() : u.getNickName();
                     map.put("nickName", nickname);
-                    // 优先使用 ss_child 中的头像
-                    String avatar = (child.getAvatarUrl() != null && !child.getAvatarUrl().isEmpty())
-                        ? child.getAvatarUrl() : u.getAvatar();
-                    map.put("avatar", avatar);
+                    // 优先使用 ss_child 中的头像 URL（字符串路径）
+                    if (child.getAvatarUrl() != null && !child.getAvatarUrl().isEmpty()) {
+                        map.put("avatar", child.getAvatarUrl());
+                    } else {
+                        // SysUserVo.avatar 为 Long 类型（OSS文件ID），直接存入 Object map
+                        map.put("avatar", u.getAvatar());
+                    }
                 } else {
                     map.put("nickName", u.getNickName());
                     map.put("avatar", u.getAvatar());

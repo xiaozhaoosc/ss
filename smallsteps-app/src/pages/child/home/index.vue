@@ -182,15 +182,9 @@ const handleSettings = () => {
         const userAnswer = parseInt(res.content || '')
         if (userAnswer === correctAnswer) {
           uni.showActionSheet({
-            itemList: ['切回家长模式', '退出当前登录', '留在儿童首页'],
+            itemList: ['退出当前登录', '留在儿童首页'],
             success: (actionRes) => {
               if (actionRes.tapIndex === 0) {
-                // Switch role back to parent, and re-launch dashboard
-                userStore.updateRole('parent')
-                uni.reLaunch({
-                  url: '/pages/parent/dashboard/index'
-                })
-              } else if (actionRes.tapIndex === 1) {
                 // Perform complete logout
                 userStore.logOut().then(() => {
                   uni.reLaunch({
