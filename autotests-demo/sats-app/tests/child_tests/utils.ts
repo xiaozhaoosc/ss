@@ -33,6 +33,6 @@ export async function loginAsChild(page: Page) {
 /** 截图并返回路径 */
 export async function screenshot(page: Page, name: string) {
   const path = `test-results/child/${name}.png`;
-  await page.screenshot({ path });
+  await page.screenshot({ path, timeout: 10000 });
   return path;
 }
