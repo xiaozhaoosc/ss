@@ -35,7 +35,7 @@ test.describe('Small Steps 完整业务流程 (Full Lifecycle)', () => {
   test('Step 1: 家长登录 → 家长模式 Dashboard', async ({ page }) => {
     // 登录
     const loginPage = new LoginPage(page);
-    await loginPage.login('ken2zhao', 'Aa123456');
+    await loginPage.login('ken2zhao', 'admin123');
 
     // 验证 Dashboard 加载
     await expect(page).toHaveTitle(/Small Steps/);
@@ -60,7 +60,7 @@ test.describe('Small Steps 完整业务流程 (Full Lifecycle)', () => {
   test('Step 2: 创建任务 → AI 拆解 → 任务列表验证', async ({ page }) => {
     // 登录
     const loginPage = new LoginPage(page);
-    await loginPage.login('ken2zhao', 'Aa123456');
+    await loginPage.login('ken2zhao', 'admin123');
 
     // 进入任务管理
     const taskPage = new TaskPage(page);
@@ -112,7 +112,7 @@ test.describe('Small Steps 完整业务流程 (Full Lifecycle)', () => {
 
   test('Step 3: 任务状态流转 → 列表展示', async ({ page }) => {
     const loginPage = new LoginPage(page);
-    await loginPage.login('ken2zhao', 'Aa123456');
+    await loginPage.login('ken2zhao', 'admin123');
 
     const taskPage = new TaskPage(page);
     await taskPage.goto();
@@ -135,7 +135,7 @@ test.describe('Small Steps 完整业务流程 (Full Lifecycle)', () => {
 
   test('Step 4: 奖励管理 → 积分激励体系', async ({ page }) => {
     const loginPage = new LoginPage(page);
-    await loginPage.login('ken2zhao', 'Aa123456');
+    await loginPage.login('ken2zhao', 'admin123');
 
     // 进入奖励管理
     await page.goto('/webadminss/#/smallsteps/reward');
@@ -149,7 +149,7 @@ test.describe('Small Steps 完整业务流程 (Full Lifecycle)', () => {
 
   test('Step 5: 儿童管理 → 查看儿童档案', async ({ page }) => {
     const loginPage = new LoginPage(page);
-    await loginPage.login('ken2zhao', 'Aa123456');
+    await loginPage.login('ken2zhao', 'admin123');
 
     // 进入儿童管理
     await page.goto('/webadminss/#/smallsteps/child');
@@ -163,7 +163,7 @@ test.describe('Small Steps 完整业务流程 (Full Lifecycle)', () => {
 
   test('Step 6: AI 智能中心 → Dashboard 数据', async ({ page }) => {
     const loginPage = new LoginPage(page);
-    await loginPage.login('ken2zhao', 'Aa123456');
+    await loginPage.login('ken2zhao', 'admin123');
 
     // 回到 Dashboard 查看 AI 智能中心
     await page.waitForLoadState('domcontentloaded');
@@ -191,7 +191,7 @@ test.describe('Small Steps 完整业务流程 (Full Lifecycle)', () => {
 
   test('Step 7: 执行中任务 → 完整闭环验证', async ({ page }) => {
     const loginPage = new LoginPage(page);
-    await loginPage.login('ken2zhao', 'Aa123456');
+    await loginPage.login('ken2zhao', 'admin123');
 
     // Dashboard 上的"正在执行中的任务"区域
     const executingTasks = page.locator('text=/正在执行中|执行中的任务/');

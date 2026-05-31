@@ -32,7 +32,10 @@ export async function loginAsChild(page: Page) {
 
 /** 截图并返回路径 */
 export async function screenshot(page: Page, name: string) {
-  const path = `test-results/child/${name}.png`;
+  const dir = 'test-results/child';
+  const fs = require('fs');
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+  const path = `${dir}/${name}.png`;
   await page.screenshot({ path, timeout: 30000 });
   return path;
 }
