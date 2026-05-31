@@ -65,7 +65,7 @@ run-tests.bat app
 | 角色 | 用户名 | 密码 |
 |------|--------|------|
 | 管理后台 | admin | admin123 |
-| 家长端 | ken2zhao | Aa123456 |
+| 家长端 | ken2zhao | admin123 |
 | 儿童端 | child_xiaoming | admin123 |
 
 ## 服务地址

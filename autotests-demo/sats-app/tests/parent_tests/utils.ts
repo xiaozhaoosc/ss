@@ -1,7 +1,7 @@
 import { Page, expect } from '@playwright/test';
 
 /** 家长账号凭据 */
-export const PARENT_CREDS = { username: 'ken2zhao', password: 'Aa123456' };
+export const PARENT_CREDS = { username: 'ken2zhao', password: 'admin123' };
 
 /** 登录为家长 */
 export async function loginAsParent(page: Page) {

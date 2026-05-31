@@ -19,7 +19,7 @@ export const test = base.extend<AppAuthFixtures>({
     const context = await browser.newContext();
     const page = await context.newPage();
     const loginPage = new AppLoginPage(page);
-    await loginPage.login('ken2zhao', 'Aa123456');
+    await loginPage.login('ken2zhao', 'admin123');
     await use(page);
     await context.close();
   },

@@ -117,7 +117,7 @@ test.describe('Small Steps H5 移动端完整流程', () => {
 
   test('Step 5: 家长端查看积分和任务状态', async ({ page }) => {
     const loginPage = new AppLoginPage(page);
-    await loginPage.login('ken2zhao', 'Aa123456');
+    await loginPage.login('ken2zhao', 'admin123');
 
     await page.waitForTimeout(2000);
 
