@@ -91,8 +91,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { onLoad, onShow } from '@dcloudio/uni-app'
+import { ref, computed, onUnmounted } from 'vue'
+import { onLoad, onShow, onHide } from '@dcloudio/uni-app'
 import TrophyJar from '@/components/child/trophy-jar/trophy-jar.vue'
 import MissionCard from '@/components/child/mission-card/mission-card.vue'
 import ChildBottomNav from '@/components/child/child-bottom-nav/child-bottom-nav.vue'
@@ -122,6 +122,10 @@ const currentMission = ref<any>(null)
 const pendingTasks = ref<any[]>([])
 // 每次拉取任务后递增，配合 :key 强制销毁重建 mission-card，彻底重置内部 isCompleted 状态
 const missionVersion = ref(0)
+
+// 轮询定时器
+let pollingTimer: ReturnType<typeof setInterval> | null = null
+const POLL_INTERVAL = 60000 // 60秒
 
 async function loadData() {
   try {
@@ -331,6 +335,29 @@ onShow(() => {
   if (userStore.id) {
     loadPendingTasks()
     userStore.fetchBalance()
+
+    // 启动轮询，定时刷新任务列表
+    if (pollingTimer) clearInterval(pollingTimer)
+    pollingTimer = setInterval(() => {
+      loadPendingTasks()
+      userStore.fetchBalance()
+    }, POLL_INTERVAL)
+  }
+})
+
+// 页面隐藏时停止轮询，节省资源
+onHide(() => {
+  if (pollingTimer) {
+    clearInterval(pollingTimer)
+    pollingTimer = null
+  }
+})
+
+// 组件卸载时清理定时器
+onUnmounted(() => {
+  if (pollingTimer) {
+    clearInterval(pollingTimer)
+    pollingTimer = null
   }
 })
 </script>

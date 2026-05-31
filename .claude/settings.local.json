@@ -10,7 +10,10 @@
       "WebFetch(domain:docs.bigmodel.cn)",
       "Bash(xargs cat)",
       "Bash(xargs ls -la)",
-      "Bash(grep *)"
+      "Bash(grep *)",
+      "Bash(dir \"D:\\\\office\\\\jushuang1\\\\github\\\\ss\\\\答辩\\\\0.26.0\")",
+      "Bash(where pandoc *)",
+      "Bash(pandoc \"D:/office/jushuang1/github/ss/答辩/ADHD中小学生儿童行为习惯辅助系统设计与实现241042025赵轩_20260423095124.doc\" -t plain --wrap=none)"
     ]
   }
 }
