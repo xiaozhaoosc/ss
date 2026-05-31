@@ -57,7 +57,7 @@ smallsteps-app/
 | 周报页面 | `/pages/parent/weekly-report/index` | ✅ 正常 |
 
 ## 🎭 测试账号
-- **家长1**: ken2zhao / Aa123456
+- **家长1**: ken2zhao / admin123
 - **家长2**: parent_zhang / admin123
 - **孩子1**: child_xiaoming / admin123
 - **孩子2**: child_xiaohong / admin123

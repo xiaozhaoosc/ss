@@ -5,7 +5,7 @@ test.describe('Backend Converter Verification', () => {
     // 1. Login as parent
     await page.goto('/');
     await page.fill('input[type="text"]', 'ken2zhao');
-    await page.fill('input[type="password"]', 'Aa123456');
+    await page.fill('input[type="password"]', 'admin123');
     await page.click('text=登 录');
     
     // Wait for navigation

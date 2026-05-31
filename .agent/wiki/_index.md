@@ -27,7 +27,7 @@
 - 后端服务：http://localhost:8081/ssapi
 - 前端Web管理后台登录账号：admin/admin123
 - APP： http://localhost:9090/
-- APP家长1端的账号/密码是：ken2zhao/Aa123456；
+- APP家长1端的账号/密码是：ken2zhao/admin123；
 - APP家长2的账号/密码是：parent_zhang/admin123；
 - APP孩子1的账号/密码是：child_xiaoming/admin123；
 - APP孩子2的账号/密码是：child_xiaohong/admin123；

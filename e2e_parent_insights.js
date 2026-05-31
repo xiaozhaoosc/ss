@@ -38,7 +38,7 @@ function logBug(bug) {
     // We saw the a11y tree has "账号 textbox" and "密码 textbox"
     const inputs = page.locator('input');
     await inputs.nth(0).fill('ken2zhao');
-    await inputs.nth(1).fill('Aa123456');
+    await inputs.nth(1).fill('admin123');
     
     // Close any error popups like "知道了"
     const confirmBtn = page.locator('text=知道了');

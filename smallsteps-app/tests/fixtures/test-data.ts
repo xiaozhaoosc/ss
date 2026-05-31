@@ -1,7 +1,7 @@
 export const TEST_ACCOUNTS = {
   parent1: {
     username: 'ken2zhao',
-    password: 'Aa123456'
+    password: 'admin123'
   },
   parent2: {
     username: 'parent_zhang',

@@ -9,7 +9,7 @@ function logBug(bug) {
 }
 
 const accounts = [
-  { user: 'ken2zhao', pass: 'Aa123456', role: '家长1' },
+  { user: 'ken2zhao', pass: 'admin123', role: '家长1' },
   { user: 'parent_zhang', pass: 'admin123', role: '家长2' },
   { user: 'child_xiaoming', pass: 'admin123', role: '孩子1' },
   { user: 'child_xiaohong', pass: 'admin123', role: '孩子2' }

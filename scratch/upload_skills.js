@@ -11,7 +11,7 @@ function cleanContent(text) {
   // 1. 替换密码、API密钥、数据库密码等敏感字符串为 "kenzhaopasswordkey"
   clean = clean.replace(/abdSSsaf#[a-zA-Z0-9\^#~!@]+/g, 'kenzhaopasswordkey');
   clean = clean.replace(/ui123456789~/g, 'kenzhaopasswordkey');
-  clean = clean.replace(/Aa123456/g, 'kenzhaopasswordkey');
+  clean = clean.replace(/admin123/g, 'kenzhaopasswordkey');
   clean = clean.replace(/admin123/g, 'kenzhaopasswordkey');
   clean = clean.replace(/gly321\?\?gly321!!/g, 'kenzhaopasswordkey');
 

@@ -5,13 +5,13 @@ const authFile = 'playwright/.auth/user.json';
 setup('authenticate', async ({ page }) => {
   await page.goto('/');
   await page.waitForSelector('#loader-wrapper', { state: 'hidden', timeout: 30000 });
-  
+
   await page.locator('input').first().fill('ken2zhao');
-  await page.locator('input[type="password"]').fill('Aa123456');
+  await page.locator('input[type="password"]').fill('admin123');
   await page.getByText('登 录', { exact: true }).click();
 
   await page.waitForURL(/.*(dashboard|index)/, { timeout: 30000 });
-  
+
   // 如果新手引导弹出，选择跳过
   const skipButton = page.getByRole('button', { name: '跳过' });
   if (await skipButton.isVisible()) {

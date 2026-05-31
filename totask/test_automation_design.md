@@ -16,7 +16,7 @@
 - **测试地址**: http://localhost:9090
 - **测试工具**: Playwright + TypeScript
 - **测试账号**:
-  - 家长1: ken2zhao / Aa123456
+  - 家长1: ken2zhao / admin123
   - 家长2: parent_zhang / admin123
 
 ## 3. 测试模块

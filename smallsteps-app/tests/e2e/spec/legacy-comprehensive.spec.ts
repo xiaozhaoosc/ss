@@ -3,7 +3,7 @@ import { test, expect, Page } from '@playwright/test';
 // MOBILE_URL is handled by baseURL in playwright.config.ts
 
 const ACCOUNTS = {
-  parent: { user: 'ken2zhao', pass: 'Aa123456' },
+  parent: { user: 'ken2zhao', pass: 'admin123' },
   child: { user: 'child_xiaoming', pass: 'admin123' },
 };
 

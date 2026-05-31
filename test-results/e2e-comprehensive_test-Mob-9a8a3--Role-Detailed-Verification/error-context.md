@@ -26,7 +26,7 @@ Call log:
   3   | const MOBILE_URL = 'http://localhost:9090';
   4   | 
   5   | const ACCOUNTS = {
-  6   |   parent: { user: 'ken2zhao', pass: 'Aa123456' },
+  6   |   parent: { user: 'ken2zhao', pass: 'admin123' },
   7   |   child: { user: 'child_xiaoming', pass: 'admin123' },
   8   | };
   9   | 

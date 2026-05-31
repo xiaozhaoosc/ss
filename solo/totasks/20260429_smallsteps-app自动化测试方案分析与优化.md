@@ -420,7 +420,7 @@ test('dashboard shows empty state when no tasks', async ({ page }) => {
 
 | 角色 | 用户名 | 密码 | 用途 |
 |---|---|---|---|
-| 家长 1 | `ken2zhao` | `Aa123456` | 主测试账号 |
+| 家长 1 | `ken2zhao` | `admin123` | 主测试账号 |
 | 家长 2 | `parent_zhang` | `admin123` | 多账号测试 |
 | 儿童 1 | `child_xiaoming` | `admin123` | 儿童端测试 |
 | 儿童 2 | `child_xiaohong` | `admin123` | 多儿童测试 |

@@ -7,7 +7,7 @@
 - **测试地址**: http://localhost:9091
 - **HTML报告地址**: http://localhost:9323
 - **测试工具**: Playwright + TestMu AI Skills
-- **测试账号**: ken2zhao / Aa123456
+- **测试账号**: ken2zhao / admin123
 
 ---
 
