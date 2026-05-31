@@ -119,20 +119,30 @@ def run_tests(headed: bool = False, video: bool = False) -> dict[str, TestSuite]
         # 收集截图
         suite.screenshots = collect_screenshots(suite_name)
 
-        # 备份截图（防止被下一个测试套件清理）
+        # 备份截图和录屏（防止被下一个测试套件清理）
         backup_dir = DEMO_DIR / suite_name / "test-results" / "_backup"
         backup_dir.mkdir(exist_ok=True)
         import shutil
+        # 备份截图
         for key, src_path in suite.screenshots.items():
             dst = backup_dir / Path(src_path).name
             if not dst.exists():
                 shutil.copy2(src_path, dst)
-        # 也备份 per-test 目录的截图
+        # 备份 per-test 目录的截图和录屏
         results_dir = DEMO_DIR / suite_name / "test-results"
         for img in results_dir.glob("*/test-finished-1.png"):
             dst = backup_dir / f"{img.parent.name}.png"
             if not dst.exists():
                 shutil.copy2(img, dst)
+        for vid in results_dir.glob("*/video.webm"):
+            dst = backup_dir / f"{vid.parent.name}.webm"
+            if not dst.exists():
+                shutil.copy2(vid, dst)
+        # 备份 .playwright-artifacts 下的录屏
+        for vid in results_dir.glob(".playwright-artifacts-*/*.webm"):
+            dst = backup_dir / f"artifacts-{vid.name}"
+            if not dst.exists():
+                shutil.copy2(vid, dst)
 
         print(f"  📊 {suite_label}: {suite.passed}/{suite.total} 通过")
 
@@ -294,19 +304,24 @@ def select_report_screenshots(suites: dict[str, TestSuite]) -> list[tuple[str, s
                 if path.exists():
                     selected.append((str(path), caption, "child"))
 
-        # 从 child_tests-*/ per-test 截图（备份源）
+        # 从 child_tests-*/ per-test 截图
         results_dir = DEMO_DIR / "sats-app" / "test-results"
         for d in sorted(results_dir.glob("child_tests-*")):
             img = d / "test-finished-1.png"
             if img.exists():
-                # 从目录名提取中文描述
                 dir_name = d.name
                 m = re.match(r'child_tests-\d+-(.+?)(?:-mobile-chrome)?$', dir_name)
-                if m:
-                    desc = m.group(1).replace('-', ' ').strip()[:40]
-                else:
-                    desc = dir_name[:40]
+                desc = m.group(1).replace('-', ' ').strip()[:40] if m else dir_name[:40]
                 selected.append((str(img), f"儿童端: {desc}", "child"))
+
+        # 从 _backup 目录（跨套件安全）
+        backup_dir = results_dir / "_backup"
+        if backup_dir.exists():
+            for png in sorted(backup_dir.glob("child_tests-*.png")):
+                name = png.stem
+                m = re.match(r'child_tests-\d+-(.+?)(?:-mobile-chrome)?$', name)
+                desc = m.group(1).replace('-', ' ').strip()[:40] if m else name[:40]
+                selected.append((str(png), f"儿童端: {desc}", "child"))
 
         # ── 家长端截图（重点）──
         parent_dir = DEMO_DIR / "sats-app" / "test-results" / "parent"
@@ -330,17 +345,22 @@ def select_report_screenshots(suites: dict[str, TestSuite]) -> list[tuple[str, s
                 if path.exists():
                     selected.append((str(path), caption, "parent"))
 
-        # 从 parent_tests-*/ per-test 截图（备份源）
+        # 从 parent_tests-*/ per-test 截图
         for d in sorted(results_dir.glob("parent_tests-*")):
             img = d / "test-finished-1.png"
             if img.exists():
                 dir_name = d.name
                 m = re.match(r'parent_tests-\d+-(.+?)(?:-mobile-chrome)?$', dir_name)
-                if m:
-                    desc = m.group(1).replace('-', ' ').strip()[:40]
-                else:
-                    desc = dir_name[:40]
+                desc = m.group(1).replace('-', ' ').strip()[:40] if m else dir_name[:40]
                 selected.append((str(img), f"家长端: {desc}", "parent"))
+
+        # 从 _backup 目录（跨套件安全）
+        if backup_dir.exists():
+            for png in sorted(backup_dir.glob("parent_tests-*.png")):
+                name = png.stem
+                m = re.match(r'parent_tests-\d+-(.+?)(?:-mobile-chrome)?$', name)
+                desc = m.group(1).replace('-', ' ').strip()[:40] if m else name[:40]
+                selected.append((str(png), f"家长端: {desc}", "parent"))
 
         # full-lifecycle 截图
         for key, path in app.screenshots.items():
