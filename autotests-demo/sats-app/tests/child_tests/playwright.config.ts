@@ -12,6 +12,7 @@ export default defineConfig({
     baseURL: 'http://10.8.0.1:8043',
     headless: process.env.DISPLAY_MODE !== 'headed',
     screenshot: 'on',
+    video: 'retain-on-failure',
     trace: 'retain-on-failure',
     viewport: { width: 393, height: 727 },
     ...(process.platform === 'linux' ? { channel: 'chrome' } : {}),

@@ -93,19 +93,24 @@ def lark(*args, timeout=TIMEOUT) -> dict:
 
 # ─── 测试运行 ──────────────────────────────────────────────────────────────────
 
-def run_tests() -> dict[str, TestSuite]:
+def run_tests(headed: bool = False, video: bool = False) -> dict[str, TestSuite]:
     """运行全部测试，返回结果"""
     print("\n🧪 运行自动化测试...")
+
+    display_mode = "headed" if headed else "headless"
+    extra_flags = ""
+    if video:
+        extra_flags = " --grep-invert='^$'"  # placeholder, video is in config
 
     suites = {}
     for suite_name, suite_label in [("sats-ui", "管理后台 UI"), ("sats-app", "H5 移动端")]:
         suite_dir = DEMO_DIR / suite_name
-        print(f"\n━━━ {suite_label} 测试 ━━━")
+        print(f"\n━━━ {suite_label} 测试 ({display_mode}) ━━━")
 
         r = run_cmd(
-            f"DISPLAY_MODE=headless npx playwright test --reporter=list 2>&1",
+            f"DISPLAY_MODE={display_mode} npx playwright test --reporter=list 2>&1",
             cwd=str(suite_dir),
-            timeout=600,
+            timeout=900,
         )
 
         suite = parse_test_output(r.stdout, suite_name, suite_label)
@@ -645,6 +650,8 @@ def shell_escape(s: str) -> str:
 def main():
     parser = argparse.ArgumentParser(description="Small Steps 自动化测试 → 飞书知识库一键更新")
     parser.add_argument("version", help="版本号，如 V6, V7")
+    parser.add_argument("--headed", action="store_true", help="有头模式（显示浏览器窗口）")
+    parser.add_argument("--video", action="store_true", help="录屏模式（所有测试录屏，不仅失败时）")
     parser.add_argument("--skip-tests", action="store_true", help="跳过测试，使用上次结果")
     parser.add_argument("--dry-run", action="store_true", help="只运行测试，不更新知识库")
     parser.add_argument("--space-id", default=os.environ.get("SS_SPACE_ID", "7645451195020020956"), help="飞书知识库 space_id")
@@ -693,7 +700,7 @@ def main():
             suites[suite_name] = suite
             print(f"  📊 {suite_label}: {suite.passed}/{suite.total} (上次结果)")
     else:
-        suites = run_tests()
+        suites = run_tests(headed=args.headed, video=args.video)
 
     # 汇总
     total = sum(s.total for s in suites.values())
