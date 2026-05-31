@@ -70,7 +70,7 @@ export class TaskPage {
 
   /** 在列表中搜索任务 */
   async searchTask(title: string) {
-    await this.page.fill('input[placeholder*="任务标题"], input[type="text"]', title);
+    await this.page.fill('input[placeholder*="任务标题"]', title);
     await this.page.locator('button:has-text("搜索")').click();
     await this.page.waitForTimeout(1000);
   }

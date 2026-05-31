@@ -3,6 +3,10 @@ import { AppLoginPage } from './pages/LoginPage';
 import { ChildHomePage } from './pages/ChildHomePage';
 import { TaskExecutePage } from './pages/TaskExecutePage';
 import * as fs from 'fs';
+
+// 确保截图目录存在
+const testResultsDir = 'test-results';
+if (!fs.existsSync(testResultsDir)) fs.mkdirSync(testResultsDir, { recursive: true });
 import * as path from 'path';
 
 /**

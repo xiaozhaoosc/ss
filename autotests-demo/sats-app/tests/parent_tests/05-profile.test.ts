@@ -2,8 +2,8 @@ import { test, expect } from '@playwright/test';
 import { loginAsParent, switchTab, screenshot } from './utils';
 
 test.describe('Tab 4: 个人中心 (Profile)', () => {
-  test.beforeEach(async ({ page }) => {
-    await loginAsParent(page);
+  test.beforeEach(async ({ page, request }) => {
+    await loginAsParent(page, request);
     await switchTab(page, '我的');
   });
 

@@ -2,8 +2,8 @@ import { test, expect } from '@playwright/test';
 import { loginAsParent, screenshot } from './utils';
 
 test.describe('子页面: 硬件玩偶设备 (Device Config)', () => {
-  test.beforeEach(async ({ page }) => {
-    await loginAsParent(page);
+  test.beforeEach(async ({ page, request }) => {
+    await loginAsParent(page, request);
     await page.goto('/#/pages/parent/device-config/index', { timeout: 15000 });
     await page.waitForTimeout(1500);
   });

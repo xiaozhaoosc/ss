@@ -2,8 +2,8 @@ import { test, expect } from '@playwright/test';
 import { loginAsParent, screenshot } from './utils';
 
 test.describe('子页面: 创建新奖励 (Reward Creator)', () => {
-  test.beforeEach(async ({ page }) => {
-    await loginAsParent(page);
+  test.beforeEach(async ({ page, request }) => {
+    await loginAsParent(page, request);
     await page.goto('/#/pages/parent/reward-creator/index', { timeout: 15000 });
     await page.waitForTimeout(2000);
     await page.waitForLoadState('domcontentloaded');

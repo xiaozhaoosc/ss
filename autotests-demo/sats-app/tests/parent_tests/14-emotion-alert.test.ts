@@ -2,8 +2,8 @@ import { test, expect } from '@playwright/test';
 import { loginAsParent, screenshot } from './utils';
 
 test.describe('子页面: 情感详情 (Emotion Detail 14)', () => {
-  test.beforeEach(async ({ page }) => {
-    await loginAsParent(page);
+  test.beforeEach(async ({ page, request }) => {
+    await loginAsParent(page, request);
     await page.goto('/#/pages/parent/emotion-detail/index', { timeout: 15000 });
     await page.waitForTimeout(2000);
     await page.waitForLoadState('domcontentloaded');

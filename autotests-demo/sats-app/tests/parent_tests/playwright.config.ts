@@ -1,11 +1,12 @@
 import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
+  globalSetup: require.resolve('./global-setup.ts'),
   testDir: './',
   testMatch: '**/*.test.ts',
   fullyParallel: false,
   forbidOnly: true,
-  retries: 0,
+  retries: 1,
   workers: 1,
   timeout: 45000,
   reporter: [

@@ -11,7 +11,7 @@ export const test = base.extend<AuthFixtures>({
     const context = await browser.newContext();
     const page = await context.newPage();
     const loginPage = new LoginPage(page);
-    await loginPage.login('ken2zhao', 'Aa123456');
+    await loginPage.login('admin', 'admin123');
     await use(page);
     await context.close();
   },
