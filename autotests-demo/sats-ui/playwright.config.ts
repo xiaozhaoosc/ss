@@ -21,7 +21,7 @@ export default defineConfig({
     headless: process.env.DISPLAY_MODE !== 'headed',
     trace: 'retain-on-failure',
     screenshot: 'on',
-    video: 'off',
+    video: 'retain-on-failure',
     viewport: { width: 1280, height: 720 },
     actionTimeout: 5000,
     navigationTimeout: 10000,
