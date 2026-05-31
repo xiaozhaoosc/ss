@@ -119,6 +119,21 @@ def run_tests(headed: bool = False, video: bool = False) -> dict[str, TestSuite]
         # 收集截图
         suite.screenshots = collect_screenshots(suite_name)
 
+        # 备份截图（防止被下一个测试套件清理）
+        backup_dir = DEMO_DIR / suite_name / "test-results" / "_backup"
+        backup_dir.mkdir(exist_ok=True)
+        import shutil
+        for key, src_path in suite.screenshots.items():
+            dst = backup_dir / Path(src_path).name
+            if not dst.exists():
+                shutil.copy2(src_path, dst)
+        # 也备份 per-test 目录的截图
+        results_dir = DEMO_DIR / suite_name / "test-results"
+        for img in results_dir.glob("*/test-finished-1.png"):
+            dst = backup_dir / f"{img.parent.name}.png"
+            if not dst.exists():
+                shutil.copy2(img, dst)
+
         print(f"  📊 {suite_label}: {suite.passed}/{suite.total} 通过")
 
     return suites
@@ -193,14 +208,25 @@ def infer_module(test_file: str, module_name: str) -> str:
 
 
 def collect_screenshots(suite_name: str) -> dict[str, str]:
-    """收集测试截图，包括子目录"""
+    """收集测试截图，包括子目录和备份目录"""
     screenshots = {}
     results_dir = DEMO_DIR / suite_name / "test-results"
     if not results_dir.exists():
         return screenshots
 
+    # 先收集 _backup 目录（最可靠，不会被清理）
+    backup_dir = results_dir / "_backup"
+    if backup_dir.exists():
+        for png in backup_dir.glob("*.png"):
+            name = png.stem
+            screenshots[f"backup/{name}"] = str(png)
+
+    # 再收集当前目录（可能被部分清理）
     for png in results_dir.rglob("*.png"):
+        # 跳过 _backup 和 .playwright-artifacts
         rel = png.relative_to(results_dir)
+        if rel.parts[0] in ("_backup",) or ".playwright-artifacts" in str(rel):
+            continue
         name = png.stem
 
         # child/ 和 parent/ 子目录的截图
@@ -215,7 +241,6 @@ def collect_screenshots(suite_name: str) -> dict[str, str]:
         elif name.startswith("step"):
             screenshots[name] = str(png)
         else:
-            # 其他手动截图 (如 parent-dashboard-mobile.png)
             screenshots[name] = str(png)
 
     return screenshots
@@ -228,88 +253,96 @@ def select_report_screenshots(suites: dict[str, TestSuite]) -> list[tuple[str, s
     
     策略：
     - 管理后台：只选 登录、用户管理、AI 模块 相关截图
-    - 重点：家长端、儿童端截图
+    - 重点：家长端、儿童端截图（从 child/ parent/ child_tests-*/ parent_tests-*/ 多源收集）
     """
     selected = []
 
     # ── 管理后台：精简选取 ──
     ui = suites.get("sats-ui")
     if ui:
-        # 登录
-        if "step1" in ui.screenshots:
-            selected.append((ui.screenshots["step1"], "管理后台: 家长登录 Dashboard", "ui"))
-        # AI 模块
-        if "step2" in ui.screenshots:
-            selected.append((ui.screenshots["step2"], "管理后台: AI 任务拆解", "ui"))
-        if "step6" in ui.screenshots:
-            selected.append((ui.screenshots["step6"], "管理后台: AI 智能中心", "ui"))
-        # 用户管理 (step5 = 儿童管理)
-        if "step5" in ui.screenshots:
-            selected.append((ui.screenshots["step5"], "管理后台: 儿童管理", "ui"))
+        # 模糊匹配 UI 截图 key（包括 backup/ 前缀）
+        ui_wanted = {
+            "step1": "管理后台: 家长登录 Dashboard",
+            "step5": "管理后台: 儿童管理",
+            "step6": "管理后台: AI 智能中心",
+        }
+        for prefix, caption in ui_wanted.items():
+            for key, path in ui.screenshots.items():
+                clean_key = key.replace("backup/", "")
+                if clean_key.startswith(prefix):
+                    selected.append((path, caption, "ui"))
+                    break
+        # full-lifecycle per-test 截图
+        for key, path in ui.screenshots.items():
+            if "家长登录" in key:
+                selected.append((path, "管理后台: 家长登录 Dashboard", "ui"))
+                break
 
     # ── 儿童端截图（重点）──
     app = suites.get("sats-app")
     if app:
-        # 儿童端子测试截图 (test-results/child/*.png)
+        # 从 child/ 手动截图
         child_dir = DEMO_DIR / "sats-app" / "test-results" / "child"
         if child_dir.exists():
-            child_shots = sorted(child_dir.glob("*.png"))
-            # 按优先级选取
-            priority_names = [
+            for name, caption in [
                 ("01-child-login", "儿童端: 登录页面"),
                 ("01-child-home", "儿童端: 游戏化首页"),
-                ("01-child-tabbar", "儿童端: 底部导航栏"),
                 ("02-task-list", "儿童端: 任务列表"),
-                ("02-task-cards", "儿童端: 任务卡片"),
                 ("03-task-detail", "儿童端: 任务详情"),
-                ("03-task-steps", "儿童端: 任务步骤"),
-                ("03-task-complete-btn", "儿童端: 完成任务按钮"),
-                ("04-focus-mode", "儿童端: 专注模式"),
-                ("04-focus-timer", "儿童端: 专注计时器"),
-                ("04-focus-back-blocked", "儿童端: 防误触返回键"),
-                ("05-achievement", "儿童端: 成就徽章"),
-                ("05-achievement-list", "儿童端: 成就列表"),
-                ("06-score-display", "儿童端: 积分余额"),
-                ("06-score-history", "儿童端: 积分流水"),
-                ("06-reward-exchange", "儿童端: 奖励兑换"),
-            ]
-            shot_map = {s.stem: str(s) for s in child_shots}
-            for name, caption in priority_names:
-                if name in shot_map:
-                    selected.append((shot_map[name], caption, "child"))
+            ]:
+                path = child_dir / f"{name}.png"
+                if path.exists():
+                    selected.append((str(path), caption, "child"))
 
-        # 家长端子测试截图 (test-results/parent/*.png)
+        # 从 child_tests-*/ per-test 截图（备份源）
+        results_dir = DEMO_DIR / "sats-app" / "test-results"
+        for d in sorted(results_dir.glob("child_tests-*")):
+            img = d / "test-finished-1.png"
+            if img.exists():
+                # 从目录名提取中文描述
+                dir_name = d.name
+                m = re.match(r'child_tests-\d+-(.+?)(?:-mobile-chrome)?$', dir_name)
+                if m:
+                    desc = m.group(1).replace('-', ' ').strip()[:40]
+                else:
+                    desc = dir_name[:40]
+                selected.append((str(img), f"儿童端: {desc}", "child"))
+
+        # ── 家长端截图（重点）──
         parent_dir = DEMO_DIR / "sats-app" / "test-results" / "parent"
         if parent_dir.exists():
-            parent_shots = sorted(parent_dir.glob("*.png"))
             priority_names = [
                 ("01-dashboard-welcome", "家长端: Dashboard 欢迎语"),
                 ("01-dashboard-focus", "家长端: 今日焦点"),
                 ("01-dashboard-records", "家长端: 执行记录"),
-                ("02-task-creator-loaded", "家长端: 创建任务"),
-                ("02-task-ai-breakdown", "家长端: AI 拆解"),
+                ("02-task-loaded", "家长端: 创建任务"),
                 ("03-reward-loaded", "家长端: 奖励管理"),
                 ("04-insights-loaded", "家长端: 洞察分析"),
-                ("04-insights-dimensions", "家长端: 能力维度"),
-                ("05-profile-loaded", "家长端: 个人中心"),
+                ("05-profile-username", "家长端: 个人中心"),
                 ("06-contract-loaded", "家长端: 亲子契约"),
                 ("07-emotion-kit-loaded", "家长端: 情绪急救包"),
-                ("08-device-loaded", "家长端: 硬件设备"),
-                ("09-exec-record-loaded", "家长端: 执行记录"),
-                ("10-daily-focus-loaded", "家长端: 每日焦点"),
-                ("11-weekly-report-loaded", "家长端: 每周报告"),
-                ("14-emotion-loaded", "家长端: 情感详情"),
                 ("14-emotion-ai", "家长端: AI 情感分析"),
                 ("15-family-bind", "家长端: 绑定孩子"),
-                ("15-family-create", "家长端: 创建孩子账号"),
                 ("16-template-loaded", "家长端: 模板库"),
             ]
-            shot_map = {s.stem: str(s) for s in parent_shots}
             for name, caption in priority_names:
-                if name in shot_map:
-                    selected.append((shot_map[name], caption, "parent"))
+                path = parent_dir / f"{name}.png"
+                if path.exists():
+                    selected.append((str(path), caption, "parent"))
 
-        # full-lifecycle 手动截图
+        # 从 parent_tests-*/ per-test 截图（备份源）
+        for d in sorted(results_dir.glob("parent_tests-*")):
+            img = d / "test-finished-1.png"
+            if img.exists():
+                dir_name = d.name
+                m = re.match(r'parent_tests-\d+-(.+?)(?:-mobile-chrome)?$', dir_name)
+                if m:
+                    desc = m.group(1).replace('-', ' ').strip()[:40]
+                else:
+                    desc = dir_name[:40]
+                selected.append((str(img), f"家长端: {desc}", "parent"))
+
+        # full-lifecycle 截图
         for key, path in app.screenshots.items():
             if "parent-dashboard" in key:
                 selected.append((path, "家长端: Dashboard (H5)", "parent"))
@@ -624,11 +657,12 @@ def insert_screenshots(doc_id: str, screenshots: list[tuple[str, str, str]]) -> 
             print(f"  ⚠️  截图不存在: {path}")
             continue
 
-        # 用 shlex.quote 确保 caption 和 path 不被 shell 拆分
+        # lark-cli --file 需要相对路径，cwd 设为 DEMO_DIR
+        rel_path = os.path.relpath(path, DEMO_DIR)
         cmd = (f"lark-cli docs +media-insert --doc {shlex.quote(doc_id)} "
-               f"--file {shlex.quote(path)} --align center "
+               f"--file {shlex.quote(rel_path)} --align center "
                f"--caption {shlex.quote(caption)} --as user")
-        r = run_cmd(cmd, timeout=120)
+        r = run_cmd(cmd, cwd=str(DEMO_DIR), timeout=120)
         if r.returncode == 0:
             success += 1
             print(f"  📸 [{i}/{len(screenshots)}] {caption}")
