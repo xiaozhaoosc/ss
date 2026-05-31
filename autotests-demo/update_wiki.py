@@ -612,24 +612,24 @@ def create_doc_in_wiki(title: str, content: str, parent_node: str, doc_type: str
 
 def insert_screenshots(doc_id: str, screenshots: list[tuple[str, str, str]]) -> int:
     """插入截图到文档，返回成功数量"""
+    import shlex
     success = 0
     for i, (path, caption, _stype) in enumerate(screenshots, 1):
         if not os.path.exists(path):
             print(f"  ⚠️  截图不存在: {path}")
             continue
 
-        r = lark("docs", "+media-insert",
-                 "--doc", doc_id,
-                 "--file", path,
-                 "--align", "center",
-                 "--caption", caption,
-                 "--as", "user", timeout=120)
-
-        if r.get("ok"):
+        # 用 shlex.quote 确保 caption 和 path 不被 shell 拆分
+        cmd = (f"lark-cli docs +media-insert --doc {shlex.quote(doc_id)} "
+               f"--file {shlex.quote(path)} --align center "
+               f"--caption {shlex.quote(caption)} --as user")
+        r = run_cmd(cmd, timeout=120)
+        if r.returncode == 0:
             success += 1
             print(f"  📸 [{i}/{len(screenshots)}] {caption}")
         else:
-            print(f"  ❌ [{i}/{len(screenshots)}] 插入失败: {caption}")
+            err = r.stderr.strip()[:100] if r.stderr else r.stdout.strip()[:100]
+            print(f"  ❌ [{i}/{len(screenshots)}] {caption}: {err}")
 
     return success
 

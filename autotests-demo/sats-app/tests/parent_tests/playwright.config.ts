@@ -16,7 +16,7 @@ export default defineConfig({
     baseURL: 'http://10.8.0.1:8043',
     headless: process.env.DISPLAY_MODE !== 'headed',
     trace: 'retain-on-failure',
-    screenshot: 'only-on-failure',
+    screenshot: 'on',
     video: 'off',
     viewport: { width: 375, height: 812 },
     actionTimeout: 30000,
