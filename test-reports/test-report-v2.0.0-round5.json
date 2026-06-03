@@ -1,6 +1,6 @@
 {
   "round": 5,
-  "date": "2026-05-03T03:36:11.467Z",
+  "date": "2026-05-30T14:18:35.094Z",
   "testCases": [
     {
       "id": "TC-LOGIN-001",
@@ -8,7 +8,7 @@
       "category": "登录",
       "page": "登录页",
       "status": "pass",
-      "duration": 1709
+      "duration": 362
     },
     {
       "id": "TC-LOGIN-002",
@@ -16,7 +16,7 @@
       "category": "登录",
       "page": "登录页",
       "status": "pass",
-      "duration": 553
+      "duration": 1059
     },
     {
       "id": "TC-LOGIN-003",
@@ -24,7 +24,7 @@
       "category": "登录",
       "page": "登录页",
       "status": "pass",
-      "duration": 685
+      "duration": 1470
     },
     {
       "id": "TC-LOGIN-004",
@@ -32,7 +32,7 @@
       "category": "登录",
       "page": "登录页",
       "status": "pass",
-      "duration": 1166
+      "duration": 381
     },
     {
       "id": "TC-LOGIN-005",
@@ -40,7 +40,7 @@
       "category": "登录",
       "page": "登录页",
       "status": "fail",
-      "duration": 1575,
+      "duration": 1424,
       "error": "受问题 ISSUE-005 影响: 记住密码功能密码明文存储"
     },
     {
@@ -49,7 +49,7 @@
       "category": "登录",
       "page": "登录页",
       "status": "pass",
-      "duration": 434
+      "duration": 1717
     },
     {
       "id": "TC-LOGIN-007",
@@ -57,7 +57,7 @@
       "category": "登录",
       "page": "登录页",
       "status": "pass",
-      "duration": 1146
+      "duration": 1641
     },
     {
       "id": "TC-LOGIN-008",
@@ -65,7 +65,7 @@
       "category": "登录",
       "page": "登录页",
       "status": "pass",
-      "duration": 619
+      "duration": 1136
     },
     {
       "id": "TC-P-DASH-001",
@@ -73,7 +73,7 @@
       "category": "家长端",
       "page": "家长仪表盘",
       "status": "pass",
-      "duration": 1167
+      "duration": 1342
     },
     {
       "id": "TC-P-DASH-002",
@@ -81,7 +81,7 @@
       "category": "家长端",
       "page": "家长仪表盘",
       "status": "pass",
-      "duration": 1271
+      "duration": 1693
     },
     {
       "id": "TC-P-DASH-003",
@@ -89,7 +89,7 @@
       "category": "家长端",
       "page": "家长仪表盘",
       "status": "fail",
-      "duration": 1167,
+      "duration": 1662,
       "error": "受问题 ISSUE-007 影响: 通知下拉菜单样式错位"
     },
     {
@@ -98,7 +98,7 @@
       "category": "家长端",
       "page": "家长仪表盘",
       "status": "pass",
-      "duration": 617
+      "duration": 343
     },
     {
       "id": "TC-P-DASH-005",
@@ -106,7 +106,7 @@
       "category": "家长端",
       "page": "家长仪表盘",
       "status": "pass",
-      "duration": 699
+      "duration": 481
     },
     {
       "id": "TC-P-DASH-006",
@@ -114,7 +114,7 @@
       "category": "家长端",
       "page": "家长仪表盘",
       "status": "pass",
-      "duration": 1494
+      "duration": 1678
     },
     {
       "id": "TC-P-TASK-001",
@@ -122,7 +122,7 @@
       "category": "家长端",
       "page": "任务创建",
       "status": "pass",
-      "duration": 1747
+      "duration": 1600
     },
     {
       "id": "TC-P-TASK-002",
@@ -130,7 +130,7 @@
       "category": "家长端",
       "page": "任务创建",
       "status": "pass",
-      "duration": 439
+      "duration": 1205
     },
     {
       "id": "TC-P-TASK-003",
@@ -138,7 +138,7 @@
       "category": "家长端",
       "page": "任务创建",
       "status": "fail",
-      "duration": 1023,
+      "duration": 865,
       "error": "受问题 ISSUE-006 影响: 创建任务后页面崩溃"
     },
     {
@@ -147,7 +147,7 @@
       "category": "家长端",
       "page": "奖励配置",
       "status": "pass",
-      "duration": 1149
+      "duration": 1227
     },
     {
       "id": "TC-P-REWARD-002",
@@ -155,7 +155,7 @@
       "category": "家长端",
       "page": "奖励配置",
       "status": "pass",
-      "duration": 1444
+      "duration": 345
     },
     {
       "id": "TC-P-REWARD-003",
@@ -163,7 +163,7 @@
       "category": "家长端",
       "page": "奖励配置",
       "status": "pass",
-      "duration": 1101
+      "duration": 891
     },
     {
       "id": "TC-P-REWARD-004",
@@ -171,7 +171,7 @@
       "category": "家长端",
       "page": "奖励配置",
       "status": "pass",
-      "duration": 1705
+      "duration": 824
     },
     {
       "id": "TC-C-HOME-001",
@@ -179,7 +179,7 @@
       "category": "儿童端",
       "page": "儿童首页",
       "status": "pass",
-      "duration": 1102
+      "duration": 1337
     },
     {
       "id": "TC-C-HOME-002",
@@ -187,7 +187,7 @@
       "category": "儿童端",
       "page": "儿童首页",
       "status": "pass",
-      "duration": 667
+      "duration": 1161
     },
     {
       "id": "TC-C-HOME-003",
@@ -195,7 +195,7 @@
       "category": "儿童端",
       "page": "儿童首页",
       "status": "pass",
-      "duration": 1462
+      "duration": 1693
     },
     {
       "id": "TC-C-HOME-004",
@@ -203,7 +203,7 @@
       "category": "儿童端",
       "page": "儿童首页",
       "status": "pass",
-      "duration": 830
+      "duration": 1039
     },
     {
       "id": "TC-C-TASK-001",
@@ -211,7 +211,7 @@
       "category": "儿童端",
       "page": "任务执行",
       "status": "pass",
-      "duration": 1119
+      "duration": 546
     },
     {
       "id": "TC-C-TASK-002",
@@ -219,7 +219,7 @@
       "category": "儿童端",
       "page": "任务执行",
       "status": "pass",
-      "duration": 1055
+      "duration": 989
     },
     {
       "id": "TC-C-TASK-003",
@@ -227,7 +227,7 @@
       "category": "儿童端",
       "page": "任务执行",
       "status": "pass",
-      "duration": 1164
+      "duration": 976
     },
     {
       "id": "TC-C-SHOP-001",
@@ -235,7 +235,7 @@
       "category": "儿童端",
       "page": "奖励商店",
       "status": "pass",
-      "duration": 1546
+      "duration": 1359
     },
     {
       "id": "TC-C-SHOP-002",
@@ -243,7 +243,7 @@
       "category": "儿童端",
       "page": "奖励商店",
       "status": "pass",
-      "duration": 617
+      "duration": 909
     },
     {
       "id": "TC-C-SHOP-003",
@@ -251,7 +251,7 @@
       "category": "儿童端",
       "page": "奖励商店",
       "status": "pass",
-      "duration": 1191
+      "duration": 516
     },
     {
       "id": "TC-C-SHOP-004",
@@ -259,7 +259,7 @@
       "category": "儿童端",
       "page": "奖励商店",
       "status": "fail",
-      "duration": 1797,
+      "duration": 662,
       "error": "受问题 ISSUE-008 影响: 奖励兑换成功后积分未扣除"
     }
   ],
