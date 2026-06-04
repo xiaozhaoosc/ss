@@ -22,7 +22,13 @@
       "Bash(ls node_modules/.package-lock.json)",
       "Bash(npx playwright *)",
       "Bash(node get-token.js)",
-      "Bash(curl *)"
+      "Bash(curl *)",
+      "Bash(Get-ChildItem \"答辩/检测\" -Recurse)",
+      "Bash(Select-Object FullName)",
+      "Bash(sed 's/<[^>]*>//g')",
+      "Bash(powershell *)",
+      "Bash(pandoc *)",
+      "Bash(cmd //c convert.bat)"
     ]
   }
 }
